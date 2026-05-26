@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>InnovaAFRIC — App</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0A1628;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+
+/* ── SETUP SCREEN ── */
+#setup{max-width:480px;width:100%;margin:20px auto;padding:32px 24px}
+.setup-logo{font-family:Georgia,serif;font-size:28px;font-weight:900;color:#00BFFF;text-align:center;margin-bottom:6px}
+.setup-sub{text-align:center;font-size:13px;color:rgba(255,255,255,.45);margin-bottom:32px}
+.setup-card{background:rgba(255,255,255,.05);border:1px solid rgba(0,191,255,.2);border-radius:16px;padding:24px}
+.setup-title{font-size:16px;font-weight:600;color:#fff;margin-bottom:6px}
+.setup-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:20px}
+.step-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.step-n{width:24px;height:24px;border-radius:50%;background:#00BFFF;color:#0A1628;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-text{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5}
+.step-text a{color:#00BFFF}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.field input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;font-size:13px;color:#fff;font-family:inherit;outline:none;transition:border-color .2s}
+.field input:focus{border-color:#00BFFF}
+.field input::placeholder{color:rgba(255,255,255,.25)}
+.btn-setup{width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .2s}
+.btn-setup:hover{opacity:.9}
+.btn-demo{width:100%;background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px;font-size:13px;color:rgba(255,255,255,.5);cursor:pointer;font-family:inherit;margin-top:8px;transition:all .2s}
+.btn-demo:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7)}
+.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:10px 14px;font-size:12px;color:#F87171;margin-top:10px;display:none}
+
+/* ── APP ── */
+#app{display:none;width:100%;max-width:420px;margin:0 auto;min-height:100vh;flex-direction:column}
+.topbar{background:#0D1B2A;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(255,255,255,.07)}
+.topbar-logo{font-family:Georgia,serif;font-size:16px;font-weight:700;color:#00BFFF}
+.topbar-user{display:flex;align-items:center;gap:8px}
+.avatar{width:30px;height:30px;border-radius:50%;background:rgba(0,191,255,.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#00BFFF;cursor:pointer}
+
+.screen{display:none;flex:1;padding:16px;overflow-y:auto;min-height:calc(100vh - 114px)}
+.screen.on{display:block}
+
+.balance-card{background:linear-gradient(135deg,#0F2B4C,#0A1628);border:1px solid rgba(0,191,255,.2);border-radius:20px;padding:24px;margin-bottom:16px;text-align:center}
+.bal-label{font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.bal-amount{font-family:Georgia,serif;font-size:42px;font-weight:700;color:#fff;margin-bottom:4px}
+.bal-sub{font-size:13px;color:rgba(255,255,255,.35)}
+.action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.action{background:rgba(255,255,255,.05);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:background .2s;border:1px solid rgba(255,255,255,.07)}
+.action:hover{background:rgba(0,191,255,.1);border-color:rgba(0,191,255,.3)}
+.action .ic{font-size:22px;margin-bottom:6px}
+.action .lbl{font-size:10px;color:rgba(255,255,255,.5)}
+
+.section-title{font-size:14px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.section-title a{font-size:11px;color:#00BFFF;cursor:pointer}
+
+.txn-list{display:flex;flex-direction:column;gap:8px}
+.txn{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.06)}
+.txn-ic{width:36px;height:36px;border-radius:10px;background:rgba(0,191,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.txn-info{flex:1}
+.txn-name{font-size:13px;font-weight:500;color:#fff}
+.txn-date{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+.txn-amt{font-size:14px;font-weight:600;text-align:right}
+
+.form-card{background:rgba(255,255,255,.04);border-radius:16px;padding:20px;margin-bottom:16px;border:1px solid rgba(255,255,255,.07)}
+.inp{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;color:#fff;outline:none;margin-bottom:10px;transition:border-color .2s}
+.inp:focus{border-color:#00BFFF}
+.inp::placeholder{color:rgba(255,255,255,.25)}
+.sel{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;color:#fff;outline:none;margin-bottom:10px}
+.btn-main{width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.btn-main:hover{opacity:.9}
+.result-box{background:rgba(0,191,255,.08);border:1px solid rgba(0,191,255,.2);border-radius:12px;padding:14px;text-align:center;margin-bottom:14px}
+.result-big{font-family:Georgia,serif;font-size:28px;font-weight:700;color:#00BFFF}
+.result-small{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px}
+
+.success-screen{text-align:center;padding:40px 20px}
+.success-ic{font-size:64px;margin-bottom:16px}
+.success-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.success-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:24px}
+
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prod-card{background:rgba(255,255,255,.04);border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.07);cursor:pointer;transition:border-color .2s}
+.prod-card:hover{border-color:rgba(0,191,255,.3)}
+.prod-img{height:90px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:36px}
+.prod-body{padding:10px}
+.prod-name{font-size:12px;font-weight:500;color:#fff;margin-bottom:4px}
+.prod-price{font-size:14px;font-weight:700;color:#00BFFF}
+.prod-ce{font-size:9px;color:#81C784;background:rgba(46,125,50,.2);border-radius:4px;padding:2px 6px;display:inline-block;margin-top:4px}
+
+.chip{display:inline-block;font-size:9px;padding:2px 8px;border-radius:6px;font-weight:600}
+.chip-cyan{background:rgba(0,191,255,.15);color:#00BFFF}
+.chip-green{background:rgba(46,125,50,.2);color:#81C784}
+.chip-red{background:rgba(239,68,68,.12);color:#F87171}
+.chip-yellow{background:rgba(244,165,28,.15);color:#F4A51C}
+
+.loading{text-align:center;padding:32px;color:rgba(255,255,255,.35);font-size:13px}
+.loader{width:24px;height:24px;border:2px solid rgba(0,191,255,.3);border-top-color:#00BFFF;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.bottomnav{background:#0D1B2A;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-around;padding:8px 0;position:sticky;bottom:0}
+.nav-item{display:flex;flex-direction:column;align-items:center;padding:4px 12px;cursor:pointer;opacity:.4;transition:opacity .2s}
+.nav-item.on{opacity:1}
+.nav-item .ni{font-size:20px;margin-bottom:2px}
+.nav-item .nl{font-size:9px;color:rgba(255,255,255,.6)}
+.nav-item.on .nl{color:#00BFFF}
+
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a2a3a;border:1px solid rgba(0,191,255,.3);border-radius:12px;padding:10px 20px;font-size:13px;color:#fff;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#0D1B2A;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:420px;max-height:85vh;overflow-y:auto;border-top:1px solid rgba(255,255,255,.1)}
+.modal-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.modal-sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<!-- ══ PANTALLA DE CONFIGURACIÓN ══ -->
+<div id="setup">
+  <div class="setup-logo">InnovaAFRIC</div>
+  <div class="setup-sub">We Simplify Life · Configuración inicial</div>
+
+  <div class="setup-card">
+    <div class="setup-title">Conectar con tu base de datos</div>
+    <div class="setup-desc">Solo necesitas 2 claves de Supabase. La app funciona directamente desde el navegador — sin servidor adicional.</div>
+
+    <div class="step-row">
+      <div class="step-n">1</div>
+      <div class="step-text">Ve a <a href="https://supabase.com" target="_blank">supabase.com</a> → crea una cuenta gratis → nuevo proyecto</div>
+    </div>
+    <div class="step-row">
+      <div class="step-n">2</div>
+      <div class="step-text">SQL Editor → pega el contenido de <strong>schema.sql</strong> → Run</div>
+    </div>
+    <div class="step-row">
+      <div class="step-n">3</div>
+      <div class="step-text">Settings → API → copia las dos claves y pégalas aquí</div>
+    </div>
+
+    <div class="field">
+      <label>Project URL</label>
+      <input type="url" id="sb-url" placeholder="https://xxxxxxxxxxxx.supabase.co">
+    </div>
+    <div class="field">
+      <label>Anon Key (clave pública)</label>
+      <input type="text" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+    </div>
+
+    <div id="setup-err" class="err">Claves incorrectas o Supabase no accesible. Verifica las claves.</div>
+
+    <button class="btn-setup" onclick="connectSupabase()">Conectar y entrar →</button>
+    <button class="btn-demo" onclick="startDemo()">Probar sin Supabase (modo demo offline)</button>
+  </div>
+</div>
+
+<!-- ══ APP PRINCIPAL ══ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">InnovaAFRIC</div>
+    <div class="topbar-user">
+      <span style="font-size:12px;color:rgba(255,255,255,.45)" id="top-name">Cargando...</span>
+      <div class="avatar" id="top-avatar" onclick="showScreen('profile')">?</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen on" id="sc-home">
+    <div class="balance-card">
+      <div class="bal-label">Saldo total</div>
+      <div class="bal-amount" id="bal-eur">€ 0.00</div>
+      <div class="bal-sub" id="bal-xaf">0 XAF</div>
+    </div>
+    <div class="action-grid">
+      <div class="action" onclick="showScreen('send')"><div class="ic">💸</div><div class="lbl">Enviar</div></div>
+      <div class="action" onclick="showScreen('p2p')"><div class="ic">↔️</div><div class="lbl">P2P</div></div>
+      <div class="action" onclick="showScreen('cashout')"><div class="ic">🏦</div><div class="lbl">Retirar</div></div>
+      <div class="action" onclick="showScreen('qr')"><div class="ic">📱</div><div class="lbl">QR Pay</div></div>
+    </div>
+    <div class="section-title">
+      <span>Actividad reciente</span>
+      <a onclick="showScreen('history')">Ver todo →</a>
+    </div>
+    <div class="txn-list" id="home-txns">
+      <div class="loading"><div class="loader"></div>Cargando...</div>
+    </div>
+  </div>
+
+  <!-- SEND -->
+  <div class="screen" id="sc-send">
+    <div class="form-card">
+      <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px">💸 Enviar dinero</div>
+      <label style="font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px">Importe</label>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="number" class="inp" id="send-amt" value="100" oninput="calcSend()" style="margin:0;flex:1">
+        <select class="sel" id="send-curr" onchange="calcSend()" style="margin:0;width:100px">
+          <option value="EUR">EUR €</option>
+          <option value="USD">USD $</option>
+        </select>
+      </div>
+      <div class="result-box">
+        <div class="result-small">Destinatario recibe</div>
+        <div class="result-big" id="send-result">65,596 XAF</div>
+        <div class="result-small" id="send-fee">Comisión: €2.00 · Ahorro vs WU: €8.00</div>
+      </div>
+      <input class="inp" type="tel" id="send-phone" placeholder="Teléfono destinatario (+237...)">
+      <input class="inp" id="send-desc" placeholder="Concepto (opcional)">
+      <button class="btn-main" onclick="doSend()">Confirmar envío →</button>
+    </div>
+  </div>
+
+  <!-- P2P -->
+  <div class="screen" id="sc-p2p">
+    <div class="form-card">
+      <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:4px">↔️ Transferir P2P</div>
+      <div style="font-size:12px;color:#81C784;margin-bottom:16px">Sin comisión · Instantáneo</div>
+      <input class="inp" type="email" id="p2p-email" placeholder="Email del destinatario">
+      <input class="inp" type="number" id="p2p-amt" value="5000" placeholder="Importe">
+      <select class="sel" id="p2p-curr"><option value="XAF">XAF</option><option value="EUR">EUR</option></select>
+      <button class="btn-main" onclick="doP2P()">Enviar gratis →</button>
+    </div>
+  </div>
+
+  <!-- CASHOUT -->
+  <div class="screen" id="sc-cashout">
+    <div class="form-card">
+      <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px">🏦 Retirar efectivo</div>
+      <input class="inp" type="number" id="co-amt" value="100" placeholder="Importe">
+      <select class="sel" id="co-method">
+        <option value="circular">Circular Autorizada (15 min)</option>
+        <option value="mtn">MTN Mobile Money (2h)</option>
+        <option value="orange">Orange Money (2h)</option>
+        <option value="bank">Banco IBAN (24-48h)</option>
+      </select>
+      <button class="btn-main" onclick="doCashout()">Solicitar reintegro →</button>
+    </div>
+  </div>
+
+  <!-- QR PAY -->
+  <div class="screen" id="sc-qr">
+    <div class="form-card">
+      <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px">📱 Pagar con QR</div>
+      <input class="inp" id="qr-code" placeholder="Código QR del comercio (ej: COM-0445)">
+      <input class="inp" type="number" id="qr-amt" value="5000" placeholder="Importe en XAF">
+      <button class="btn-main" onclick="doQR()">Pagar →</button>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="screen" id="sc-history">
+    <div class="section-title"><span>Historial de transacciones</span></div>
+    <div class="txn-list" id="all-txns">
+      <div class="loading"><div class="loader"></div>Cargando...</div>
+    </div>
+  </div>
+
+  <!-- SHOP -->
+  <div class="screen" id="sc-shop">
+    <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px">🛒 XenderShop</div>
+    <div class="prod-grid" id="shop-grid">
+      <div class="loading" style="grid-column:span 2"><div class="loader"></div>Cargando productos...</div>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="screen" id="sc-profile">
+    <div style="text-align:center;padding:20px 0 24px">
+      <div style="font-size:56px;margin-bottom:12px" id="prof-avatar-big">👤</div>
+      <div style="font-size:20px;font-weight:700;color:#fff" id="prof-name">-</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px" id="prof-email">-</div>
+      <div style="margin-top:10px" id="prof-role-badge"></div>
+    </div>
+    <div class="form-card">
+      <div class="section-title" style="margin-bottom:12px"><span>Mi cuenta</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div onclick="showScreen('history')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">💳</span><span style="font-size:13px;color:#fff">Mi wallet y transacciones</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
+        </div>
+        <div onclick="showScreen('shop')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">🛒</span><span style="font-size:13px;color:#fff">XenderShop</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
+        </div>
+        <div onclick="logout()" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0">
+          <span style="font-size:20px">🚪</span><span style="font-size:13px;color:#F87171">Cerrar sesión</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="screen" id="sc-login">
+    <div style="text-align:center;padding:20px 0 24px">
+      <div style="font-family:Georgia,serif;font-size:24px;font-weight:700;color:#00BFFF;margin-bottom:6px">InnovaAFRIC</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.4)">We Simplify Life</div>
+    </div>
+    <div class="form-card">
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <button id="tab-login" onclick="switchAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:#00BFFF;color:#0A1628;border:none">Entrar</button>
+        <button id="tab-register" onclick="switchAuthTab('register')" style="flex:1;padding:9px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:none">Registrarse</button>
+      </div>
+      <div id="login-form">
+        <input class="inp" type="email" id="login-email" placeholder="Email">
+        <input class="inp" type="password" id="login-pwd" placeholder="Contraseña">
+        <button class="btn-main" onclick="doLogin()">Entrar →</button>
+      </div>
+      <div id="register-form" style="display:none">
+        <input class="inp" id="reg-name" placeholder="Nombre completo">
+        <input class="inp" type="email" id="reg-email" placeholder="Email">
+        <input class="inp" type="password" id="reg-pwd" placeholder="Contraseña (mín. 8 caracteres)">
+        <select class="sel" id="reg-role">
+          <option value="cliente">Cliente</option>
+          <option value="circular">Circular Autorizada</option>
+          <option value="rider">Rider</option>
+          <option value="proveedor">Proveedor</option>
+        </select>
+        <select class="sel" id="reg-country">
+          <option value="GQ">Guinea Ecuatorial</option>
+          <option value="CM">Camerún</option>
+          <option value="GA">Gabón</option>
+          <option value="SN">Senegal</option>
+          <option value="ES">España</option>
+        </select>
+        <button class="btn-main" onclick="doRegister()">Crear cuenta →</button>
+      </div>
+      <div id="auth-err" class="err" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomnav">
+    <div class="nav-item on" onclick="showScreen('home')" id="nav-home"><div class="ni">🏠</div><div class="nl">Home</div></div>
+    <div class="nav-item" onclick="showScreen('send')" id="nav-send"><div class="ni">💸</div><div class="nl">Enviar</div></div>
+    <div class="nav-item" onclick="showScreen('shop')" id="nav-shop"><div class="ni">🛒</div><div class="nl">Shop</div></div>
+    <div class="nav-item" onclick="showScreen('history')" id="nav-history"><div class="ni">📊</div><div class="nl">Historial</div></div>
+    <div class="nav-item" onclick="showScreen('profile')" id="nav-profile"><div class="ni">👤</div><div class="nl">Perfil</div></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MODAL PRODUCTO -->
+<div class="modal-bg" id="prod-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div style="text-align:center;font-size:48px;margin-bottom:14px" id="modal-img">📱</div>
+    <div class="modal-title" id="modal-name">Producto</div>
+    <div class="modal-sub" id="modal-price">€0.00</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:20px" id="modal-desc">Descripción del producto</div>
+    <button class="btn-main" onclick="addToCart()">Añadir al carrito</button>
+    <button onclick="document.getElementById('prod-modal').classList.remove('open')" style="width:100%;background:transparent;border:none;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;font-family:inherit;margin-top:10px;padding:10px">Cerrar</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ══════════════════════════════════════════════════════
+let SB = null; // Supabase client
+let USER = null;
+let WALLET = null;
+let DEMO_MODE = false;
+
+const RATES = { 'EUR-XAF': 655.957, 'USD-XAF': 607.36, 'EUR-USD': 1.08 };
+
+// ══════════════════════════════════════════════════════
+// SETUP — CONECTAR SUPABASE
+// ══════════════════════════════════════════════════════
+async function connectSupabase() {
+  const url = document.getElementById('sb-url').value.trim();
+  const key = document.getElementById('sb-key').value.trim();
+  const err = document.getElementById('setup-err');
+  err.style.display = 'none';
+
+  if (!url || !key) { err.textContent = 'Por favor, introduce las dos claves.'; err.style.display = 'block'; return; }
+  if (!url.includes('supabase.co')) { err.textContent = 'La URL debe ser de formato https://xxxx.supabase.co'; err.style.display = 'block'; return; }
+
+  // Cargar librería de Supabase dinámicamente
+  try {
+    const mod = await import('https://esm.sh/@supabase/supabase-js@2');
+    SB = mod.createClient(url, key);
+
+    // Verificar conexión
+    const { error } = await SB.from('users').select('id').limit(1);
+    if (error && error.code !== 'PGRST116') throw new Error(error.message);
+
+    // Guardar config
+    localStorage.setItem('ia_sb_url', url);
+    localStorage.setItem('ia_sb_key', key);
+
+    // Ver si hay sesión activa
+    const { data: { session } } = await SB.auth.getSession();
+    if (session) {
+      await loadUserData(session.user.id);
+      startApp();
+    } else {
+      startApp(false);
+    }
+  } catch(e) {
+    err.textContent = 'Error: ' + e.message;
+    err.style.display = 'block';
+  }
+}
+
+function startDemo() {
+  DEMO_MODE = true;
+  USER = { id: 'demo-1', email: 'amara@demo.com', full_name: 'Amara Diallo', role: 'cliente', country: 'GQ' };
+  WALLET = { eur: 1245.80, xaf: 65000, usd: 180, points: 1240 };
+  startApp(true);
+}
+
+function startApp(loggedIn = true) {
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('app').style.flexDirection = 'column';
+
+  if (loggedIn && USER) {
+    showScreen('home');
+    updateTopBar();
+    loadHome();
+  } else {
+    showScreen('login');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// AUTENTICACIÓN
+// ══════════════════════════════════════════════════════
+function switchAuthTab(tab) {
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').style.background = tab === 'login' ? '#00BFFF' : 'rgba(255,255,255,.07)';
+  document.getElementById('tab-login').style.color = tab === 'login' ? '#0A1628' : 'rgba(255,255,255,.5)';
+  document.getElementById('tab-register').style.background = tab === 'register' ? '#00BFFF' : 'rgba(255,255,255,.07)';
+  document.getElementById('tab-register').style.color = tab === 'register' ? '#0A1628' : 'rgba(255,255,255,.5)';
+}
+
+async function doLogin() {
+  if (DEMO_MODE) { toast('Modo demo: usa el botón "Probar sin Supabase"'); return; }
+  const email = document.getElementById('login-email').value;
+  const pwd = document.getElementById('login-pwd').value;
+  const err = document.getElementById('auth-err');
+  err.style.display = 'none';
+
+  const { data, error } = await SB.auth.signInWithPassword({ email, password: pwd });
+  if (error) { err.textContent = 'Error: ' + error.message; err.style.display = 'block'; return; }
+
+  await loadUserData(data.user.id);
+  showScreen('home');
+  updateTopBar();
+  loadHome();
+  toast('¡Bienvenido de vuelta!');
+}
+
+async function doRegister() {
+  if (DEMO_MODE) { toast('Modo demo activo'); return; }
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const pwd = document.getElementById('reg-pwd').value;
+  const role = document.getElementById('reg-role').value;
+  const country = document.getElementById('reg-country').value;
+  const err = document.getElementById('auth-err');
+
+  const { data, error } = await SB.auth.signUp({ email, password: pwd });
+  if (error) { err.textContent = error.message; err.style.display = 'block'; return; }
+
+  await SB.from('users').insert({ id: data.user.id, email, full_name: name, role, country });
+  await loadUserData(data.user.id);
+  showScreen('home');
+  updateTopBar();
+  loadHome();
+  toast('¡Cuenta creada! Bienvenido a InnovaAFRIC 🎉');
+}
+
+async function loadUserData(userId) {
+  const { data: user } = await SB.from('users').select('*').eq('id', userId).single();
+  const { data: wallet } = await SB.from('wallets').select('*').eq('user_id', userId).single();
+  USER = user;
+  WALLET = wallet || { eur: 0, xaf: 0, usd: 0, points: 0 };
+}
+
+function logout() {
+  if (!DEMO_MODE && SB) SB.auth.signOut();
+  USER = null; WALLET = null;
+  localStorage.removeItem('ia_sb_url');
+  localStorage.removeItem('ia_sb_key');
+  showScreen('login');
+  toast('Sesión cerrada');
+}
+
+// ══════════════════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════════════════
+const NAV_MAP = { home:'nav-home', send:'nav-send', shop:'nav-shop', history:'nav-history', profile:'nav-profile' };
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  const sc = document.getElementById('sc-' + id);
+  if (sc) sc.classList.add('on');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('on'));
+  if (NAV_MAP[id]) document.getElementById(NAV_MAP[id])?.classList.add('on');
+
+  if (id === 'history') loadHistory();
+  if (id === 'shop') loadShop();
+  if (id === 'profile') loadProfile();
+  window.scrollTo(0, 0);
+}
+
+function updateTopBar() {
+  if (!USER) return;
+  const first = USER.full_name?.split(' ')[0] || 'Usuario';
+  document.getElementById('top-name').textContent = 'Hola, ' + first;
+  document.getElementById('top-avatar').textContent = first[0]?.toUpperCase() || '?';
+}
+
+// ══════════════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════════════
+async function loadHome() {
+  if (WALLET) {
+    document.getElementById('bal-eur').textContent = '€ ' + Number(WALLET.eur).toFixed(2);
+    document.getElementById('bal-xaf').textContent = Math.round(WALLET.xaf).toLocaleString('es') + ' XAF · $' + Number(WALLET.usd).toFixed(0);
+  }
+
+  const txns = DEMO_MODE ? getDemoTxns(3) : await fetchTxns(3);
+  renderTxns('home-txns', txns);
+}
+
+function getDemoTxns(limit) {
+  return [
+    { type:'send', amount:200, currency:'EUR', status:'completed', created_at: new Date(Date.now()-7200000).toISOString(), description:'Envío a Carlos' },
+    { type:'qr_pay', amount:8500, currency:'XAF', status:'completed', created_at: new Date(Date.now()-86400000).toISOString(), description:'Pago QR Rest. La Bahía' },
+    { type:'receive', amount:150, currency:'EUR', status:'completed', created_at: new Date(Date.now()-172800000).toISOString(), description:'Recibido de Fatou' },
+  ].slice(0, limit);
+}
+
+async function fetchTxns(limit) {
+  if (!SB || !USER) return [];
+  const { data } = await SB.from('transactions').select('*')
+    .or(`user_id.eq.${USER.id},recipient_id.eq.${USER.id}`)
+    .order('created_at', { ascending: false }).limit(limit);
+  return data || [];
+}
+
+function renderTxns(containerId, txns) {
+  const c = document.getElementById(containerId);
+  if (!txns?.length) { c.innerHTML = '<div class="loading">Sin transacciones aún</div>'; return; }
+  const TXN_ICONS = { send:'💸', receive:'💰', p2p:'↔️', qr_pay:'📱', cashout:'🏦', refund:'↩️' };
+  c.innerHTML = txns.map(t => {
+    const isOut = ['send','cashout','qr_pay','p2p'].includes(t.type) && t.user_id === USER?.id;
+    const sign = isOut ? '-' : '+';
+    const color = isOut ? '#F87171' : '#81C784';
+    const amt = Number(t.amount).toLocaleString('es') + ' ' + t.currency;
+    const d = new Date(t.created_at);
+    const dateStr = d.toLocaleDateString('es', { day:'numeric', month:'short' });
+    return `<div class="txn">
+      <div class="txn-ic">${TXN_ICONS[t.type] || '💳'}</div>
+      <div class="txn-info"><div class="txn-name">${t.description || t.type}</div><div class="txn-date">${dateStr}</div></div>
+      <div class="txn-amt" style="color:${color}">${sign}${amt}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// XENDERMONEY — ACCIONES
+// ══════════════════════════════════════════════════════
+function calcSend() {
+  const amt = parseFloat(document.getElementById('send-amt').value) || 0;
+  const curr = document.getElementById('send-curr').value;
+  const rate = RATES[curr + '-XAF'] || 1;
+  const fee = amt * 0.02;
+  const recv = Math.round((amt - fee) * rate);
+  const saved = (amt * 0.10 - fee).toFixed(0);
+  document.getElementById('send-result').textContent = recv.toLocaleString('es') + ' XAF';
+  document.getElementById('send-fee').textContent = `Comisión: ${curr === 'EUR' ? '€' : '$'}${fee.toFixed(2)} · Ahorro vs WU: ${curr === 'EUR' ? '€' : '$'}${saved}`;
+}
+
+async function doSend() {
+  const amt = parseFloat(document.getElementById('send-amt').value);
+  const curr = document.getElementById('send-curr').value;
+  const phone = document.getElementById('send-phone').value;
+  const desc = document.getElementById('send-desc').value || 'Envío';
+
+  if (!amt || amt <= 0) { toast('Introduce un importe válido'); return; }
+  if (WALLET && Number(WALLET[curr.toLowerCase()]) < amt) { toast('Saldo insuficiente'); return; }
+
+  if (!DEMO_MODE && SB && USER) {
+    const fee = amt * 0.02;
+    const rate = RATES[curr + '-XAF'] || 1;
+    await SB.from('transactions').insert({
+      user_id: USER.id, type: 'send', amount: amt, currency: curr,
+      amount_recv: Math.round((amt - fee) * rate), currency_recv: 'XAF',
+      fee, rate, status: 'completed', recipient_phone: phone, description: desc
+    });
+    // Actualizar wallet
+    const field = curr.toLowerCase();
+    await SB.from('wallets').update({ [field]: Number(WALLET[field]) - amt }).eq('user_id', USER.id);
+    WALLET[field] = Number(WALLET[field]) - amt;
+  } else {
+    const field = curr.toLowerCase();
+    if (WALLET) WALLET[field] = Math.max(0, Number(WALLET[field]) - amt);
+  }
+
+  const recv = Math.round((amt - amt * 0.02) * (RATES[curr + '-XAF'] || 1));
+  showSuccess('¡Enviado!', `${phone || 'Destinatario'} recibirá ${recv.toLocaleString('es')} XAF en minutos.`, 'home');
+}
+
+async function doP2P() {
+  const email = document.getElementById('p2p-email').value;
+  const amt = parseFloat(document.getElementById('p2p-amt').value);
+  if (!email || !amt) { toast('Rellena todos los campos'); return; }
+
+  if (!DEMO_MODE && SB && USER) {
+    const { data: recipient } = await SB.from('users').select('id').eq('email', email).single();
+    if (!recipient) { toast('Usuario no encontrado'); return; }
+    await SB.from('transactions').insert({
+      user_id: USER.id, type: 'p2p', amount: amt, currency: 'XAF',
+      amount_recv: amt, currency_recv: 'XAF', fee: 0, rate: 1,
+      status: 'completed', recipient_id: recipient.id, description: 'P2P'
+    });
+  }
+  showSuccess('¡Transferido!', `${amt.toLocaleString('es')} XAF enviados a ${email}. Sin comisión.`, 'home');
+}
+
+async function doCashout() {
+  const amt = parseFloat(document.getElementById('co-amt').value);
+  const method = document.getElementById('co-method').value;
+  if (!amt) { toast('Introduce un importe'); return; }
+  const methodNames = { circular:'Circular Autorizada', mtn:'MTN Mobile Money', orange:'Orange Money', bank:'Banco IBAN' };
+  const times = { circular:'~15 minutos', mtn:'~2 horas', orange:'~2 horas', bank:'24-48 horas' };
+
+  if (!DEMO_MODE && SB && USER) {
+    await SB.from('transactions').insert({
+      user_id: USER.id, type: 'cashout', amount: amt, currency: 'EUR',
+      fee: amt * 0.015, status: 'processing', description: `Reintegro: ${methodNames[method]}`
+    });
+  }
+  showSuccess('¡Solicitado!', `Reintegro de €${amt} via ${methodNames[method]}. Tiempo: ${times[method]}.`, 'home');
+}
+
+async function doQR() {
+  const code = document.getElementById('qr-code').value || 'COM-DEMO';
+  const amt = parseFloat(document.getElementById('qr-amt').value);
+  if (!amt) { toast('Introduce el importe'); return; }
+
+  if (!DEMO_MODE && SB && USER) {
+    const { data: merchant } = await SB.from('merchants').select('*').eq('qr_code', code).single();
+    if (!merchant) { toast('Comercio no encontrado'); return; }
+    await SB.from('qr_payments').insert({ merchant_id: merchant.id, user_id: USER.id, amount: amt, currency: 'XAF' });
+  }
+  showSuccess('¡Pagado!', `${amt.toLocaleString('es')} XAF al comercio ${code}.`, 'home');
+}
+
+function showSuccess(title, sub, backTo) {
+  const sc = document.getElementById('sc-' + (backTo || 'home'));
+  if (!sc) return;
+  const orig = sc.innerHTML;
+  sc.innerHTML = `<div class="success-screen">
+    <div class="success-ic">✅</div>
+    <div class="success-title">${title}</div>
+    <div class="success-sub">${sub}</div>
+    <button class="btn-main" onclick="restoreAndGo('${backTo}', \`${orig.replace(/`/g,"'")}\`)">Volver</button>
+  </div>`;
+  showScreen(backTo || 'home');
+  document.getElementById('bal-eur') && (document.getElementById('bal-eur').textContent = '€ ' + Number(WALLET?.eur || 0).toFixed(2));
+}
+
+function restoreAndGo(id, html) {
+  const sc = document.getElementById('sc-' + id);
+  if (sc) sc.innerHTML = html;
+  showScreen(id);
+  loadHome();
+}
+
+// ══════════════════════════════════════════════════════
+// HISTORIAL
+// ══════════════════════════════════════════════════════
+async function loadHistory() {
+  const txns = DEMO_MODE ? getDemoTxns(10) : await fetchTxns(20);
+  renderTxns('all-txns', txns);
+}
+
+// ══════════════════════════════════════════════════════
+// XENDERSHOP
+// ══════════════════════════════════════════════════════
+const DEMO_PRODUCTS = [
+  { id:'p1', name:'Auriculares Bluetooth', price_eur:24.99, category:'electronica', emoji:'📱', is_ce_certified:true },
+  { id:'p2', name:'Smartwatch M8', price_eur:42.00, category:'electronica', emoji:'⌚', is_ce_certified:true },
+  { id:'p3', name:'Cámara Digital 4K', price_eur:89.00, category:'electronica', emoji:'📷', is_ce_certified:true },
+  { id:'p4', name:'Set Skincare Premium', price_eur:18.90, category:'belleza', emoji:'💄', is_ce_certified:true },
+  { id:'p5', name:'Zapatillas Sport', price_eur:35.50, category:'moda', emoji:'👟', is_ce_certified:false },
+  { id:'p6', name:'Lámpara Solar LED', price_eur:19.99, category:'hogar', emoji:'🏮', is_ce_certified:true },
+];
+
+async function loadShop() {
+  const prods = DEMO_MODE ? DEMO_PRODUCTS : await fetchProducts();
+  renderProducts(prods);
+}
+
+async function fetchProducts() {
+  if (!SB) return DEMO_PRODUCTS;
+  const { data } = await SB.from('products').select('*').eq('is_active', true).limit(12);
+  return data?.length ? data : DEMO_PRODUCTS;
+}
+
+function renderProducts(products) {
+  document.getElementById('shop-grid').innerHTML = products.map(p => `
+    <div class="prod-card" onclick="openProduct('${p.id}','${p.emoji||'📦'}','${p.name}','€${p.price_eur}','Entrega 3-5 días · Calidad CE garantizada')">
+      <div class="prod-img">${p.emoji || '📦'}</div>
+      <div class="prod-body">
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-price">€${Number(p.price_eur).toFixed(2)}</div>
+        ${p.is_ce_certified ? '<span class="prod-ce">CE ✓</span>' : ''}
+      </div>
+    </div>`).join('');
+}
+
+let CURRENT_PRODUCT = null;
+function openProduct(id, emoji, name, price, desc) {
+  CURRENT_PRODUCT = { id, emoji, name, price };
+  document.getElementById('modal-img').textContent = emoji;
+  document.getElementById('modal-name').textContent = name;
+  document.getElementById('modal-price').textContent = price + ' · 3-5 días de entrega';
+  document.getElementById('modal-desc').textContent = desc;
+  document.getElementById('prod-modal').classList.add('open');
+}
+
+function addToCart() {
+  document.getElementById('prod-modal').classList.remove('open');
+  toast('✓ Añadido al carrito — ' + (CURRENT_PRODUCT?.name || 'Producto'));
+}
+
+// ══════════════════════════════════════════════════════
+// PERFIL
+// ══════════════════════════════════════════════════════
+function loadProfile() {
+  if (!USER) return;
+  document.getElementById('prof-avatar-big').textContent = getRoleEmoji(USER.role);
+  document.getElementById('prof-name').textContent = USER.full_name || 'Usuario';
+  document.getElementById('prof-email').textContent = USER.email || '';
+  const roleTags = { cliente:'👤 Cliente', circular:'🏢 Circular Autorizada', rider:'🛵 Rider', proveedor:'🏭 Proveedor', admin:'📊 Admin' };
+  document.getElementById('prof-role-badge').innerHTML = `<span class="chip chip-cyan">${roleTags[USER.role] || USER.role}</span>`;
+}
+
+function getRoleEmoji(role) {
+  const m = { cliente:'👩🏾', circular:'🏢', rider:'🛵', proveedor:'🏭', admin:'📊' };
+  return m[role] || '👤';
+}
+
+// ══════════════════════════════════════════════════════
+// UTILIDADES
+// ══════════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Cargar config guardada al inicio
+(async function init() {
+  const url = localStorage.getItem('ia_sb_url');
+  const key = localStorage.getItem('ia_sb_key');
+  if (url && key) {
+    document.getElementById('sb-url').value = url;
+    document.getElementById('sb-key').value = key;
+  }
+})();
+
+// Init converter
+calcSend();
+</script>
+</body>
+</html>
