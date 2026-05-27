@@ -130,9 +130,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- ══ APP PRINCIPAL ══ -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-logo">InnovaAFRIC</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button id="back-btn" onclick="goBack()" style="display:none;background:rgba(255,255,255,.08);border:none;border-radius:8px;width:30px;height:30px;font-size:16px;cursor:pointer;color:#fff;flex-shrink:0">←</button>
+      <div class="topbar-logo" id="topbar-logo">InnovaAFRIC</div>
+    </div>
     <div class="topbar-user">
-      <span style="font-size:12px;color:rgba(255,255,255,.45)" id="top-name">Cargando...</span>
+      <button onclick="cycleLanguage()" style="background:rgba(0,191,255,.1);border:1px solid rgba(0,191,255,.3);border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;color:#00BFFF;cursor:pointer;font-family:inherit" id="lang-btn">ES</button>
       <div class="avatar" id="top-avatar" onclick="showScreen('profile')">?</div>
     </div>
   </div>
@@ -145,10 +148,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="bal-sub" id="bal-xaf">0 XAF</div>
     </div>
     <div class="action-grid">
-      <div class="action" onclick="showScreen('send')"><div class="ic">💸</div><div class="lbl">Enviar</div></div>
-      <div class="action" onclick="showScreen('p2p')"><div class="ic">↔️</div><div class="lbl">P2P</div></div>
-      <div class="action" onclick="showScreen('cashout')"><div class="ic">🏦</div><div class="lbl">Retirar</div></div>
-      <div class="action" onclick="showScreen('qr')"><div class="ic">📱</div><div class="lbl">QR Pay</div></div>
+      <div class="action" onclick="showScreen('send')"><div class="ic">💸</div><div class="lbl" data-k="act-send">Enviar</div></div>
+      <div class="action" onclick="showScreen('receive')"><div class="ic">💰</div><div class="lbl" data-k="act-receive">Recibir</div></div>
+      <div class="action" onclick="showScreen('cashout')"><div class="ic">🏦</div><div class="lbl" data-k="act-cashout">Retirar</div></div>
+      <div class="action" onclick="showScreen('converter')"><div class="ic">💱</div><div class="lbl" data-k="act-converter">Cambio</div></div>
     </div>
     <div class="section-title">
       <span>Actividad reciente</span>
@@ -394,11 +397,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
+  <!-- RECIBIR DINERO -->
+  <div class="screen" id="sc-receive">
+    <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px" data-k="receive-title">💰 Recibir dinero</div>
+    
+    <!-- Mi código QR personal -->
+    <div class="form-card" style="text-align:center;margin-bottom:14px">
+      <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:14px" data-k="receive-qr-label">Tu código personal para recibir pagos</div>
+      <div style="background:#fff;border-radius:12px;padding:16px;display:inline-block;margin-bottom:12px">
+        <div id="qr-display" style="width:120px;height:120px;background:linear-gradient(135deg,#0A1628,#0F2B4C);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#00BFFF;font-weight:700;text-align:center;padding:8px" id="my-qr-code">
+          QR
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:4px" id="my-receive-code">IA-XXXXX</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4)" data-k="receive-share">Comparte este código para recibir pagos</div>
+      <button onclick="shareReceiveCode()" style="margin-top:12px;background:rgba(0,191,255,.1);border:1px solid rgba(0,191,255,.3);border-radius:10px;padding:8px 20px;font-size:13px;color:#00BFFF;cursor:pointer;font-family:inherit;width:100%">📤 Compartir código</button>
+    </div>
+
+    <!-- Pagos recibidos recientes -->
+    <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:12px" data-k="receive-recent">Pagos recibidos</div>
+    <div id="received-txns">
+      <div style="text-align:center;padding:32px;color:rgba(255,255,255,.3);font-size:13px" data-k="receive-empty">Sin pagos recibidos aún</div>
+    </div>
+
+    <!-- Solicitar pago -->
+    <div class="form-card" style="margin-top:14px">
+      <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:14px" data-k="receive-request">Solicitar pago</div>
+      <input class="inp" type="number" id="req-amount" placeholder="0.00">
+      <select class="sel" id="req-currency">
+        <option value="EUR">EUR €</option>
+        <option value="XAF">XAF</option>
+        <option value="USD">USD $</option>
+      </select>
+      <input class="inp" id="req-concept" placeholder="Concepto (opcional)">
+      <button class="btn-main" onclick="createPaymentRequest()" data-k="receive-btn">Generar solicitud de pago →</button>
+    </div>
+  </div>
+
   <!-- HISTORIAL -->
   <div class="screen" id="sc-history">
-    <div class="section-title"><span>Historial de transacciones</span></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px">
+      <button onclick="filterHistory('all',this)" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(0,191,255,.5);background:rgba(0,191,255,.1);color:#00BFFF;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" id="hf-all" data-k="hist-all">Todos</button>
+      <button onclick="filterHistory('send',this)" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" id="hf-send" data-k="hist-send">Enviados</button>
+      <button onclick="filterHistory('receive',this)" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" id="hf-recv" data-k="hist-recv">Recibidos</button>
+      <button onclick="filterHistory('cashout',this)" style="padding:7px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit" id="hf-cashout" data-k="hist-cashout">Reintegros</button>
+    </div>
     <div class="txn-list" id="all-txns">
-      <div class="loading"><div class="loader"></div>Cargando...</div>
+      <div class="loading"><div class="loader"></div></div>
     </div>
   </div>
 
@@ -412,24 +457,86 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <!-- PERFIL -->
   <div class="screen" id="sc-profile">
-    <div style="text-align:center;padding:20px 0 24px">
-      <div style="font-size:56px;margin-bottom:12px" id="prof-avatar-big">👤</div>
+    <!-- Header perfil -->
+    <div style="text-align:center;padding:20px 0 20px">
+      <div style="position:relative;display:inline-block;margin-bottom:12px">
+        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00BFFF,#00897B);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#000;margin:0 auto" id="prof-avatar-big">?</div>
+      </div>
       <div style="font-size:20px;font-weight:700;color:#fff" id="prof-name">-</div>
       <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px" id="prof-email">-</div>
-      <div style="margin-top:10px" id="prof-role-badge"></div>
+      <div style="margin-top:8px" id="prof-role-badge"></div>
     </div>
+
+    <!-- KYC Level -->
+    <div style="background:rgba(244,165,28,.08);border:1px solid rgba(244,165,28,.2);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:28px">🪪</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:#fff" data-k="kyc-level">Nivel KYC: Básico</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px" data-k="kyc-limit">Límite: €200 por envío</div>
+      </div>
+      <button onclick="showScreen('kyc')" style="background:rgba(244,165,28,.15);border:1px solid rgba(244,165,28,.3);border-radius:8px;padding:6px 12px;font-size:11px;color:#F4A51C;cursor:pointer;font-family:inherit" data-k="kyc-upgrade">Subir nivel</button>
+    </div>
+
+    <!-- Idioma -->
+    <div class="form-card" style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:14px" data-k="prof-language">Idioma</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="setLang('es')" id="lang-es" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid rgba(0,191,255,.5);background:rgba(0,191,255,.1);color:#00BFFF;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🇪🇸 ES</button>
+        <button onclick="setLang('en')" id="lang-en" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🇬🇧 EN</button>
+        <button onclick="setLang('fr')" id="lang-fr" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🇫🇷 FR</button>
+      </div>
+    </div>
+
+    <!-- Menú -->
     <div class="form-card">
-      <div class="section-title" style="margin-bottom:12px"><span>Mi cuenta</span></div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div onclick="showScreen('history')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)">
-          <span style="font-size:20px">💳</span><span style="font-size:13px;color:#fff">Mi wallet y transacciones</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
+      <div style="display:flex;flex-direction:column">
+        <div onclick="showScreen('receive')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">💰</span><span style="font-size:13px;color:#fff" data-k="menu-receive">Recibir dinero</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
         </div>
-        <div onclick="showScreen('shop')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+        <div onclick="showScreen('history')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">📊</span><span style="font-size:13px;color:#fff" data-k="menu-history">Historial completo</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
+        </div>
+        <div onclick="showScreen('converter')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">💱</span><span style="font-size:13px;color:#fff" data-k="menu-converter">Conversor de divisas</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
+        </div>
+        <div onclick="showScreen('shop')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)">
           <span style="font-size:20px">🛒</span><span style="font-size:13px;color:#fff">XenderShop</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
         </div>
-        <div onclick="logout()" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0">
-          <span style="font-size:20px">🚪</span><span style="font-size:13px;color:#F87171">Cerrar sesión</span>
+        <div onclick="showScreen('kyc')" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:20px">🪪</span><span style="font-size:13px;color:#fff" data-k="menu-kyc">Verificación KYC</span><span style="margin-left:auto;color:rgba(255,255,255,.3)">→</span>
         </div>
+        <div onclick="logout()" style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 0">
+          <span style="font-size:20px">🚪</span><span style="font-size:13px;color:#F87171" data-k="menu-logout">Cerrar sesión</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KYC SCREEN -->
+  <div class="screen" id="sc-kyc">
+    <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px" data-k="kyc-title">🪪 Verificación KYC</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+      <div style="background:rgba(0,191,255,.08);border:1.5px solid rgba(0,191,255,.4);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:14px;font-weight:700;color:#00BFFF" data-k="kyc-basic">Nivel Básico</span>
+          <span style="font-size:11px;background:rgba(0,191,255,.2);color:#00BFFF;padding:2px 10px;border-radius:6px" data-k="kyc-active">Activo</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5)" data-k="kyc-basic-desc">Hasta €200 por envío · Solo email verificado</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:14px;font-weight:700;color:rgba(255,255,255,.7)" data-k="kyc-standard">Nivel Estándar</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.4)" data-k="kyc-unlock">Desbloquear</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4)" data-k="kyc-standard-desc">Hasta €2,000 por envío · DNI/Pasaporte</div>
+        <div class="inp" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.03);cursor:pointer;text-align:center" onclick="toast('Sube una foto de tu documento de identidad')" data-k="kyc-upload">📄 Subir documento de identidad</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:14px;font-weight:700;color:rgba(244,165,28,.7)" data-k="kyc-premium">Nivel Premium</span>
+          <span style="font-size:11px;color:rgba(255,255,255,.4)" data-k="kyc-unlimited">Sin límite</span>
+        </div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4)" data-k="kyc-premium-desc">Envíos ilimitados · Verificación completa</div>
       </div>
     </div>
   </div>
@@ -905,23 +1012,74 @@ async function fetchTxns(limit) {
   return data || [];
 }
 
+const STATUS_LABELS = {
+  completed: {es:'Completado',en:'Completed',fr:'Complété'},
+  pending: {es:'Pendiente',en:'Pending',fr:'En attente'},
+  processing: {es:'Procesando',en:'Processing',fr:'Traitement'},
+  failed: {es:'Fallido',en:'Failed',fr:'Échoué'}
+};
+
 function renderTxns(containerId, txns) {
   const c = document.getElementById(containerId);
-  if (!txns?.length) { c.innerHTML = '<div class="loading">Sin transacciones aún</div>'; return; }
+  if (!c) return;
+  if (!txns?.length) {
+    c.innerHTML = '<div class="loading">' + T_UI('Sin transacciones aún','No transactions yet','Aucune transaction') + '</div>';
+    return;
+  }
   const TXN_ICONS = { send:'💸', receive:'💰', p2p:'↔️', qr_pay:'📱', cashout:'🏦', refund:'↩️' };
+  const TYPE_LABELS = {
+    send: {es:'Envío',en:'Send',fr:'Envoi'},
+    receive: {es:'Recibido',en:'Received',fr:'Reçu'},
+    p2p: {es:'P2P',en:'P2P',fr:'P2P'},
+    qr_pay: {es:'Pago QR',en:'QR Payment',fr:'Paiement QR'},
+    cashout: {es:'Reintegro',en:'Withdrawal',fr:'Retrait'},
+    refund: {es:'Reembolso',en:'Refund',fr:'Remboursement'}
+  };
   c.innerHTML = txns.map(t => {
-    const isOut = ['send','cashout','qr_pay','p2p'].includes(t.type) && t.user_id === USER?.id;
+    const isOut = ['send','cashout','qr_pay'].includes(t.type) && t.user_id === USER?.id;
     const sign = isOut ? '-' : '+';
     const color = isOut ? '#F87171' : '#81C784';
     const amt = Number(t.amount).toLocaleString('es') + ' ' + t.currency;
     const d = new Date(t.created_at);
-    const dateStr = d.toLocaleDateString('es', { day:'numeric', month:'short' });
-    return `<div class="txn">
+    const dateStr = d.toLocaleDateString('es', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+    const typeLbl = (TYPE_LABELS[t.type]||{})[lang] || t.type;
+    const statusLbl = (STATUS_LABELS[t.status]||{})[lang] || t.status || '';
+    const statusColor = t.status === 'completed' ? '#81C784' : t.status === 'failed' ? '#F87171' : '#F4A51C';
+    const ref = t.ref_code ? '<div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:2px;font-family:monospace">' + t.ref_code.substring(0,16) + '</div>' : '';
+    return `<div class="txn" style="margin-bottom:8px;cursor:pointer" onclick="showTxnDetail(this,'${t.type}','${amt}','${dateStr}','${t.description||''}','${t.ref_code||''}','${t.status||''}')">
       <div class="txn-ic">${TXN_ICONS[t.type] || '💳'}</div>
-      <div class="txn-info"><div class="txn-name">${t.description || t.type}</div><div class="txn-date">${dateStr}</div></div>
-      <div class="txn-amt" style="color:${color}">${sign}${amt}</div>
+      <div class="txn-info">
+        <div class="txn-name">${t.description || typeLbl}</div>
+        <div class="txn-date">${dateStr}</div>
+        ${ref}
+      </div>
+      <div style="text-align:right">
+        <div class="txn-amt" style="color:${color}">${sign}${amt}</div>
+        <div style="font-size:9px;color:${statusColor};margin-top:2px">${statusLbl}</div>
+      </div>
     </div>`;
   }).join('');
+}
+
+function showTxnDetail(el, type, amt, date, desc, ref, status) {
+  const TXN_ICONS = { send:'💸', receive:'💰', p2p:'↔️', qr_pay:'📱', cashout:'🏦' };
+  const statusColor = status === 'completed' ? '#81C784' : status === 'failed' ? '#F87171' : '#F4A51C';
+  const html = `<div style="position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999;display:flex;align-items:flex-end;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
+    <div style="background:#0D1B2A;border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:420px;border-top:1px solid rgba(255,255,255,.1)">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:48px;margin-bottom:10px">${TXN_ICONS[type]||'💳'}</div>
+        <div style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px">${amt}</div>
+        <div style="font-size:13px;color:${statusColor};font-weight:600">${status||''}</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:16px">
+        ${desc ? '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">' + T_UI('Concepto','Concept','Concept') + '</span><span style="font-size:12px;color:#fff">' + desc + '</span></div>' : ''}
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">' + T_UI('Fecha','Date','Date') + '</span><span style="font-size:12px;color:#fff">${date}</span></div>
+        ${ref ? '<div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:rgba(255,255,255,.4)">Ref.</span><span style="font-size:11px;color:#00BFFF;font-family:monospace">' + ref + '</span></div>' : ''}
+      </div>
+      <button onclick="this.closest('.fixed, [style*=fixed]').remove()" style="width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">' + T_UI('Cerrar','Close','Fermer') + '</button>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
 }
 
 // ══════════════════════════════════════════════════════
@@ -1241,6 +1399,99 @@ function getRoleEmoji(role) {
 // ══════════════════════════════════════════════════════
 // UTILIDADES
 // ══════════════════════════════════════════════════════
+// ── RECEIVE ─────────────────────────────────────────────
+async function loadReceive() {
+  if (!USER) return;
+  const code = 'IA-' + USER.id.substring(0,6).toUpperCase();
+  const el = document.getElementById('my-receive-code');
+  if (el) el.textContent = code;
+  const qr = document.getElementById('my-qr-code');
+  if (qr) qr.textContent = code;
+
+  if (!DEMO_MODE && SB && USER.id) {
+    const { data } = await SB.from('transactions').select('*').eq('recipient_id', USER.id).order('created_at', {ascending:false}).limit(10);
+    const cont = document.getElementById('received-txns');
+    if (!cont) return;
+    if (!data?.length) {
+      cont.innerHTML = '<div style="text-align:center;padding:32px;color:rgba(255,255,255,.3);font-size:13px">' + T_UI('Sin pagos recibidos aún','No payments received yet','Aucun paiement reçu') + '</div>';
+      return;
+    }
+    const TXN_ICONS = { send:'💸', receive:'💰', p2p:'↔️', qr_pay:'📱', cashout:'🏦' };
+    cont.innerHTML = data.map(t => `
+      <div class="txn" style="margin-bottom:8px">
+        <div class="txn-ic" style="background:rgba(129,199,132,.15)">${TXN_ICONS[t.type]||'💰'}</div>
+        <div class="txn-info"><div class="txn-name">${t.description||T_UI('Pago recibido','Payment received','Paiement reçu')}</div><div class="txn-date">${new Date(t.created_at).toLocaleDateString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div></div>
+        <div class="txn-amt" style="color:#81C784">+${Number(t.amount_recv||t.amount).toLocaleString('es')} ${t.currency_recv||t.currency}</div>
+      </div>`).join('');
+  }
+}
+
+function shareReceiveCode() {
+  const code = document.getElementById('my-receive-code')?.textContent || '';
+  if (navigator.share) {
+    navigator.share({ title: 'InnovaAFRIC', text: T_UI('Envíame dinero con mi código:','Send me money with my code:','Envoyez-moi de l'argent avec mon code:') + ' ' + code });
+  } else {
+    navigator.clipboard?.writeText(code);
+    toast(T_UI('Código copiado','Code copied','Code copié') + ': ' + code);
+  }
+}
+
+function createPaymentRequest() {
+  const amt = document.getElementById('req-amount')?.value;
+  const curr = document.getElementById('req-currency')?.value || 'EUR';
+  const concept = document.getElementById('req-concept')?.value || '';
+  if (!amt) { toast(T_UI('Introduce un importe','Enter an amount','Entrez un montant')); return; }
+  const msg = T_UI('Por favor envíame','Please send me','Veuillez m'envoyer') + ' ' + amt + ' ' + curr + (concept ? ' - ' + concept : '') + '. ' + T_UI('Mi código InnovaAFRIC:','My InnovaAFRIC code:','Mon code InnovaAFRIC:') + ' ' + (document.getElementById('my-receive-code')?.textContent||'');
+  if (navigator.share) navigator.share({ title: 'Solicitud de pago', text: msg });
+  else { navigator.clipboard?.writeText(msg); toast(T_UI('Solicitud copiada','Request copied','Demande copiée')); }
+}
+
+// ── HISTORY FILTER ────────────────────────────────────────
+let ALL_TXNS_DATA = [];
+async function loadHistory() {
+  const txns = DEMO_MODE ? getDemoTxns(10) : await fetchTxns(20);
+  ALL_TXNS_DATA = txns;
+  renderTxns('all-txns', txns);
+}
+
+function filterHistory(type, btn) {
+  document.querySelectorAll('[id^="hf-"]').forEach(b => {
+    b.style.background = 'rgba(255,255,255,.04)';
+    b.style.borderColor = 'rgba(255,255,255,.1)';
+    b.style.color = 'rgba(255,255,255,.5)';
+  });
+  btn.style.background = 'rgba(0,191,255,.1)';
+  btn.style.borderColor = 'rgba(0,191,255,.5)';
+  btn.style.color = '#00BFFF';
+  if (type === 'all') { renderTxns('all-txns', ALL_TXNS_DATA); return; }
+  const filtered = ALL_TXNS_DATA.filter(t => {
+    if (type === 'send') return ['send','cashout','qr_pay'].includes(t.type) && t.user_id === USER?.id;
+    if (type === 'receive') return t.recipient_id === USER?.id || t.type === 'receive';
+    if (type === 'cashout') return t.type === 'cashout';
+    return true;
+  });
+  renderTxns('all-txns', filtered);
+}
+
+// ── PROFILE LANG BUTTONS ──────────────────────────────────
+function updateLangButtons() {
+  ['es','en','fr'].forEach(l => {
+    const btn = document.getElementById('lang-' + l);
+    if (!btn) return;
+    if (l === lang) {
+      btn.style.border = '1.5px solid rgba(0,191,255,.5)';
+      btn.style.background = 'rgba(0,191,255,.1)';
+      btn.style.color = '#00BFFF';
+    } else {
+      btn.style.border = '1.5px solid rgba(255,255,255,.1)';
+      btn.style.background = 'rgba(255,255,255,.04)';
+      btn.style.color = 'rgba(255,255,255,.5)';
+    }
+  });
+}
+
+const _origSetLang = setLang;
+
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
