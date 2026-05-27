@@ -847,26 +847,64 @@ function switchAuthTab(tab) {
 }
 
 async function doLogin() {
-  if (DEMO_MODE) { toast('Modo demo: usa el botón "Probar sin Supabase"'); return; }
-  const email = document.getElementById('login-email').value;
+  if (DEMO_MODE) { startDemo(); return; }
+  const email = document.getElementById('login-email').value.trim();
   const pwd = document.getElementById('login-pwd').value;
   const err = document.getElementById('auth-err');
+  const btn = document.querySelector('#tab-login .btn-main');
   err.style.display = 'none';
 
-  const { data, error } = await SB.auth.signInWithPassword({ email, password: pwd });
-  if (error) { err.textContent = 'Credenciales incorrectas'; err.style.display = 'block'; return; }
+  if (!email || !pwd) { err.textContent = 'Introduce email y contraseña'; err.style.display = 'block'; return; }
 
-  // Cargar rol desde localStorage (guardado al registrarse)
-  const uid = data.user.id;
-  const savedRole = localStorage.getItem('ia_role_' + uid) || 'cliente';
-  const savedName = localStorage.getItem('ia_name_' + uid) || email.split('@')[0];
-  const savedCountry = localStorage.getItem('ia_country_' + uid) || 'GQ';
-  USER = { id: uid, email, full_name: savedName, role: savedRole, country: savedCountry };
-  WALLET = { eur: 0, xaf: 0, usd: 0, points: 0 };
-  showScreen('home');
-  updateTopBar();
-  loadHome();
-  toast('¡Bienvenido de vuelta, ' + savedName.split(' ')[0] + '!');
+  // Show loading state
+  if (btn) { btn.textContent = 'Conectando...'; btn.disabled = true; }
+
+  try {
+    // Connect Supabase if not connected
+    if (!SB) {
+      const mod = await import('https://esm.sh/@supabase/supabase-js@2');
+      SB = mod.createClient(SB_URL, SB_KEY);
+    }
+
+    const { data, error } = await SB.auth.signInWithPassword({ email, password: pwd });
+    if (error) {
+      err.textContent = 'Email o contraseña incorrectos';
+      err.style.display = 'block';
+      if (btn) { btn.textContent = 'Entrar →'; btn.disabled = false; }
+      return;
+    }
+
+    const uid = data.user.id;
+    // Try to get role from Supabase first, fallback to localStorage
+    let role = 'cliente', name = email.split('@')[0], country = 'GQ';
+    try {
+      const { data: u } = await SB.from('users').select('role,full_name,country').eq('id', uid).single();
+      if (u) { role = u.role || role; name = u.full_name || name; country = u.country || country; }
+    } catch(e) {
+      role = localStorage.getItem('ia_role_' + uid) || role;
+      name = localStorage.getItem('ia_name_' + uid) || name;
+    }
+
+    // Save to localStorage
+    localStorage.setItem('ia_role_' + uid, role);
+    localStorage.setItem('ia_name_' + uid, name);
+    localStorage.setItem('ia_country_' + uid, country);
+
+    USER = { id: uid, email, full_name: name, role, country };
+    WALLET = { eur: 0, xaf: 0, usd: 0, points: 0 };
+
+    document.getElementById('setup').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.flexDirection = 'column';
+    showScreen('home');
+    updateTopBar();
+    loadHome();
+    toast('¡Bienvenido, ' + name.split(' ')[0] + '!');
+  } catch(e) {
+    err.textContent = 'Error de conexión: ' + e.message;
+    err.style.display = 'block';
+    if (btn) { btn.textContent = 'Entrar →'; btn.disabled = false; }
+  }
 }
 
 async function doRegister() {
