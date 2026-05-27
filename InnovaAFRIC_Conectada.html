@@ -1184,29 +1184,29 @@ function renderTxns(containerId, txns) {
 function showTxnDetail(el, type, amt, date, desc, ref, status) {
   const TXN_ICONS = { send:'💸', receive:'💰', p2p:'↔️', qr_pay:'📱', cashout:'🏦' };
   const statusColor = status === 'completed' ? '#81C784' : status === 'failed' ? '#F87171' : '#F4A51C';
-  const html = `<div style="position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999;display:flex;align-items:flex-end;justify-content:center;padding:20px" onclick="if(event.target===this)this.remove()">
-    <div style="background:#0D1B2A;border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:420px;border-top:1px solid rgba(255,255,255,.1)">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:48px;margin-bottom:10px">${TXN_ICONS[type]||'💳'}</div>
-        <div style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px">${amt}</div>
-        <div style="font-size:13px;color:${statusColor};font-weight:600">${status||''}</div>
-      </div>
-      <div style="background:rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:16px">
-        ${desc ? '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">' + T_UI('Concepto','Concept','Concept') + '</span><span style="font-size:12px;color:#fff">' + desc + '</span></div>' : ''}
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">' + T_UI('Fecha','Date','Date') + '</span><span style="font-size:12px;color:#fff">${date}</span></div>
-        ${ref ? '<div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:rgba(255,255,255,.4)">Ref.</span><span style="font-size:11px;color:#00BFFF;font-family:monospace">' + ref + '</span></div>' : ''}
-      </div>
-      <button onclick="this.closest('.fixed, [style*=fixed]').remove()" style="width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">' + T_UI('Cerrar','Close','Fermer') + '</button>
-    </div>
-  </div>`;
-  document.body.insertAdjacentHTML('beforeend', html);
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999;display:flex;align-items:flex-end;justify-content:center;padding:20px';
+  overlay.onclick = function(e) { if(e.target===overlay) overlay.remove(); };
+  
+  const descRow = desc ? '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">Concepto</span><span style="font-size:12px;color:#fff">' + desc + '</span></div>' : '';
+  const refRow = ref ? '<div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:rgba(255,255,255,.4)">Ref.</span><span style="font-size:11px;color:#00BFFF;font-family:monospace">' + ref + '</span></div>' : '';
+  
+  overlay.innerHTML = '<div style="background:#0D1B2A;border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:420px;border-top:1px solid rgba(255,255,255,.1)">' +
+    '<div style="text-align:center;margin-bottom:20px">' +
+      '<div style="font-size:48px;margin-bottom:10px">' + (TXN_ICONS[type]||'💳') + '</div>' +
+      '<div style="font-size:24px;font-weight:700;color:#fff;margin-bottom:4px">' + amt + '</div>' +
+      '<div style="font-size:13px;color:' + statusColor + ';font-weight:600">' + (status||'') + '</div>' +
+    '</div>' +
+    '<div style="background:rgba(255,255,255,.04);border-radius:12px;padding:16px;margin-bottom:16px">' +
+      descRow +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">Fecha</span><span style="font-size:12px;color:#fff">' + date + '</span></div>' +
+      refRow +
+    '</div>' +
+    '<button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Cerrar</button>' +
+  '</div>';
+  document.body.appendChild(overlay);
 }
 
-// ══════════════════════════════════════════════════════
-// XENDERMONEY — ACCIONES
-// ══════════════════════════════════════════════════════
-// ── SEND TYPE ──────────────────────────────────────────
-let SEND_TYPE = 'intl';
 function setSendType(type) {
   SEND_TYPE = type;
   const intl = document.getElementById('send-type-intl');
@@ -1545,11 +1545,13 @@ async function loadReceive() {
 
 function shareReceiveCode() {
   const code = document.getElementById('my-receive-code')?.textContent || '';
+  const msgs = {es:'Envíame dinero con mi código:', en:'Send me money with my code:'};
+  const msg = (msgs[lang] || msgs.es) + ' ' + code;
   if (navigator.share) {
-    navigator.share({ title: 'InnovaAFRIC', text: T_UI('Envíame dinero con mi código:','Send me money with my code:','Envoyez-moi de l'argent avec mon code:') + ' ' + code });
+    navigator.share({ title: 'InnovaAFRIC', text: msg });
   } else {
-    navigator.clipboard?.writeText(code);
-    toast(T_UI('Código copiado','Code copied','Code copié') + ': ' + code);
+    if(navigator.clipboard) navigator.clipboard.writeText(code);
+    toast('Codigo copiado: ' + code);
   }
 }
 
