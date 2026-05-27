@@ -115,23 +115,73 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </head>
 <body>
 
-<!-- ══ PANTALLA DE CARGA ══ -->
-<div id="setup" style="text-align:center;padding:60px 24px">
-  <div class="setup-logo">InnovaAFRIC</div>
-  <div class="setup-sub">We Simplify Life</div>
-  <div style="margin-top:40px" id="setup-loading">
-    <div style="width:40px;height:40px;border:3px solid rgba(0,191,255,.3);border-top-color:#00BFFF;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px"></div>
-    <div style="font-size:13px;color:rgba(255,255,255,.4)">Conectando...</div>
+<!-- ══ PANTALLA DE LOGIN ══ -->
+<div id="setup" style="max-width:420px;width:100%;margin:20px auto;padding:32px 24px">
+  <div style="text-align:center;margin-bottom:32px">
+    <div class="setup-logo">InnovaAFRIC</div>
+    <div class="setup-sub">We Simplify Life</div>
   </div>
-  <div id="setup-err" class="err" style="max-width:360px;margin:20px auto 0"></div>
-  <button class="btn-demo" onclick="startDemo()" style="max-width:300px;margin:20px auto 0;display:none;font-family:inherit" id="demo-btn">⚡ Entrar en modo demo</button>
-  <div style="margin-top:12px;display:none" id="setup-manual">
-    <button onclick="document.getElementById('setup-form').style.display='block';this.parentElement.style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;font-family:inherit">Configurar manualmente</button>
+  <div style="background:rgba(255,255,255,.05);border:1px solid rgba(0,191,255,.2);border-radius:16px;padding:24px">
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button id="tab-login-btn" onclick="switchTab('login')" style="flex:1;padding:10px;border-radius:10px;background:#00BFFF;color:#0A1628;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Entrar</button>
+      <button id="tab-reg-btn" onclick="switchTab('register')" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="tab-login">
+      <input class="inp" type="email" id="login-email" placeholder="Email">
+      <input class="inp" type="password" id="login-pwd" placeholder="Contraseña">
+      <button class="btn-main" onclick="doLogin()">Entrar →</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="tab-register" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <input class="inp" id="reg-name" placeholder="Nombre" style="margin:0 0 8px">
+        <input class="inp" id="reg-surname" placeholder="Apellidos" style="margin:0 0 8px">
+      </div>
+      <input class="inp" type="email" id="reg-email" placeholder="Email">
+      <input class="inp" type="password" id="reg-pwd" placeholder="Contraseña (mín. 8 caracteres)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <select class="sel" id="reg-country" onchange="onCountryChange()" style="margin:0">
+          <option value="GQ" data-code="+240" data-currency="XAF">🇬🇶 Guinea Ecuatorial</option>
+          <option value="CM" data-code="+237" data-currency="XAF">🇨🇲 Camerún</option>
+          <option value="GA" data-code="+241" data-currency="XAF">🇬🇦 Gabón</option>
+          <option value="SN" data-code="+221" data-currency="XOF">🇸🇳 Senegal</option>
+          <option value="CI" data-code="+225" data-currency="XOF">🇨🇮 Costa de Marfil</option>
+          <option value="ES" data-code="+34" data-currency="EUR">🇪🇸 España</option>
+        </select>
+        <select class="sel" id="reg-city" style="margin:0">
+          <option>Malabo</option><option>Bata</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:70px 1fr;gap:8px;margin-bottom:8px">
+        <input class="inp" id="reg-code" value="+240" readonly style="margin:0;text-align:center;font-weight:700;color:#00BFFF">
+        <input class="inp" type="tel" id="reg-phone" placeholder="Teléfono" style="margin:0">
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Elige tu rol</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+        <div class="role-opt" onclick="selRole('cliente',this)" style="border:1.5px solid rgba(0,191,255,.5);background:rgba(0,191,255,.1);border-radius:10px;padding:10px;text-align:center;cursor:pointer">
+          <div style="font-size:20px">👤</div><div style="font-size:11px;font-weight:600;color:#00BFFF">Cliente</div>
+        </div>
+        <div class="role-opt" onclick="selRole('circular',this)" style="border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:10px;padding:10px;text-align:center;cursor:pointer">
+          <div style="font-size:20px">🏢</div><div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.7)">Circular</div>
+        </div>
+        <div class="role-opt" onclick="selRole('rider',this)" style="border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:10px;padding:10px;text-align:center;cursor:pointer">
+          <div style="font-size:20px">🛵</div><div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.7)">Rider</div>
+        </div>
+        <div class="role-opt" onclick="selRole('proveedor',this)" style="border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:10px;padding:10px;text-align:center;cursor:pointer">
+          <div style="font-size:20px">🏭</div><div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.7)">Proveedor</div>
+        </div>
+      </div>
+      <input type="hidden" id="reg-role" value="cliente">
+      <button class="btn-main" onclick="doRegister()">Crear cuenta →</button>
+    </div>
+
+    <div id="auth-err" class="err" style="display:none;margin-top:10px"></div>
   </div>
-  <div id="setup-form" style="display:none;max-width:360px;margin:20px auto 0">
-    <input type="url" class="inp" id="sb-url-manual" placeholder="https://xxxx.supabase.co" style="margin-bottom:8px">
-    <input type="text" class="inp" id="sb-key-manual" placeholder="sb_publishable_...">
-    <button class="btn-main" style="margin-top:8px" onclick="connectManual()">Conectar →</button>
+  <div style="text-align:center;margin-top:16px">
+    <button onclick="startDemo()" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 24px;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer;font-family:inherit">⚡ Probar sin cuenta (modo demo)</button>
   </div>
 </div>
 
@@ -718,6 +768,8 @@ function startApp(loggedIn = true) {
     updateTopBar();
     loadHome();
   } else {
+    // Keep login screen visible - it's inside #setup which is now hidden
+    // Show the app with login screen
     showScreen('login');
   }
 }
@@ -749,6 +801,28 @@ function onCountryChange() {
   const cities = CITIES[sel.value] || ['Ciudad'];
   const cityEl = document.getElementById('reg-city');
   if(cityEl) cityEl.innerHTML = cities.map(c=>`<option>${c}</option>`).join('');
+}
+
+function switchTab(tab) {
+  const loginDiv = document.getElementById('tab-login');
+  const regDiv = document.getElementById('tab-register');
+  const loginBtn = document.getElementById('tab-login-btn');
+  const regBtn = document.getElementById('tab-reg-btn');
+  if (tab === 'login') {
+    loginDiv.style.display = 'block';
+    regDiv.style.display = 'none';
+    loginBtn.style.background = '#00BFFF';
+    loginBtn.style.color = '#0A1628';
+    regBtn.style.background = 'rgba(255,255,255,.07)';
+    regBtn.style.color = 'rgba(255,255,255,.5)';
+  } else {
+    loginDiv.style.display = 'none';
+    regDiv.style.display = 'block';
+    regBtn.style.background = '#00BFFF';
+    regBtn.style.color = '#0A1628';
+    loginBtn.style.background = 'rgba(255,255,255,.07)';
+    loginBtn.style.color = 'rgba(255,255,255,.5)';
+  }
 }
 
 function selRole(role, el) {
@@ -1504,24 +1578,16 @@ function toast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// AUTO-CONECTAR con las claves integradas
+// CONFIGURACIÓN SUPABASE
 const SB_URL = 'https://spnfvmvrlexyiljwyola.supabase.co';
 const SB_KEY = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
 
 (async function init() {
-  // Mostrar demo tras 10 segundos
-  const demoTimeout = setTimeout(() => {
-    const d = document.getElementById('demo-btn');
-    if (d) d.style.display = 'block';
-    const m = document.getElementById('setup-manual');
-    if (m) m.style.display = 'block';
-  }, 10000);
-
+  // Conectar en background - mostrar login inmediatamente
   try {
     const mod = await import('https://esm.sh/@supabase/supabase-js@2');
     SB = mod.createClient(SB_URL, SB_KEY);
-    clearTimeout(demoTimeout);
-
+    
     const { data: { session } } = await SB.auth.getSession();
     if (session) {
       const uid = session.user.id;
@@ -1530,16 +1596,13 @@ const SB_KEY = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
       const savedCountry = localStorage.getItem('ia_country_' + uid) || 'GQ';
       USER = { id: uid, email: session.user.email, full_name: savedName, role: savedRole, country: savedCountry };
       WALLET = { eur: 0, xaf: 0, usd: 0, points: 0 };
+      document.getElementById('setup').style.display = 'none';
       startApp(true);
-    } else {
-      startApp(false);
     }
+    // If no session, login screen is already showing - do nothing
   } catch(e) {
-    clearTimeout(demoTimeout);
-    const d = document.getElementById('demo-btn');
-    if (d) d.style.display = 'block';
-    const loading = document.getElementById('setup-loading');
-    if (loading) loading.innerHTML = '<div style="font-size:13px;color:#F87171;margin-top:10px">Sin conexión — usa modo demo</div>';
+    console.log('Supabase error:', e.message);
+    // Login screen is showing - user can still login manually
   }
 })();
 
