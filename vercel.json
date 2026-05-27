@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "routes": [
     { "src": "/", "dest": "/InnovaAFRIC_Conectada.html" },
     { "src": "/admin", "dest": "/InnovaAFRIC_Admin.html" }
