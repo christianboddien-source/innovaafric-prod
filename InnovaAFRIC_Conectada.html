@@ -1202,7 +1202,7 @@ function showTxnDetail(el, type, amt, date, desc, ref, status) {
       '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:12px;color:rgba(255,255,255,.4)">Fecha</span><span style="font-size:12px;color:#fff">' + date + '</span></div>' +
       refRow +
     '</div>' +
-    '<button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Cerrar</button>' +
+    '<button onclick="document.body.lastChild.remove()" style="width:100%;background:#00BFFF;color:#0A1628;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Cerrar</button>' +
   '</div>';
   document.body.appendChild(overlay);
 }
@@ -1560,7 +1560,9 @@ function createPaymentRequest() {
   const curr = document.getElementById('req-currency')?.value || 'EUR';
   const concept = document.getElementById('req-concept')?.value || '';
   if (!amt) { toast(T_UI('Introduce un importe','Enter an amount','Entrez un montant')); return; }
-  const msg = T_UI('Por favor envíame','Please send me','Veuillez m'envoyer') + ' ' + amt + ' ' + curr + (concept ? ' - ' + concept : '') + '. ' + T_UI('Mi código InnovaAFRIC:','My InnovaAFRIC code:','Mon code InnovaAFRIC:') + ' ' + (document.getElementById('my-receive-code')?.textContent||'');
+  const payMsgs = {es:'Por favor envíame', en:'Please send me', fr:"Veuillez m'envoyer"};
+  const codeMsgs = {es:'Mi código InnovaAFRIC:', en:'My InnovaAFRIC code:', fr:'Mon code InnovaAFRIC:'};
+  const msg = (payMsgs[lang]||payMsgs.es) + ' ' + amt + ' ' + curr + (concept ? ' - ' + concept : '') + '. ' + (codeMsgs[lang]||codeMsgs.es) + ' ' + (document.getElementById('my-receive-code')?.textContent||'');
   if (navigator.share) navigator.share({ title: 'Solicitud de pago', text: msg });
   else { navigator.clipboard?.writeText(msg); toast(T_UI('Solicitud copiada','Request copied','Demande copiée')); }
 }
