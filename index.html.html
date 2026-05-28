@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#050B18">
+<title>InnovaAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050B18;--g1:#0A1628;--g2:#0F1F3D;
+  --card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.07);
+  --b:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
+  --cy:#00E5FF;--cy2:#00B4D8;--cy-d:rgba(0,229,255,.1);
+  --gr:#00FFB2;--gr-d:rgba(0,255,178,.1);
+  --go:#FFD166;--go-d:rgba(255,209,102,.1);
+  --re:#FF4D6D;--re-d:rgba(255,77,109,.1);
+  --pu:#C77DFF;--pu-d:rgba(199,125,255,.1);
+  --txt:#F0F4FF;--mu:rgba(240,244,255,.4);--su:rgba(240,244,255,.6);
+  --fs:'Syne',sans-serif;--fd:'DM Sans',sans-serif;
+  --r:14px;--r2:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--fd);color:var(--txt);max-width:430px;margin:0 auto;position:relative}
+
+/* SPLASH */
+#splash{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,229,255,.15),transparent),
+             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(199,125,255,.12),transparent),var(--bg)}
+.splash-logo{font-family:var(--fs);font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;
+  background:linear-gradient(135deg,var(--cy),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.splash-sub{font-size:13px;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;margin-bottom:48px}
+.splash-ring{width:56px;height:56px;border-radius:50%;border:2px solid rgba(0,229,255,.15);border-top-color:var(--cy);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+body.light-mode{
+  --bg:#F0F4FF;--g1:#E8EEF8;--g2:#DDE5F5;
+  --card:rgba(255,255,255,.8);--card2:rgba(255,255,255,.95);
+  --b:rgba(0,0,0,.1);--b2:rgba(0,0,0,.18);
+  --txt:#0A1628;--mu:rgba(10,22,40,.5);--su:rgba(10,22,40,.65);
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* LOGIN */
+#ls{position:fixed;inset:0;display:none;flex-direction:column;overflow-y:auto;
+  background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,229,255,.12),transparent),var(--bg)}
+.ls-wrap{padding:48px 24px 32px;display:flex;flex-direction:column;min-height:100%;align-items:center;justify-content:center}
+.ls-logo{font-family:var(--fs);font-size:28px;font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:4px;
+  background:linear-gradient(135deg,var(--cy),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ls-tagline{font-size:12px;color:var(--mu);text-align:center;letter-spacing:.12em;text-transform:uppercase;margin-bottom:36px}
+.ls-card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:24px;padding:24px;width:100%;max-width:380px;animation:slideUp .5s ease both}
+.tab-row{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:12px;padding:3px;margin-bottom:20px}
+.tab-btn{flex:1;padding:9px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd);color:var(--mu);background:none;transition:all .25s}
+.tab-btn.on{background:var(--cy);color:#050B18;font-weight:700}
+.inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--b);border-radius:var(--r);padding:13px 16px;font-size:14px;font-family:var(--fd);color:var(--txt);outline:none;margin-bottom:10px;transition:all .2s}
+.inp:focus{border-color:var(--cy);background:rgba(0,229,255,.05);box-shadow:0 0 0 3px rgba(0,229,255,.08)}
+.inp::placeholder{color:var(--mu)}
+.inp[readonly]{color:var(--cy);text-align:center;font-weight:700;cursor:default}
+.sel{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--b);border-radius:var(--r);padding:13px 16px;font-size:13px;font-family:var(--fd);color:var(--txt);outline:none;margin-bottom:10px}
+.sel option{background:#0A1628}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pr{display:grid;grid-template-columns:72px 1fr;gap:8px}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.role-card{border:1.5px solid var(--b);border-radius:var(--r);padding:12px;text-align:center;cursor:pointer;transition:all .2s}
+.role-card:hover{border-color:rgba(0,229,255,.3)}
+.role-card.on{border-color:var(--cy);background:var(--cy-d)}
+.role-card .ri{font-size:22px;margin-bottom:5px}
+.role-card .rn{font-size:11px;font-weight:600;color:var(--su)}
+.role-card.on .rn{color:var(--cy)}
+.btn{width:100%;padding:14px;border-radius:var(--r);border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fs);transition:all .2s;letter-spacing:.3px}
+.btn-cy{background:linear-gradient(135deg,var(--cy),var(--cy2));color:#050B18;box-shadow:0 8px 24px rgba(0,229,255,.25)}
+.btn-cy:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,229,255,.35)}
+.btn-cy:disabled{opacity:.5;transform:none;cursor:not-allowed}
+.btn-gh{background:rgba(255,255,255,.06);color:var(--su);border:1px solid var(--b);margin-top:8px;box-shadow:none}
+.err-box{background:var(--re-d);border:1px solid rgba(255,77,109,.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--re);margin-top:10px;display:none}
+
+/* APP */
+#app{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg)}
+
+/* TOPBAR */
+.top{height:58px;background:rgba(5,11,24,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;position:sticky;top:0;z-index:10}
+.top-back{width:34px;height:34px;border-radius:10px;background:var(--card2);border:none;color:var(--txt);font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.top-back:hover{background:var(--cy-d)}
+.top-title{font-family:var(--fs);font-size:16px;font-weight:700;flex:1;letter-spacing:-.3px}
+.top-right{display:flex;align-items:center;gap:8px}
+.top-lang{background:var(--cy-d);border:1px solid rgba(0,229,255,.2);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--cy);cursor:pointer;font-family:var(--fs);transition:all .2s}
+.top-lang:hover{background:rgba(0,229,255,.2)}
+.top-notif{position:relative;cursor:pointer;padding:4px}
+.notif-dot{position:absolute;top:0;right:0;width:8px;height:8px;background:var(--re);border-radius:50%;display:none;animation:pulse 2s infinite}
+.top-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--pu));display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:13px;font-weight:700;color:#050B18;cursor:pointer;flex-shrink:0;transition:transform .2s}
+.top-av:hover{transform:scale(1.08)}
+
+/* SCREENS */
+.screens{flex:1;overflow:hidden;position:relative}
+.sc{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 80px;display:none}
+.sc::-webkit-scrollbar{display:none}
+.sc.on{display:block;animation:fadeIn .3s ease both}
+.ptr{text-align:center;padding:12px;font-size:12px;color:var(--mu);display:none;align-items:center;justify-content:center;gap:8px}
+.ptr.show{display:flex}
+.ptr-spin{width:16px;height:16px;border:2px solid rgba(0,229,255,.2);border-top-color:var(--cy);border-radius:50%;animation:spin .7s linear infinite}
+
+/* BALANCE CARD */
+.bal-card{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(199,125,255,.06));border:1px solid rgba(0,229,255,.15);border-radius:24px;padding:24px;margin-bottom:16px;position:relative;overflow:hidden}
+.bal-card::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,.08),transparent)}
+.bal-card::after{content:"";position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(199,125,255,.06),transparent)}
+.bal-lbl{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;font-weight:600}
+.bal-amount{font-family:var(--fs);font-size:20px;font-weight:800;letter-spacing:-.3px;line-height:1.1;margin-bottom:5px;background:linear-gradient(135deg,var(--txt),var(--su));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.bal-sub{font-size:13px;color:var(--mu);margin-bottom:16px}
+.bal-chips{display:flex;gap:7px;flex-wrap:wrap}
+.bal-chip{background:rgba(255,255,255,.07);backdrop-filter:blur(8px);border:1px solid var(--b);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--su)}
+.bal-chip span{color:var(--txt);font-weight:600}
+.bal-chip.up{border-color:rgba(0,255,178,.2);background:rgba(0,255,178,.05)}
+.bal-chip.up span{color:var(--gr)}
+
+/* ACTION GRID */
+.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.ac{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--b);border-radius:16px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .25s}
+.ac:hover{background:var(--card2);border-color:rgba(0,229,255,.2);transform:translateY(-2px)}
+.ac:active{transform:scale(.95)}
+.ac .ai{font-size:22px;margin-bottom:6px}
+.ac .al{font-size:10px;color:var(--su);font-weight:600;letter-spacing:.02em}
+
+/* SECTION */
+.sec-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sec-ttl{font-family:var(--fs);font-size:14px;font-weight:700;letter-spacing:-.2px}
+.sec-lnk{font-size:12px;color:var(--cy);cursor:pointer;opacity:.8}
+.sec-lnk:hover{opacity:1}
+
+/* TRANSACTIONS */
+.tl{display:flex;flex-direction:column;gap:8px}
+.tx{display:flex;align-items:center;gap:12px;background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--b);border-radius:16px;padding:13px;cursor:pointer;transition:all .2s}
+.tx:hover{background:var(--card2);border-color:var(--b2)}
+.ti{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tn{flex:1;min-width:0}
+.tn-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tn-date{font-size:11px;color:var(--mu);margin-top:2px}
+.ta{text-align:right;flex-shrink:0}
+.ta-amt{font-size:13px;font-weight:700;font-family:var(--fs)}
+.ta-st{font-size:10px;color:var(--mu);margin-top:2px}
+
+/* FORM CARD */
+.fc{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:20px;padding:18px;margin-bottom:14px}
+.fl{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:7px}
+
+/* RESULT BOX */
+.rb{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(0,180,216,.04));border:1px solid rgba(0,229,255,.2);border-radius:16px;padding:16px;margin-bottom:12px}
+.rb-recv{font-family:var(--fs);font-size:28px;font-weight:800;color:var(--cy);margin-bottom:4px;letter-spacing:-.5px}
+.rb-meta{font-size:11px;color:var(--mu)}
+
+/* QUICK AMOUNTS */
+.qa{display:flex;gap:6px;margin-bottom:12px}
+.q{flex:1;padding:8px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--b);color:var(--su);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fd);text-align:center;transition:all .2s}
+.q:hover,.q.on{background:var(--cy-d);border-color:rgba(0,229,255,.3);color:var(--cy)}
+
+/* SEND TABS */
+.tt{display:flex;gap:8px;margin-bottom:16px}
+.ttab{flex:1;padding:12px;border-radius:14px;border:1.5px solid var(--b);background:rgba(255,255,255,.03);text-align:center;cursor:pointer;transition:all .2s}
+.ttab.on{border-color:var(--cy);background:var(--cy-d)}
+.ttab .tti{font-size:20px;margin-bottom:5px}
+.ttab .ttn{font-size:11px;font-weight:600;color:var(--mu)}
+.ttab.on .ttn{color:var(--cy)}
+
+/* CASHOUT METHODS */
+.ml{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.mt{display:flex;align-items:center;gap:13px;background:var(--card);border:1.5px solid var(--b);border-radius:16px;padding:13px;cursor:pointer;transition:all .2s}
+.mt.on,.mt:hover{border-color:rgba(0,229,255,.4);background:var(--cy-d)}
+.mt .mi{font-size:26px;flex-shrink:0}
+.mt-info{flex:1}
+.mt-nm{font-size:13px;font-weight:600}
+.mt-ds{font-size:11px;color:var(--mu);margin-top:2px}
+.mt-fe{font-size:12px;font-weight:700;color:var(--cy)}
+
+/* CONVERTER */
+.cv-sw{width:36px;height:36px;border-radius:50%;background:var(--cy-d);border:1px solid rgba(0,229,255,.25);color:var(--cy);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:6px auto;transition:transform .3s}
+.cv-sw:hover{transform:rotate(180deg)}
+.rg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.ri2{background:rgba(255,255,255,.04);border-radius:11px;padding:10px 13px}
+.ri2-f{font-size:11px;color:var(--mu);margin-bottom:3px}
+.ri2-v{font-size:13px;font-weight:700;color:var(--cy);font-family:var(--fs)}
+
+/* HISTORY FILTERS */
+.hf{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}
+.hf::-webkit-scrollbar{display:none}
+.hff{padding:7px 14px;border-radius:20px;border:1px solid var(--b);background:rgba(255,255,255,.03);color:var(--mu);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:var(--fd);transition:all .2s;flex-shrink:0}
+.hff.on{background:var(--cy-d);border-color:rgba(0,229,255,.35);color:var(--cy)}
+
+/* PROFILE */
+.prof-head{text-align:center;padding:20px 0 24px}
+.prof-av-wrap{position:relative;display:inline-block;margin-bottom:14px}
+.prof-av{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--pu));display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:30px;font-weight:700;color:#050B18;margin:0 auto}
+.prof-av-ring{position:absolute;inset:-3px;border-radius:50%;border:2px solid transparent;background:linear-gradient(135deg,var(--cy),var(--pu)) border-box;-webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);-webkit-mask-composite:destination-out;mask-composite:exclude}
+.prof-name{font-family:var(--fs);font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:-.3px}
+.prof-email{font-size:13px;color:var(--mu)}
+.prof-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:10px;font-family:var(--fs)}
+.kyc-bar{background:var(--go-d);border:1px solid rgba(255,209,102,.2);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.lb-row{display:flex;gap:7px;margin-top:10px}
+.lb{flex:1;padding:11px;border-radius:11px;border:1.5px solid var(--b);background:rgba(255,255,255,.04);color:var(--mu);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fs);transition:all .2s}
+.lb.on{border-color:var(--cy);background:var(--cy-d);color:var(--cy)}
+.menu-list{display:flex;flex-direction:column}
+.mi2{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--b);cursor:pointer;transition:all .2s}
+.mi2:last-child{border-bottom:none}
+.mi2:hover{padding-left:4px}
+.mi2-i{font-size:20px;width:28px;flex-shrink:0}
+.mi2-n{font-size:13px;flex:1;font-weight:500}
+.mi2-a{font-size:16px;color:var(--b2)}
+
+/* PORTAL SCREENS */
+.por-h{border-radius:22px;padding:22px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
+.por-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:10px;opacity:.7}
+.por-i{font-size:48px;margin-bottom:12px}
+.por-a{font-family:var(--fs);font-size:28px;font-weight:800;letter-spacing:-.5px}
+.por-s{font-size:13px;color:var(--mu);margin-top:5px}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.ss{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:13px;text-align:center}
+.ss-n{font-family:var(--fs);font-size:22px;font-weight:800}
+.ss-l{font-size:10px;color:var(--mu);margin-top:3px;letter-spacing:.03em}
+.al2{display:flex;flex-direction:column;gap:8px}
+.ai2{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;cursor:pointer;transition:all .2s}
+.ai2:hover{background:var(--card2);border-color:rgba(0,229,255,.2);transform:translateX(3px)}
+.ai2-i{font-size:22px;width:32px;flex-shrink:0}
+.ai2-b{flex:1}
+.ai2-n{font-size:13px;font-weight:600}
+.ai2-d{font-size:11px;color:var(--mu);margin-top:2px}
+.tiers{display:flex;flex-direction:column;gap:9px}
+.tier{border-left:3px solid;border-radius:14px;padding:14px;background:var(--card);border-top:1px solid var(--b);border-right:1px solid var(--b);border-bottom:1px solid var(--b)}
+.tier.t0{border-left-color:#CD7F32}.tier.t1{border-left-color:#C0C0C0}.tier.t2{border-left-color:var(--go);background:rgba(255,209,102,.03)}
+.tier-n{font-family:var(--fs);font-size:13px;font-weight:700;margin-bottom:10px}
+.tier-s{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.ts{background:rgba(255,255,255,.04);border-radius:9px;padding:9px;text-align:center}
+.ts-n{font-family:var(--fs);font-size:15px;font-weight:700}
+.ts-l{font-size:9px;color:var(--mu);margin-top:2px;letter-spacing:.02em}
+
+/* QR / RECEIVE */
+.qr-wrap{text-align:center;margin-bottom:14px}
+.qr-box{background:#fff;border-radius:18px;padding:18px;display:inline-flex;margin-bottom:12px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.qr-inner{width:110px;height:110px;background:linear-gradient(135deg,#050B18,#0A1628);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--fs);font-size:10px;font-weight:700;color:var(--cy);text-align:center;border:2px solid var(--cy);padding:8px}
+.qr-code-text{font-family:var(--fs);font-size:18px;font-weight:800;letter-spacing:.1em;margin-bottom:5px;color:var(--cy)}
+
+/* KYC */
+.kl{display:flex;flex-direction:column;gap:10px}
+.kli{border:1px solid var(--b);border-radius:16px;padding:15px;transition:all .2s}
+.kli.on{border-color:rgba(0,229,255,.3);background:var(--cy-d)}
+.kli-n{font-family:var(--fs);font-size:13px;font-weight:700;margin-bottom:5px}
+.kli-d{font-size:12px;color:var(--mu);line-height:1.5}
+
+/* PIN MODAL */
+.pin-overlay{position:fixed;inset:0;background:rgba(5,11,24,.92);backdrop-filter:blur(16px);z-index:50;display:none;align-items:flex-end;justify-content:center;padding:16px}
+.pin-overlay.open{display:flex}
+.pin-box{background:rgba(10,22,40,.95);border:1px solid var(--b);border-radius:24px;padding:28px;width:100%;max-width:360px;animation:slideUp .3s ease both}
+.pin-title{font-family:var(--fs);font-size:18px;font-weight:700;text-align:center;margin-bottom:6px}
+.pin-sub{font-size:13px;color:var(--mu);text-align:center;margin-bottom:24px}
+.pin-dots{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--b2);transition:all .2s}
+.pin-dot.filled{background:var(--cy);border-color:var(--cy);transform:scale(1.1)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pin-btn{background:rgba(255,255,255,.06);border:1px solid var(--b);border-radius:14px;padding:16px;font-family:var(--fs);font-size:20px;font-weight:700;color:var(--txt);cursor:pointer;transition:all .2s;text-align:center}
+.pin-btn:hover{background:var(--cy-d);border-color:rgba(0,229,255,.3);color:var(--cy)}
+.pin-btn:active{transform:scale(.93)}
+.pin-cancel{width:100%;padding:13px;border-radius:var(--r);background:rgba(255,255,255,.05);border:1px solid var(--b);color:var(--mu);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--fd);margin-top:12px;transition:all .2s}
+.pin-cancel:hover{background:var(--re-d);color:var(--re);border-color:rgba(255,77,109,.25)}
+
+/* SEARCH USER */
+.user-found{background:var(--gr-d);border:1px solid rgba(0,255,178,.2);border-radius:12px;padding:12px 14px;display:none;align-items:center;gap:12px;margin-bottom:10px}
+.user-found-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--pu));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#050B18;flex-shrink:0}
+.user-found-info{flex:1}
+.user-found-name{font-size:13px;font-weight:600}
+.user-found-code{font-size:11px;color:var(--mu);font-family:var(--fs)}
+
+/* BOTTOM NAV */
+.bnav{height:64px;background:rgba(5,11,24,.95);backdrop-filter:blur(20px);border-top:1px solid var(--b);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px;opacity:.35;transition:all .25s;position:relative;min-width:52px}
+.ni.on{opacity:1}
+.ni .ic{font-size:22px;transition:transform .25s}
+.ni.on .ic{transform:translateY(-1px)}
+.ni .lbl{font-size:9px;color:var(--su);font-weight:600;letter-spacing:.04em}
+.ni.on .lbl{color:var(--cy)}
+.ni-dot{position:absolute;top:2px;right:8px;width:7px;height:7px;background:var(--re);border-radius:50%;display:none}
+
+/* TOAST */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(10,22,40,.95);backdrop-filter:blur(20px);border:1px solid var(--b);border-radius:14px;padding:11px 20px;font-size:13px;font-weight:500;opacity:0;transition:all .35s;pointer-events:none;z-index:99;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(0,255,178,.3);color:var(--gr)}
+.toast.err{border-color:rgba(255,77,109,.3);color:var(--re)}
+.toast.info{border-color:rgba(0,229,255,.3);color:var(--cy)}
+
+/* MISC */
+.empty{text-align:center;padding:36px 16px;color:var(--mu);font-size:13px}
+.empty-i{font-size:40px;margin-bottom:12px;opacity:.4}
+.loading{text-align:center;padding:32px;color:var(--mu);font-size:13px}
+.divider{height:1px;background:var(--b);margin:14px 0}
+.badge-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">InnovaAFRIC</div>
+  <div class="splash-sub">We Simplify Life</div>
+  <div class="splash-ring"></div>
+</div>
+
+<!-- LOGIN -->
+<div id="ls">
+  <div class="ls-wrap">
+    <div class="ls-logo">InnovaAFRIC</div>
+    <div class="ls-tagline">Asia &middot; España &middot; África</div>
+    <div class="ls-card">
+      <div class="tab-row">
+        <button class="tab-btn on" id="tb-l" onclick="swTab('l')">Entrar</button>
+        <button class="tab-btn" id="tb-r" onclick="swTab('r')">Registrarse</button>
+      </div>
+      <div id="fl">
+        <input class="inp" type="email" id="l-em" placeholder="Email" autocomplete="email">
+        <input class="inp" type="password" id="l-pw" placeholder="Contraseña" autocomplete="current-password">
+        <button class="btn btn-cy" id="l-btn" onclick="doLogin()">Entrar →</button>
+        <div class="err-box" id="l-err"></div>
+      </div>
+      <div id="fr" style="display:none">
+        <div class="g2">
+          <input class="inp" id="r-nm" placeholder="Nombre" style="margin:0 0 10px">
+          <input class="inp" id="r-ap" placeholder="Apellidos" style="margin:0 0 10px">
+        </div>
+        <input class="inp" type="email" id="r-em" placeholder="Email">
+        <input class="inp" type="password" id="r-pw" placeholder="Contraseña (min. 8)">
+        <div class="g2">
+          <select class="sel" id="r-co" onchange="onCo()" style="margin:0 0 10px">
+            <option value="GQ" data-c="+240">🇬🇶 Guinea Ecuatorial</option>
+            <option value="CM" data-c="+237">🇨🇲 Camerún</option>
+            <option value="GA" data-c="+241">🇬🇦 Gabón</option>
+            <option value="SN" data-c="+221">🇸🇳 Senegal</option>
+            <option value="CI" data-c="+225">🇨🇮 Costa de Marfil</option>
+            <option value="ES" data-c="+34">🇪🇸 España</option>
+          </select>
+          <select class="sel" id="r-ci" style="margin:0 0 10px">
+            <option>Malabo</option><option>Bata</option>
+          </select>
+        </div>
+        <div class="pr" style="margin-bottom:10px">
+          <input class="inp" id="r-cc" value="+240" readonly style="margin:0">
+          <input class="inp" type="tel" id="r-ph" placeholder="Teléfono" style="margin:0">
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Tu rol</div>
+        <div class="role-grid">
+          <div class="role-card on" onclick="selR('cliente',this)"><div class="ri">👤</div><div class="rn">Cliente</div></div>
+          <div class="role-card" onclick="selR('circular',this)"><div class="ri">🏢</div><div class="rn">Circular</div></div>
+          <div class="role-card" onclick="selR('rider',this)"><div class="ri">🛵</div><div class="rn">Rider</div></div>
+          <div class="role-card" onclick="selR('proveedor',this)"><div class="ri">🏭</div><div class="rn">Proveedor</div></div>
+        </div>
+        <input type="hidden" id="r-ro" value="cliente">
+        <button class="btn btn-cy" id="r-btn" onclick="doReg()">Crear cuenta →</button>
+        <div class="err-box" id="r-err"></div>
+      </div>
+    </div>
+    <button class="btn btn-gh" style="max-width:380px;margin-top:10px" onclick="startDemo()">⚡ Probar sin cuenta</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="top">
+    <button class="top-back" id="tb-back" onclick="goBack()">←</button>
+    <div class="top-title" id="top-t">InnovaAFRIC</div>
+    <div class="top-right">
+      <button class="top-lang" id="top-lg" onclick="cycleLang()">ES</button>
+      <div class="top-notif" onclick="goTo('notifs')">
+        <span style="font-size:20px">🔔</span>
+        <div class="notif-dot" id="notif-dot"></div>
+      </div>
+      <div class="top-av" id="top-av" onclick="goTo('profile')">?</div>
+    </div>
+  </div>
+
+  <div class="screens">
+
+    <!-- HOME -->
+    <div class="sc on" id="sc-home">
+      <div class="ptr" id="ptr"><div class="ptr-spin"></div>Actualizando...</div>
+      <div class="bal-card">
+        <div class="bal-lbl">Saldo total</div>
+        <div class="bal-amount" id="b-eur">€ 0.00</div>
+        <div class="bal-sub" id="b-xaf">0 XAF · $0</div>
+        <div class="bal-chips">
+          <div class="bal-chip up">EUR <span id="bc-eur">0.00</span></div>
+          <div class="bal-chip">XAF <span id="bc-xaf">0</span></div>
+          <div class="bal-chip">USD <span id="bc-usd">0.00</span></div>
+          <div class="bal-chip">Pts <span id="bc-pts">0</span></div>
+        </div>
+      </div>
+      <div class="ag">
+        <div class="ac" onclick="goTo('send')"><div class="ai">💸</div><div class="al" data-k="send">Enviar</div></div>
+        <div class="ac" onclick="goTo('receive')"><div class="ai">💰</div><div class="al" data-k="receive">Recibir</div></div>
+        <div class="ac" onclick="goTo('cashout')"><div class="ai">🏦</div><div class="al" data-k="cashout">Retirar</div></div>
+        <div class="ac" onclick="goTo('converter')"><div class="ai">💱</div><div class="al" data-k="conv">Cambio</div></div>
+      </div>
+      <div class="sec-row"><span class="sec-ttl" data-k="recent">Actividad reciente</span><span class="sec-lnk" data-k="see-all" onclick="goTo('history')">Ver todo →</span></div>
+      <div class="tl" id="home-txns"><div class="empty"><div class="empty-i">💳</div>Sin transacciones aún</div></div>
+    </div>
+
+    <!-- SEND -->
+    <div class="sc" id="sc-send">
+      <div class="tt">
+        <div class="ttab on" id="tt-i" onclick="setST('intl',this)"><div class="tti">🌍</div><div class="ttn" data-k="intl">Internacional</div></div>
+        <div class="ttab" id="tt-p" onclick="setST('p2p',this)"><div class="tti">↔️</div><div class="ttn" data-k="p2p">P2P Gratis</div></div>
+      </div>
+      <div class="fc">
+        <!-- Saldo disponible -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:12px;padding:10px 14px">
+          <span style="font-size:12px;color:var(--mu)">Saldo disponible</span>
+          <span style="font-size:14px;font-weight:800;color:var(--cy);font-family:var(--fs)" id="s-av">0.00 EUR</span>
+        </div>
+
+        <!-- Importe -->
+        <label class="fl">Importe a enviar</label>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input type="number" class="inp" id="s-amt" value="100" oninput="calcS()" style="margin:0;flex:1;font-family:var(--fs);font-size:26px;font-weight:800;letter-spacing:-.5px">
+          <select class="sel" id="s-fc" onchange="calcS();updSAv();" style="margin:0;width:110px">
+            <option value="EUR">EUR €</option>
+            <option value="USD">USD $</option>
+            <option value="XAF">XAF</option>
+          </select>
+        </div>
+        <div class="qa">
+          <button class="q" onclick="setA(50)">50</button>
+          <button class="q" onclick="setA(100)">100</button>
+          <button class="q" onclick="setA(200)">200</button>
+          <button class="q" onclick="setA(500)">500</button>
+        </div>
+
+        <!-- Moneda destino -->
+        <label class="fl">Recibe en</label>
+        <select class="sel" id="s-tc" onchange="calcS()">
+          <option value="XAF">XAF · Franco CFA CEMAC</option>
+          <option value="XOF">XOF · Franco CFA UEMOA</option>
+          <option value="EUR">EUR · Euro</option>
+          <option value="USD">USD · Dólar</option>
+        </select>
+
+        <!-- Resultado -->
+        <div class="rb">
+          <div class="rb-meta">Destinatario recibe</div>
+          <div class="rb-recv" id="s-recv">65,596 XAF</div>
+          <div style="border-top:1px solid rgba(0,229,255,.1);margin-top:10px;padding-top:10px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span class="rb-meta">Comisión (2%)</span>
+              <span style="font-size:12px;color:var(--gr);font-weight:700" id="s-fee">€2.00</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span class="rb-meta">Ahorro vs WU (~10%)</span>
+              <span style="font-size:12px;color:var(--gr);font-weight:700" id="s-sav">€8.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Internacional: nombre + telefono -->
+        <div id="s-fi">
+          <label class="fl">Nombre del destinatario</label>
+          <input class="inp" type="text" id="s-name" placeholder="Nombre completo del destinatario">
+          
+          <label class="fl">Teléfono del destinatario</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            <select class="sel" id="s-country-code" style="margin:0;width:110px">
+              <option value="+240">🇬🇶 +240</option>
+              <option value="+237">🇨🇲 +237</option>
+              <option value="+241">🇬🇦 +241</option>
+              <option value="+221">🇸🇳 +221</option>
+              <option value="+225">🇨🇮 +225</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+243">🇨🇩 +243</option>
+              <option value="+234">🇳🇬 +234</option>
+            </select>
+            <input class="inp" type="tel" id="s-dest" placeholder="555 000 000" style="margin:0;flex:1">
+          </div>
+          <div style="display:flex;gap:8px">
+            <button onclick="goTo('favorites')" style="flex:1;padding:11px;background:var(--go-d);border:1px solid rgba(255,209,102,.2);border-radius:var(--r);font-size:13px;color:var(--go);cursor:pointer;font-family:var(--fs);font-weight:600">⭐ Mis favoritos</button>
+          </div>
+        </div>
+
+        <!-- P2P: codigo IA -->
+        <div id="s-fp" style="display:none">
+          <label class="fl">Código IA del destinatario</label>
+          <input class="inp" type="text" id="s-code" placeholder="IA-XXXXXX" style="font-family:var(--fs);font-weight:700;letter-spacing:.12em;font-size:18px;text-transform:uppercase;text-align:center">
+          <div style="font-size:11px;color:var(--mu);text-align:center;margin-bottom:10px">El código IA lo puedes ver en el perfil del usuario</div>
+        </div>
+
+        <input class="inp" id="s-ds" placeholder="Concepto (opcional)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <input type="checkbox" id="s-sched" onchange="toggleSched(this)" style="width:16px;height:16px;accent-color:var(--cy)">
+          <label for="s-sched" style="font-size:13px;color:var(--su);cursor:pointer">Transferencia programada</label>
+        </div>
+        <div id="s-sched-box" style="display:none;margin-bottom:12px">
+          <label class="fl">Fecha de envío</label>
+          <input class="inp" type="date" id="s-sched-date" style="margin:0">
+        </div>
+        <button class="btn btn-cy" id="s-btn" onclick="initSend()">💸 Confirmar envío →</button>
+      </div>
+    </div>
+
+    <!-- RECEIVE -->
+    <div class="sc" id="sc-receive">
+      <div class="fc">
+        <div class="qr-wrap">
+          <div style="font-size:12px;color:var(--mu);margin-bottom:14px;text-align:center;letter-spacing:.05em;text-transform:uppercase;font-size:11px">Tu código personal InnovaAFRIC</div>
+          <div class="qr-box"><div class="qr-inner" id="my-qr">IA-CODE</div></div>
+          <div class="qr-code-text" id="my-code">IA-XXXXX</div>
+          <div style="font-size:12px;color:var(--mu);margin-bottom:16px">Comparte para recibir pagos directos</div>
+          <button class="btn btn-cy" onclick="shareCode()">📤 Compartir mi código</button>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:14px">Solicitar pago</div>
+        <input class="inp" type="number" id="rq-a" placeholder="Importe">
+        <select class="sel" id="rq-c"><option value="EUR">EUR €</option><option value="XAF">XAF</option><option value="USD">USD $</option></select>
+        <input class="inp" id="rq-d" placeholder="Concepto (opcional)">
+        <button class="btn btn-cy" onclick="doReq()">Generar solicitud de pago →</button>
+      </div>
+      <div class="sec-row"><span class="sec-ttl">Pagos recibidos</span></div>
+      <div id="recv-list"><div class="empty"><div class="empty-i">💰</div>Sin pagos recibidos aún</div></div>
+    </div>
+
+    <!-- CASHOUT -->
+    <div class="sc" id="sc-cashout">
+      <div class="ml">
+        <div class="mt on" id="cm-c" onclick="selM('circular',this)"><div class="mi">🏢</div><div class="mt-info"><div class="mt-nm">Circular Autorizada</div><div class="mt-ds">Recoge en efectivo · ~15 min</div></div><div class="mt-fe">Gratis</div></div>
+        <div class="mt" id="cm-m" onclick="selM('mtn',this)"><div class="mi">📱</div><div class="mt-info"><div class="mt-nm">MTN Mobile Money</div><div class="mt-ds">A tu móvil · ~2 horas</div></div><div class="mt-fe">1.5%</div></div>
+        <div class="mt" id="cm-o" onclick="selM('orange',this)"><div class="mi">🍊</div><div class="mt-info"><div class="mt-nm">Orange Money</div><div class="mt-ds">A tu móvil · ~2 horas</div></div><div class="mt-fe">1.5%</div></div>
+        <div class="mt" id="cm-b" onclick="selM('bank',this)"><div class="mi">🏦</div><div class="mt-info"><div class="mt-nm">Transferencia bancaria</div><div class="mt-ds">IBAN · 24-48 horas</div></div><div class="mt-fe">0.5%</div></div>
+      </div>
+      <div class="fc">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+          <span style="font-size:12px;color:var(--mu)">Saldo disponible</span>
+          <span style="font-size:13px;font-weight:700;color:var(--cy)" id="co-av">€ 0.00</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input type="number" class="inp" id="co-a" value="100" oninput="calcCO()" style="margin:0;flex:1;font-family:var(--fs);font-size:24px;font-weight:800">
+          <select class="sel" id="co-c" onchange="calcCO()" style="margin:0;width:108px">
+            <option value="EUR">EUR €</option><option value="XAF">XAF</option><option value="USD">USD $</option>
+          </select>
+        </div>
+        <div class="qa">
+          <button class="q" onclick="setCOA(50)">50</button>
+          <button class="q" onclick="setCOA(100)">100</button>
+          <button class="q" onclick="setCOA(200)">200</button>
+          <button class="q" onclick="setCOA(500)">500</button>
+        </div>
+        <div class="rb">
+          <div class="rb-meta">Recibes</div>
+          <div class="rb-recv" id="co-recv">€ 100.00</div>
+          <div style="border-top:1px solid rgba(0,229,255,.1);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between">
+            <span class="rb-meta">Comisión</span>
+            <span style="font-size:12px;color:var(--re);font-weight:700" id="co-fee">Gratis</span>
+          </div>
+          <div style="font-size:11px;color:var(--mu);margin-top:4px" id="co-lbl">Circular Autorizada · ~15 min</div>
+        </div>
+        <div id="co-ex" style="display:none">
+          <input class="inp" id="co-acc" placeholder="Teléfono o IBAN">
+        </div>
+        <button class="btn btn-cy" onclick="initCO()">🏦 Solicitar reintegro →</button>
+      </div>
+    </div>
+
+    <!-- CONVERTER -->
+    <div class="sc" id="sc-converter">
+      <div class="fc">
+        <label class="fl">Tengo</label>
+        <div style="display:flex;gap:8px;margin-bottom:6px">
+          <input type="number" class="inp" id="cv-f" value="100" oninput="calcCV()" style="margin:0;flex:1;font-family:var(--fs);font-size:22px;font-weight:700">
+          <select class="sel" id="cv-fc" onchange="calcCV()" style="margin:0;width:108px">
+            <option value="EUR">EUR €</option><option value="USD">USD $</option><option value="XAF">XAF</option><option value="XOF">XOF</option>
+          </select>
+        </div>
+        <div class="cv-sw" onclick="swapCV()">⇅</div>
+        <label class="fl">Quiero</label>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <input type="number" class="inp" id="cv-t" readonly style="margin:0;flex:1;font-family:var(--fs);font-size:22px;font-weight:700;color:var(--cy);background:var(--cy-d)">
+          <select class="sel" id="cv-tc" onchange="calcCV()" style="margin:0;width:108px">
+            <option value="XAF">XAF</option><option value="XOF">XOF</option><option value="EUR">EUR €</option><option value="USD">USD $</option>
+          </select>
+        </div>
+        <div style="background:var(--cy-d);border:1px solid rgba(0,229,255,.15);border-radius:12px;padding:11px;text-align:center">
+          <div style="font-size:11px;color:var(--mu);margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase">Tasa aplicada</div>
+          <div style="font-family:var(--fs);font-size:15px;font-weight:700;color:var(--cy)" id="cv-rate">1 EUR = 655.957 XAF</div>
+        </div>
+        <button class="btn btn-cy" style="margin-top:14px" onclick="goTo('send')">Enviar con esta tasa →</button>
+      </div>
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:12px">Tasas del mercado</div>
+        <div class="rg2">
+          <div class="ri2"><div class="ri2-f">1 EUR</div><div class="ri2-v">655.96 XAF</div></div>
+          <div class="ri2"><div class="ri2-f">1 EUR</div><div class="ri2-v">1.08 USD</div></div>
+          <div class="ri2"><div class="ri2-f">1 USD</div><div class="ri2-v">607.36 XAF</div></div>
+          <div class="ri2"><div class="ri2-f">1 XAF</div><div class="ri2-v">0.00152 EUR</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="sc" id="sc-history">
+      <input class="inp" type="text" id="hist-search" placeholder="Buscar por concepto, importe..." oninput="searchHist(this.value)" style="margin-bottom:12px">
+      <div class="hf">
+        <button class="hff on" onclick="fH('all',this)">Todos</button>
+        <button class="hff" onclick="fH('send',this)">Enviados</button>
+        <button class="hff" onclick="fH('receive',this)">Recibidos</button>
+        <button class="hff" onclick="fH('cashout',this)">Reintegros</button>
+      </div>
+      <div class="fc" style="margin-bottom:14px">
+        <div class="sec-ttl" style="margin-bottom:12px">Gastos por mes</div>
+        <canvas id="hist-chart" height="120"></canvas>
+      </div>
+      <div class="tl" id="hist-list"><div class="loading"><span style="display:inline-block;width:18px;height:18px;border:2px solid rgba(0,229,255,.2);border-top-color:var(--cy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:7px"></span>Cargando...</div></div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="sc" id="sc-shop">
+      <div class="hf">
+        <button class="hff on" onclick="filterShop('all',this)">Todos</button>
+        <button class="hff" onclick="filterShop('electro',this)">⚡ Electro</button>
+        <button class="hff" onclick="filterShop('hogar',this)">🏠 Hogar</button>
+        <button class="hff" onclick="filterShop('moda',this)">👗 Moda</button>
+        <button class="hff" onclick="filterShop('solar',this)">☀️ Solar</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="shop-g"></div>
+    </div>
+
+    <!-- FAVORITES -->
+    <div class="sc" id="sc-favorites">
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:14px">Añadir favorito</div>
+        <input class="inp" id="fv-nm" placeholder="Nombre del contacto">
+        <input class="inp" type="tel" id="fv-ph" placeholder="Teléfono o código IA-XXXXXX">
+        <button class="btn btn-cy" onclick="addFav()">+ Añadir a favoritos</button>
+      </div>
+      <div class="sec-row"><span class="sec-ttl">Mis favoritos</span></div>
+      <div id="fav-list"><div class="empty"><div class="empty-i">⭐</div>Sin favoritos aún</div></div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="sc" id="sc-notifs">
+      <div class="tl" id="notif-list"><div class="empty"><div class="empty-i">🔔</div>Sin notificaciones</div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="sc" id="sc-profile">
+      <div class="prof-head">
+        <div class="prof-av-wrap" onclick="changeProfPhoto()" style="cursor:pointer;position:relative">
+          <div class="prof-av" id="pr-av">?</div>
+          <div class="prof-av-ring"></div>
+          <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--cy);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg)">📷</div>
+        </div>
+        <input type="file" id="prof-photo-input" accept="image/*" style="display:none" onchange="onProfPhoto(this)">
+        <div class="prof-name" id="pr-nm">—</div>
+        <div class="prof-email" id="pr-em">—</div>
+        <div id="pr-ba"></div>
+        <div style="margin-top:10px;font-family:var(--fs);font-size:13px;color:var(--cy);letter-spacing:.08em;font-weight:600" id="pr-code">IA-XXXXXX</div>
+      </div>
+      <div class="kyc-bar">
+        <span style="font-size:24px">🪪</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">KYC: Nivel Básico</div><div style="font-size:11px;color:var(--mu);margin-top:2px">Límite: €200 por envío · Verificar para subir</div></div>
+        <button onclick="goTo('kyc')" style="background:var(--go-d);border:1px solid rgba(255,209,102,.25);border-radius:9px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--go);cursor:pointer;font-family:var(--fs)">Subir ↗</button>
+      </div>
+      <div class="fc" style="margin-bottom:14px">
+        <div class="sec-ttl" style="margin-bottom:11px">Idioma</div>
+        <div class="lb-row">
+          <button class="lb on" id="lb-es" onclick="setLang('es')">🇪🇸 ES</button>
+          <button class="lb" id="lb-en" onclick="setLang('en')">🇬🇧 EN</button>
+          <button class="lb" id="lb-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--b)">
+          <span style="font-size:13px;font-weight:500">Modo oscuro</span>
+          <div onclick="toggleTheme()" id="theme-toggle" style="width:44px;height:24px;background:var(--cy);border-radius:12px;cursor:pointer;position:relative;transition:background .2s">
+            <div id="theme-knob" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="menu-list">
+          <div class="mi2" onclick="goTo('receive')"><span class="mi2-i">💰</span><span class="mi2-n">Mi código QR · Recibir</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('favorites')"><span class="mi2-i">⭐</span><span class="mi2-n">Contactos favoritos</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('notifs')"><span class="mi2-i">🔔</span><span class="mi2-n">Notificaciones</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('history')"><span class="mi2-i">📊</span><span class="mi2-n">Historial completo</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('converter')"><span class="mi2-i">💱</span><span class="mi2-n">Conversor de divisas</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('shop')"><span class="mi2-i">🛒</span><span class="mi2-n">XenderShop</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="changePin()"><span class="mi2-i">🔐</span><span class="mi2-n">Cambiar PIN de seguridad</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('limits')"><span class="mi2-i">🎯</span><span class="mi2-n">Límites de gasto</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('referral')"><span class="mi2-i">🎁</span><span class="mi2-n">Programa de referidos</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="goTo('kyc')"><span class="mi2-i">🪪</span><span class="mi2-n">Verificación KYC</span><span class="mi2-a">›</span></div>
+          <div class="mi2" onclick="doLogout()"><span class="mi2-i">🚪</span><span class="mi2-n" style="color:var(--re)">Cerrar sesión</span></div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- KYC -->
+    <div class="sc" id="sc-onboard" style="padding:0">
+      <div style="min-height:100%;display:flex;flex-direction:column">
+        <div id="ob-slides">
+          <div class="ob-slide on" id="ob0">
+            <div style="background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(199,125,255,.08));min-height:260px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+              <div style="font-size:64px">💸</div>
+              <div style="font-family:var(--fs);font-size:22px;font-weight:800;color:var(--txt);text-align:center;padding:0 24px">Envía dinero a África</div>
+              <div style="font-size:14px;color:var(--mu);text-align:center;padding:0 32px;line-height:1.6">Solo un 2% de comisión. Western Union cobra hasta el 10%.</div>
+            </div>
+          </div>
+          <div class="ob-slide" id="ob1" style="display:none">
+            <div style="background:linear-gradient(135deg,rgba(0,255,178,.08),rgba(0,229,255,.08));min-height:260px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+              <div style="font-size:64px">🛒</div>
+              <div style="font-family:var(--fs);font-size:22px;font-weight:800;color:var(--txt);text-align:center;padding:0 24px">Compra desde Asia</div>
+              <div style="font-size:14px;color:var(--mu);text-align:center;padding:0 32px;line-height:1.6">Productos con certificación CE entregados en 3-5 días.</div>
+            </div>
+          </div>
+          <div class="ob-slide" id="ob2" style="display:none">
+            <div style="background:linear-gradient(135deg,rgba(255,209,102,.08),rgba(199,125,255,.08));min-height:260px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+              <div style="font-size:64px">🛵</div>
+              <div style="font-family:var(--fs);font-size:22px;font-weight:800;color:var(--txt);text-align:center;padding:0 24px">Delivery en 30 minutos</div>
+              <div style="font-size:14px;color:var(--mu);text-align:center;padding:0 32px;line-height:1.6">XenderDelivery conecta comercios y riders en tu ciudad.</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:28px 24px;flex:1">
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px" id="ob-dots">
+            <div style="width:24px;height:4px;border-radius:2px;background:var(--cy)" id="od0"></div>
+            <div style="width:8px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)" id="od1"></div>
+            <div style="width:8px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)" id="od2"></div>
+          </div>
+          <button class="btn btn-cy" id="ob-next-btn" onclick="obNext()">Siguiente →</button>
+          <button class="btn btn-gh" onclick="goTo('home',false);loadHome()">Saltar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIMITS SCREEN -->
+    <div class="sc" id="sc-limits">
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:4px">Límite diario de envíos</div>
+        <div style="font-size:12px;color:var(--mu);margin-bottom:14px">Protege tu cuenta configurando límites</div>
+        <label class="fl">Límite diario (EUR)</label>
+        <input class="inp" type="number" id="lim-daily" placeholder="Ej: 500">
+        <label class="fl">Límite por transacción (EUR)</label>
+        <input class="inp" type="number" id="lim-tx" placeholder="Ej: 200">
+        <button class="btn btn-cy" onclick="saveLimits()">Guardar límites</button>
+      </div>
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:12px">Uso hoy</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:13px;color:var(--mu)">Enviado hoy</span>
+          <span style="font-size:13px;font-weight:700;color:var(--cy)" id="lim-used">€ 0.00</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden">
+          <div style="height:100%;background:var(--cy);border-radius:3px;transition:width .5s" id="lim-bar" style="width:0%"></div>
+        </div>
+        <div style="font-size:11px;color:var(--mu);margin-top:6px" id="lim-remaining">Sin límite configurado</div>
+      </div>
+    </div>
+
+    <!-- REFERRAL SCREEN -->
+    <div class="sc" id="sc-referral">
+      <div class="fc" style="text-align:center">
+        <div style="font-size:48px;margin-bottom:12px">🎁</div>
+        <div class="sec-ttl" style="margin-bottom:6px">Invita y gana</div>
+        <div style="font-size:13px;color:var(--mu);margin-bottom:18px;line-height:1.6">Por cada amigo que se registre con tu código y haga su primer envío, ambos recibís <strong style="color:var(--gr)">€5</strong> en puntos</div>
+        <div style="background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);border-radius:14px;padding:16px;margin-bottom:16px">
+          <div style="font-size:11px;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Tu código de referido</div>
+          <div style="font-family:var(--fs);font-size:22px;font-weight:800;color:var(--cy);letter-spacing:.12em" id="ref-code">REF-XXXXXX</div>
+        </div>
+        <button class="btn btn-cy" onclick="shareReferral()">📤 Compartir código</button>
+      </div>
+      <div class="fc">
+        <div class="sec-ttl" style="margin-bottom:12px">Tus referidos</div>
+        <div id="ref-list"><div class="empty"><div class="empty-i">👥</div>Aún no has invitado a nadie</div></div>
+      </div>
+    </div>
+
+    <!-- CART SCREEN -->
+    <div class="sc" id="sc-cart">
+      <div id="cart-empty" style="display:none"><div class="empty" style="padding-top:60px"><div class="empty-i">🛒</div>Tu carrito está vacío</div></div>
+      <div id="cart-content">
+        <div class="tl" id="cart-items"></div>
+        <div class="fc" id="cart-summary" style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:13px;color:var(--mu)">Subtotal</span>
+            <span style="font-size:13px;font-weight:600" id="cart-sub">€ 0.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="font-size:13px;color:var(--mu)">Envío desde España</span>
+            <span style="font-size:13px;font-weight:600;color:var(--gr)">Gratis</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid var(--b)">
+            <span style="font-size:14px;font-weight:700">Total</span>
+            <span style="font-family:var(--fs);font-size:18px;font-weight:800;color:var(--cy)" id="cart-total">€ 0.00</span>
+          </div>
+          <button class="btn btn-cy" style="margin-top:14px" onclick="doCheckout()">✓ Confirmar pedido →</button>
+          <button class="btn btn-gh" onclick="clearCart()">Vaciar carrito</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc" id="sc-kyc">
+      <div class="kl">
+        <div class="kli on"><div class="kli-n">🔵 Nivel Básico · Activo</div><div class="kli-d">Hasta €200 por envío · Solo email verificado. Tu nivel actual.</div></div>
+        <div class="kli">
+          <div class="kli-n">⚪ Nivel Estándar</div>
+          <div class="kli-d">Hasta €2,000 por envío · Requiere DNI o Pasaporte</div>
+          <button onclick="toast('Próximamente: sube tu documento de identidad','info')" style="margin-top:10px;width:100%;padding:11px;border-radius:var(--r);background:var(--cy-d);border:1px solid rgba(0,229,255,.25);color:var(--cy);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fs)">📄 Subir documento</button>
+        </div>
+        <div class="kli">
+          <div class="kli-n" style="color:var(--go)">🌟 Nivel Premium</div>
+          <div class="kli-d">Envíos ilimitados · Verificación facial + documentos completos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIDER PORTAL -->
+    <div class="sc" id="sc-rider">
+      <div class="por-h" style="background:linear-gradient(135deg,rgba(255,77,109,.08),rgba(199,125,255,.05));border:1px solid rgba(255,77,109,.15)">
+        <div class="por-t" style="color:var(--re)">PORTAL RIDER · XENDERDELIVERY</div>
+        <div class="por-i">🛵</div>
+        <div class="por-a" id="rider-earnings">€ 0.00</div>
+        <div class="por-s">Ganancias de hoy</div>
+      </div>
+      <div class="sg">
+        <div class="ss"><div class="ss-n" id="rider-today">0</div><div class="ss-l">Hoy</div></div>
+        <div class="ss"><div class="ss-n" style="color:#CD7F32" id="rider-level">🥉</div><div class="ss-l">Nivel</div></div>
+        <div class="ss"><div class="ss-n" id="rider-rating">5.0⭐</div><div class="ss-l">Rating</div></div>
+      </div>
+      <!-- Available deliveries -->
+      <div class="sec-row"><span class="sec-ttl">Entregas disponibles</span><span style="font-size:11px;color:var(--gr)">● En línea</span></div>
+      <div id="rider-deliveries-list">
+        <div class="tx" style="border-color:rgba(0,255,178,.2);background:rgba(0,255,178,.04)">
+          <div class="ti" style="background:var(--gr-d);font-size:18px">📦</div>
+          <div class="tn">
+            <div class="tn-name">Pedido #IA-20451 · XenderShop</div>
+            <div class="tn-date">Malabo Centro → Ela Nguema · 2.3 km</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+            <span style="font-size:13px;font-weight:700;color:var(--gr)">€3.50</span>
+            <button data-delivery="IA-20451" onclick="acceptDelivery('IA-20451')" style="background:var(--gr);color:#000;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fs)">Aceptar</button>
+          </div>
+        </div>
+        <div class="tx">
+          <div class="ti" style="background:var(--cy-d);font-size:18px">🛒</div>
+          <div class="tn">
+            <div class="tn-name">Pedido #IA-20449 · BigShop</div>
+            <div class="tn-date">Supermercado Akwa → Barrio Las Palmas · 1.8 km</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+            <span style="font-size:13px;font-weight:700;color:var(--cy)">€3.00</span>
+            <button data-delivery="IA-20449" onclick="acceptDelivery('IA-20449')" style="background:var(--cy);color:#000;border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fs)">Aceptar</button>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="tiers">
+        <div class="tier t0"><div class="tier-n">🥉 Bronze · Tu nivel actual</div><div class="tier-s"><div class="ts"><div class="ts-n" style="color:#CD7F32">€3.00</div><div class="ts-l">por entrega</div></div><div class="ts"><div class="ts-n" style="color:#CD7F32">5%</div><div class="ts-l">bono</div></div><div class="ts"><div class="ts-n" style="color:#CD7F32">~€472</div><div class="ts-l">/mes</div></div></div></div>
+        <div class="tier t1"><div class="tier-n">🥈 Silver · 51+ entregas</div><div class="tier-s"><div class="ts"><div class="ts-n" style="color:#C0C0C0">€3.50</div><div class="ts-l">por entrega</div></div><div class="ts"><div class="ts-n" style="color:#C0C0C0">10%</div><div class="ts-l">bono</div></div><div class="ts"><div class="ts-n" style="color:#C0C0C0">~€770</div><div class="ts-l">/mes</div></div></div></div>
+        <div class="tier t2"><div class="tier-n">🥇 Gold · 151+ entregas</div><div class="tier-s"><div class="ts"><div class="ts-n" style="color:var(--go)">€4.00</div><div class="ts-l">por entrega</div></div><div class="ts"><div class="ts-n" style="color:var(--go)">15%</div><div class="ts-l">bono</div></div><div class="ts"><div class="ts-n" style="color:var(--go)">~€1,104</div><div class="ts-l">/mes</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- CIRCULAR PORTAL -->
+    <div class="sc" id="sc-circular">
+      <div class="por-h" style="background:linear-gradient(135deg,rgba(255,209,102,.07),rgba(0,229,255,.04));border:1px solid rgba(255,209,102,.15)">
+        <div class="por-t" style="color:var(--go)">CIRCULAR AUTORIZADA</div>
+        <div class="por-i">🏢</div>
+        <div class="por-a" id="circ-earnings">€ 0.00</div>
+        <div class="por-s">Comisiones este mes</div>
+      </div>
+      <div class="sg">
+        <div class="ss"><div class="ss-n" style="color:var(--cy)" id="circ-riders">0</div><div class="ss-l">Riders</div></div>
+        <div class="ss"><div class="ss-n" style="color:var(--gr)" id="circ-merchants">0</div><div class="ss-l">Comercios</div></div>
+        <div class="ss"><div class="ss-n" style="color:var(--go)" id="circ-txns">0</div><div class="ss-l">Pagos hoy</div></div>
+      </div>
+      <div class="sec-row" style="margin-bottom:10px"><span class="sec-ttl">Reintegros pendientes</span></div>
+      <div id="circ-cashouts">
+        <div class="tx" style="border-color:rgba(255,181,71,.2)">
+          <div class="ti" style="background:var(--go-d)">🏦</div>
+          <div class="tn"><div class="tn-name">Ana Mbele — IA-AB4521</div><div class="tn-date">Solicitud de reintegro · hace 5 min</div></div>
+          <div style="text-align:right">
+            <div style="font-size:13px;font-weight:700;color:var(--go)">€85.00</div>
+            <button onclick="approveReintegro('IA-AB4521')" style="background:var(--gr);color:#000;border:none;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;margin-top:4px;font-family:var(--fs)">Pagar</button>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="al2">
+        <div class="ai2" onclick="toast('Generando QR para nuevo rider...','info')"><div class="ai2-i">🛵</div><div class="ai2-b"><div class="ai2-n">Añadir rider a mi flota</div><div class="ai2-d">Genera código de invitación</div></div></div>
+        <div class="ai2" onclick="toast('Generando QR comercial...','info')"><div class="ai2-i">🏪</div><div class="ai2-b"><div class="ai2-n">Afiliar nuevo comercio</div><div class="ai2-d">QR de pago para el comercio</div></div></div>
+        <div class="ai2" onclick="goTo('history')"><div class="ai2-i">📊</div><div class="ai2-b"><div class="ai2-n">Ver mis comisiones</div><div class="ai2-d">Historial completo de ganancias</div></div></div>
+      </div>
+    </div>
+
+    <!-- PROVEEDOR PORTAL -->
+    <div class="sc" id="sc-proveedor">
+      <div class="por-h" style="background:linear-gradient(135deg,rgba(199,125,255,.08),rgba(0,229,255,.04));border:1px solid rgba(199,125,255,.15)">
+        <div class="por-t" style="color:var(--pu)">PORTAL PROVEEDOR</div>
+        <div class="por-i">🏭</div>
+        <div class="por-a">€ 0.00</div>
+        <div class="por-s">Ventas acumuladas</div>
+      </div>
+      <div class="sg">
+        <div class="ss"><div class="ss-n" style="color:var(--pu)">0</div><div class="ss-l">Productos</div></div>
+        <div class="ss"><div class="ss-n" style="color:var(--gr)">0</div><div class="ss-l">Pedidos</div></div>
+        <div class="ss"><div class="ss-n" style="color:var(--cy)">0</div><div class="ss-l">En tránsito</div></div>
+      </div>
+      <div class="al2">
+        <div class="ai2"><div class="ai2-i">📦</div><div class="ai2-b"><div class="ai2-n">Mi catálogo</div><div class="ai2-d">Gestionar mis productos</div></div></div>
+        <div class="ai2"><div class="ai2-i">🚢</div><div class="ai2-b"><div class="ai2-n">Tracking envíos</div><div class="ai2-d">Asia → España → África</div></div></div>
+        <div class="ai2"><div class="ai2-i">✅</div><div class="ai2-b"><div class="ai2-n">Solicitar certificación CE</div><div class="ai2-d">Hub logístico Valencia</div></div></div>
+      </div>
+    </div>
+
+  </div><!-- /screens -->
+
+  <div class="bnav">
+    <div class="ni on" id="nv-h" onclick="goTo('home')"><div class="ic">🏠</div><div class="lbl">Home</div></div>
+    <div class="ni" id="nv-s" onclick="goTo('send')"><div class="ic">💸</div><div class="lbl">Enviar</div></div>
+    <div class="ni" id="nv-c" onclick="goTo('converter')"><div class="ic">💱</div><div class="lbl">Cambio</div></div>
+    <div class="ni" id="nv-hi" onclick="goTo('history')"><div class="ic">📊</div><div class="lbl">Historial</div></div>
+    <div class="ni" id="nv-shop" onclick="goTo('shop')"><div class="ic" style="position:relative">🛒<span id="cart-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--re);color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:14px;height:14px;line-height:14px;text-align:center">0</span></div><div class="lbl">Shop</div></div>
+    <div class="ni" id="nv-p" onclick="goTo('profile')"><div class="ic">👤</div><div class="lbl">Perfil</div></div>
+  </div>
+</div><!-- /app -->
+
+<!-- PIN MODAL -->
+<div class="pin-overlay" id="pin-modal">
+  <div class="pin-box">
+    <div class="pin-title">Confirmar con PIN</div>
+    <div class="pin-sub" id="pin-sub">Introduce tu PIN de 4 dígitos</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-btn" onclick="pinPress('1')">1</button>
+      <button class="pin-btn" onclick="pinPress('2')">2</button>
+      <button class="pin-btn" onclick="pinPress('3')">3</button>
+      <button class="pin-btn" onclick="pinPress('4')">4</button>
+      <button class="pin-btn" onclick="pinPress('5')">5</button>
+      <button class="pin-btn" onclick="pinPress('6')">6</button>
+      <button class="pin-btn" onclick="pinPress('7')">7</button>
+      <button class="pin-btn" onclick="pinPress('8')">8</button>
+      <button class="pin-btn" onclick="pinPress('9')">9</button>
+      <button class="pin-btn" onclick="pinClear()" style="font-size:14px;color:var(--mu)">⌫</button>
+      <button class="pin-btn" onclick="pinPress('0')">0</button>
+      <button class="pin-btn" onclick="pinCancel()" style="font-size:12px;color:var(--mu)">✕</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SB_URL='https://spnfvmvrlexyiljwyola.supabase.co';
+var SB_KEY='sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
+var SB=null,USER=null,WALLET=null,DEMO=false,LANG='es';
+var ST='intl',COM='circular',NAV=[],CUR='home',ALL_TX=[];
+var SHOP_FILTER='all',PIN_VAL='',PIN_CB=null,PIN_MODE='confirm';
+var FAVS=JSON.parse(localStorage.getItem('ia_favs')||'[]');
+var NOTIFS=JSON.parse(localStorage.getItem('ia_notifs')||'[]');
+
+var RATES={
+  'EUR-XAF':655.957,'EUR-XOF':655.957,'EUR-USD':1.08,'EUR-EUR':1,
+  'USD-XAF':607.36,'USD-XOF':607.36,'USD-EUR':0.926,'USD-USD':1,
+  'XAF-EUR':0.001524,'XAF-USD':0.001646,'XAF-XOF':1,'XAF-XAF':1,
+  'XOF-EUR':0.001524,'XOF-USD':0.001646,'XOF-XAF':1,'XOF-XOF':1
+};
+var COF={circular:0,mtn:0.015,orange:0.015,bank:0.005};
+var COL={circular:'Circular Autorizada · ~15 min',mtn:'MTN Mobile Money · ~2h',orange:'Orange Money · ~2h',bank:'Banco IBAN · 24-48h'};
+var CITIES={GQ:['Malabo','Bata','Ebebiyin','Mongomo'],CM:['Douala','Yaounde','Bamenda','Bafoussam'],GA:['Libreville','Port-Gentil','Franceville'],SN:['Dakar','Thies','Saint-Louis','Ziguinchor'],CI:['Abidjan','Bouake','Daloa','Korhogo'],ES:['Madrid','Barcelona','Valencia','Las Palmas','Sevilla'],CD:['Kinshasa','Lubumbashi','Goma'],CG:['Brazzaville','Pointe-Noire'],CF:['Bangui'],TD:['Ndjamena'],NG:['Lagos','Abuja','Kano'],GH:['Accra','Kumasi'],BJ:['Cotonou','Porto-Novo'],TG:['Lome'],BF:['Ouagadougou'],ML:['Bamako'],GN:['Conakry'],GW:['Bissau'],MR:['Nouakchott'],NE:['Niamey'],CN:['Guangzhou','Shanghai','Yiwu'],FR:['Paris','Lyon','Marseille'],PT:['Lisboa','Oporto'],OTHER:['Ciudad']};
+var NM={home:'nv-h',send:'nv-s',converter:'nv-c',history:'nv-hi',shop:'nv-shop',profile:'nv-p'};
+var ALL_PRODS=[
+  {n:'Auriculares Bluetooth Pro',p:24.99,e:'🎧',ce:true,cat:'electro'},
+  {n:'Smartwatch Series M8',p:42.00,e:'⌚',ce:true,cat:'electro'},
+  {n:'Camara Digital 4K',p:89.00,e:'📷',ce:true,cat:'electro'},
+  {n:'Set Skincare Premium',p:18.90,e:'💄',ce:true,cat:'hogar'},
+  {n:'Zapatillas Sport X',p:35.50,e:'👟',ce:false,cat:'moda'},
+  {n:'Lampara Solar LED',p:19.99,e:'💡',ce:true,cat:'solar'},
+  {n:'Panel Solar 100W',p:89.00,e:'☀️',ce:true,cat:'solar'},
+  {n:'Tablet 10 pulgadas',p:129.00,e:'📱',ce:true,cat:'electro'},
+  {n:'Hervidor Electrico',p:22.00,e:'☕',ce:true,cat:'hogar'},
+  {n:'Camiseta Sport',p:12.90,e:'👕',ce:false,cat:'moda'},
+  {n:'Bateria Portatil 20k',p:28.00,e:'🔋',ce:true,cat:'electro'},
+  {n:'Ventilador Solar',p:34.00,e:'🌀',ce:true,cat:'solar'}
+];
+
+function getUserCode(id){
+  var s=(id||'DEMO').replace(/-/g,'').toUpperCase();
+  return 'IA-'+s.substring(0,6);
+}
+
+(function init(){
+  var showLogin=function(){
+    document.getElementById('splash').style.display='none';
+    document.getElementById('ls').style.display='flex';
+  };
+
+  function loadSB(cb){
+    if(SB){cb();return;}
+    // Use UMD bundle if already loaded
+    if(window.supabase){
+      SB=window.supabase.createClient(SB_URL,SB_KEY);
+      cb();return;
+    }
+    import('https://esm.sh/@supabase/supabase-js@2').then(function(m){
+      SB=m.createClient(SB_URL,SB_KEY);cb();
+    }).catch(function(){
+      if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);cb();}
+      else{cb();}
+    });
+  }
+
+  loadSB(function(){
+    if(!SB){showLogin();return;}
+    SB.auth.getSession().then(function(res){
+      var session=res.data&&res.data.session;
+      if(session){
+        loadU(session.user.id,session.user.email).then(function(){
+          setTimeout(showApp,800);
+        }).catch(function(){setTimeout(showLogin,800);});
+      } else {
+        setTimeout(showLogin,800);
+      }
+    }).catch(function(){setTimeout(showLogin,800);});
+  });
+})();
+
+function loadU(id,email){
+  return Promise.all([
+    SB.from('users').select('*').eq('id',id).single(),
+    SB.from('wallets').select('*').eq('user_id',id).single()
+  ]).then(function(res){
+    USER=res[0].data||{id:id,email:email,full_name:localStorage.getItem('ia_n_'+id)||email.split('@')[0],role:localStorage.getItem('ia_r_'+id)||'cliente',country:'GQ'};
+    WALLET=res[1].data||{eur:0,xaf:0,usd:0,points:0};
+    if(USER){localStorage.setItem('ia_r_'+id,USER.role);localStorage.setItem('ia_n_'+id,USER.full_name);}
+  }).catch(function(){
+    USER={id:id,email:email,full_name:localStorage.getItem('ia_n_'+id)||email.split('@')[0],role:localStorage.getItem('ia_r_'+id)||'cliente',country:'GQ'};
+    WALLET={eur:0,xaf:0,usd:0,points:0};
+  });
+}
+
+function showApp(){
+  document.getElementById('splash').style.display='none';
+  document.getElementById('ls').style.display='none';
+  var app=document.getElementById('app');
+  app.style.display='flex';
+  updTop();
+  var role=USER&&USER.role?USER.role:'cliente';
+  if(role==='rider'){goTo('rider',false);}
+  else if(role==='circular'){goTo('circular',false);}
+  else if(role==='proveedor'){goTo('proveedor',false);}
+  else{goTo('home',false);loadHome();}
+  if(NOTIFS.length){
+    var dot=document.getElementById('notif-dot');
+    if(dot)dot.style.display='block';
+  }
+}
+
+function startDemo(){
+  DEMO=true;
+  USER={id:'demo123456',email:'demo@innovaafric.com',full_name:'Demo User',role:'cliente',country:'GQ'};
+  WALLET={eur:1500,xaf:985000,usd:270,points:1200};
+  addNotif('💸','Bienvenido al demo','Cuenta con 1500 EUR de prueba');
+  showApp();
+}
+
+function swTab(t){
+  var il=t==='l';
+  document.getElementById('fl').style.display=il?'block':'none';
+  document.getElementById('fr').style.display=il?'none':'block';
+  document.getElementById('tb-l').className='tab-btn'+(il?' on':'');
+  document.getElementById('tb-r').className='tab-btn'+(il?'':' on');
+}
+
+function doLogin(){
+  var em=document.getElementById('l-em').value.trim();
+  var pw=document.getElementById('l-pw').value;
+  var btn=document.getElementById('l-btn');
+  var err=document.getElementById('l-err');
+  err.style.display='none';
+  if(!em||!pw){showE(err,'Introduce email y contraseña');return;}
+  btn.textContent='Conectando...';btn.disabled=true;
+  var go=function(){
+    SB.auth.signInWithPassword({email:em,password:pw}).then(function(res){
+      if(res.error){showE(err,'Email o contraseña incorrectos');btn.textContent='Entrar →';btn.disabled=false;return;}
+      loadU(res.data.user.id,em).then(function(){showApp();});
+    }).catch(function(e){showE(err,'Error de conexion: '+e.message);btn.textContent='Entrar →';btn.disabled=false;});
+  };
+  if(!SB){
+    if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);go();return;}
+    import('https://esm.sh/@supabase/supabase-js@2').then(function(m){SB=m.createClient(SB_URL,SB_KEY);go();}).catch(function(){if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);go();}else{showE(err,'Error de conexión. Verifica tu internet.');btn.textContent='Entrar →';btn.disabled=false;}});
+  } else {go();}
+}
+
+function doReg(){
+  var nm=(document.getElementById('r-nm').value.trim()+' '+document.getElementById('r-ap').value.trim()).trim();
+  var em=document.getElementById('r-em').value.trim();
+  var pw=document.getElementById('r-pw').value;
+  var role=document.getElementById('r-ro').value;
+  var country=document.getElementById('r-co').value;
+  var phone=document.getElementById('r-cc').value+document.getElementById('r-ph').value;
+  var city=document.getElementById('r-ci').value;
+  var btn=document.getElementById('r-btn');
+  var err=document.getElementById('r-err');
+  err.style.display='none';
+  if(!nm||!em||!pw){showE(err,'Rellena nombre, email y contraseña');return;}
+  btn.textContent='Creando...';btn.disabled=true;
+  var go=function(){
+    SB.auth.signUp({email:em,password:pw}).then(function(res){
+      if(res.error){showE(err,res.error.message);btn.textContent='Crear cuenta →';btn.disabled=false;return;}
+      var uid=res.data.user.id;
+      localStorage.setItem('ia_r_'+uid,role);
+      localStorage.setItem('ia_n_'+uid,nm);
+      var userData={id:uid,email:em,full_name:nm,role:role,country:country};
+      if(phone&&phone.length>3)userData.phone=phone;
+      if(city&&city.length>0)userData.city=city;
+      SB.from('users').upsert(userData).catch(function(e){console.log('users upsert:',e.message);});
+      SB.from('wallets').upsert({user_id:uid,eur:0,xaf:0,usd:0,points:0}).catch(function(){});
+      USER={id:uid,email:em,full_name:nm,role:role,country:country};
+      WALLET={eur:0,xaf:0,usd:0,points:0};
+      var iaCode=getUserCode(uid);
+      addNotif('🎉','Bienvenido a InnovaAFRIC','Tu código: '+iaCode);
+      localStorage.setItem('ia_new_user','1');
+      localStorage.setItem('ia_new_code',iaCode);
+      showApp();
+    }).catch(function(e){showE(err,'Error: '+e.message);btn.textContent='Crear cuenta →';btn.disabled=false;});
+  };
+  if(!SB){
+    if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);go();return;}
+    import('https://esm.sh/@supabase/supabase-js@2').then(function(m){SB=m.createClient(SB_URL,SB_KEY);go();}).catch(function(){if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);go();}else{showE(err,'Error de conexión. Verifica tu internet.');btn.textContent='Crear cuenta →';btn.disabled=false;}});
+  } else {go();}
+}
+
+function showE(el,msg){el.textContent=msg;el.style.display='block';}
+
+function selR(role,el){
+  document.querySelectorAll('.role-card').forEach(function(c){c.className='role-card';c.querySelector('.rn').style.color='var(--su)';});
+  el.className='role-card on';el.querySelector('.rn').style.color='var(--cy)';
+  document.getElementById('r-ro').value=role;
+}
+
+function onCo(){
+  var s=document.getElementById('r-co');
+  var o=s.options[s.selectedIndex];
+  document.getElementById('r-cc').value=o.getAttribute('data-c')||'+240';
+  var cs=CITIES[s.value]||['Ciudad'];
+  document.getElementById('r-ci').innerHTML=cs.map(function(c){return '<option>'+c+'</option>';}).join('');
+}
+
+function doLogout(){
+  if(!DEMO&&SB)SB.auth.signOut();
+  USER=null;WALLET=null;DEMO=false;NAV=[];
+  document.getElementById('app').style.display='none';
+  document.getElementById('ls').style.display='flex';
+}
+
+function goTo(id,push){
+  if(push===undefined)push=true;
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});
+  var sc=document.getElementById('sc-'+id);
+  if(!sc)return;
+  sc.classList.add('on');
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
+  if(NM[id])document.getElementById(NM[id]).classList.add('on');
+  if(push&&id!==CUR)NAV.push(CUR);
+  CUR=id;
+  var bb=document.getElementById('tb-back');
+  bb.style.display=(NAV.length>0&&['home','rider','circular','proveedor'].indexOf(id)===-1)?'flex':'none';
+  var titles={home:'InnovaAFRIC',send:'Enviar dinero',receive:'Recibir dinero',cashout:'Retirar dinero',converter:'Cambio de divisas',history:'Historial',shop:'XenderShop',profile:'Mi perfil',kyc:'KYC',rider:'Portal Rider',circular:'Circular',proveedor:'Proveedor',favorites:'Favoritos',notifs:'Notificaciones'};
+  document.getElementById('top-t').textContent=titles[id]||'InnovaAFRIC';
+  if(id==='history')loadHist();
+  if(id==='shop')loadShop();
+  if(id==='profile')rendProf();
+  if(id==='receive')rendRecv();
+  if(id==='send'){calcS();updSAv();}
+  if(id==='cashout'){calcCO();updCOAv();}
+  if(id==='converter')calcCV();
+  if(id==='favorites')rendFavs();
+  if(id==='notifs')rendNotifs();
+  window.scrollTo(0,0);
+}
+
+function goBack(){
+  if(NAV.length>0){var p=NAV.pop();goTo(p,false);}
+  else goTo('home',false);
+}
+
+function loadHome(){
+  updBal();
+  var el=document.getElementById('home-txns');
+  if(el)el.innerHTML='<div class="empty"><div class="empty-i">💳</div>Sin transacciones aún</div>';
+  if(!DEMO&&SB&&USER&&USER.id){
+    Promise.all([
+      SB.from('transactions').select('*').or('user_id.eq.'+USER.id+',recipient_id.eq.'+USER.id).order('created_at',{ascending:false}).limit(5),
+      SB.from('wallets').select('*').eq('user_id',USER.id).single()
+    ]).then(function(res){
+      if(res[1].data){WALLET=res[1].data;updBal();}
+      if(res[0].data&&res[0].data.length)renderTx('home-txns',res[0].data);
+    }).catch(function(){});
+  }
+}
+
+function updBal(){
+  if(!WALLET)return;
+  var eur=Number(WALLET.eur||0);
+  var xaf=Math.round(WALLET.xaf||0);
+  var usd=Number(WALLET.usd||0);
+  document.getElementById('b-eur').textContent=eur.toFixed(2)+' EUR';
+  document.getElementById('b-xaf').textContent=xaf.toLocaleString('es')+' XAF · '+usd.toFixed(2)+' USD';
+  document.getElementById('bc-eur').textContent=eur.toFixed(2);
+  document.getElementById('bc-xaf').textContent=xaf.toLocaleString('es');
+  document.getElementById('bc-usd').textContent=usd.toFixed(2);
+  document.getElementById('bc-pts').textContent=WALLET.points||0;
+}
+
+function updTop(){
+  if(!USER)return;
+  document.getElementById('top-av').textContent=(USER.full_name||USER.email)[0].toUpperCase();
+}
+
+function updSAv(){
+  var c=document.getElementById('s-fc')&&document.getElementById('s-fc').value||'EUR';
+  var v=Number(WALLET&&WALLET[c.toLowerCase()]||0);
+  var s=c==='EUR'?'€ ':c==='USD'?'$ ':'';
+  var el=document.getElementById('s-av');
+  if(el)el.textContent=s+v.toFixed(2)+(c==='XAF'?' XAF':'');
+}
+
+function updCOAv(){
+  var c=document.getElementById('co-c')&&document.getElementById('co-c').value||'EUR';
+  var v=Number(WALLET&&WALLET[c.toLowerCase()]||0);
+  var el=document.getElementById('co-av');
+  if(el)el.textContent='€ '+v.toFixed(2);
+}
+
+var TIC={send:'var(--re-d)',receive:'var(--gr-d)',p2p:'var(--cy-d)',qr_pay:'var(--pu-d)',cashout:'var(--go-d)'};
+var TII={send:'💸',receive:'💰',p2p:'↔️',qr_pay:'📱',cashout:'🏦',refund:'↩️'};
+
+function renderTx(id,txns){
+  var c=document.getElementById(id);if(!c)return;
+  if(!txns||!txns.length){c.innerHTML='<div class="empty"><div class="empty-i">💳</div>Sin transacciones aún</div>';return;}
+  var html='';
+  txns.forEach(function(tx,i){
+    var out=['send','cashout','qr_pay'].indexOf(tx.type)!==-1&&tx.user_id===(USER&&USER.id);
+    var col=out?'var(--re)':'var(--gr)';
+    var sign=out?'-':'+';
+    var amt=Number(tx.amount).toLocaleString('es')+' '+tx.currency;
+    var dt=new Date(tx.created_at).toLocaleDateString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    var bg=TIC[tx.type]||'rgba(255,255,255,.05)';
+    var statusColor=tx.status==='completed'?'var(--gr)':tx.status==='failed'?'var(--re)':'var(--go)';
+    html+='<div class="tx" onclick="showTxDetail('+i+')">'
+      +'<div class="ti" style="background:'+bg+'">'+(TII[tx.type]||'💳')+'</div>'
+      +'<div class="tn"><div class="tn-name">'+(tx.description||tx.type)+'</div><div class="tn-date">'+dt+'</div></div>'
+      +'<div class="ta"><div class="ta-amt" style="color:'+col+'">'+sign+amt+'</div>'
+      +'<div class="ta-st" style="color:'+statusColor+'">'+(tx.status||'')+'</div></div>'
+      +'</div>';
+  });
+  c.innerHTML=html;
+  window._lastTxns=txns;
+}
+
+function showTxDetail(idx){
+  var txns=window._lastTxns||[];
+  var tx=txns[idx];if(!tx)return;
+  var out=['send','cashout','qr_pay'].indexOf(tx.type)!==-1&&tx.user_id===(USER&&USER.id);
+  var col=out?'var(--re)':'var(--gr)';
+  var sign=out?'-':'+';
+  var amt=sign+Number(tx.amount).toLocaleString('es')+' '+tx.currency;
+  var statusColor=tx.status==='completed'?'var(--gr)':tx.status==='failed'?'var(--re)':'var(--go)';
+  var statusLabel={completed:'Completado',processing:'Procesando',pending:'Pendiente',failed:'Fallido'};
+  var typeLabel={send:'Envio internacional',p2p:'Transferencia P2P',receive:'Pago recibido',cashout:'Reintegro',qr_pay:'Pago QR'};
+  var dt=new Date(tx.created_at).toLocaleString('es',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  var fee=tx.fee?'EUR '+Number(tx.fee).toFixed(2):'Gratis';
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(5,11,24,.92);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:flex-end;justify-content:center;padding:16px';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var d=document.createElement('div');
+  d.style.cssText='background:rgba(10,22,40,.98);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:26px;width:100%;max-width:420px;';
+  var rows=[
+    ['Tipo',(typeLabel[tx.type]||tx.type)],
+    ['Importe',amt+' '],
+    ['Estado',(statusLabel[tx.status]||tx.status||'—')],
+    ['Fecha',dt],
+    ['Comision',fee],
+    tx.ref_code?['Referencia',tx.ref_code.substring(0,16)]:null,
+    tx.description?['Concepto',tx.description]:null,
+    tx.recipient_phone?['Destinatario',tx.recipient_phone]:null,
+  ].filter(Boolean);
+  var rowsHtml=rows.map(function(r){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">'
+      +'<span style="font-size:12px;color:var(--mu)">'+r[0]+'</span>'
+      +'<span style="font-size:13px;font-weight:600;color:var(--txt)">'+r[1]+'</span>'
+      +'</div>';
+  }).join('');
+  d.innerHTML='<div style="text-align:center;margin-bottom:20px">'
+    +'<div style="font-size:48px;margin-bottom:10px">'+(TII[tx.type]||'💳')+'</div>'
+    +'<div style="font-family:var(--fs);font-size:24px;font-weight:800;color:'+col+'">'+amt+'</div>'
+    +'<div style="font-size:12px;font-weight:700;color:'+statusColor+';margin-top:5px;text-transform:uppercase;letter-spacing:.08em">'+(statusLabel[tx.status]||'')+'</div>'
+    +'</div>'
+    +'<div style="margin-bottom:18px">'+rowsHtml+'</div>';
+  var btn=document.createElement('button');
+  btn.style.cssText='width:100%;padding:13px;border-radius:var(--r);background:linear-gradient(135deg,var(--cy),var(--cy2));color:#050B18;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fs)';
+  btn.textContent='Cerrar';
+  btn.onclick=function(){ov.remove();};
+  d.appendChild(btn);
+  ov.appendChild(d);
+  document.body.appendChild(ov);
+}
+
+function loadHist(){
+  var c=document.getElementById('hist-list');if(!c)return;
+  c.innerHTML='<div class="loading"><span style="display:inline-block;width:18px;height:18px;border:2px solid rgba(0,229,255,.2);border-top-color:var(--cy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:7px"></span>Cargando...</div>';
+  if(DEMO){ALL_TX=getDemoTx();renderTx('hist-list',ALL_TX);return;}
+  SB.from('transactions').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}).limit(50).then(function(res){
+    ALL_TX=res.data||[];
+    if(ALL_TX.length)renderTx('hist-list',ALL_TX);
+    else c.innerHTML='<div class="empty"><div class="empty-i">📊</div>Sin transacciones aún</div>';
+  }).catch(function(){c.innerHTML='<div class="empty"><div class="empty-i">📊</div>Sin transacciones aún</div>';});
+}
+
+function fH(type,btn){
+  document.querySelectorAll('.hff').forEach(function(b){b.classList.remove('on');});
+  btn.classList.add('on');
+  if(type==='all'){renderTx('hist-list',ALL_TX);return;}
+  renderTx('hist-list',ALL_TX.filter(function(tx){
+    if(type==='send')return['send','qr_pay'].indexOf(tx.type)!==-1&&tx.user_id===(USER&&USER.id);
+    if(type==='receive')return tx.recipient_id===(USER&&USER.id);
+    if(type==='cashout')return tx.type==='cashout';
+    return true;
+  }));
+}
+
+function getDemoTx(){
+  return[
+    {type:'send',amount:200,currency:'EUR',status:'completed',created_at:new Date(Date.now()-7200000).toISOString(),description:'Envio familiar Douala',user_id:'demo123456'},
+    {type:'receive',amount:150000,currency:'XAF',status:'completed',created_at:new Date(Date.now()-86400000).toISOString(),description:'Pago recibido',recipient_id:'demo123456'},
+    {type:'cashout',amount:100,currency:'EUR',status:'processing',created_at:new Date(Date.now()-172800000).toISOString(),description:'Reintegro MTN',user_id:'demo123456'},
+    {type:'qr_pay',amount:8500,currency:'XAF',status:'completed',created_at:new Date(Date.now()-259200000).toISOString(),description:'Restaurante Malabo',user_id:'demo123456'}
+  ];
+}
+
+function setST(type,el){
+  ST=type;
+  document.querySelectorAll('.ttab').forEach(function(t){t.classList.remove('on');});
+  el.classList.add('on');
+  document.getElementById('s-fi').style.display=type==='intl'?'block':'none';
+  document.getElementById('s-fp').style.display=type==='p2p'?'block':'none';
+  document.getElementById('s-btn').textContent=type==='p2p'?'↔️ Transferir gratis →':'💸 Confirmar envio →';
+  // P2P has no fee
+  var feeEl=document.getElementById('s-fee');
+  if(feeEl)feeEl.textContent=type==='p2p'?'Gratis':'...';
+  calcS();
+}
+
+function setA(v){
+  document.getElementById('s-amt').value=v;
+  calcS();
+  document.querySelectorAll('.qa .q').forEach(function(b){
+    b.classList.toggle('on',parseFloat(b.textContent.replace('€',''))===v);
+  });
+}
+
+function calcS(){
+  var amt=parseFloat(document.getElementById('s-amt').value)||0;
+  var from=document.getElementById('s-fc').value||'EUR';
+  var to=document.getElementById('s-tc').value||'XAF';
+  var rate=RATES[from+'-'+to]||1;
+  var fee=ST==='p2p'?0:amt*0.02;
+  var recv=(amt-fee)*rate;
+  var sym=from==='EUR'?'€':from==='USD'?'$':'';
+  var sav=(amt*0.10-fee);
+  var el=document.getElementById('s-recv');
+  if(el)el.textContent=recv>=1000?Math.round(recv).toLocaleString('es')+' '+to:recv.toFixed(2)+' '+to;
+  var fe=document.getElementById('s-fee');
+  if(fe)fe.textContent=ST==='p2p'?'Gratis':sym+fee.toFixed(2)+' (2%)';
+  var sv=document.getElementById('s-sav');
+  if(sv)sv.textContent=sav>0?sym+sav.toFixed(2):'€0.00';
+  updSAv();
+}
+
+var searchTimer=null;
+function searchUser(val){
+  clearTimeout(searchTimer);
+  var found=document.getElementById('user-found');
+  if(!found)return;
+  if(!val||val.length<3){found.style.display='none';return;}
+  if(val.toUpperCase().indexOf('IA-')===0&&SB&&!DEMO){
+    searchTimer=setTimeout(function(){
+      var code=val.substring(3).toUpperCase();
+      SB.from('users').select('id,full_name').limit(1).then(function(res){
+        found.style.display='none';
+      }).catch(function(){found.style.display='none';});
+    },800);
+  }
+}
+
+function searchByCode(val){
+  clearTimeout(searchTimer);
+  var found=document.getElementById('user-found-p2p');
+  if(!found)return;
+  found.style.display='none';
+}
+
+function initSend(){
+  var amt=parseFloat(document.getElementById('s-amt').value);
+  var from=document.getElementById('s-fc').value;
+  if(!amt||amt<=0){toast('Introduce un importe valido','err');return;}
+  var av=Number(WALLET&&WALLET[from.toLowerCase()]||0);
+  if(av<amt){toast('Saldo insuficiente — disponible: '+av.toFixed(2)+' '+from,'err');return;}
+  if(ST==='intl'){
+    var phone=document.getElementById('s-dest')&&document.getElementById('s-dest').value||'';
+    if(!phone){toast('Introduce el telefono del destinatario','err');return;}
+  }
+  if(ST==='p2p'){
+    var code=document.getElementById('s-code')&&document.getElementById('s-code').value||'';
+    if(!code||code.length<6){toast('Introduce el codigo IA- del destinatario','err');return;}
+  }
+  var pin=localStorage.getItem('ia_pin');
+  if(pin){openPin('confirm',function(){doSend();});}
+  else{doSend();}
+}
+
+function doSend(){
+  var amt=parseFloat(document.getElementById('s-amt').value);
+  var from=document.getElementById('s-fc').value;
+  var to=document.getElementById('s-tc').value;
+  var destName=document.getElementById('s-name')&&document.getElementById('s-name').value||'';
+  var countryCode=document.getElementById('s-country-code')&&document.getElementById('s-country-code').value||'';
+  var destPhone=document.getElementById('s-dest')&&document.getElementById('s-dest').value||'';
+  var fullPhone=(countryCode+destPhone).trim();
+  var code=(document.getElementById('s-code')&&document.getElementById('s-code').value||'').toUpperCase();
+  var desc=document.getElementById('s-ds')&&document.getElementById('s-ds').value||'';
+  var fee=ST==='p2p'?0:amt*0.02;
+  var rate=RATES[from+'-'+to]||1;
+  var recv=Math.round((amt-fee)*rate);
+  if(!DEMO&&SB&&USER&&USER.id){
+    var txData={user_id:USER.id,type:ST==='p2p'?'p2p':'send',amount:amt,currency:from,amount_recv:recv,currency_recv:to,fee:fee,rate:rate,status:'completed',description:desc||(destName?'Envio a '+destName:null)};
+    if(ST==='intl'){txData.recipient_phone=fullPhone;txData.recipient_name=destName;}
+    else txData.recipient_code=code;
+    SB.from('transactions').insert(txData).catch(function(){});
+    var newBal=Number(WALLET[from.toLowerCase()]||0)-amt;
+    if(newBal<0)newBal=0;
+    var update={};update[from.toLowerCase()]=newBal;
+    SB.from('wallets').update(update).eq('user_id',USER.id).then(function(){
+      WALLET[from.toLowerCase()]=newBal;updBal();
+    }).catch(function(){WALLET[from.toLowerCase()]=newBal;updBal();});
+  }
+  var destLabel=destName||fullPhone||code||'Destinatario';
+  addNotif('💸','Envio completado',destLabel+' recibira '+recv.toLocaleString('es')+' '+to);
+  showOK('Enviado!',destLabel+' recibira '+recv.toLocaleString('es')+' '+to+' en minutos.');
+}
+
+function selM(method,el){
+  COM=method;
+  document.querySelectorAll('.mt').forEach(function(m){m.classList.remove('on');});
+  el.classList.add('on');
+  var ex=document.getElementById('co-ex');
+  if(ex)ex.style.display=method!=='circular'?'block':'none';
+  var acc=document.getElementById('co-acc');
+  if(acc)acc.placeholder=method==='bank'?'IBAN (ES00 0000...)':'Telefono (+237...)';
+  calcCO();
+}
+
+function setCOA(v){document.getElementById('co-a').value=v;calcCO();}
+
+function calcCO(){
+  var amt=parseFloat(document.getElementById('co-a').value)||0;
+  var curr=document.getElementById('co-c').value||'EUR';
+  var fee=COF[COM]||0;
+  var fa=amt*fee;
+  var sym=curr==='EUR'?'€':curr==='USD'?'$':'';
+  var el=document.getElementById('co-recv');
+  if(el)el.textContent=sym+(amt-fa).toFixed(2)+(curr==='XAF'?' XAF':'');
+  var fe=document.getElementById('co-fee');
+  if(fe)fe.textContent=fee===0?'Gratis':sym+fa.toFixed(2)+' ('+Math.round(fee*100)+'%)';
+  var lb=document.getElementById('co-lbl');
+  if(lb)lb.textContent=COL[COM];
+  updCOAv();
+}
+
+function initCO(){
+  var amt=parseFloat(document.getElementById('co-a').value);
+  var curr=document.getElementById('co-c').value;
+  if(!amt||amt<=0){toast('Introduce un importe','err');return;}
+  var av=Number(WALLET&&WALLET[curr.toLowerCase()]||0);
+  if(av<amt){toast('Saldo insuficiente','err');return;}
+  var pin=localStorage.getItem('ia_pin');
+  if(pin){openPin('confirm',function(){doCO();});}
+  else{openPin('set',function(){doCO();});}
+}
+
+function doCO(){
+  var amt=parseFloat(document.getElementById('co-a').value);
+  var curr=document.getElementById('co-c').value;
+  var fee=COF[COM]*amt;
+  if(!DEMO&&SB&&USER&&USER.id){
+    SB.from('transactions').insert({user_id:USER.id,type:'cashout',amount:amt,currency:curr,fee:fee,status:'processing',description:'Reintegro: '+COL[COM]}).catch(function(){});
+    var newBal=Number(WALLET[curr.toLowerCase()]||0)-amt;
+    if(newBal<0)newBal=0;
+    var update={};update[curr.toLowerCase()]=newBal;
+    SB.from('wallets').update(update).eq('user_id',USER.id).then(function(){
+      WALLET[curr.toLowerCase()]=newBal;updBal();
+    }).catch(function(){});
+  }
+  var times={circular:'15 minutos',mtn:'2 horas',orange:'2 horas',bank:'24-48 horas'};
+  addNotif('🏦','Reintegro solicitado','Llegara en '+times[COM]);
+  showOK('Solicitado!','Tu reintegro de '+amt+' '+curr+' llegara en '+times[COM]+' via '+COL[COM].split(' ')[0]+'.');
+}
+
+function calcCV(){
+  var amt=parseFloat(document.getElementById('cv-f').value)||0;
+  var from=document.getElementById('cv-fc').value||'EUR';
+  var to=document.getElementById('cv-tc').value||'XAF';
+  var rate=RATES[from+'-'+to]||1;
+  var res=amt*rate;
+  var el=document.getElementById('cv-t');
+  if(el)el.value=res>=1000?Math.round(res).toLocaleString('es'):res.toFixed(4);
+  var re=document.getElementById('cv-rate');
+  if(re)re.textContent='1 '+from+' = '+rate.toFixed(rate<0.1?6:3)+' '+to;
+}
+
+function swapCV(){
+  var fc=document.getElementById('cv-fc');var tc=document.getElementById('cv-tc');
+  var fa=document.getElementById('cv-f');var ta=document.getElementById('cv-t');
+  var tmp=fc.value;fc.value=tc.value;tc.value=tmp;
+  fa.value=ta.value.replace(/[^0-9.]/g,'')||'100';
+  calcCV();
+}
+
+function rendRecv(){
+  if(!USER)return;
+  var code=getUserCode(USER.id);
+  var q=document.getElementById('my-qr');var mc=document.getElementById('my-code');
+  if(q)q.textContent=code;if(mc)mc.textContent=code;
+  if(!DEMO&&SB&&USER.id!=='demo123456'){
+    SB.from('transactions').select('*').eq('recipient_id',USER.id).order('created_at',{ascending:false}).limit(5).then(function(res){
+      if(res.data&&res.data.length)renderTx('recv-list',res.data);
+    }).catch(function(){});
+  }
+}
+
+function shareCode(){
+  var code=document.getElementById('my-code')&&document.getElementById('my-code').textContent||'';
+  var msg='Enviame dinero con mi codigo InnovaAFRIC: '+code+' en https://lustrous-ganache-e93234.netlify.app/';
+  if(navigator.share){navigator.share({title:'InnovaAFRIC',text:msg});}
+  else{if(navigator.clipboard)navigator.clipboard.writeText(code).catch(function(){});toast('Codigo copiado: '+code,'info');}
+}
+
+function doReq(){
+  var amt=document.getElementById('rq-a').value;
+  var curr=document.getElementById('rq-c').value||'EUR';
+  var desc=document.getElementById('rq-d').value||'';
+  if(!amt){toast('Introduce un importe','err');return;}
+  var code=document.getElementById('my-code')&&document.getElementById('my-code').textContent||'';
+  var msg='Me debes '+amt+' '+curr+(desc?' ('+desc+')':'')+'. Paga con mi codigo InnovaAFRIC: '+code;
+  if(navigator.share){navigator.share({title:'Solicitud de pago',text:msg});}
+  else{if(navigator.clipboard)navigator.clipboard.writeText(msg).catch(function(){});toast('Solicitud copiada','ok');}
+}
+
+function rendProf(){
+  if(!USER)return;
+  var f=(USER.full_name||USER.email)[0].toUpperCase();
+  document.getElementById('pr-av').textContent=f;
+  document.getElementById('pr-nm').textContent=USER.full_name||'—';
+  document.getElementById('pr-em').textContent=USER.email||'—';
+  var code=getUserCode(USER.id);
+  var el=document.getElementById('pr-code');if(el)el.textContent=code;
+  var RC={cliente:'var(--cy)',circular:'var(--go)',rider:'var(--re)',proveedor:'var(--pu)',admin:'var(--gr)'};
+  var RI={cliente:'👤',circular:'🏢',rider:'🛵',proveedor:'🏭',admin:'📊'};
+  var r=USER.role||'cliente';
+  document.getElementById('pr-ba').innerHTML='<span class="badge-pill" style="background:rgba(255,255,255,.07);color:'+(RC[r]||'var(--cy)')+'">'+( RI[r]||'')+' '+r+'</span>';
+  updLb();
+}
+
+function loadShop(){
+  filterShop('all',document.querySelector('.hff.on'));
+}
+
+function filterShop(cat,btn){
+  SHOP_FILTER=cat;
+  document.querySelectorAll('#sc-shop .hff').forEach(function(b){b.classList.remove('on');});
+  if(btn)btn.classList.add('on');
+  var g=document.getElementById('shop-g');if(!g)return;
+  var prods=cat==='all'?ALL_PRODS:ALL_PRODS.filter(function(p){return p.cat===cat;});
+  var html='';
+  prods.forEach(function(p){
+    var ce=p.ce?'<span style="font-size:9px;background:rgba(0,255,178,.1);color:var(--gr);border-radius:5px;padding:2px 7px;margin-top:5px;display:inline-block;font-weight:700">CE ✓</span>':'';
+    html+='<div style="background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--b);border-radius:16px;overflow:hidden;transition:all .2s" >'
+      +'<div style="height:88px;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:38px">'+p.e+'</div>'
+      +'<div style="padding:10px">'
+      +'<div style="font-size:12px;font-weight:500;margin-bottom:6px;line-height:1.3">'+p.n+'</div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center">'
+      +'<span style="font-family:var(--fs);font-size:15px;font-weight:800;color:var(--cy)">€'+p.p+'</span>'
+      +'<button onclick="addCart()" style="background:var(--cy);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:#050B18;cursor:pointer;font-family:var(--fs)">+</button>'
+      +'</div>'+ce+'</div></div>';
+  });
+  g.innerHTML=html;
+}
+
+function rendFavs(){
+  var c=document.getElementById('fav-list');if(!c)return;
+  FAVS=JSON.parse(localStorage.getItem('ia_favs')||'[]');
+  if(!FAVS.length){c.innerHTML='<div class="empty"><div class="empty-i">⭐</div>Sin favoritos aun</div>';return;}
+  var html='<div class="tl">';
+  FAVS.forEach(function(f,i){
+    html+='<div class="tx">'
+      +'<div class="ti" style="background:var(--go-d);font-size:20px">⭐</div>'
+      +'<div class="tn"><div class="tn-name">'+f.name+'</div><div class="tn-date">'+f.phone+'</div></div>'
+      +'<div style="display:flex;gap:6px">'
+      +'<button data-i="'+i+'" onclick="favSend(this)" style="background:var(--cy-d);border:1px solid rgba(0,229,255,.2);border-radius:9px;padding:6px 11px;font-size:12px;font-weight:600;color:var(--cy);cursor:pointer">Enviar</button>'
+      +'<button data-i="'+i+'" onclick="favDel(this)" style="background:var(--re-d);border:1px solid rgba(255,77,109,.2);border-radius:9px;padding:6px 9px;font-size:12px;color:var(--re);cursor:pointer">✕</button>'
+      +'</div></div>';
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function addFav(){
+  var nm=document.getElementById('fv-nm').value.trim();
+  var ph=document.getElementById('fv-ph').value.trim();
+  if(!nm||!ph){toast('Introduce nombre y telefono','err');return;}
+  FAVS.push({name:nm,phone:ph,id:Date.now()});
+  localStorage.setItem('ia_favs',JSON.stringify(FAVS));
+  document.getElementById('fv-nm').value='';
+  document.getElementById('fv-ph').value='';
+  rendFavs();
+  toast(nm+' anadido a favoritos','ok');
+}
+
+function sendToFav(idx){
+  var f=FAVS[idx];if(!f)return;
+  goTo('send');
+  setTimeout(function(){
+    var dest=document.getElementById('s-dest');
+    if(dest)dest.value=f.phone;
+    toast('Enviando a '+f.name,'info');
+  },200);
+}
+
+function delFav(idx){
+  FAVS.splice(idx,1);
+  localStorage.setItem('ia_favs',JSON.stringify(FAVS));
+  rendFavs();
+}
+
+function rendNotifs(){
+  NOTIFS=JSON.parse(localStorage.getItem('ia_notifs')||'[]');
+  var c=document.getElementById('notif-list');if(!c)return;
+  var dot=document.getElementById('notif-dot');if(dot)dot.style.display='none';
+  if(!NOTIFS.length){c.innerHTML='<div class="empty"><div class="empty-i">🔔</div>Sin notificaciones</div>';return;}
+  var html='<div class="tl">';
+  NOTIFS.forEach(function(n){
+    html+='<div class="tx">'
+      +'<div class="ti" style="background:var(--cy-d)">'+n.icon+'</div>'
+      +'<div class="tn"><div class="tn-name">'+n.title+'</div><div class="tn-date">'+n.msg+'</div></div>'
+      +'<div style="font-size:11px;color:var(--mu)">'+n.time+'</div>'
+      +'</div>';
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+
+function addNotif(icon,title,msg){
+  NOTIFS=JSON.parse(localStorage.getItem('ia_notifs')||'[]');
+  NOTIFS.unshift({icon:icon,title:title,msg:msg,time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})});
+  if(NOTIFS.length>30)NOTIFS.pop();
+  localStorage.setItem('ia_notifs',JSON.stringify(NOTIFS));
+  var dot=document.getElementById('notif-dot');if(dot)dot.style.display='block';
+}
+
+var TR={
+  es:{
+    'send':'Enviar','receive':'Recibir','cashout':'Retirar','conv':'Cambio',
+    'recent':'Actividad reciente','see-all':'Ver todo',
+    'avail':'Saldo disponible','recv-gets':'Destinatario recibe',
+    'fee':'Comision InnovaAFRIC','saving':'Ahorro vs Western Union',
+    'recv-in':'Recibe en','dest':'Telefono o codigo IA-XXXXXX',
+    'concept':'Concepto (opcional)','send-btn':'Confirmar envio',
+    'send-free':'Enviar gratis','intl':'Internacional','p2p':'P2P Gratis',
+    'you-get':'Recibes','withdraw':'Solicitar reintegro',
+    'have':'Tengo','want':'Quiero','rate':'Tasa aplicada','market':'Tasas del mercado',
+    'send-rate':'Enviar con esta tasa',
+    'all':'Todos','sent':'Enviados','received':'Recibidos','cashouts':'Reintegros',
+    'my-code':'Tu codigo personal InnovaAFRIC',
+    'share':'Compartir mi codigo','req':'Solicitar pago','gen-req':'Generar solicitud',
+    'lang':'Idioma','logout':'Cerrar sesion',
+    'kyc-lbl':'KYC: Nivel Basico','kyc-limit':'Limite: 200 EUR por envio',
+    'kyc-up':'Subir',
+    'fav-add':'Anadir a favoritos','fav-ttl':'Mis favoritos','fav-name':'Nombre del contacto','fav-ph':'Telefono o codigo IA-',
+    'notif-ttl':'Notificaciones','hist':'Historial',
+    'shop-all':'Todos','shop-e':'Electro','shop-h':'Hogar','shop-m':'Moda','shop-s':'Solar',
+    'add-cart':'Anadir'
+  },
+  en:{
+    'send':'Send','receive':'Receive','cashout':'Withdraw','conv':'Exchange',
+    'recent':'Recent activity','see-all':'See all',
+    'avail':'Available balance','recv-gets':'Recipient gets',
+    'fee':'InnovaAFRIC fee','saving':'Savings vs Western Union',
+    'recv-in':'Receive in','dest':'Phone or code IA-XXXXXX',
+    'concept':'Concept (optional)','send-btn':'Confirm transfer',
+    'send-free':'Send free','intl':'International','p2p':'P2P Free',
+    'you-get':'You get','withdraw':'Request withdrawal',
+    'have':'I have','want':'I want','rate':'Applied rate','market':'Market rates',
+    'send-rate':'Send at this rate',
+    'all':'All','sent':'Sent','received':'Received','cashouts':'Withdrawals',
+    'my-code':'Your personal InnovaAFRIC code',
+    'share':'Share my code','req':'Request payment','gen-req':'Generate request',
+    'lang':'Language','logout':'Sign out',
+    'kyc-lbl':'KYC: Basic Level','kyc-limit':'Limit: EUR 200 per transfer',
+    'kyc-up':'Upgrade',
+    'fav-add':'Add to favorites','fav-ttl':'My favorites','fav-name':'Contact name','fav-ph':'Phone or code IA-',
+    'notif-ttl':'Notifications','hist':'History',
+    'shop-all':'All','shop-e':'Electronics','shop-h':'Home','shop-m':'Fashion','shop-s':'Solar',
+    'add-cart':'Add'
+  },
+  fr:{
+    'send':'Envoyer','receive':'Recevoir','cashout':'Retirer','conv':'Change',
+    'recent':'Activite recente','see-all':'Voir tout',
+    'avail':'Solde disponible','recv-gets':'Le destinataire recoit',
+    'fee':'Frais InnovaAFRIC','saving':'Economies vs WU',
+    'recv-in':'Recevoir en','dest':'Telephone ou code IA-XXXXXX',
+    'concept':'Concept (optionnel)','send-btn':'Confirmer le transfert',
+    'send-free':'Envoyer gratuit','intl':'International','p2p':'P2P Gratuit',
+    'you-get':'Vous recevez','withdraw':'Demander un retrait',
+    'have':'J ai','want':'Je veux','rate':'Taux applique','market':'Taux du marche',
+    'send-rate':'Envoyer a ce taux',
+    'all':'Tous','sent':'Envoyes','received':'Recus','cashouts':'Retraits',
+    'my-code':'Votre code personnel InnovaAFRIC',
+    'share':'Partager mon code','req':'Demander un paiement','gen-req':'Generer demande',
+    'lang':'Langue','logout':'Deconnexion',
+    'kyc-lbl':'KYC: Niveau Basique','kyc-limit':'Limite: 200 EUR par envoi',
+    'kyc-up':'Monter',
+    'fav-add':'Ajouter aux favoris','fav-ttl':'Mes favoris','fav-name':'Nom du contact','fav-ph':'Telephone ou code IA-',
+    'notif-ttl':'Notifications','hist':'Historique',
+    'shop-all':'Tous','shop-e':'Electronique','shop-h':'Maison','shop-m':'Mode','shop-s':'Solaire',
+    'add-cart':'Ajouter'
+  }
+};
+
+function t(key){return (TR[LANG]&&TR[LANG][key])||key;}
+
+function applyLang(){
+  document.querySelectorAll('[data-k]').forEach(function(el){
+    var k=el.getAttribute('data-k');
+    var val=t(k);
+    if(val&&val!==k&&!el.getAttribute('onclick')){el.textContent=val;}
+  });
+  var tb=document.getElementById('top-lg');
+  if(tb)tb.textContent=LANG.toUpperCase();
+  updLb();
+}
+
+function setLang(l){
+  LANG=l;
+  applyLang();
+  toast(l==='es'?'Espanol':l==='en'?'English':'Francais','info');
+}
+
+function cycleLang(){
+  var ls=['es','en','fr'];
+  setLang(ls[(ls.indexOf(LANG)+1)%ls.length]);
+}
+
+function updLb(){
+  ['es','en','fr'].forEach(function(l){
+    var b=document.getElementById('lb-'+l);
+    if(b)b.className='lb'+(l===LANG?' on':'');
+  });
+}
+
+function openPin(mode,cb){
+  PIN_MODE=mode;PIN_CB=cb;PIN_VAL='';
+  var sub=document.getElementById('pin-sub');
+  var existingPin=localStorage.getItem('ia_pin');
+  if(mode==='set'&&!existingPin){
+    if(sub)sub.textContent='Crea tu PIN de 4 digitos para confirmar pagos';
+  } else {
+    if(sub)sub.textContent='Introduce tu PIN para continuar';
+  }
+  for(var i=0;i<4;i++){var d=document.getElementById('pd'+i);if(d)d.classList.remove('filled');}
+  document.getElementById('pin-modal').classList.add('open');
+}
+
+function pinPress(digit){
+  if(PIN_VAL.length>=4)return;
+  PIN_VAL+=digit;
+  var d=document.getElementById('pd'+(PIN_VAL.length-1));
+  if(d)d.classList.add('filled');
+  if(PIN_VAL.length===4){
+    setTimeout(function(){
+      var existingPin=localStorage.getItem('ia_pin');
+      if(PIN_MODE==='set'&&!existingPin){
+        localStorage.setItem('ia_pin',PIN_VAL);
+        document.getElementById('pin-modal').classList.remove('open');
+        toast('PIN creado correctamente','ok');
+        if(PIN_CB)PIN_CB();
+      } else if(PIN_VAL===existingPin||PIN_MODE==='set'){
+        if(PIN_MODE==='set')localStorage.setItem('ia_pin',PIN_VAL);
+        document.getElementById('pin-modal').classList.remove('open');
+        if(PIN_CB)PIN_CB();
+      } else {
+        PIN_VAL='';
+        for(var i=0;i<4;i++){var d2=document.getElementById('pd'+i);if(d2)d2.classList.remove('filled');}
+        toast('PIN incorrecto','err');
+      }
+    },200);
+  }
+}
+
+function pinClear(){
+  if(PIN_VAL.length>0){
+    var d=document.getElementById('pd'+(PIN_VAL.length-1));
+    if(d)d.classList.remove('filled');
+    PIN_VAL=PIN_VAL.slice(0,-1);
+  }
+}
+
+function pinCancel(){
+  document.getElementById('pin-modal').classList.remove('open');
+  PIN_VAL='';PIN_CB=null;
+}
+
+function showOK(title,msg){
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(5,11,24,.92);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:center;justify-content:center;padding:24px';
+  var d=document.createElement('div');
+  d.style.cssText='background:rgba(10,22,40,.98);border:1px solid rgba(0,229,255,.15);border-radius:22px;padding:30px;text-align:center;width:100%;max-width:320px;box-shadow:0 24px 64px rgba(0,0,0,.6)';
+  var check=document.createElement('div');
+  check.style.cssText='width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--gr));display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 18px';
+  check.textContent='✓';
+  var t=document.createElement('div');
+  t.style.cssText='font-family:var(--fs);font-size:20px;font-weight:800;margin-bottom:10px;letter-spacing:-.3px';
+  t.textContent=title;
+  var m=document.createElement('div');
+  m.style.cssText='font-size:13px;color:var(--mu);line-height:1.6;margin-bottom:24px';
+  m.textContent=msg;
+  var btn=document.createElement('button');
+  btn.style.cssText='width:100%;padding:14px;border-radius:var(--r);background:linear-gradient(135deg,var(--cy),var(--cy2));color:#050B18;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fs)';
+  btn.textContent='Volver al inicio';
+  btn.onclick=function(){ov.remove();goTo('home',false);loadHome();};
+  d.appendChild(check);d.appendChild(t);d.appendChild(m);d.appendChild(btn);
+  ov.appendChild(d);
+  document.body.appendChild(ov);
+}
+
+function favSend(el){sendToFav(parseInt(el.getAttribute('data-i')));}
+function favDel(el){delFav(parseInt(el.getAttribute('data-i')));}
+function addCart(){toast('Anadido al carrito','ok');}
+function toast(msg,type){
+  var el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className='toast show'+(type?' '+type:'');
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.classList.remove('show');},3000);
+}
+
+// Pull to refresh
+(function setupPTR(){
+  var sc=document.getElementById('sc-home');
+  if(!sc)return;
+  var startY=0,pulling=false;
+  sc.addEventListener('touchstart',function(e){startY=e.touches[0].clientY;},{ passive:true });
+  sc.addEventListener('touchmove',function(e){
+    if(sc.scrollTop===0&&e.touches[0].clientY-startY>50){
+      pulling=true;
+      var ptr=document.getElementById('ptr');
+      if(ptr)ptr.classList.add('show');
+    }
+  },{ passive:true });
+  sc.addEventListener('touchend',function(){
+    if(pulling){
+      pulling=false;
+      setTimeout(function(){
+        loadHome();
+        var ptr=document.getElementById('ptr');
+        if(ptr)ptr.classList.remove('show');
+        toast('Actualizado','info');
+      },600);
+    }
+  });
+})();
+
+// ── CHANGE PIN ─────────────────────────────────────────
+function changePin(){
+  var old=localStorage.getItem('ia_pin');
+  if(!old){openPin('set',function(){toast('PIN creado','ok');});return;}
+  openPin('confirm',function(){
+    localStorage.removeItem('ia_pin');
+    setTimeout(function(){
+      openPin('set',function(){toast('PIN cambiado correctamente','ok');});
+    },300);
+  });
+}
+
+
+// ── ONBOARDING ───────────────────────────────────────────
+var obStep=0;
+function obNext(){
+  var slides=document.querySelectorAll('.ob-slide');
+  var dots=[document.getElementById('od0'),document.getElementById('od1'),document.getElementById('od2')];
+  if(obStep<slides.length-1){
+    slides[obStep].style.display='none';
+    dots[obStep].style.width='8px';dots[obStep].style.background='rgba(255,255,255,.2)';
+    obStep++;
+    slides[obStep].style.display='flex';
+    dots[obStep].style.width='24px';dots[obStep].style.background='var(--cy)';
+    if(obStep===slides.length-1){
+      var btn=document.getElementById('ob-next-btn');
+      if(btn){btn.textContent='Empezar →';btn.onclick=function(){goTo('home',false);loadHome();};}
+    }
+  }
+}
+
+function showOnboarding(){
+  var seen=localStorage.getItem('ia_onboard');
+  if(!seen){
+    localStorage.setItem('ia_onboard','1');
+    goTo('onboard',false);
+  }
+}
+
+// ── HISTORY CHART ────────────────────────────────────────
+var histChartInstance=null;
+function renderHistChart(txns){
+  var canvas=document.getElementById('hist-chart');
+  if(!canvas)return;
+  var months={};
+  txns.forEach(function(tx){
+    if(['send','cashout','qr_pay'].indexOf(tx.type)===-1||tx.user_id!==(USER&&USER.id))return;
+    var d=new Date(tx.created_at);
+    var key=d.toLocaleDateString('es',{month:'short',year:'2-digit'});
+    months[key]=(months[key]||0)+Number(tx.amount||0);
+  });
+  var labels=Object.keys(months).slice(-6);
+  var data=labels.map(function(k){return Math.round(months[k]);});
+  if(histChartInstance)histChartInstance.destroy();
+  if(typeof Chart==='undefined')return;
+  histChartInstance=new Chart(canvas,{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        data:data,
+        backgroundColor:'rgba(0,229,255,.25)',
+        borderColor:'rgba(0,229,255,.8)',
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{color:'rgba(240,244,255,.4)',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}},
+        x:{ticks:{color:'rgba(240,244,255,.4)',font:{size:10}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+// ── DARK / LIGHT THEME ────────────────────────────────────
+var darkMode=localStorage.getItem('ia_theme')!=='light';
+function applyTheme(){
+  document.body.classList.toggle('light-mode',!darkMode);
+  var knob=document.getElementById('theme-knob');
+  var tog=document.getElementById('theme-toggle');
+  if(knob)knob.style.transform=darkMode?'none':'translateX(20px)';
+  if(tog)tog.style.background=darkMode?'var(--cy)':'rgba(255,255,255,.3)';
+}
+function toggleTheme(){
+  darkMode=!darkMode;
+  localStorage.setItem('ia_theme',darkMode?'dark':'light');
+  applyTheme();
+  toast(darkMode?'Modo oscuro activado':'Modo claro activado','info');
+}
+applyTheme();
+
+// ── PROFILE PHOTO ─────────────────────────────────────────
+function changeProfPhoto(){
+  var input=document.getElementById('prof-photo-input');
+  if(input)input.click();
+}
+function onProfPhoto(input){
+  var file=input.files&&input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var data=e.target.result;
+    localStorage.setItem('ia_photo',data);
+    var av=document.getElementById('pr-av');
+    var tav=document.getElementById('top-av');
+    if(av){av.style.backgroundImage='url('+data+')';av.style.backgroundSize='cover';av.textContent='';}
+    if(tav){tav.style.backgroundImage='url('+data+')';tav.style.backgroundSize='cover';tav.textContent='';}
+    toast('Foto actualizada','ok');
+  };
+  reader.readAsDataURL(file);
+}
+function loadSavedPhoto(){
+  var data=localStorage.getItem('ia_photo');
+  if(!data)return;
+  var av=document.getElementById('pr-av');
+  var tav=document.getElementById('top-av');
+  if(av){av.style.backgroundImage='url('+data+')';av.style.backgroundSize='cover';av.textContent='';}
+  if(tav){tav.style.backgroundImage='url('+data+')';tav.style.backgroundSize='cover';tav.textContent='';}
+}
+
+// ── SCHEDULED TRANSFER ───────────────────────────────────
+function toggleSched(cb){
+  var box=document.getElementById('s-sched-box');
+  if(box)box.style.display=cb.checked?'block':'none';
+  if(cb.checked){
+    var inp=document.getElementById('s-sched-date');
+    if(inp){
+      var tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+      inp.min=tomorrow.toISOString().split('T')[0];
+      inp.value=tomorrow.toISOString().split('T')[0];
+    }
+  }
+}
+
+// ── P2P RECIPIENT UPDATE ─────────────────────────────────
+async function updateRecipientBalance(code, amount, currency){
+  if(!SB||DEMO)return;
+  try{
+    var clean=code.replace('IA-','').toUpperCase().substring(0,6);
+    var res=await SB.from('users').select('id').ilike('id',clean+'%').limit(1);
+    if(res.data&&res.data.length){
+      var recipId=res.data[0].id;
+      var walletRes=await SB.from('wallets').select('*').eq('user_id',recipId).single();
+      if(walletRes.data){
+        var curr=currency.toLowerCase();
+        var newBal=Number(walletRes.data[curr]||0)+amount;
+        var upd={};upd[curr]=newBal;
+        await SB.from('wallets').update(upd).eq('user_id',recipId);
+      }
+    }
+  }catch(e){console.log('recipient update error:',e.message);}
+}
+
+// ── BLOCK/UNBLOCK USER (used from profile if admin) ──────
+function isAdmin(){return USER&&USER.role==='admin';}
+
+// ── OVERRIDE loadHist to also render chart ────────────────
+var _origLoadHist=loadHist;
+loadHist=function(){
+  _origLoadHist();
+  if(typeof Chart!=='undefined'){
+    setTimeout(function(){renderHistChart(ALL_TX);},300);
+  }
+};
+
+// ── OVERRIDE doSend to handle P2P recipient balance ───────
+var _origDoSend=doSend;
+doSend=function(){
+  _origDoSend();
+  if(ST==='p2p'){
+    var code=document.getElementById('s-code')&&document.getElementById('s-code').value||'';
+    var amt=parseFloat(document.getElementById('s-amt')&&document.getElementById('s-amt').value)||0;
+    var from=document.getElementById('s-fc')&&document.getElementById('s-fc').value||'EUR';
+    if(code&&amt>0)updateRecipientBalance(code,amt,from);
+  }
+};
+
+// ── OVERRIDE showApp to show onboarding first time ────────
+var _origShowApp=showApp;
+showApp=function(){
+  _origShowApp();
+  setTimeout(showOnboarding,400);
+  loadSavedPhoto();
+};
+
+
+// ── FORGOT PASSWORD ──────────────────────────────────────
+function doForgotPwd(){
+  var em=document.getElementById('l-em').value.trim();
+  if(!em){toast('Introduce tu email primero','err');return;}
+  var go=function(){
+    SB.auth.resetPasswordForEmail(em,{redirectTo:'https://christianboddien-source.github.io/innovaafric-prod/'}).then(function(res){
+      if(res.error){toast('Error: '+res.error.message,'err');return;}
+      var ok=document.getElementById('l-reset-ok');
+      if(ok)ok.style.display='block';
+      toast('Email enviado','ok');
+    }).catch(function(e){toast('Error: '+e.message,'err');});
+  };
+  if(!SB){
+    import('https://esm.sh/@supabase/supabase-js@2').then(function(m){SB=m.createClient(SB_URL,SB_KEY);go();}).catch(function(){toast('Sin conexion','err');});
+  } else {go();}
+}
+
+// ── SHOW IA CODE TO NEW USER ─────────────────────────────
+function checkNewUser(){
+  var isNew=localStorage.getItem('ia_new_user');
+  var code=localStorage.getItem('ia_new_code');
+  if(isNew&&code){
+    localStorage.removeItem('ia_new_user');
+    localStorage.removeItem('ia_new_code');
+    setTimeout(function(){
+      var ov=document.createElement('div');
+      ov.style.cssText='position:fixed;inset:0;background:rgba(5,11,24,.92);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:center;justify-content:center;padding:24px';
+      var d=document.createElement('div');
+      d.style.cssText='background:rgba(10,22,40,.98);border:1px solid rgba(0,229,255,.2);border-radius:22px;padding:28px;text-align:center;width:100%;max-width:320px';
+      d.innerHTML='<div style="font-size:48px;margin-bottom:14px">🎉</div>'
+        +'<div style="font-family:var(--fs);font-size:18px;font-weight:800;margin-bottom:8px">Bienvenido a InnovaAFRIC</div>'
+        +'<div style="font-size:13px;color:var(--mu);margin-bottom:18px">Tu código personal para recibir pagos:</div>'
+        +'<div style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);border-radius:12px;padding:14px;margin-bottom:18px">'
+        +'<div style="font-family:var(--fs);font-size:26px;font-weight:800;color:var(--cy);letter-spacing:.15em">'+code+'</div>'
+        +'<div style="font-size:11px;color:var(--mu);margin-top:5px">Guarda este código. Lo necesitan para enviarte dinero.</div>'
+        +'</div>';
+      var btn=document.createElement('button');
+      btn.style.cssText='width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--cy),var(--cy2));color:#000;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fs)';
+      btn.textContent='Entendido';
+      btn.onclick=function(){ov.remove();};
+      d.appendChild(btn);
+      ov.appendChild(d);
+      document.body.appendChild(ov);
+    },800);
+  }
+}
+
+// ── SPENDING LIMITS ───────────────────────────────────────
+function saveLimits(){
+  var daily=parseFloat(document.getElementById('lim-daily').value)||0;
+  var tx=parseFloat(document.getElementById('lim-tx').value)||0;
+  localStorage.setItem('ia_lim_daily',daily);
+  localStorage.setItem('ia_lim_tx',tx);
+  toast('Límites guardados','ok');
+  updateLimitsDisplay();
+}
+
+function updateLimitsDisplay(){
+  var daily=parseFloat(localStorage.getItem('ia_lim_daily'))||0;
+  var lim=document.getElementById('lim-daily');
+  var limTx=document.getElementById('lim-tx');
+  if(lim&&daily)lim.value=daily;
+  if(limTx){var tx=parseFloat(localStorage.getItem('ia_lim_tx'))||0;if(tx)limTx.value=tx;}
+  var used=parseFloat(localStorage.getItem('ia_used_today'))||0;
+  var usedEl=document.getElementById('lim-used');
+  var barEl=document.getElementById('lim-bar');
+  var remEl=document.getElementById('lim-remaining');
+  if(usedEl)usedEl.textContent='€ '+used.toFixed(2);
+  if(barEl&&daily>0)barEl.style.width=Math.min(100,used/daily*100)+'%';
+  if(remEl){
+    if(daily>0)remEl.textContent='Límite diario: €'+daily+' · Disponible: €'+(Math.max(0,daily-used)).toFixed(2);
+    else remEl.textContent='Sin límite configurado';
+  }
+}
+
+function checkDailyLimit(amount){
+  var daily=parseFloat(localStorage.getItem('ia_lim_daily'))||0;
+  var tx=parseFloat(localStorage.getItem('ia_lim_tx'))||0;
+  var used=parseFloat(localStorage.getItem('ia_used_today'))||0;
+  if(tx>0&&amount>tx){toast('Importe supera tu límite por transacción (€'+tx+')','err');return false;}
+  if(daily>0&&(used+amount)>daily){toast('Superarías tu límite diario de €'+daily,'err');return false;}
+  return true;
+}
+
+function recordDailySpend(amount){
+  var today=new Date().toDateString();
+  var lastDay=localStorage.getItem('ia_spend_day');
+  if(lastDay!==today){localStorage.setItem('ia_spend_day',today);localStorage.setItem('ia_used_today','0');}
+  var used=(parseFloat(localStorage.getItem('ia_used_today'))||0)+amount;
+  localStorage.setItem('ia_used_today',used.toString());
+}
+
+// ── REFERRAL PROGRAM ──────────────────────────────────────
+function loadReferral(){
+  var code=document.getElementById('ref-code');
+  if(code&&USER)code.textContent='REF-'+(USER.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+}
+
+function shareReferral(){
+  var code=document.getElementById('ref-code')&&document.getElementById('ref-code').textContent||'';
+  var msg='Únete a InnovaAFRIC con mi código '+code+' y ambos recibimos €5: https://christianboddien-source.github.io/innovaafric-prod/';
+  if(navigator.share){navigator.share({title:'InnovaAFRIC',text:msg});}
+  else{if(navigator.clipboard)navigator.clipboard.writeText(msg).catch(function(){});toast('Enlace copiado','ok');}
+}
+
+// ── CART ──────────────────────────────────────────────────
+var CART=JSON.parse(localStorage.getItem('ia_cart')||'[]');
+
+function addToCart(name,price,emoji){
+  var ex=CART.find(function(i){return i.name===name;});
+  if(ex){ex.qty+=1;}else{CART.push({name:name,price:price,emoji:emoji,qty:1});}
+  localStorage.setItem('ia_cart',JSON.stringify(CART));
+  updateCartBadge();
+  toast(name+' añadido al carrito','ok');
+}
+
+function cartMinus(el){var idx=parseInt(el.getAttribute('data-idx'));cartQty(idx,-1);}
+function cartPlus(el){var idx=parseInt(el.getAttribute('data-idx'));cartQty(idx,1);}
+function shopAdd(el){var idx=parseInt(el.getAttribute('data-idx'));var p=ALL_PRODS[idx];if(p)addToCart(p.n,p.p,p.e);}
+function updateCartBadge(){
+  var total=CART.reduce(function(s,i){return s+i.qty;},0);
+  var badge=document.getElementById('cart-badge');
+  if(badge){badge.textContent=total;badge.style.display=total>0?'inline-block':'none';}
+}
+
+function renderCart(){
+  var empty=document.getElementById('cart-empty');
+  var content=document.getElementById('cart-content');
+  if(!CART.length){if(empty)empty.style.display='block';if(content)content.style.display='none';return;}
+  if(empty)empty.style.display='none';if(content)content.style.display='block';
+  var total=CART.reduce(function(s,i){return s+i.price*i.qty;},0);
+  var itemsEl=document.getElementById('cart-items');
+  if(itemsEl){
+    itemsEl.innerHTML=CART.map(function(item,idx){
+      return '<div class="tx">'
+        +'<div class="ti" style="background:var(--cy-d);font-size:22px">'+item.emoji+'</div>'
+        +'<div class="tn"><div class="tn-name">'+item.name+'</div><div class="tn-date">€'+item.price+' × '+item.qty+'</div></div>'
+        +'<div style="text-align:right">'
+        +'<div style="font-size:13px;font-weight:700;color:var(--cy)">€'+(item.price*item.qty).toFixed(2)+'</div>'
+        +'<div style="display:flex;gap:5px;margin-top:4px">'
+        +'<button data-idx="'+idx+'" onclick="cartMinus(this)" style="background:rgba(255,255,255,.08);border:none;border-radius:6px;width:22px;height:22px;color:var(--txt);cursor:pointer">-</button>'
+        +'<button data-idx="'+idx+'" onclick="cartPlus(this)" style="background:rgba(255,255,255,.08);border:none;border-radius:6px;width:22px;height:22px;color:var(--txt);cursor:pointer">+</button>'
+        +'</div></div></div>';
+    }).join('');
+  }
+  var subEl=document.getElementById('cart-sub');var totEl=document.getElementById('cart-total');
+  if(subEl)subEl.textContent='€ '+total.toFixed(2);
+  if(totEl)totEl.textContent='€ '+total.toFixed(2);
+}
+
+function cartQty(idx,delta){
+  CART[idx].qty+=delta;
+  if(CART[idx].qty<=0)CART.splice(idx,1);
+  localStorage.setItem('ia_cart',JSON.stringify(CART));
+  updateCartBadge();renderCart();
+}
+
+function clearCart(){
+  CART=[];localStorage.setItem('ia_cart','[]');
+  updateCartBadge();renderCart();
+}
+
+function doCheckout(){
+  var total=CART.reduce(function(s,i){return s+i.price*i.qty;},0);
+  if(!DEMO&&SB&&USER&&USER.id){
+    SB.from('orders').insert({user_id:USER.id,type:'shop',total_eur:total,status:'pending',items:JSON.stringify(CART)}).catch(function(){});
+  }
+  addNotif('📦','Pedido confirmado','€'+total.toFixed(2)+' · Llegará en 3-5 días');
+  clearCart();
+  showOK('Pedido confirmado 📦','Tu pedido de €'+total.toFixed(2)+' llegará en 3-5 días desde España. Te notificaremos por WhatsApp.');
+}
+
+// ── RIDER PORTAL FUNCTIONS ───────────────────────────────
+function acceptDelivery(id){
+  toast('Entrega '+id+' aceptada. Recibirás las instrucciones en segundos.','ok');
+  addNotif('🛵','Nueva entrega asignada','Pedido '+id+' — dirígete al punto de recogida');
+  var btn=  document.querySelectorAll('[data-delivery="'+id+'"]').forEach(function(btn){btn.textContent='En camino';btn.style.background='var(--go)';btn.disabled=true;});
+  if(btn){btn.textContent='En camino';btn.style.background='var(--go)';btn.disabled=true;}
+}
+
+// ── CIRCULAR PORTAL FUNCTIONS ─────────────────────────────
+function approveReintegro(code){
+  toast('Reintegro para '+code+' aprobado','ok');
+  addNotif('💰','Reintegro procesado','Código '+code+' ha recibido su efectivo');
+}
+
+// ── HISTORY SEARCH ────────────────────────────────────────
+function searchHist(val){
+  if(!val||val.trim()===''){renderTx('hist-list',ALL_TX);return;}
+  var q=val.toLowerCase();
+  var filtered=ALL_TX.filter(function(tx){
+    return (tx.description&&tx.description.toLowerCase().indexOf(q)!==-1)
+      ||(tx.amount&&String(tx.amount).indexOf(q)!==-1)
+      ||(tx.currency&&tx.currency.toLowerCase().indexOf(q)!==-1)
+      ||(tx.type&&tx.type.toLowerCase().indexOf(q)!==-1);
+  });
+  renderTx('hist-list',filtered);
+}
+
+// ── SUPABASE REALTIME FOR BALANCE ─────────────────────────
+function setupRealtime(){
+  if(!SB||DEMO||!USER||!USER.id)return;
+  try{
+    SB.channel('wallet-'+USER.id)
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'wallets',filter:'user_id=eq.'+USER.id},function(payload){
+        if(payload.new){
+          WALLET=payload.new;
+          updBal();
+          toast('Saldo actualizado','info');
+          addNotif('💸','Pago recibido','Tu saldo ha sido actualizado');
+        }
+      }).subscribe();
+  }catch(e){console.log('realtime err:',e.message);}
+}
+
+// ── WHATSAPP SHARE RECEIPT ────────────────────────────────
+function shareReceipt(tx){
+  var amt=Number(tx.amount).toLocaleString('es')+' '+tx.currency;
+  var dt=new Date(tx.created_at).toLocaleDateString('es');
+  var code=getUserCode(USER&&USER.id||'');
+  var NL=String.fromCharCode(10);
+  var msg='Comprobante InnovaAFRIC'+NL+'Fecha: '+dt+NL+'Importe: '+amt+NL+'Estado: '+(tx.status||'')+NL+'Ref: '+code+NL+'www.innovaafric.com';
+  var waUrl='https://wa.me/?text='+encodeURIComponent(msg);
+  window.open(waUrl,'_blank');
+}
+
+// ── SHOP PRODUCT ADD TO CART OVERIDE ─────────────────────
+filterShop=function(cat,btn){
+  SHOP_FILTER=cat;
+  document.querySelectorAll('#sc-shop .hff').forEach(function(b){b.classList.remove('on');});
+  if(btn)btn.classList.add('on');
+  var g=document.getElementById('shop-g');if(!g)return;
+  var prods=cat==='all'?ALL_PRODS:ALL_PRODS.filter(function(p){return p.cat===cat;});
+  var html='';
+  prods.forEach(function(p,i){
+    var idx=ALL_PRODS.indexOf(p);
+    var ce=p.ce?'<span style="font-size:9px;background:rgba(0,255,178,.1);color:var(--gr);border-radius:5px;padding:2px 7px;margin-top:5px;display:inline-block;font-weight:700">CE ✓</span>':'';
+    html+='<div style="background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--b);border-radius:16px;overflow:hidden">'
+      +'<div style="height:88px;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:38px">'+p.e+'</div>'
+      +'<div style="padding:10px">'
+      +'<div style="font-size:12px;font-weight:500;margin-bottom:6px;line-height:1.3">'+p.n+'</div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center">'
+      +'<span style="font-family:var(--fs);font-size:15px;font-weight:800;color:var(--cy)">€'+p.p+'</span>'
+      +'<button data-idx="'+idx+'" onclick="shopAdd(this)" style="background:var(--cy);border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;color:#050B18;cursor:pointer;font-family:var(--fs)">+ Añadir</button>'
+      +'</div>'+ce+'</div></div>';
+  });
+  g.innerHTML=html;
+  updateCartBadge();
+};
+
+// ── EXTEND goTo FOR NEW SCREENS ──────────────────────────
+var _goTo2=goTo;
+goTo=function(id,push){
+  if(push===undefined)push=true;
+  _goTo2(id,push);
+  if(id==='limits')updateLimitsDisplay();
+  if(id==='referral')loadReferral();
+  if(id==='cart')renderCart();
+};
+
+// ── EXTEND showApp FOR REALTIME + NEW USER CHECK ──────────
+var _origShowApp2=showApp;
+showApp=function(){
+  _origShowApp2();
+  setTimeout(setupRealtime,1500);
+  setTimeout(checkNewUser,600);
+  updateCartBadge();
+};
+
+// ── EXTEND initSend TO CHECK LIMITS ───────────────────────
+var _origInitSend=initSend;
+initSend=function(){
+  var amt=parseFloat(document.getElementById('s-amt')&&document.getElementById('s-amt').value)||0;
+  if(!checkDailyLimit(amt))return;
+  _origInitSend();
+};
+
+// ── EXTEND doSend TO RECORD SPEND ────────────────────────
+var _origDoSend2=doSend;
+doSend=function(){
+  var amt=parseFloat(document.getElementById('s-amt')&&document.getElementById('s-amt').value)||0;
+  recordDailySpend(amt);
+  _origDoSend2();
+};
+
+updateCartBadge();
+calcS();calcCV();
+</script>
+</body>
+</html>
