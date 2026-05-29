@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>InnovaAFRIC · Admin v17</title>
+<title>InnovaAFRIC · Admin v18</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
@@ -223,6 +223,37 @@ select.form-input option{background:var(--s2)}
 .session-warn{position:fixed;top:0;left:0;right:0;background:var(--amber);color:#000;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;z-index:10000;display:none;justify-content:center;align-items:center;gap:12px}
 .session-warn.show{display:flex}
 
+/* ═══ V18 NEW STYLES ═══ */
+.api-source-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:var(--mono)}
+.api-source-railway{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3)}
+.api-source-supabase{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(6,182,212,.3)}
+.loan-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.loan-pending{background:var(--amber-d);color:var(--amber)}.loan-approved{background:var(--cyan-d);color:var(--cyan)}
+.loan-disbursed{background:var(--green-d);color:var(--green)}.loan-repaid{background:rgba(16,185,129,.08);color:#34d399}.loan-rejected{background:var(--red-d);color:var(--red)}
+.tontine-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);padding:16px;margin-bottom:10px}
+.tontine-progress{height:6px;background:var(--s3);border-radius:3px;overflow:hidden;margin-top:8px}
+.tontine-bar{height:100%;border-radius:3px;background:var(--cyan);transition:width .5s}
+.vcard{background:linear-gradient(135deg,#0a1628,#1a2a4a);border:1px solid rgba(6,182,212,.3);border-radius:16px;padding:20px;position:relative;overflow:hidden;margin-bottom:10px}
+.vcard::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,.15),transparent)}
+.vcard-frozen{filter:grayscale(.8);opacity:.7}
+.payroll-run{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);padding:14px;margin-bottom:8px}
+.payroll-executed{border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.04)}
+.alert-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);padding:14px;margin-bottom:8px}
+.alert-critical{border-color:rgba(239,68,68,.3);background:var(--red-d)}.alert-warning{border-color:rgba(245,158,11,.3);background:var(--amber-d)}.alert-info{border-color:rgba(6,182,212,.3);background:var(--cyan-d)}
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.prod-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);overflow:hidden;transition:border-color .2s}.prod-card:hover{border-color:rgba(6,182,212,.3)}
+.prod-img{height:80px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--s3)}
+.prod-info{padding:10px}
+.chat-room{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;margin-bottom:6px;cursor:pointer;transition:all .15s}.chat-room:hover{border-color:rgba(6,182,212,.3)}
+.apikey-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);padding:14px;margin-bottom:8px}
+.apikey-value{font-family:var(--mono);font-size:11px;background:var(--s3);padding:6px 10px;border-radius:6px;word-break:break-all;color:var(--subtle)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px}
+.stat-card .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:6px}
+.stat-card .val{font-size:22px;font-weight:800;font-family:var(--mono);color:var(--txt)}
+.stat-card .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.stat-card.c-cyan{border-top:2px solid var(--cyan)}.stat-card.c-green{border-top:2px solid var(--green)}.stat-card.c-amber{border-top:2px solid var(--amber)}.stat-card.c-red{border-top:2px solid var(--red)}.stat-card.c-purple{border-top:2px solid var(--purple)}
+
 /* SETUP */
 #setup{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
 .setup-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:36px;max-width:420px;width:100%}
@@ -259,6 +290,31 @@ select.form-input option{background:var(--s2)}
 /* CAMPAIGNS */
 .camp-card{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:14px;display:flex;align-items:center;gap:14px;margin-bottom:8px}
 .camp-code{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--cyan);background:var(--cyan-d);padding:4px 12px;border-radius:6px;flex-shrink:0}
+
+/* COMMAND PALETTE */
+.cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:99998;display:none;align-items:flex-start;justify-content:center;padding-top:120px}
+.cmd-overlay.open{display:flex}
+.cmd-box{background:var(--s1);border:1px solid var(--b2);border-radius:16px;width:100%;max-width:560px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+.cmd-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--b1)}
+.cmd-input{flex:1;background:none;border:none;outline:none;font-size:15px;color:var(--txt);font-family:var(--font)}
+.cmd-input::placeholder{color:var(--muted)}
+.cmd-results{max-height:360px;overflow-y:auto}
+.cmd-item{display:flex;align-items:center;gap:12px;padding:10px 18px;cursor:pointer;transition:background .1s;font-size:13px}
+.cmd-item:hover,.cmd-item.selected{background:var(--cyan-d)}
+.cmd-item:hover .cmd-label,.cmd-item.selected .cmd-label{color:var(--cyan)}
+.cmd-ic{font-size:16px;width:24px;text-align:center;flex-shrink:0}
+.cmd-label{font-weight:500;color:var(--txt)}
+.cmd-desc{font-size:11px;color:var(--muted);margin-left:auto}
+.cmd-section{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:8px 18px 4px;font-family:var(--mono)}
+.cmd-empty{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+.ai-chat-msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;font-size:13px;line-height:1.6;max-width:85%}
+.ai-chat-msg.user{background:var(--cyan-d);border:1px solid rgba(6,182,212,.2);margin-left:auto;border-radius:12px 12px 2px 12px}
+.ai-chat-msg.ai{background:var(--s2);border:1px solid var(--b1);border-radius:2px 12px 12px 12px}
+.ai-chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px);min-height:400px}
+.ai-chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:4px}
+.ai-chat-input-wrap{padding:14px;border-top:1px solid var(--b1);display:flex;gap:8px}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-weight:700}
+.sync-ok{background:var(--green-d);color:var(--green)}.sync-pending{background:var(--amber-d);color:var(--amber)}.sync-error{background:var(--red-d);color:var(--red)}
 </style>
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -277,7 +333,7 @@ select.form-input option{background:var(--s2)}
 <div id="setup">
   <div class="setup-card">
     <div class="setup-logo">INNOVA<span>AFRIC</span></div>
-    <div class="setup-desc">Panel de administración v16 · Conectado a Supabase</div>
+    <div class="setup-desc">Panel de administración v18 · Supabase + Railway API</div>
     <div class="form-group">
       <label class="form-label">Project URL</label>
       <input class="form-input" id="sb-url" placeholder="https://xxxx.supabase.co">
@@ -298,7 +354,7 @@ select.form-input option{background:var(--s2)}
       <div class="sb-logo-ic">IA</div>
       <div class="sb-brand-text">INNOVA<span>AFRIC</span></div>
     </div>
-    <span class="sb-badge">Admin v17</span>
+    <span class="sb-badge">Admin v18</span>
   </div>
   <nav class="sb-nav">
     <div class="sb-group">Principal</div>
@@ -323,7 +379,21 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('operators',this)"><span class="ic">📡</span><span>Operadoras</span></div>
     <div class="sb-link" onclick="nav('mapa',this)"><span class="ic">🗺️</span><span>Mapa usuarios</span></div>
     <div class="sb-link" onclick="nav('cargos',this)"><span class="ic">💳</span><span>Cargos manuales</span></div>
+    <div class="sb-group">Railway — Finanzas</div>
+    <div class="sb-link" onclick="nav('loans',this)"><span class="ic">🤝</span><span>Préstamos</span><span class="badge-warn" id="sb-loans-count" style="display:none">0</span></div>
+    <div class="sb-link" onclick="nav('tontinas',this)"><span class="ic">🫂</span><span>Tontinas</span></div>
+    <div class="sb-link" onclick="nav('vcards',this)"><span class="ic">💳</span><span>Tarjetas virtuales</span></div>
+    <div class="sb-link" onclick="nav('accounting',this)"><span class="ic">📒</span><span>Contabilidad</span></div>
+    <div class="sb-link" onclick="nav('payroll',this)"><span class="ic">💼</span><span>Nómina Riders</span></div>
+    <div class="sb-group">Railway — Sistema</div>
+    <div class="sb-link" onclick="nav('productos',this)"><span class="ic">🛍️</span><span>Productos</span></div>
+    <div class="sb-link" onclick="nav('chat',this)"><span class="ic">💬</span><span>Chat</span></div>
+    <div class="sb-link" onclick="nav('roles',this)"><span class="ic">🎭</span><span>Roles</span></div>
+    <div class="sb-link" onclick="nav('apikeys',this)"><span class="ic">🔑</span><span>API Keys</span></div>
+    <div class="sb-link" onclick="nav('alerts',this)"><span class="ic">🔔</span><span>Alertas</span></div>
     <div class="sb-link" onclick="nav('auditlog',this)"><span class="ic">📋</span><span>Auditoría</span></div>
+    <div class="sb-link" onclick="nav('sync',this)"><span class="ic">🔄</span><span>Sincronización</span></div>
+    <div class="sb-link" onclick="nav('aichat',this)"><span class="ic">🤖</span><span>Admin AI Chat</span></div>
     <div class="sb-link" onclick="nav('settings',this)"><span class="ic">⚙️</span><span>Ajustes</span></div>
   </nav>
   <div class="sb-foot">
@@ -1009,6 +1079,309 @@ select.form-input option{background:var(--s2)}
       </div>
     </div>
 
+    <!-- PRÉSTAMOS (Railway) -->
+    <div id="pg-loans" style="display:none">
+      <div id="loans-stats-wrap" class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card c-amber"><div class="lbl">Total</div><div class="val" id="loans-total">—</div></div>
+        <div class="stat-card c-amber"><div class="lbl">Pendientes</div><div class="val" id="loans-pending">—</div></div>
+        <div class="stat-card c-cyan"><div class="lbl">Aprobados</div><div class="val" id="loans-approved">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Desembolsados</div><div class="val" id="loans-disbursed">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Reembolsados</div><div class="val" id="loans-repaid">—</div></div>
+        <div class="stat-card c-red"><div class="lbl">Rechazados</div><div class="val" id="loans-rejected">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🤝 Préstamos <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Gestión de microcréditos</div></div>
+          <div style="display:flex;gap:8px">
+            <select class="filter-select" id="loan-filter" onchange="filterLoansTable()">
+              <option value="">Todos</option>
+              <option value="pending">Pendientes</option>
+              <option value="approved">Aprobados</option>
+              <option value="disbursed">Desembolsados</option>
+              <option value="repaid">Reembolsados</option>
+              <option value="rejected">Rechazados</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="loadLoans()">↻</button>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <input class="filter-input" id="loan-search" placeholder="Buscar por usuario o ID..." oninput="filterLoansTable()">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Usuario</th><th>Importe</th><th>Moneda</th><th>Propósito</th><th>Estado</th><th>Vencimiento</th><th>Acción</th></tr></thead>
+            <tbody id="tb-loans"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TONTINAS (Railway) -->
+    <div id="pg-tontinas" style="display:none">
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card c-cyan"><div class="lbl">Total</div><div class="val" id="tontines-total">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Abiertas</div><div class="val" id="tontines-open">—</div></div>
+        <div class="stat-card c-cyan"><div class="lbl">Activas</div><div class="val" id="tontines-active">—</div></div>
+        <div class="stat-card c-amber"><div class="lbl">Cerradas</div><div class="val" id="tontines-closed">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🫂 Tontinas <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Grupos de ahorro comunitario</div></div>
+          <button class="topbar-btn btn-ghost" onclick="loadTontinas()">↻</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Nombre</th><th>Aportación</th><th>Moneda</th><th>Frecuencia</th><th>Máx. Miembros</th><th>Actuales</th><th>Ronda</th><th>Estado</th></tr></thead>
+            <tbody id="tb-tontinas"><tr><td colspan="9" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TARJETAS VIRTUALES (Railway) -->
+    <div id="pg-vcards" style="display:none">
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card c-cyan"><div class="lbl">Total</div><div class="val" id="vcards-total">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Activas</div><div class="val" id="vcards-active">—</div></div>
+        <div class="stat-card c-amber"><div class="lbl">Congeladas</div><div class="val" id="vcards-frozen">—</div></div>
+        <div class="stat-card c-red"><div class="lbl">Canceladas</div><div class="val" id="vcards-cancelled">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">💳 Tarjetas virtuales <span class="api-source-badge api-source-railway">● Railway</span></div></div>
+          <div style="display:flex;gap:8px">
+            <select class="filter-select" id="vcard-filter" onchange="filterVCards()">
+              <option value="">Todas</option>
+              <option value="active">Activas</option>
+              <option value="frozen">Congeladas</option>
+              <option value="cancelled">Canceladas</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="loadVCards()">↻</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Usuario</th><th>Etiqueta</th><th>Número</th><th>Moneda</th><th>Saldo</th><th>Gastado</th><th>Estado</th><th>Creada</th></tr></thead>
+            <tbody id="tb-vcards"><tr><td colspan="9" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTABILIDAD (Railway) -->
+    <div id="pg-accounting" style="display:none">
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card c-green"><div class="lbl">Ingresos</div><div class="val" id="acc-income">—</div><div class="sub">XAF total</div></div>
+        <div class="stat-card c-red"><div class="lbl">Gastos</div><div class="val" id="acc-expenses">—</div><div class="sub">XAF total</div></div>
+        <div class="stat-card c-cyan"><div class="lbl">Beneficio neto</div><div class="val" id="acc-profit">—</div></div>
+        <div class="stat-card c-amber"><div class="lbl">Entradas</div><div class="val" id="acc-entries">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">📒 Contabilidad <span class="api-source-badge api-source-railway">● Railway</span></div></div>
+          <div style="display:flex;gap:8px">
+            <select class="filter-select" id="acc-filter" onchange="filterAccounting()">
+              <option value="">Todas</option>
+              <option value="income">Ingresos</option>
+              <option value="expense">Gastos</option>
+              <option value="transfer">Transferencias</option>
+            </select>
+            <button class="topbar-btn btn-primary" onclick="openModal('m-new-accounting')">+ Nueva entrada</button>
+            <button class="topbar-btn btn-ghost" onclick="loadAccounting()">↻</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Importe</th><th>Moneda</th><th>Fecha</th></tr></thead>
+            <tbody id="tb-accounting"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NÓMINA RIDERS (Railway) -->
+    <div id="pg-payroll" style="display:none">
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card c-cyan"><div class="lbl">Total nóminas</div><div class="val" id="payroll-total">—</div></div>
+        <div class="stat-card c-amber"><div class="lbl">Borradores</div><div class="val" id="payroll-draft">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Ejecutadas</div><div class="val" id="payroll-executed">—</div></div>
+        <div class="stat-card c-green"><div class="lbl">Total pagado</div><div class="val" id="payroll-paid">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">💼 Nómina Riders <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Gestión de pagos a riders</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="topbar-btn btn-primary" onclick="openModal('m-new-payroll')">+ Nueva nómina</button>
+            <button class="topbar-btn btn-ghost" onclick="loadPayroll()">↻</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Período</th><th>Riders</th><th>Total XAF</th><th>Moneda</th><th>Estado</th><th>Ejecutada</th><th>Acciones</th></tr></thead>
+            <tbody id="tb-payroll"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTOS (Railway) -->
+    <div id="pg-productos" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🛍️ Productos <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub" id="productos-count">Cargando...</div></div>
+          <div style="display:flex;gap:8px">
+            <input class="filter-input" id="prod-search" placeholder="Buscar..." oninput="filterProductos()" style="width:160px">
+            <select class="filter-select" id="prod-cat-filter" onchange="filterProductos()">
+              <option value="">Todas las categorías</option>
+              <option value="electro">Electrónica</option>
+              <option value="hogar">Hogar</option>
+              <option value="moda">Moda</option>
+              <option value="solar">Solar</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="loadProductos()">↻</button>
+          </div>
+        </div>
+        <div style="padding:16px 20px" id="productos-grid"><div class="loading-cell"><div class="spin"></div></div></div>
+      </div>
+    </div>
+
+    <!-- CHAT (Railway) -->
+    <div id="pg-chat" style="display:none">
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:16px;height:calc(100vh - 140px)">
+        <div class="card" style="margin-bottom:0;overflow:hidden;display:flex;flex-direction:column">
+          <div class="card-head"><div class="card-title">💬 Conversaciones <span class="api-source-badge api-source-railway">● Railway</span></div></div>
+          <div style="flex:1;overflow-y:auto;padding:12px" id="chat-rooms-list"><div class="loading-cell"><div class="spin"></div></div></div>
+        </div>
+        <div class="card" style="margin-bottom:0;overflow:hidden;display:flex;flex-direction:column">
+          <div class="card-head"><div class="card-title" id="chat-room-title">Selecciona una conversación</div></div>
+          <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px" id="chat-messages-list">
+            <div style="text-align:center;color:var(--muted);padding:40px;font-size:13px">Selecciona una conversación para ver los mensajes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLES (Railway) -->
+    <div id="pg-roles" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🎭 Sistema de roles <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">18 roles en 5 niveles de acceso</div></div>
+        </div>
+        <div style="padding:16px 20px" id="roles-content"><div class="loading-cell"><div class="spin"></div></div></div>
+      </div>
+    </div>
+
+    <!-- API KEYS (Railway) -->
+    <div id="pg-apikeys" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🔑 API Keys <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Clientes con acceso a la API</div></div>
+          <button class="topbar-btn btn-ghost" onclick="loadApiKeys()">↻</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Nombre</th><th>Client ID</th><th>Scopes</th><th>Estado</th><th>Creada</th></tr></thead>
+            <tbody id="tb-apikeys"><tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div id="pg-alerts" style="display:none">
+      <div id="alerts-active-box" style="margin-bottom:16px"></div>
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🔔 Alertas del sistema</div><div class="card-sub">Notificaciones automáticas por umbrales</div></div>
+          <button class="topbar-btn btn-primary" onclick="openModal('m-new-alert')">+ Nueva alerta</button>
+        </div>
+        <div style="padding:16px 20px" id="alerts-grid-content"><div class="td-empty">Sin alertas configuradas</div></div>
+      </div>
+    </div>
+
+    <!-- AI ADMIN CHAT -->
+    <div id="pg-aichat" style="display:none">
+      <div class="card" style="height:calc(100vh - 140px);display:flex;flex-direction:column;margin-bottom:0">
+        <div class="card-head">
+          <div>
+            <div class="card-title">🤖 Admin AI — InnovaBot Pro</div>
+            <div class="card-sub">Pregunta sobre tus datos en lenguaje natural · Claude Sonnet</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="api-source-badge api-source-railway">● Claude API</span>
+            <button class="topbar-btn btn-ghost" onclick="clearAIChat()">🗑 Limpiar</button>
+          </div>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages">
+          <div class="ai-chat-msg ai">
+            👋 Hola, soy el Admin AI de InnovaAFRIC. Puedo ayudarte a analizar tus datos, buscar usuarios, revisar transacciones y generar resúmenes. ¿En qué te ayudo?
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding:4px 0">
+            <button onclick="sendAIMsg('¿Cuántos usuarios hay registrados y cuál es su distribución por país?')" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--cyan);cursor:pointer;font-family:var(--font)">👥 Resumen usuarios</button>
+            <button onclick="sendAIMsg('Dame un resumen del estado financiero actual: wallets, transacciones y revenue')" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--cyan);cursor:pointer;font-family:var(--font)">💰 Estado financiero</button>
+            <button onclick="sendAIMsg('¿Hay alertas de fraude o usuarios sospechosos que deba revisar?')" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--cyan);cursor:pointer;font-family:var(--font)">🛡️ Alertas fraude</button>
+            <button onclick="sendAIMsg('¿Cuántos KYC están pendientes de revisión y quiénes son?')" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--cyan);cursor:pointer;font-family:var(--font)">🪪 KYC pendientes</button>
+            <button onclick="sendAIMsg('Genera un informe ejecutivo del mes con los datos más importantes')" style="background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--amber);cursor:pointer;font-family:var(--font)">📊 Informe mensual</button>
+          </div>
+        </div>
+        <div class="ai-chat-input-wrap">
+          <input class="filter-input" id="ai-chat-input" placeholder="Pregunta algo sobre tus datos..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMsg()}" style="flex:1">
+          <button class="topbar-btn btn-primary" onclick="sendAIMsg()">Enviar ➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SINCRONIZACIÓN -->
+    <div id="pg-sync" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">🔄 Estado de sincronización</div><div class="card-sub">Supabase ↔ Railway PostgreSQL</div></div>
+            <button class="topbar-btn btn-ghost" onclick="checkSyncStatus()">↻ Verificar</button>
+          </div>
+          <div style="padding:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+              <div class="stat-card c-cyan"><div class="lbl">Usuarios Supabase</div><div class="val" id="sync-sb-count">—</div></div>
+              <div class="stat-card c-purple"><div class="lbl">Usuarios Railway</div><div class="val" id="sync-rw-count">—</div></div>
+              <div class="stat-card c-amber"><div class="lbl">Sin sincronizar</div><div class="val" id="sync-diff">—</div></div>
+              <div class="stat-card c-green"><div class="lbl">Último sync</div><div class="val" id="sync-last" style="font-size:12px">—</div></div>
+            </div>
+            <div id="sync-status-box" style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:14px;font-size:13px;color:var(--muted)">
+              Click "Verificar" para comprobar el estado de sincronización
+            </div>
+            <button class="btn-block btn-primary" onclick="syncAllUsers()">⚡ Sincronizar todos los usuarios ahora</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">📋 Log de sincronización</div><div class="card-sub">Últimas operaciones</div></div>
+          </div>
+          <div style="padding:16px 20px;max-height:400px;overflow-y:auto" id="sync-log">
+            <div class="td-empty">Sin operaciones registradas</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:0">
+        <div class="card-head">
+          <div><div class="card-title">ℹ️ Cómo funciona la sincronización</div></div>
+        </div>
+        <div style="padding:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+          <div style="background:var(--s2);border-radius:var(--r);padding:14px">
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">🔗 Webhook automático</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">Cada nuevo usuario registrado en la app dispara automáticamente el webhook de Supabase que lo crea en Railway PostgreSQL. Ya está activo.</div>
+          </div>
+          <div style="background:var(--s2);border-radius:var(--r);padding:14px">
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">⚡ Sync manual</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">El botón "Sincronizar todos" coge los usuarios de Supabase que no están en Railway y los crea. Útil para usuarios anteriores al webhook.</div>
+          </div>
+          <div style="background:var(--s2);border-radius:var(--r);padding:14px">
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">🔄 Dual write</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.6">La app también escribe directamente en Railway al registrar. Doble seguridad: si el webhook falla, el dual write lo captura.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /content -->
 </main>
 
@@ -1204,7 +1577,155 @@ select.form-input option{background:var(--s2)}
   </div>
 </div>
 
-<!-- NUEVA CAMPAÑA -->
+<!-- NUEVA ENTRADA CONTABLE -->
+<div class="modal-overlay" id="m-new-accounting" onclick="if(event.target===this)closeModal('m-new-accounting')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">📒 Nueva entrada contable</div>
+    <div class="modal-sub">Se guardará en Railway PostgreSQL</div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-input" id="ac-type">
+        <option value="income">Ingreso</option>
+        <option value="expense">Gasto</option>
+        <option value="transfer">Transferencia</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Categoría</label><input class="form-input" id="ac-category" placeholder="comisiones, salarios..."></div>
+      <div><label class="form-label">Moneda</label>
+        <select class="form-input" id="ac-currency">
+          <option value="XAF">XAF</option>
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Importe *</label><input class="form-input" type="number" id="ac-amount" placeholder="0"></div>
+    <div class="form-group"><label class="form-label">Descripción *</label><input class="form-input" id="ac-desc" placeholder="Descripción de la entrada"></div>
+    <div class="form-group"><label class="form-label">Referencia</label><input class="form-input" id="ac-ref" placeholder="Opcional"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="saveAccounting()">✓ Guardar entrada</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-new-accounting')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUEVA NÓMINA -->
+<div class="modal-overlay" id="m-new-payroll" onclick="if(event.target===this)closeModal('m-new-payroll')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">💼 Nueva nómina riders</div>
+    <div class="modal-sub">Calcula automáticamente según entregas</div>
+    <div class="form-group"><label class="form-label">Período *</label><input class="form-input" id="pr-period" placeholder="ej: 2026-05"></div>
+    <div class="form-row">
+      <div><label class="form-label">Moneda</label>
+        <select class="form-input" id="pr-currency">
+          <option value="XAF">XAF</option>
+          <option value="EUR">EUR</option>
+        </select>
+      </div>
+      <div><label class="form-label">Tarifa por entrega</label><input class="form-input" type="number" id="pr-rate" value="500" placeholder="XAF"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notas</label><input class="form-input" id="pr-notes" placeholder="Opcional"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="createPayroll()">✓ Crear nómina</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-new-payroll')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETALLE NÓMINA -->
+<div class="modal-overlay" id="m-payroll-detail" onclick="if(event.target===this)closeModal('m-payroll-detail')">
+  <div class="modal" style="max-width:600px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="modal-title" id="payroll-detail-title">Detalle nómina</div>
+      <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--cyan)" id="payroll-detail-total">—</div>
+    </div>
+    <div class="table-wrap" style="max-height:300px;overflow-y:auto">
+      <table>
+        <thead><tr><th>Rider</th><th>Entregas</th><th>Tarifa</th><th>Total</th><th>Estado</th></tr></thead>
+        <tbody id="tb-payroll-detail"></tbody>
+      </table>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" id="payroll-execute-btn" onclick="executePayroll()">⚡ Ejecutar nómina</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-payroll-detail')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- GESTIONAR PRÉSTAMO -->
+<div class="modal-overlay" id="m-loan-manage" onclick="if(event.target===this)closeModal('m-loan-manage')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🤝 Gestionar préstamo</div>
+    <input type="hidden" id="loan-manage-id">
+    <div id="loan-manage-info" style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px;margin-bottom:14px;font-size:13px"></div>
+    <div class="form-group"><label class="form-label">Nueva acción</label>
+      <select class="form-input" id="loan-action">
+        <option value="approve">✅ Aprobar</option>
+        <option value="reject">❌ Rechazar</option>
+        <option value="disburse">💸 Desembolsar</option>
+        <option value="mark_repaid">✓ Marcar como reembolsado</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Notas</label><input class="form-input" id="loan-notes" placeholder="Opcional"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="submitLoanAction()">✓ Aplicar</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-loan-manage')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUEVA ALERTA -->
+<div class="modal-overlay" id="m-new-alert" onclick="if(event.target===this)closeModal('m-new-alert')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🔔 Nueva alerta</div>
+    <div class="form-group"><label class="form-label">Nombre *</label><input class="form-input" id="al-name" placeholder="Ej: Muchos KYC pendientes"></div>
+    <div class="form-row">
+      <div><label class="form-label">Métrica</label>
+        <select class="form-input" id="al-metric">
+          <option value="users_total">👥 Total usuarios</option>
+          <option value="kyc_pending">⏳ KYC pendientes</option>
+          <option value="txns_24h">💸 Txns 24h</option>
+          <option value="blocked_users">🚫 Usuarios bloqueados</option>
+          <option value="loans_active">🤝 Préstamos activos</option>
+        </select>
+      </div>
+      <div><label class="form-label">Nivel</label>
+        <select class="form-input" id="al-level">
+          <option value="info">ℹ️ Info</option>
+          <option value="warning">⚠️ Warning</option>
+          <option value="critical">🔴 Critical</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Condición</label>
+        <select class="form-input" id="al-condition">
+          <option value="gt">Mayor que (&gt;)</option>
+          <option value="gte">Mayor o igual (≥)</option>
+          <option value="lt">Menor que (&lt;)</option>
+        </select>
+      </div>
+      <div><label class="form-label">Umbral *</label><input class="form-input" type="number" id="al-threshold" placeholder="ej: 10"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="saveAlert()">✓ Guardar alerta</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-new-alert')">Cancelar</button>
+    </div>
+  </div>
+</div>
+<!-- COMMAND PALETTE -->
+<div class="cmd-overlay" id="cmd-overlay" onclick="if(event.target===this)closeCmd()">
+  <div class="cmd-box">
+    <div class="cmd-input-wrap">
+      <span style="font-size:16px;color:var(--muted)">⌘</span>
+      <input class="cmd-input" id="cmd-input" placeholder="Buscar páginas, usuarios, acciones..." oninput="filterCmd(this.value)" onkeydown="handleCmdKey(event)">
+      <span style="font-size:11px;color:var(--muted);background:var(--s2);border:1px solid var(--b1);border-radius:5px;padding:2px 7px;font-family:var(--mono)">ESC</span>
+    </div>
+    <div class="cmd-results" id="cmd-results"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="m-new-campaign" onclick="if(event.target===this)closeModal('m-new-campaign')">
   <div class="modal" style="max-width:440px">
     <div class="modal-title">📣 Nueva campaña</div>
@@ -1251,7 +1772,7 @@ select.form-input option{background:var(--s2)}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// INNOVAAFRIC ADMIN v16
+// INNOVAAFRIC ADMIN v18 — CORE
 // ═══════════════════════════════════════════════════════════
 const SB_URL='https://spnfvmvrlexyiljwyola.supabase.co';
 const SB_KEY='sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
@@ -1338,7 +1859,12 @@ function nav(page,el){
   const titles={dashboard:'Dashboard',users:'Usuarios',wallets:'Wallets',transactions:'Transacciones',
     riders:'Riders',circulares:'Circulares',orders:'Pedidos',kyc:'KYC',crear:'Nuevo usuario',
     fraud:'Anti-fraude 🛡️',rates:'Tasas 📈',support:'Soporte 🎧',campaigns:'Campañas 📣',
-    simulator:'Simulador 💡',operators:'Operadoras 📡',auditlog:'Auditoría 📋',settings:'Ajustes ⚙️'};
+    simulator:'Simulador 💡',operators:'Operadoras 📡',mapa:'Mapa usuarios 🗺️',cargos:'Cargos manuales 💳',
+    proveedores:'Proveedores 🏭',auditlog:'Auditoría 📋',settings:'Ajustes ⚙️',
+    loans:'Préstamos 🤝',tontinas:'Tontinas 🫂',vcards:'Tarjetas virtuales 💳',
+    accounting:'Contabilidad 📒',payroll:'Nómina Riders 💼',productos:'Productos 🛍️',
+    chat:'Chat 💬',roles:'Roles 🎭',apikeys:'API Keys 🔑',alerts:'Alertas 🔔',
+    aichat:'Admin AI Chat 🤖',sync:'Sincronización 🔄'};
   document.getElementById('page-title').textContent=titles[page]||page;
   CURRENT_PAGE=page;
   if(page==='users')loadUsers();
@@ -2376,7 +2902,547 @@ function toast(msg,type=''){
 document.addEventListener('DOMContentLoaded',()=>updateCreateCurrency());
 
 // ═══════════════════════════════════════════════════════════
-// INNOVAAFRIC ADMIN v17 — NUEVAS FUNCIONES
+// INNOVAAFRIC ADMIN v18 — RAILWAY API INTEGRATION
+// ═══════════════════════════════════════════════════════════
+
+const RAILWAY_BASE='https://innovaafric-api-production.up.railway.app/v1';
+let RW_TOKEN=localStorage.getItem('ia_rw_token')||null;
+
+// ── RAILWAY API CALL ──────────────────────────────────────
+async function rwAPI(method,endpoint,body){
+  try{
+    const opts={method,headers:{'Content-Type':'application/json'}};
+    if(RW_TOKEN)opts.headers['Authorization']='Bearer '+RW_TOKEN;
+    if(body)opts.body=JSON.stringify(body);
+    const res=await Promise.race([
+      fetch(RAILWAY_BASE+endpoint,opts),
+      new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),8000))
+    ]);
+    const data=await res.json();
+    return data;
+  }catch(e){
+    console.warn('[Railway]',endpoint,'failed:',e.message);
+    return{success:false,error:e.message};
+  }
+}
+
+// ── NAV UPDATE for new pages ──────────────────────────────
+const _navOrig=nav;
+nav=function(page,el){
+  _navOrig(page,el);
+  if(page==='loans')loadLoans();
+  if(page==='tontinas')loadTontinas();
+  if(page==='vcards')loadVCards();
+  if(page==='accounting')loadAccounting();
+  if(page==='payroll')loadPayroll();
+  if(page==='productos')loadProductos();
+  if(page==='chat')loadChatRooms();
+  if(page==='roles')loadRoles();
+  if(page==='apikeys')loadApiKeys();
+  if(page==='alerts'){loadAlerts();checkAlerts();}
+  if(page==='aichat')initAIChat();
+  if(page==='sync')checkSyncStatus();
+};
+
+// ── LOANS ─────────────────────────────────────────────────
+let ALL_LOANS=[];
+async function loadLoans(){
+  const r=await rwAPI('GET','/loans');
+  if(!r.success){
+    // Fallback — show empty state with instruction
+    document.getElementById('tb-loans').innerHTML='<tr><td colspan="8" class="td-empty">Conecta Railway para ver préstamos</td></tr>';
+    return;
+  }
+  ALL_LOANS=r.data.loans||r.data.items||[];
+  const s=r.data.stats||{};
+  document.getElementById('loans-total').textContent=s.total||ALL_LOANS.length||0;
+  document.getElementById('loans-pending').textContent=s.pending||ALL_LOANS.filter(l=>l.status==='pending').length||0;
+  document.getElementById('loans-approved').textContent=s.approved||ALL_LOANS.filter(l=>l.status==='approved').length||0;
+  document.getElementById('loans-disbursed').textContent=s.disbursed||ALL_LOANS.filter(l=>l.status==='disbursed').length||0;
+  document.getElementById('loans-repaid').textContent=s.repaid||ALL_LOANS.filter(l=>l.status==='repaid').length||0;
+  document.getElementById('loans-rejected').textContent=s.rejected||ALL_LOANS.filter(l=>l.status==='rejected').length||0;
+  const pending=s.pending||0;
+  const sbCount=document.getElementById('sb-loans-count');
+  if(sbCount){sbCount.textContent=pending;sbCount.style.display=pending>0?'inline':'none';}
+  renderLoansTable(ALL_LOANS);
+}
+function loanBadge(s){
+  const m={pending:'loan-pending',approved:'loan-approved',disbursed:'loan-disbursed',repaid:'loan-repaid',rejected:'loan-rejected'};
+  return`<span class="loan-badge ${m[s]||''}">${s}</span>`;
+}
+function renderLoansTable(loans){
+  const tb=document.getElementById('tb-loans');
+  if(!loans.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin préstamos</td></tr>';return;}
+  tb.innerHTML=loans.map(l=>`<tr>
+    <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${l.id}</td>
+    <td style="font-weight:500">${l.user?.name||l.userId||'—'}</td>
+    <td style="font-weight:700;color:var(--amber);font-family:var(--mono)">${Number(l.amount||0).toLocaleString('es')}</td>
+    <td style="font-size:12px">${l.currency||'XAF'}</td>
+    <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${l.purpose||'—'}</span></td>
+    <td>${loanBadge(l.status)}</td>
+    <td style="font-size:12px;color:var(--muted)">${l.dueDate?fmt_date(l.dueDate):'—'}</td>
+    <td><button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="openLoanManage('${l.id}','${(l.user?.name||'').replace(/'/g,'')}',${l.amount||0},'${l.currency||'XAF'}','${l.status}')">⚙️ Gestionar</button></td>
+  </tr>`).join('');
+}
+function filterLoansTable(){
+  const q=(document.getElementById('loan-search').value||'').toLowerCase();
+  const f=document.getElementById('loan-filter').value;
+  renderLoansTable(ALL_LOANS.filter(l=>{
+    if(f&&l.status!==f)return false;
+    if(q&&!(l.user?.name||'').toLowerCase().includes(q)&&!l.id.toLowerCase().includes(q))return false;
+    return true;
+  }));
+}
+function openLoanManage(id,name,amount,currency,status){
+  document.getElementById('loan-manage-id').value=id;
+  document.getElementById('loan-manage-info').innerHTML=`
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">${name||'Usuario'}</div>
+    <div style="font-size:12px;color:var(--muted)">Importe: ${Number(amount).toLocaleString('es')} ${currency} · Estado actual: ${status}</div>`;
+  openModal('m-loan-manage');
+}
+async function submitLoanAction(){
+  const id=document.getElementById('loan-manage-id').value;
+  const action=document.getElementById('loan-action').value;
+  const notes=document.getElementById('loan-notes').value;
+  const statusMap={approve:'approved',reject:'rejected',disburse:'disbursed',mark_repaid:'repaid'};
+  const r=await rwAPI('PATCH','/loans/'+id,{status:statusMap[action],notes:notes||undefined});
+  if(r.success){
+    toast('✅ Préstamo actualizado','success');
+    logAdminAction('loan_action',action+' para préstamo '+id);
+    closeModal('m-loan-manage');
+    loadLoans();
+  }else{
+    // Fallback update locally
+    const loan=ALL_LOANS.find(l=>l.id===id);
+    if(loan){loan.status=statusMap[action];renderLoansTable(ALL_LOANS);}
+    toast('Actualizado localmente (Railway no disponible)','info');
+    closeModal('m-loan-manage');
+  }
+}
+
+// ── TONTINAS ──────────────────────────────────────────────
+let ALL_TONTINAS=[];
+async function loadTontinas(){
+  const r=await rwAPI('GET','/admin/tontines');
+  if(!r.success){document.getElementById('tb-tontinas').innerHTML='<tr><td colspan="9" class="td-empty">Railway no disponible</td></tr>';return;}
+  ALL_TONTINAS=r.data.tontines||r.data.items||[];
+  const s=r.data.stats||{};
+  document.getElementById('tontines-total').textContent=s.total||ALL_TONTINAS.length||0;
+  document.getElementById('tontines-open').textContent=s.open||ALL_TONTINAS.filter(t=>t.status==='open').length||0;
+  document.getElementById('tontines-active').textContent=s.active||ALL_TONTINAS.filter(t=>t.status==='active').length||0;
+  document.getElementById('tontines-closed').textContent=s.closed||ALL_TONTINAS.filter(t=>t.status==='closed').length||0;
+  renderTontinasTable(ALL_TONTINAS);
+}
+function tontinaBadge(s){const m={open:'pill-green',active:'pill-cyan',closed:'pill-gray'};return`<span class="pill ${m[s]||'pill-gray'}">${s}</span>`;}
+function renderTontinasTable(items){
+  const tb=document.getElementById('tb-tontinas');
+  if(!items.length){tb.innerHTML='<tr><td colspan="9" class="td-empty">Sin tontinas</td></tr>';return;}
+  tb.innerHTML=items.map(t=>`<tr>
+    <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${t.id}</td>
+    <td style="font-weight:600">${t.name||'—'}</td>
+    <td style="color:var(--amber);font-family:var(--mono)">${Number(t.contributionAmount||0).toLocaleString('es')}</td>
+    <td>${t.currency||'XAF'}</td>
+    <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${t.frequency||'—'}</span></td>
+    <td style="text-align:center">${t.maxMembers||'—'}</td>
+    <td style="text-align:center;color:var(--cyan);font-weight:700">${t._count?.members||0}</td>
+    <td style="text-align:center">${t.currentRound||1}</td>
+    <td>${tontinaBadge(t.status)}</td>
+  </tr>`).join('');
+}
+
+// ── VIRTUAL CARDS ─────────────────────────────────────────
+let ALL_VCARDS=[];
+async function loadVCards(){
+  const r=await rwAPI('GET','/admin/cards');
+  if(!r.success){document.getElementById('tb-vcards').innerHTML='<tr><td colspan="9" class="td-empty">Railway no disponible</td></tr>';return;}
+  ALL_VCARDS=r.data.cards||r.data.items||[];
+  const s=r.data.stats||{};
+  document.getElementById('vcards-total').textContent=s.total||ALL_VCARDS.length||0;
+  document.getElementById('vcards-active').textContent=s.active||ALL_VCARDS.filter(c=>c.status==='active'&&!c.frozen).length||0;
+  document.getElementById('vcards-frozen').textContent=s.frozen||ALL_VCARDS.filter(c=>c.frozen).length||0;
+  document.getElementById('vcards-cancelled').textContent=s.cancelled||ALL_VCARDS.filter(c=>c.status==='cancelled').length||0;
+  renderVCardsTable(ALL_VCARDS);
+}
+function filterVCards(){
+  const f=document.getElementById('vcard-filter').value;
+  let filtered=ALL_VCARDS;
+  if(f==='active')filtered=ALL_VCARDS.filter(c=>c.status==='active'&&!c.frozen);
+  else if(f==='frozen')filtered=ALL_VCARDS.filter(c=>c.frozen);
+  else if(f==='cancelled')filtered=ALL_VCARDS.filter(c=>c.status==='cancelled');
+  renderVCardsTable(filtered);
+}
+function renderVCardsTable(items){
+  const tb=document.getElementById('tb-vcards');
+  if(!items.length){tb.innerHTML='<tr><td colspan="9" class="td-empty">Sin tarjetas</td></tr>';return;}
+  tb.innerHTML=items.map(c=>`<tr>
+    <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${c.id}</td>
+    <td style="font-weight:500">${c.user?.name||c.userId||'—'}</td>
+    <td>${c.label||'—'}</td>
+    <td style="font-family:var(--mono);color:var(--muted)">${c.number||'••••'}</td>
+    <td>${c.currency||'XAF'}</td>
+    <td style="color:var(--green);font-weight:700;font-family:var(--mono)">${Number(c.balance||0).toLocaleString('es')}</td>
+    <td style="color:var(--red);font-family:var(--mono)">${Number(c.spentTotal||0).toLocaleString('es')}</td>
+    <td>${c.frozen?'<span class="pill pill-amber">Congelada</span>':c.status==='active'?'<span class="pill pill-green">Activa</span>':'<span class="pill pill-red">Cancelada</span>'}</td>
+    <td style="font-size:11px;color:var(--muted)">${c.createdAt?fmt_date(c.createdAt):'—'}</td>
+  </tr>`).join('');
+}
+
+// ── ACCOUNTING ────────────────────────────────────────────
+let ALL_ACCOUNTING=[];
+async function loadAccounting(){
+  const[rSum,rEnt]=await Promise.all([rwAPI('GET','/accounting/summary'),rwAPI('GET','/accounting?limit=100')]);
+  if(rSum.success){
+    const d=rSum.data;
+    document.getElementById('acc-income').textContent=Number(d.total_income||0).toLocaleString('es');
+    document.getElementById('acc-expenses').textContent=Number(d.total_expenses||0).toLocaleString('es');
+    const profit=Number(d.net_profit||0);
+    const profEl=document.getElementById('acc-profit');
+    profEl.textContent=profit.toLocaleString('es');
+    profEl.style.color=profit>=0?'var(--green)':'var(--red)';
+    document.getElementById('acc-entries').textContent=d.entries_count||0;
+  }
+  if(rEnt.success){
+    ALL_ACCOUNTING=rEnt.data.items||rEnt.data||[];
+    renderAccountingTable(ALL_ACCOUNTING);
+  }else{
+    document.getElementById('tb-accounting').innerHTML='<tr><td colspan="7" class="td-empty">Railway no disponible</td></tr>';
+  }
+}
+function filterAccounting(){
+  const f=document.getElementById('acc-filter').value;
+  renderAccountingTable(f?ALL_ACCOUNTING.filter(e=>e.type===f):ALL_ACCOUNTING);
+}
+function accTypeBadge(t){const m={income:'pill-green',expense:'pill-red',transfer:'pill-cyan'};return`<span class="pill ${m[t]||'pill-gray'}">${t}</span>`;}
+function renderAccountingTable(items){
+  const tb=document.getElementById('tb-accounting');
+  if(!items.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin entradas contables</td></tr>';return;}
+  tb.innerHTML=items.map(e=>`<tr>
+    <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${e.id}</td>
+    <td>${accTypeBadge(e.type)}</td>
+    <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${e.category||'—'}</span></td>
+    <td style="color:var(--subtle)">${e.description||'—'}</td>
+    <td style="font-weight:700;color:${e.type==='income'?'var(--green)':'var(--red)'};font-family:var(--mono)">${Number(e.amount||0).toLocaleString('es')}</td>
+    <td>${e.currency||'XAF'}</td>
+    <td style="font-size:11px;color:var(--muted)">${fmt_date(e.date||e.createdAt)}</td>
+  </tr>`).join('');
+}
+async function saveAccounting(){
+  const body={
+    type:document.getElementById('ac-type').value,
+    category:document.getElementById('ac-category').value,
+    amount:parseFloat(document.getElementById('ac-amount').value),
+    currency:document.getElementById('ac-currency').value,
+    description:document.getElementById('ac-desc').value,
+    reference:document.getElementById('ac-ref').value||undefined
+  };
+  if(!body.description||!body.amount){toast('Completa los campos requeridos','error');return;}
+  const r=await rwAPI('POST','/accounting',body);
+  if(r.success){
+    closeModal('m-new-accounting');
+    toast('✅ Entrada contable guardada','success');
+    logAdminAction('accounting_entry',body.type+' '+body.amount+' '+body.currency);
+    loadAccounting();
+  }else{toast('Error: '+(r.error?.message||'Railway no disponible'),'error');}
+}
+
+// ── PAYROLL ───────────────────────────────────────────────
+let ALL_PAYROLL=[];let currentPayrollId=null;
+async function loadPayroll(){
+  const r=await rwAPI('GET','/payroll');
+  if(!r.success){document.getElementById('tb-payroll').innerHTML='<tr><td colspan="7" class="td-empty">Railway no disponible</td></tr>';return;}
+  ALL_PAYROLL=r.data.runs||r.data.items||[];
+  const s=r.data.stats||{};
+  document.getElementById('payroll-total').textContent=s.total||ALL_PAYROLL.length||0;
+  document.getElementById('payroll-draft').textContent=s.draft||ALL_PAYROLL.filter(p=>p.status!=='executed').length||0;
+  document.getElementById('payroll-executed').textContent=s.executed||ALL_PAYROLL.filter(p=>p.status==='executed').length||0;
+  document.getElementById('payroll-paid').textContent=Number(s.totalPaid||0).toLocaleString('es')+' XAF';
+  renderPayrollTable();
+}
+function renderPayrollTable(){
+  const tb=document.getElementById('tb-payroll');
+  if(!ALL_PAYROLL.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin nóminas creadas</td></tr>';return;}
+  tb.innerHTML=ALL_PAYROLL.map(p=>`<tr>
+    <td style="font-weight:600">${p.period||'—'}</td>
+    <td>${p._count?.items||0} riders</td>
+    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(p.totalAmount||0).toLocaleString('es')}</td>
+    <td><span class="pill pill-cyan">${p.currency||'XAF'}</span></td>
+    <td>${p.status==='executed'?'<span class="pill pill-green">Ejecutada</span>':'<span class="pill pill-amber">Borrador</span>'}</td>
+    <td style="font-size:11px;color:var(--muted)">${p.executedAt?fmt_date(p.executedAt):'—'}</td>
+    <td style="display:flex;gap:4px">
+      <button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="viewPayrollDetail('${p.id}')">🔍 Ver</button>
+      ${p.status!=='executed'?`<button class="topbar-btn btn-danger-sm" style="font-size:11px;padding:4px 8px" onclick="deletePayroll('${p.id}')">🗑️</button>`:''}
+    </td>
+  </tr>`).join('');
+}
+async function createPayroll(){
+  const body={
+    period:document.getElementById('pr-period').value,
+    currency:document.getElementById('pr-currency').value,
+    ratePerDelivery:parseFloat(document.getElementById('pr-rate').value)||500,
+    notes:document.getElementById('pr-notes').value||undefined
+  };
+  if(!body.period){toast('El período es requerido','error');return;}
+  const r=await rwAPI('POST','/payroll',body);
+  if(r.success){
+    closeModal('m-new-payroll');
+    toast(`✅ Nómina creada: ${r.data.items?.length||0} riders · ${Number(r.data.totalAmount||0).toLocaleString('es')} ${r.data.currency}`,'success');
+    logAdminAction('create_payroll','Nómina '+body.period);
+    loadPayroll();
+  }else{toast('Error: '+(r.error?.message||'Railway no disponible'),'error');}
+}
+async function viewPayrollDetail(id){
+  const r=await rwAPI('GET','/payroll/'+id);
+  if(!r.success){toast('Error al cargar detalle','error');return;}
+  const run=r.data;
+  currentPayrollId=run.id;
+  document.getElementById('payroll-detail-title').textContent='💼 Nómina '+run.period+' — '+run.currency;
+  document.getElementById('payroll-detail-total').textContent=Number(run.totalAmount||0).toLocaleString('es')+' '+(run.currency||'XAF');
+  const btn=document.getElementById('payroll-execute-btn');
+  if(btn)btn.style.display=run.status==='executed'?'none':'block';
+  const tb=document.getElementById('tb-payroll-detail');
+  if(tb)tb.innerHTML=(run.items||[]).map(i=>`<tr>
+    <td style="font-weight:600">${i.riderName||'—'}</td>
+    <td style="font-family:var(--mono)">${i.deliveries||0}</td>
+    <td style="font-family:var(--mono)">${Number(i.ratePerDelivery||0).toLocaleString('es')}</td>
+    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(i.amount||0).toLocaleString('es')}</td>
+    <td>${i.status==='paid'?'<span class="pill pill-green">Pagado</span>':'<span class="pill pill-amber">Pendiente</span>'}</td>
+  </tr>`).join('');
+  openModal('m-payroll-detail');
+}
+async function executePayroll(){
+  if(!currentPayrollId)return;
+  if(!confirm('¿Ejecutar esta nómina? Todos los riders serán marcados como pagados.'))return;
+  const r=await rwAPI('PATCH','/payroll/'+currentPayrollId+'/execute',{});
+  if(r.success){
+    toast('✅ Nómina ejecutada correctamente','success');
+    logAdminAction('execute_payroll','Nómina '+currentPayrollId);
+    closeModal('m-payroll-detail');
+    loadPayroll();
+  }else{toast('Error: '+(r.error?.message||'Railway no disponible'),'error');}
+}
+async function deletePayroll(id){
+  if(!confirm('¿Eliminar esta nómina borrador?'))return;
+  const r=await rwAPI('DELETE','/payroll/'+id);
+  if(r.success){toast('Nómina eliminada','success');loadPayroll();}
+  else toast('Error: '+(r.error?.message||'Railway no disponible'),'error');
+}
+
+// ── PRODUCTOS ─────────────────────────────────────────────
+let ALL_PRODUCTOS=[];
+async function loadProductos(){
+  const r=await rwAPI('GET','/shop/products?limit=100');
+  const grid=document.getElementById('productos-grid');
+  if(!r.success){grid.innerHTML='<div class="td-empty">Railway no disponible</div>';return;}
+  ALL_PRODUCTOS=r.data.items||r.data.products||[];
+  document.getElementById('productos-count').textContent=ALL_PRODUCTOS.length+' productos';
+  renderProductosGrid(ALL_PRODUCTOS);
+}
+function filterProductos(){
+  const q=(document.getElementById('prod-search')?.value||'').toLowerCase();
+  const cat=document.getElementById('prod-cat-filter')?.value||'';
+  renderProductosGrid(ALL_PRODUCTOS.filter(p=>{
+    if(cat&&p.category!==cat)return false;
+    if(q&&!(p.name||'').toLowerCase().includes(q))return false;
+    return true;
+  }));
+}
+function renderProductosGrid(prods){
+  const grid=document.getElementById('productos-grid');
+  if(!prods.length){grid.innerHTML='<div class="td-empty">Sin productos</div>';return;}
+  const CE_EMOJI={electro:'⚡',hogar:'🏠',moda:'👗',solar:'☀️'};
+  grid.innerHTML='<div class="prod-grid">'+prods.map(p=>`
+    <div class="prod-card">
+      <div class="prod-img">${CE_EMOJI[p.category]||'📦'}</div>
+      <div class="prod-info">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;line-height:1.3">${p.name||'—'}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-family:var(--mono);font-size:14px;font-weight:800;color:var(--cyan)">€${Number(p.priceEur||0).toFixed(2)}</span>
+          <span style="font-size:10px;color:var(--muted)">${p.stock||0} uds</span>
+        </div>
+        ${p.ceCertified?'<span style="font-size:9px;background:var(--green-d);color:var(--green);border-radius:4px;padding:1px 6px;font-weight:700">CE ✓</span>':''}
+      </div>
+    </div>`).join('')+'</div>';
+}
+
+// ── CHAT ──────────────────────────────────────────────────
+async function loadChatRooms(){
+  const list=document.getElementById('chat-rooms-list');
+  const r=await rwAPI('GET','/chat');
+  if(!r.success){list.innerHTML='<div class="td-empty">Railway no disponible</div>';return;}
+  const rooms=r.data.rooms||r.data.items||[];
+  if(!rooms.length){list.innerHTML='<div class="td-empty">Sin conversaciones</div>';return;}
+  list.innerHTML=rooms.map(room=>`
+    <div class="chat-room" onclick="loadChatMessages('${room.id}','${(room.name||room.id).replace(/'/g,'')}')">
+      <div style="font-size:13px;font-weight:600">${room.name||'Conversación'}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${room._count?.messages||0} mensajes</div>
+    </div>`).join('');
+}
+const renderChatRooms=loadChatRooms;
+async function loadChatMessages(roomId,roomName){
+  document.getElementById('chat-room-title').textContent='💬 '+roomName;
+  const msgs=document.getElementById('chat-messages-list');
+  msgs.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
+  const r=await rwAPI('GET','/chat/'+roomId);
+  if(!r.success){msgs.innerHTML='<div class="td-empty">Error cargando mensajes</div>';return;}
+  const messages=r.data.messages||r.data.items||[];
+  if(!messages.length){msgs.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Sin mensajes</div>';return;}
+  msgs.innerHTML=messages.map(m=>`
+    <div class="chat-msg chat-msg-in">
+      <div style="font-size:10px;color:var(--muted);margin-bottom:3px">${m.sender?.name||'Usuario'} · ${fmt_datetime(m.createdAt)}</div>
+      <div>${m.content||m.message||'—'}</div>
+    </div>`).join('');
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ── ROLES ─────────────────────────────────────────────────
+function loadRoles(){
+  const el=document.getElementById('roles-content');
+  // Roles are defined locally in the API — show them from our knowledge
+  const ROLES_DEF=[
+    {role:'customer',level:0,label:'Cliente',dashboard:false},
+    {role:'rider',level:0,label:'Rider',dashboard:false},
+    {role:'supplier',level:0,label:'Proveedor',dashboard:false},
+    {role:'circular_autorizada',level:0,label:'Circular Autorizada',dashboard:false},
+    {role:'api_partner',level:0,label:'API Partner',dashboard:true},
+    {role:'city_coordinator',level:1,label:'Coordinador de Ciudad',dashboard:true},
+    {role:'rider_coordinator',level:1,label:'Coordinador de Riders',dashboard:true},
+    {role:'business_developer',level:1,label:'Business Developer',dashboard:true},
+    {role:'kyc_officer',level:2,label:'Oficial KYC',dashboard:true},
+    {role:'loan_officer',level:2,label:'Oficial de Préstamos',dashboard:true},
+    {role:'support_agent',level:2,label:'Agente de Soporte',dashboard:true},
+    {role:'marketing_manager',level:2,label:'Manager de Marketing',dashboard:true},
+    {role:'tax_officer',level:2,label:'Oficial Fiscal',dashboard:true},
+    {role:'payroll_manager',level:2,label:'Manager de Nóminas',dashboard:true},
+    {role:'compliance_officer',level:3,label:'Oficial de Cumplimiento',dashboard:true},
+    {role:'finance_officer',level:3,label:'Oficial Financiero',dashboard:true},
+    {role:'country_manager',level:4,label:'Director de País',dashboard:true},
+    {role:'regional_director',level:5,label:'Director Regional',dashboard:true},
+    {role:'super_admin',level:9,label:'Super Admin',dashboard:true},
+  ];
+  const LEVEL_LABELS={0:'Usuario final',1:'Operaciones de campo',2:'Especialistas',3:'Managers',4:'Executives',5:'Directors',9:'Super Admin'};
+  const grouped={};
+  ROLES_DEF.forEach(r=>{if(!grouped[r.level])grouped[r.level]=[];grouped[r.level].push(r);});
+  el.innerHTML=Object.entries(grouped).map(([level,roles])=>`
+    <div style="margin-bottom:20px">
+      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--b1)">${LEVEL_LABELS[level]||'Nivel '+level} — Nivel ${level}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+        ${roles.map(r=>`
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px">
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px">${r.label}</div>
+            <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px">${r.role}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;height:4px;background:var(--s3);border-radius:2px;overflow:hidden">
+                <div style="width:${Math.round(r.level/9*100)}%;height:100%;background:var(--cyan);border-radius:2px"></div>
+              </div>
+              ${r.dashboard?'<span style="font-size:9px;background:var(--cyan-d);color:var(--cyan);padding:1px 6px;border-radius:4px;font-weight:700">DASHBOARD</span>':''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── API KEYS ──────────────────────────────────────────────
+async function loadApiKeys(){
+  const r=await rwAPI('GET','/apikeys');
+  const tb=document.getElementById('tb-apikeys');
+  if(!r.success){tb.innerHTML='<tr><td colspan="5" class="td-empty">Railway no disponible</td></tr>';return;}
+  const keys=r.data.clients||r.data.items||[];
+  if(!keys.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin API Keys registradas</td></tr>';return;}
+  tb.innerHTML=keys.map(k=>`<tr>
+    <td style="font-weight:600">${k.name||k.description||'—'}</td>
+    <td><span style="font-family:var(--mono);font-size:11px;background:var(--s3);padding:3px 8px;border-radius:5px">${k.clientId||'—'}</span></td>
+    <td style="font-size:11px;color:var(--muted)">${(k.scopes||'').toString()}</td>
+    <td>${k.active?'<span class="pill pill-green">Activa</span>':'<span class="pill pill-gray">Inactiva</span>'}</td>
+    <td style="font-size:11px;color:var(--muted)">${k.createdAt?fmt_date(k.createdAt):'—'}</td>
+  </tr>`).join('');
+}
+
+// ── ALERTS ────────────────────────────────────────────────
+let ALL_ALERTS_DATA=JSON.parse(localStorage.getItem('ia_alerts_v18')||'[]');
+function loadAlerts(){
+  ALL_ALERTS_DATA=JSON.parse(localStorage.getItem('ia_alerts_v18')||'[]');
+  renderAlertsGrid();
+}
+function renderAlertsGrid(){
+  const grid=document.getElementById('alerts-grid-content');
+  if(!grid)return;
+  if(!ALL_ALERTS_DATA.length){grid.innerHTML='<div class="td-empty">Sin alertas configuradas. Crea una para empezar.</div>';return;}
+  const levelColor={info:'var(--cyan)',warning:'var(--amber)',critical:'var(--red)'};
+  const levelIcon={info:'ℹ️',warning:'⚠️',critical:'🔴'};
+  const metricLabel={users_total:'👥 Total usuarios',kyc_pending:'⏳ KYC pendientes',txns_24h:'💸 Txns 24h',blocked_users:'🚫 Bloqueados',loans_active:'🤝 Préstamos activos'};
+  const condLabel={gt:'>',lt:'<',gte:'≥'};
+  grid.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">'+ALL_ALERTS_DATA.map(a=>`
+    <div class="alert-card alert-${a.level||'info'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="font-weight:600;font-size:13px">${levelIcon[a.level]||'🔔'} ${a.name}</div>
+        <span class="pill pill-${a.level==='critical'?'red':a.level==='warning'?'amber':'cyan'}">${a.level}</span>
+      </div>
+      <div style="font-size:12px;color:var(--subtle);margin-bottom:10px">${metricLabel[a.metric]||a.metric} ${condLabel[a.condition]||a.condition} <strong style="color:${levelColor[a.level]}">${a.threshold}</strong></div>
+      <div style="display:flex;gap:8px">
+        <button class="topbar-btn btn-danger-sm" style="font-size:11px;padding:4px 8px" onclick="deleteAlert('${a.id}')">🗑️ Eliminar</button>
+      </div>
+    </div>`).join('')+'</div>';
+}
+function saveAlert(){
+  const name=document.getElementById('al-name').value.trim();
+  const metric=document.getElementById('al-metric').value;
+  const condition=document.getElementById('al-condition').value;
+  const threshold=parseFloat(document.getElementById('al-threshold').value);
+  const level=document.getElementById('al-level').value;
+  if(!name||isNaN(threshold)){toast('Nombre y umbral son requeridos','error');return;}
+  ALL_ALERTS_DATA.push({id:'al_'+Date.now(),name,metric,condition,threshold,level});
+  localStorage.setItem('ia_alerts_v18',JSON.stringify(ALL_ALERTS_DATA));
+  closeModal('m-new-alert');
+  renderAlertsGrid();
+  toast('✅ Alerta guardada','success');
+  document.getElementById('al-name').value='';
+  document.getElementById('al-threshold').value='';
+}
+function deleteAlert(id){
+  if(!confirm('¿Eliminar esta alerta?'))return;
+  ALL_ALERTS_DATA=ALL_ALERTS_DATA.filter(a=>a.id!==id);
+  localStorage.setItem('ia_alerts_v18',JSON.stringify(ALL_ALERTS_DATA));
+  renderAlertsGrid();
+  toast('Alerta eliminada','success');
+}
+function checkAlerts(){
+  if(!ALL_USERS||!ALL_ALERTS_DATA.length)return;
+  const getValue=metric=>{
+    if(metric==='users_total')return ALL_USERS.length;
+    if(metric==='kyc_pending')return ALL_USERS.filter(u=>u.kyc_pending).length;
+    if(metric==='blocked_users')return ALL_USERS.filter(u=>u.is_blocked).length;
+    return 0;
+  };
+  const evalCond=(val,cond,thr)=>cond==='gt'?val>thr:cond==='lt'?val<thr:cond==='gte'?val>=thr:false;
+  const triggered=ALL_ALERTS_DATA.filter(a=>evalCond(getValue(a.metric),a.condition,a.threshold));
+  const box=document.getElementById('alerts-active-box');
+  if(!box)return;
+  if(!triggered.length){box.innerHTML='';return;}
+  const lc={info:'var(--cyan)',warning:'var(--amber)',critical:'var(--red)'};
+  box.innerHTML=`<div style="padding:12px 16px;border-radius:10px;background:var(--red-d);border:1px solid rgba(239,68,68,.2);margin-bottom:16px">
+    <div style="font-weight:700;margin-bottom:8px;color:var(--red)">⚠️ ${triggered.length} alerta(s) activa(s)</div>
+    ${triggered.map(a=>`<div style="font-size:12px;color:${lc[a.level]};margin-bottom:4px">• ${a.name}</div>`).join('')}
+  </div>`;
+}
+
+// ── RAILWAY HEALTH CHECK ON INIT ──────────────────────────
+async function checkRailwayHealth(){
+  const r=await rwAPI('GET','/utils/health');
+  const dot=document.getElementById('rt-dot');
+  if(r.success&&r.status==='healthy'){
+    if(dot){dot.style.background='linear-gradient(135deg,var(--green),var(--cyan))';dot.title='Realtime + Railway activos';}
+    console.log('[Admin v18] ✅ Railway activa');
+  }else{
+    if(dot)dot.title='Railway no disponible — usando Supabase';
+    console.warn('[Admin v18] ⚠️ Railway no responde');
+  }
+}
+// Run health check after load
+setTimeout(checkRailwayHealth,2000);
+
+
+// ═══════════════════════════════════════════════════════════
+// INNOVAAFRIC ADMIN v18 — FUNCIONES v17
 // ═══════════════════════════════════════════════════════════
 
 // ── NAV UPDATE para páginas nuevas ────────────────────────
@@ -2749,6 +3815,302 @@ saveEdit=async function(){
 renderNotifs();
 // Hook realtime to push notifs for new users
 const _sbRTHook=setupAdminRealtime;
+
+// ═══════════════════════════════════════════════════════════
+// INNOVAAFRIC ADMIN v18 — AI CHAT + COMMAND PALETTE + SYNC
+// ═══════════════════════════════════════════════════════════
+
+// ── ADMIN AI CHAT ─────────────────────────────────────────
+let AI_CHAT_HISTORY=[];
+let AI_CHAT_INIT=false;
+
+function initAIChat(){
+  if(AI_CHAT_INIT)return;
+  AI_CHAT_INIT=true;
+}
+
+function clearAIChat(){
+  AI_CHAT_HISTORY=[];
+  const msgs=document.getElementById('ai-chat-messages');
+  if(msgs)msgs.innerHTML=`
+    <div class="ai-chat-msg ai">👋 Chat limpiado. ¿En qué te ayudo?</div>`;
+}
+
+async function sendAIMsg(preset){
+  const input=document.getElementById('ai-chat-input');
+  const text=preset||(input&&input.value.trim());
+  if(!text)return;
+  if(input)input.value='';
+
+  const msgs=document.getElementById('ai-chat-messages');
+  if(!msgs)return;
+
+  // Remove suggestion buttons if present
+  const sugs=msgs.querySelector('div[style*="flex-wrap"]');
+  if(sugs)sugs.remove();
+
+  // Add user message
+  msgs.innerHTML+=`<div class="ai-chat-msg user">${text}</div>`;
+  msgs.innerHTML+=`<div class="ai-chat-msg ai loading" id="ai-typing">🤖 Analizando datos...</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+
+  // Build context from current data
+  const userCount=ALL_USERS?ALL_USERS.length:0;
+  const countries=[...new Set((ALL_USERS||[]).map(u=>u.country).filter(Boolean))];
+  const roles={};(ALL_USERS||[]).forEach(u=>{roles[u.role]=(roles[u.role]||0)+1;});
+  const kycPending=(ALL_USERS||[]).filter(u=>u.kyc_pending).length;
+  const blocked=(ALL_USERS||[]).filter(u=>u.is_blocked).length;
+
+  const systemPrompt=`Eres el asistente IA del panel de administración de InnovaAFRIC, una fintech de remesas entre Europa, Asia y África.
+Tienes acceso a estos datos en tiempo real:
+- Total usuarios: ${userCount}
+- Países activos: ${countries.join(', ')||'—'}
+- Distribución por rol: ${JSON.stringify(roles)}
+- KYC pendientes: ${kycPending}
+- Usuarios bloqueados: ${blocked}
+- Moneda principal: XAF (Franco CFA) y EUR
+- Comisión estándar: 2% en envíos internacionales
+- Infraestructura: Supabase + Railway API + GitHub Pages
+
+Responde en español de forma concisa y profesional. Usa emojis para destacar puntos clave. Si te preguntan algo que requiere más datos de los que tienes, explica qué datos necesitarías.`;
+
+  AI_CHAT_HISTORY.push({role:'user',content:text});
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:systemPrompt,
+        messages:AI_CHAT_HISTORY.slice(-10)
+      })
+    });
+    const data=await res.json();
+    const reply=(data.content&&data.content[0]&&data.content[0].text)||'No pude procesar tu consulta.';
+    AI_CHAT_HISTORY.push({role:'assistant',content:reply});
+    const typing=document.getElementById('ai-typing');
+    if(typing){
+      typing.id='';
+      typing.classList.remove('loading');
+      typing.innerHTML=reply.replace(/\n/g,'<br>');
+    }
+  }catch(e){
+    const typing=document.getElementById('ai-typing');
+    if(typing){typing.id='';typing.innerHTML='❌ Error de conexión con Claude API: '+e.message;}
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ── COMMAND PALETTE ───────────────────────────────────────
+const CMD_ITEMS=[
+  // Navegación
+  {type:'nav',ic:'📊',label:'Dashboard',desc:'Ir al dashboard',page:'dashboard'},
+  {type:'nav',ic:'👥',label:'Usuarios',desc:'Gestión de usuarios',page:'users'},
+  {type:'nav',ic:'💳',label:'Wallets',desc:'Ver wallets',page:'wallets'},
+  {type:'nav',ic:'💸',label:'Transacciones',desc:'Historial de operaciones',page:'transactions'},
+  {type:'nav',ic:'🛵',label:'Riders',desc:'Red de riders',page:'riders'},
+  {type:'nav',ic:'🏢',label:'Circulares',desc:'Circulares autorizadas',page:'circulares'},
+  {type:'nav',ic:'🏭',label:'Proveedores',desc:'Gestión de proveedores',page:'proveedores'},
+  {type:'nav',ic:'📦',label:'Pedidos',desc:'Órdenes y entregas',page:'orders'},
+  {type:'nav',ic:'🪪',label:'KYC',desc:'Verificación de identidad',page:'kyc'},
+  {type:'nav',ic:'🛡️',label:'Anti-fraude',desc:'Motor de fraude',page:'fraud'},
+  {type:'nav',ic:'📈',label:'Tasas',desc:'Tasas de cambio',page:'rates'},
+  {type:'nav',ic:'🎧',label:'Soporte',desc:'Tickets de soporte',page:'support'},
+  {type:'nav',ic:'📣',label:'Campañas',desc:'Promociones y códigos',page:'campaigns'},
+  {type:'nav',ic:'🗺️',label:'Mapa usuarios',desc:'Distribución geográfica',page:'mapa'},
+  {type:'nav',ic:'💳',label:'Cargos manuales',desc:'Ajustes de saldo',page:'cargos'},
+  {type:'nav',ic:'🤝',label:'Préstamos',desc:'Microcréditos Railway',page:'loans'},
+  {type:'nav',ic:'🫂',label:'Tontinas',desc:'Grupos de ahorro',page:'tontinas'},
+  {type:'nav',ic:'💳',label:'Tarjetas virtuales',desc:'Gestión de tarjetas',page:'vcards'},
+  {type:'nav',ic:'📒',label:'Contabilidad',desc:'Libro de cuentas',page:'accounting'},
+  {type:'nav',ic:'💼',label:'Nómina Riders',desc:'Pagos a riders',page:'payroll'},
+  {type:'nav',ic:'🛍️',label:'Productos',desc:'Catálogo de productos',page:'productos'},
+  {type:'nav',ic:'💬',label:'Chat',desc:'Conversaciones',page:'chat'},
+  {type:'nav',ic:'🎭',label:'Roles',desc:'Sistema de roles',page:'roles'},
+  {type:'nav',ic:'🔑',label:'API Keys',desc:'Claves de acceso',page:'apikeys'},
+  {type:'nav',ic:'🔔',label:'Alertas',desc:'Alertas del sistema',page:'alerts'},
+  {type:'nav',ic:'📋',label:'Auditoría',desc:'Log de acciones',page:'auditlog'},
+  {type:'nav',ic:'🔄',label:'Sincronización',desc:'Sync Supabase-Railway',page:'sync'},
+  {type:'nav',ic:'🤖',label:'Admin AI Chat',desc:'Asistente IA',page:'aichat'},
+  {type:'nav',ic:'⚙️',label:'Ajustes',desc:'Configuración',page:'settings'},
+  {type:'nav',ic:'➕',label:'Nuevo usuario',desc:'Crear usuario',page:'crear'},
+  // Acciones
+  {type:'action',ic:'📥',label:'Exportar usuarios CSV',desc:'Descarga CSV',fn:()=>exportUsersCSV()},
+  {type:'action',ic:'↻',label:'Actualizar datos',desc:'Recargar página actual',fn:()=>refreshCurrent()},
+  {type:'action',ic:'🔄',label:'Sincronizar usuarios',desc:'Sync Supabase→Railway',fn:()=>{nav('sync',null);setTimeout(syncAllUsers,500);}},
+  {type:'action',ic:'🔍',label:'Escaneo anti-fraude',desc:'Ejecutar análisis',fn:()=>{nav('fraud',null);setTimeout(runFraudScan,300);}},
+];
+
+let cmdSelected=0;let cmdFiltered=[];
+
+function openCmd(){
+  document.getElementById('cmd-overlay').classList.add('open');
+  document.getElementById('cmd-input').value='';
+  filterCmd('');
+  setTimeout(()=>document.getElementById('cmd-input').focus(),50);
+}
+
+function closeCmd(){
+  document.getElementById('cmd-overlay').classList.remove('open');
+}
+
+function filterCmd(q){
+  const query=q.toLowerCase().trim();
+  // Search users too
+  const userResults=query.length>=2?(ALL_USERS||[]).filter(u=>
+    (u.full_name||'').toLowerCase().includes(query)||
+    (u.email||'').toLowerCase().includes(query)||
+    ('ia-'+(u.id||'').replace(/-/g,'').toLowerCase().substring(0,6)).includes(query)
+  ).slice(0,4).map(u=>({type:'user',ic:'👤',label:u.full_name||u.email,desc:u.email,user:u})):[];
+
+  cmdFiltered=[
+    ...CMD_ITEMS.filter(i=>!query||i.label.toLowerCase().includes(query)||i.desc.toLowerCase().includes(query)),
+    ...userResults
+  ];
+  cmdSelected=0;
+  renderCmdResults();
+}
+
+function renderCmdResults(){
+  const el=document.getElementById('cmd-results');
+  if(!el)return;
+  if(!cmdFiltered.length){el.innerHTML='<div class="cmd-empty">Sin resultados</div>';return;}
+  const navItems=cmdFiltered.filter(i=>i.type==='nav');
+  const actionItems=cmdFiltered.filter(i=>i.type==='action');
+  const userItems=cmdFiltered.filter(i=>i.type==='user');
+  let html='';let idx=0;
+  const item=(i,ci)=>`<div class="cmd-item${ci===cmdSelected?' selected':''}" onclick="execCmd(${ci})" onmouseover="cmdSelected=${ci};renderCmdResults()">
+    <span class="cmd-ic">${i.ic}</span>
+    <span class="cmd-label">${i.label}</span>
+    <span class="cmd-desc">${i.desc||''}</span>
+  </div>`;
+  if(navItems.length){html+='<div class="cmd-section">Páginas</div>';navItems.forEach(i=>{html+=item(i,idx);idx++;});}
+  if(actionItems.length){html+='<div class="cmd-section">Acciones</div>';actionItems.forEach(i=>{html+=item(i,idx);idx++;});}
+  if(userItems.length){html+='<div class="cmd-section">Usuarios</div>';userItems.forEach(i=>{html+=item(i,idx);idx++;});}
+  el.innerHTML=html;
+}
+
+function execCmd(idx){
+  const item=cmdFiltered[idx];
+  if(!item)return;
+  closeCmd();
+  if(item.type==='nav')nav(item.page,null);
+  else if(item.type==='action'&&item.fn)item.fn();
+  else if(item.type==='user')openFicha(item.user.id);
+}
+
+function handleCmdKey(e){
+  if(e.key==='Escape'){closeCmd();return;}
+  if(e.key==='ArrowDown'){cmdSelected=Math.min(cmdSelected+1,cmdFiltered.length-1);renderCmdResults();e.preventDefault();}
+  if(e.key==='ArrowUp'){cmdSelected=Math.max(cmdSelected-1,0);renderCmdResults();e.preventDefault();}
+  if(e.key==='Enter'){execCmd(cmdSelected);e.preventDefault();}
+}
+
+// Keyboard shortcut Ctrl+K / Cmd+K
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openCmd();}
+  if(e.key==='Escape'&&document.getElementById('cmd-overlay').classList.contains('open'))closeCmd();
+});
+
+// ── SYNC SUPABASE → RAILWAY ───────────────────────────────
+let SYNC_LOG=[];
+
+async function checkSyncStatus(){
+  const box=document.getElementById('sync-status-box');
+  if(box)box.innerHTML='<div style="display:flex;align-items:center;gap:8px"><div class="spin"></div> Verificando...</div>';
+
+  // Count Supabase users
+  const sbCount=ALL_USERS?ALL_USERS.length:0;
+  document.getElementById('sync-sb-count').textContent=sbCount;
+
+  // Count Railway users
+  const r=await rwAPI('GET','/admin/users?limit=1');
+  const rwCount=r.success?(r.data.total||r.data.items?.length||0):'N/A';
+  document.getElementById('sync-rw-count').textContent=rwCount;
+
+  const diff=typeof rwCount==='number'?Math.max(0,sbCount-rwCount):'?';
+  document.getElementById('sync-diff').textContent=diff;
+
+  const lastSync=localStorage.getItem('ia_last_sync');
+  document.getElementById('sync-last').textContent=lastSync?new Date(lastSync).toLocaleString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca';
+
+  if(box){
+    if(diff===0){
+      box.innerHTML='<span class="sync-badge sync-ok">✅ Sincronizado</span> Todos los usuarios de Supabase están en Railway.';
+    }else if(typeof diff==='number'&&diff>0){
+      box.innerHTML=`<span class="sync-badge sync-pending">⚠️ Pendiente</span> Hay ${diff} usuario(s) de Supabase que no están en Railway. Click "Sincronizar todos" para resolverlo.`;
+    }else{
+      box.innerHTML='<span class="sync-badge sync-error">❌ Error</span> No se pudo conectar con Railway para verificar.';
+    }
+  }
+}
+
+async function syncAllUsers(){
+  if(!ALL_USERS||!ALL_USERS.length){toast('Carga los usuarios primero','error');return;}
+  if(!confirm(`¿Sincronizar ${ALL_USERS.length} usuarios de Supabase a Railway?`))return;
+
+  const box=document.getElementById('sync-status-box');
+  if(box)box.innerHTML='<div style="display:flex;align-items:center;gap:8px"><div class="spin"></div> Sincronizando '+ALL_USERS.length+' usuarios...</div>';
+
+  // Get wallets for enrichment
+  const{data:wallets}=await SB.from('wallets').select('user_id,eur,xaf,usd').catch(()=>({data:[]}));
+  const walletMap={};(wallets||[]).forEach(w=>{walletMap[w.user_id]=w;});
+
+  const usersPayload=ALL_USERS.map(u=>{
+    const w=walletMap[u.id]||{};
+    return{id:u.id,email:u.email,full_name:u.full_name,phone:u.phone,country:u.country,role:u.role,city:u.city,kyc_level:u.kyc_level||0,eur:w.eur||0,xaf:w.xaf||0,usd:w.usd||0};
+  });
+
+  const r=await rwAPI('POST','/admin/sync-bulk',{users:usersPayload});
+
+  if(r.success){
+    const{synced=0,skipped=0,errors=0}=r.data;
+    localStorage.setItem('ia_last_sync',new Date().toISOString());
+    addSyncLog(`✅ Sync completado: ${synced} nuevos, ${skipped} ya existían, ${errors} errores`,'success');
+    toast(`✅ Sincronizados ${synced} usuarios nuevos`,'success');
+    logAdminAction('sync_bulk',`${synced} usuarios sincronizados a Railway`);
+    checkSyncStatus();
+  }else{
+    addSyncLog('❌ Error en sync-bulk: '+(r.error||'desconocido'),'error');
+    toast('Error de sincronización','error');
+    if(box)box.innerHTML='<span class="sync-badge sync-error">❌ Error</span> '+( r.error||'No se pudo conectar con Railway');
+  }
+}
+
+function addSyncLog(msg,type){
+  SYNC_LOG.unshift({msg,type,time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})});
+  if(SYNC_LOG.length>50)SYNC_LOG.pop();
+  const el=document.getElementById('sync-log');
+  if(!el)return;
+  const colors={success:'var(--green)',error:'var(--red)',info:'var(--cyan)'};
+  el.innerHTML=SYNC_LOG.map(l=>`
+    <div class="log-entry">
+      <div class="log-dot" style="background:${colors[l.type]||'var(--muted)'}"></div>
+      <div style="flex:1"><div class="log-action" style="color:${colors[l.type]||'var(--txt)'}">${l.msg}</div></div>
+      <div class="log-time">${l.time}</div>
+    </div>`).join('');
+}
+
+// ── DUAL WRITE PATCH for doReg in app ─────────────────────
+// This is a note — the actual patch goes in index.html of the app
+// The sync webhook handles new registrations automatically
+
+// Add cmd button to topbar hint
+document.addEventListener('DOMContentLoaded',()=>{
+  // Add Ctrl+K hint to search bar
+  const sw=document.querySelector('.search-wrap input');
+  if(sw)sw.placeholder='Buscar... (Ctrl+K)';
+  // Init cmd with all users once loaded
+});
+
+// Refresh cmd results when users load
+const _origLoadUsers=loadUsers;
+loadUsers=async function(){
+  await _origLoadUsers();
+  // Update cmd user search pool silently
+};
 
 </script>
 </body>
