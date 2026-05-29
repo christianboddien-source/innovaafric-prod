@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>InnovaAFRIC · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0B0F19;--s1:#111827;--s2:#1a2235;--s3:#1e2940;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.1);
+  --cyan:#06b6d4;--cyan-l:#cffafe;--cyan-d:rgba(6,182,212,.15);
+  --green:#10b981;--green-d:rgba(16,185,129,.15);
+  --amber:#f59e0b;--amber-d:rgba(245,158,11,.15);
+  --red:#ef4444;--red-d:rgba(239,68,68,.15);
+  --purple:#8b5cf6;--purple-d:rgba(139,92,246,.15);
+  --txt:#f1f5f9;--muted:#64748b;--subtle:#94a3b8;
+  --font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:10px;--r-lg:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);display:flex}
+
+/* SIDEBAR */
+.sb{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto}
+.sb-head{padding:20px 20px 16px;border-bottom:1px solid var(--b1)}
+.sb-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sb-logo-ic{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000}
+.sb-brand-text{font-size:16px;font-weight:700;color:var(--txt);letter-spacing:-.3px}
+.sb-brand-text span{color:var(--cyan)}
+.sb-badge{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cyan-d);border:1px solid rgba(6,182,212,.3);border-radius:5px;padding:2px 8px}
+.sb-nav{flex:1;padding:12px 0}
+.sb-group{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:14px 20px 5px}
+.sb-link{display:flex;align-items:center;gap:10px;padding:8px 16px;margin:1px 8px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:500;transition:all .15s;position:relative}
+.sb-link:hover{background:var(--b1);color:var(--subtle)}
+.sb-link.active{background:var(--cyan-d);color:var(--cyan)}
+.sb-link .ic{width:18px;text-align:center;font-size:16px;flex-shrink:0}
+.sb-link .badge-count{margin-left:auto;background:var(--cyan);color:#000;font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;font-family:var(--mono)}
+.sb-foot{padding:14px 16px;border-top:1px solid var(--b1)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border-radius:var(--r);cursor:pointer}
+.sb-user:hover{background:var(--s3)}
+.sb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--green));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000;flex-shrink:0}
+.sb-user-info .name{font-size:13px;font-weight:600;color:var(--txt)}
+.sb-user-info .role{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.sb-status{width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:auto;box-shadow:0 0 6px var(--green)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.topbar{background:var(--s1);border-bottom:1px solid var(--b1);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.page-title{font-size:16px;font-weight:600;color:var(--txt)}
+.breadcrumb{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:6px 12px}
+.search-wrap input{background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:var(--font);width:180px}
+.search-wrap input::placeholder{color:var(--muted)}
+.topbar-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:all .15s;border:none}
+.btn-primary{background:var(--cyan);color:#000}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-ghost{background:var(--s2);color:var(--subtle);border:1px solid var(--b1)}
+.btn-ghost:hover{background:var(--s3);color:var(--txt)}
+.btn-danger-sm{background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r-lg);padding:18px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi-card:hover{border-color:var(--b2)}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-card.c1::after{background:var(--cyan)}
+.kpi-card.c2::after{background:var(--green)}
+.kpi-card.c3::after{background:var(--amber)}
+.kpi-card.c4::after{background:var(--purple)}
+.kpi-label{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;font-family:var(--mono)}
+.kpi-row{display:flex;align-items:flex-end;justify-content:space-between}
+.kpi-val{font-size:28px;font-weight:700;color:var(--txt);line-height:1;letter-spacing:-.5px}
+.kpi-ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.kpi-foot{margin-top:10px;display:flex;align-items:center;gap:6px}
+.kpi-trend{font-size:11px;font-weight:600;padding:2px 8px;border-radius:5px;font-family:var(--mono)}
+.trend-up{background:var(--green-d);color:var(--green)}
+.trend-neutral{background:var(--amber-d);color:var(--amber)}
+.kpi-foot-label{font-size:11px;color:var(--muted)}
+
+/* TABLES */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--b1)}
+.card-title{font-size:14px;font-weight:600;color:var(--txt)}
+.card-sub{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.card-actions{display:flex;gap:8px;align-items:center}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 20px;text-align:left;border-bottom:1px solid var(--b1);font-family:var(--mono);white-space:nowrap;background:var(--s1)}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody td{padding:11px 20px;font-size:13px;color:var(--txt);border-bottom:1px solid rgba(255,255,255,.03)}
+tbody tr:last-child td{border-bottom:none}
+.td-empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+
+/* BADGES */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.pill-cyan{background:var(--cyan-d);color:var(--cyan)}.pill-cyan::before{background:var(--cyan)}
+.pill-green{background:var(--green-d);color:var(--green)}.pill-green::before{background:var(--green)}
+.pill-amber{background:var(--amber-d);color:var(--amber)}.pill-amber::before{background:var(--amber)}
+.pill-red{background:var(--red-d);color:var(--red)}.pill-red::before{background:var(--red)}
+.pill-purple{background:var(--purple-d);color:var(--purple)}.pill-purple::before{background:var(--purple)}
+.pill-gray{background:var(--b1);color:var(--muted)}.pill-gray::before{background:var(--muted)}
+
+/* FORMS */
+.modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,.8);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex !important}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:16px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;color:var(--txt);margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-family:var(--mono)}
+.form-input{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:10px 13px;font-size:13px;font-family:var(--font);color:var(--txt);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--cyan)}
+.form-input::placeholder{color:var(--muted)}
+select.form-input option{background:var(--s2)}
+.form-actions{display:flex;gap:10px;margin-top:20px}
+.btn-block{flex:1;padding:11px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:none}
+
+/* WALLET DISPLAY */
+.wallet-display{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:14px;margin-bottom:18px}
+.wallet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.wallet-item{background:var(--s3);border-radius:8px;padding:10px 12px;text-align:center}
+.wallet-curr{font-size:10px;color:var(--muted);font-family:var(--mono);margin-bottom:4px}
+.wallet-amount{font-size:17px;font-weight:700;color:var(--txt);font-family:var(--mono)}
+
+/* SEARCH */
+.filter-bar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--b1)}
+.filter-input{flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:8px 13px;font-size:13px;color:var(--txt);font-family:var(--font);outline:none}
+.filter-input:focus{border-color:var(--cyan)}
+.filter-input::placeholder{color:var(--muted)}
+.filter-select{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--muted);font-family:var(--font)}
+.filter-select option{background:var(--s2)}
+
+/* USER AVATAR */
+.user-cell{display:flex;align-items:center;gap:10px}
+.uc-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.uc-name{font-size:13px;font-weight:500;color:var(--txt)}
+.uc-email{font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:12px 16px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;min-width:250px;transform:translateX(120%);transition:transform .3s}
+.toast.show{transform:none}
+.toast.success{border-color:rgba(16,185,129,.3);color:var(--green)}
+.toast.error{border-color:rgba(239,68,68,.3);color:var(--red)}
+.toast.info{border-color:rgba(6,182,212,.3);color:var(--cyan)}
+
+/* LOADER */
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(6,182,212,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-cell{text-align:center;padding:36px;color:var(--muted)}
+
+/* SETUP */
+#setup{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.setup-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:36px;max-width:420px;width:100%}
+.setup-logo{font-size:24px;font-weight:700;color:var(--txt);margin-bottom:3px}
+.setup-logo span{color:var(--cyan)}
+.setup-desc{font-size:13px;color:var(--muted);margin-bottom:26px;line-height:1.6}
+.err-msg{background:var(--red-d);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red);margin-top:12px;display:none}
+
+/* STATS CHART (mini bar) */
+.mini-chart{display:flex;align-items:flex-end;gap:3px;height:32px}
+.mini-bar{flex:1;border-radius:2px;min-height:3px;transition:opacity .2s}
+.mini-bar:hover{opacity:.7}
+</style>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="setup-card">
+    <div class="setup-logo">INNOVA<span>AFRIC</span></div>
+    <div class="setup-desc">Panel de administración · Conectado a Supabase</div>
+    <div class="form-group">
+      <label class="form-label">Project URL</label>
+      <input class="form-input" id="sb-url" placeholder="https://xxxx.supabase.co">
+    </div>
+    <div class="form-group">
+      <label class="form-label">API Key</label>
+      <input class="form-input" id="sb-key" placeholder="sb_publishable_...">
+    </div>
+    <div class="err-msg" id="setup-err"></div>
+    <button class="btn-block btn-primary" style="margin-top:16px" onclick="connectDB()">Entrar al dashboard →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<aside class="sb">
+  <div class="sb-head">
+    <div class="sb-brand">
+      <div class="sb-logo-ic">IA</div>
+      <div class="sb-brand-text">INNOVA<span>AFRIC</span></div>
+    </div>
+    <span class="sb-badge">Admin Panel</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">Principal</div>
+    <div class="sb-link active" onclick="nav('dashboard',this)">
+      <span class="ic">📊</span><span>Dashboard</span>
+    </div>
+    <div class="sb-link" onclick="nav('users',this)">
+      <span class="ic">👥</span><span>Usuarios</span>
+      <span class="badge-count" id="sb-users-count">0</span>
+    </div>
+    <div class="sb-link" onclick="nav('wallets',this)">
+      <span class="ic">💳</span><span>Wallets</span>
+    </div>
+    <div class="sb-link" onclick="nav('transactions',this)">
+      <span class="ic">💸</span><span>Transacciones</span>
+    </div>
+    <div class="sb-group">Operaciones</div>
+    <div class="sb-link" onclick="nav('riders',this)">
+      <span class="ic">🛵</span><span>Riders</span>
+    </div>
+    <div class="sb-link" onclick="nav('circulares',this)">
+      <span class="ic">🏢</span><span>Circulares</span>
+    </div>
+    <div class="sb-link" onclick="nav('orders',this)">
+      <span class="ic">📦</span><span>Pedidos</span>
+    </div>
+    <div class="sb-link" onclick="nav('kyc',this)">
+      <span class="ic">🪪</span><span>KYC</span>
+    </div>
+    <div class="sb-group">Config</div>
+    <div class="sb-link" onclick="nav('crear',this)">
+      <span class="ic">➕</span><span>Nuevo usuario</span>
+    </div>
+    <div class="sb-group">AVANZADO</div>
+    <div class="sb-link" onclick="nav('fraud',this)"><span class="ic">🛡️</span><span>Anti-fraude</span></div>
+    <div class="sb-link" onclick="nav('rates',this)"><span class="ic">📈</span><span>Tasas</span></div>
+    <div class="sb-link" onclick="nav('support',this)"><span class="ic">🎧</span><span>Soporte</span></div>
+    <div class="sb-link" onclick="nav('campaigns',this)"><span class="ic">📣</span><span>Campañas</span></div>
+    <div class="sb-link" onclick="nav('simulator',this)"><span class="ic">💡</span><span>Simulador</span></div>
+    <div class="sb-link" onclick="nav('operators',this)"><span class="ic">📡</span><span>Operadoras</span></div>
+    <div class="sb-link" onclick="nav('settings',this)"><span class="ic">⚙️</span><span>Ajustes</span></div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-av">A</div>
+      <div class="sb-user-info">
+        <div class="name">Admin</div>
+        <div class="role">innovaafric.com</div>
+      </div>
+      <div class="sb-status" id="rt-dot" title="Realtime conectado"></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title" id="page-title">Dashboard</div>
+    </div>
+    <div class="topbar-right"><span id="last-update" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
+      <div class="search-wrap">
+        <span style="color:var(--muted);font-size:14px">🔍</span>
+        <input placeholder="Buscar usuarios..." id="global-search" oninput="globalSearch(this.value)">
+      </div>
+      <button class="topbar-btn btn-ghost" onclick="refreshCurrent()">↻</button>
+      <button class="topbar-btn btn-primary" onclick="nav('crear',null)">+ Nuevo usuario</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="pg-dashboard">
+      <!-- Notification panel -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-head">
+          <div>
+            <div class="card-title">📢 Notificar usuarios</div>
+            <div class="card-sub">Enviar mensaje a todos o por grupo</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+          <input id="notif-msg" type="text" placeholder="Escribe tu mensaje..." style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--txt);font-family:var(--font);outline:none">
+          <select id="notif-target" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;font-size:12px;color:var(--txt);font-family:var(--font)">
+            <option value="all">Todos los usuarios</option>
+            <option value="cliente">Solo clientes</option>
+            <option value="rider">Solo riders</option>
+            <option value="circular">Solo circulares</option>
+            <option value="proveedor">Solo proveedores</option>
+          </select>
+          <button class="topbar-btn btn-primary" onclick="sendMassNotif()" style="padding:10px 18px">Enviar 📤</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card c1">
+          <div class="kpi-label">Usuarios activos</div>
+          <div class="kpi-row">
+            <div class="kpi-val" id="k-users">—</div>
+            <div class="kpi-ic" style="background:var(--cyan-d);font-size:22px">👥</div>
+          </div>
+          <div class="kpi-foot">
+            <span class="kpi-trend trend-up" id="k-users-t">...</span>
+            <span class="kpi-foot-label">registrados</span>
+          </div>
+        </div>
+        <div class="kpi-card c2">
+          <div class="kpi-label">Revenue total</div>
+          <div class="kpi-row">
+            <div class="kpi-val" id="k-rev">—</div>
+            <div class="kpi-ic" style="background:var(--green-d);font-size:22px">💰</div>
+          </div>
+          <div class="kpi-foot">
+            <span class="kpi-trend trend-up">comisiones 2%</span>
+            <span class="kpi-foot-label">en EUR</span>
+          </div>
+        </div>
+        <div class="kpi-card c3">
+          <div class="kpi-label">Transacciones</div>
+          <div class="kpi-row">
+            <div class="kpi-val" id="k-txns">—</div>
+            <div class="kpi-ic" style="background:var(--amber-d);font-size:22px">💸</div>
+          </div>
+          <div class="kpi-foot">
+            <span class="kpi-trend trend-neutral" id="k-txns-t">...</span>
+            <span class="kpi-foot-label">operaciones</span>
+          </div>
+        </div>
+        <div class="kpi-card c4">
+          <div class="kpi-label">Riders en red</div>
+          <div class="kpi-row">
+            <div class="kpi-val" id="k-riders">—</div>
+            <div class="kpi-ic" style="background:var(--purple-d);font-size:22px">🛵</div>
+          </div>
+          <div class="kpi-foot">
+            <span class="kpi-trend trend-up" id="k-riders-t">...</span>
+            <span class="kpi-foot-label">activos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS ROW -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div class="card-title">💰 Total wallets EUR</div></div>
+          <div style="padding:16px 20px;font-size:28px;font-weight:800;font-family:var(--mono);color:var(--cyan)" id="k-total-eur">—</div>
+          <div style="padding:0 20px 16px;font-size:12px;color:var(--muted)" id="k-avg-eur">Promedio por usuario: —</div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div class="card-title">📊 Tasa de actividad</div></div>
+          <div style="padding:16px 20px;font-size:28px;font-weight:800;font-family:var(--mono);color:var(--green)" id="k-activity">—</div>
+          <div style="padding:0 20px 16px;font-size:12px;color:var(--muted)" id="k-activity-sub">usuarios con transacciones</div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div class="card-title">🌍 Países activos</div></div>
+          <div style="padding:16px 20px;font-size:28px;font-weight:800;font-family:var(--mono);color:var(--amber)" id="k-countries">—</div>
+          <div style="padding:0 20px 16px;font-size:12px;color:var(--muted)" id="k-countries-sub">mercados</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div class="card-title">📈 Registros por día</div></div>
+          <div style="padding:16px 20px;height:200px"><canvas id="chart-registros"></canvas></div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div class="card-title">🥧 Transacciones por tipo</div></div>
+          <div style="padding:16px 20px;height:200px;display:flex;align-items:center;justify-content:center"><canvas id="chart-txn-types"></canvas></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Usuarios recientes</div>
+              <div class="card-sub" id="recent-sub">Últimos registros</div>
+            </div>
+            <button class="topbar-btn btn-ghost" onclick="nav('users',null)">Ver todos →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Usuario</th><th>Rol</th><th>Registro</th></tr></thead>
+              <tbody id="tb-recent-users"><tr><td colspan="3" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Transacciones recientes</div>
+              <div class="card-sub">Últimas operaciones</div>
+            </div>
+            <button class="topbar-btn btn-ghost" onclick="nav('transactions',null)">Ver todas →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tipo</th><th>Importe</th><th>Estado</th></tr></thead>
+              <tbody id="tb-recent-txns"><tr><td colspan="3" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-head">
+          <div class="card-title">Distribución por rol</div>
+          <button class="topbar-btn btn-ghost" onclick="exportUsersExcel()">📥 Exportar todo</button>
+        </div>
+        <div style="padding:18px 20px;display:flex;gap:24px;flex-wrap:wrap" id="role-dist"></div>
+      </div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div id="pg-users" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Gestión de usuarios</div>
+            <div class="card-sub" id="users-count-label">Cargando...</div>
+          </div>
+          <div class="card-actions">
+            <select id="filter-role" onchange="applyUserFilters()" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:12px;color:var(--txt);font-family:var(--font)">
+              <option value="">Todos los roles</option>
+              <option value="cliente">Cliente</option>
+              <option value="circular">Circular</option>
+              <option value="rider">Rider</option>
+              <option value="proveedor">Proveedor</option>
+              <option value="admin">Admin</option>
+            </select>
+            <select id="filter-pin" onchange="applyUserFilters()" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:12px;color:var(--txt);font-family:var(--font)">
+              <option value="">🔐 Todos</option>
+              <option value="with">Con PIN</option>
+              <option value="without">Sin PIN</option>
+            </select>
+            <select id="filter-country" onchange="applyUserFilters()" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:12px;color:var(--txt);font-family:var(--font)">
+              <option value="">Todos los países</option>
+              <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+              <option value="CM">🇨🇲 Camerún</option>
+              <option value="GA">🇬🇦 Gabón</option>
+              <option value="SN">🇸🇳 Senegal</option>
+              <option value="CI">🇨🇮 Costa de Marfil</option>
+              <option value="ES">🇪🇸 España</option>
+              <option value="CD">🇨🇩 R.D. Congo</option>
+              <option value="NG">🇳🇬 Nigeria</option>
+              <option value="GH">🇬🇭 Ghana</option>
+              <option value="CN">🇨🇳 China</option>
+              <option value="FR">🇫🇷 Francia</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="exportUsersExcel()" title="Exportar CSV">📥</button>
+            <button class="topbar-btn btn-ghost" onclick="loadUsers()">↻</button>
+            <button class="topbar-btn btn-primary" onclick="nav('crear',null)">+ Nuevo</button>
+          </div>
+        </div>
+        <div class="filter-bar">
+          <input class="filter-input" id="user-q" placeholder="Buscar nombre, email o código IA..." oninput="filterUsers()">
+          <select class="filter-select" id="user-role-f" onchange="filterUsers()">
+            <option value="">Todos los roles</option>
+            <option value="cliente">Cliente</option>
+            <option value="circular">Circular</option>
+            <option value="rider">Rider</option>
+            <option value="proveedor">Proveedor</option>
+            <option value="comercio">Comercio</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button class="topbar-btn btn-ghost" onclick="quickSearchByIA()" title="Buscar por código IA">🔍 Buscar IA</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Usuario</th><th>Código IA</th><th>Teléfono</th><th>Rol</th><th>País/Ciudad</th><th>Saldo (local)</th><th>PIN</th><th>Acciones</th></tr></thead>
+            <tbody id="tb-users"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WALLETS -->
+    <div id="pg-wallets" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Wallets</div>
+            <div class="card-sub">Saldos en tiempo real</div>
+          </div>
+          <button class="topbar-btn btn-primary" onclick="openModal('m-all-recharge')">💰 Recargar todos</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Usuario</th><th>EUR €</th><th>XAF</th><th>USD $</th><th>Puntos</th><th>Actualizado</th><th>Acciones</th></tr></thead>
+            <tbody id="tb-wallets"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSACCIONES -->
+    <div id="pg-transactions" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="display:flex;gap:8px">
+          <select id="filter-txn-type" onchange="loadTransactions()" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:7px 12px;font-size:12px;color:var(--txt);font-family:var(--font)">
+            <option value="">Todos los tipos</option>
+            <option value="send">Envios</option>
+            <option value="p2p">P2P</option>
+            <option value="cashout">Reintegros</option>
+            <option value="qr_pay">QR Pay</option>
+          </select>
+          <button class="topbar-btn btn-ghost" onclick="exportTxnsCsv()" style="font-size:12px">📥 Exportar CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Historial de transacciones</div>
+            <div class="card-sub" id="txns-count-label">Cargando...</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Referencia</th><th>Usuario</th><th>Tipo</th><th>Importe</th><th>Comisión</th><th>Estado</th><th>Fecha</th></tr></thead>
+            <tbody id="tb-txns"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIDERS -->
+    <div id="pg-riders" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Red de Riders</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Rider</th><th>Nivel</th><th>Entregas</th><th>Rating</th><th>Estado</th></tr></thead>
+            <tbody id="tb-riders"><tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CIRCULARES -->
+    <div id="pg-circulares" style="display:none">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Circulares Autorizadas</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Circular</th><th>Territorio</th><th>Estado</th><th>Comisión %</th></tr></thead>
+            <tbody id="tb-circulares"><tr><td colspan="4" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <!-- KYC PAGE -->
+    <div id="pg-kyc" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🪪 Verificación KYC</div><div class="card-sub">Solicitudes pendientes de aprobación</div></div>
+          <span class="badge badge-warn" id="kyc-count">0 pendientes</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table><thead><tr>
+            <th>Usuario</th><th>Código IA</th><th>Nivel solicitado</th><th>Documento</th><th>Fecha</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="tb-kyc">
+            <tr><td colspan="6" class="td-empty">Sin solicitudes pendientes</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="pg-orders" style="display:none">
+      <div class="card">
+        <div class="card-head"><div class="card-title">Pedidos</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Código</th><th>Usuario</th><th>Tipo</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead>
+            <tbody id="tb-orders"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAUD PAGE -->
+    <div id="pg-fraud" style="display:none">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">🛡️ Motor Anti-fraude</div><div class="card-sub">Alertas y transacciones sospechosas</div></div><button class="topbar-btn btn-ghost" onclick="runFraudScan()">🔍 Escanear</button></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px 20px;border-bottom:1px solid var(--b1)">
+          <div style="background:var(--red-d);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--red)" id="fraud-high">0</div><div style="font-size:11px;color:var(--muted)">Alto riesgo</div></div>
+          <div style="background:var(--amber-d);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--amber)" id="fraud-med">0</div><div style="font-size:11px;color:var(--muted)">Medio riesgo</div></div>
+          <div style="background:var(--green-d);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--green)" id="fraud-ok">0</div><div style="font-size:11px;color:var(--muted)">Sin alertas</div></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Alerta</th><th>Importe</th><th>Riesgo</th><th>Acción</th></tr></thead><tbody id="fraud-list"><tr><td colspan="5" class="td-empty">Ejecuta el escaneo para ver resultados</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- RATES PAGE -->
+    <div id="pg-rates" style="display:none">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">📈 Tasas y comisiones</div><div class="card-sub">Edita en tiempo real</div></div><button class="topbar-btn btn-primary" onclick="saveRates()">💾 Guardar</button></div>
+        <div style="padding:20px">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Tasas de cambio</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px" id="rates-editor"></div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Comisiones</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="fees-editor"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT PAGE -->
+    <div id="pg-support" style="display:none">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">🎧 Soporte</div><div class="card-sub">Tickets de usuarios</div></div><button class="topbar-btn btn-ghost" onclick="loadSupport()">↻</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Usuario</th><th>Asunto</th><th>Estado</th><th>Fecha</th><th>Responder</th></tr></thead><tbody id="support-list"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS PAGE -->
+    <div id="pg-campaigns" style="display:none">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">📣 Campañas y promociones</div><div class="card-sub">Gestiona descuentos y códigos promo</div></div><button class="topbar-btn btn-primary" onclick="createCampaign()">+ Nueva</button></div>
+        <div style="padding:20px">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+            <div class="kpi-card c1"><div class="kpi-label">Activas</div><div class="kpi-row"><div class="kpi-val" id="c-active">0</div></div></div>
+            <div class="kpi-card c2"><div class="kpi-label">Usos</div><div class="kpi-row"><div class="kpi-val" id="c-used">0</div></div></div>
+            <div class="kpi-card c3"><div class="kpi-label">Desc. total</div><div class="kpi-row"><div class="kpi-val" id="c-total">€0</div></div></div>
+          </div>
+          <div id="campaigns-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULATOR PAGE -->
+    <div id="pg-simulator" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-head"><div class="card-title">💡 Simulador de ingresos</div></div>
+          <div style="padding:20px">
+            <div class="form-group"><label class="form-label">Transacciones/mes</label><input class="form-input" type="number" id="sim-txns" value="1000" oninput="runSimulator()"></div>
+            <div class="form-group"><label class="form-label">Importe promedio (EUR)</label><input class="form-input" type="number" id="sim-avg" value="150" oninput="runSimulator()"></div>
+            <div class="form-group"><label class="form-label">Comisión (%)</label><input class="form-input" type="number" id="sim-fee" value="2" step="0.1" oninput="runSimulator()"></div>
+            <div style="background:var(--cyan-d);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px;margin-top:10px;text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">INGRESOS ESTIMADOS</div>
+              <div style="font-size:36px;font-weight:900;font-family:var(--mono);color:var(--cyan)" id="sim-result">€0</div>
+              <div style="font-size:12px;color:var(--muted)" id="sim-annual">al mes</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">❤️ Impacto social</div></div>
+          <div style="padding:20px" id="impact-panel"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPERATORS PAGE -->
+    <div id="pg-operators" style="display:none">
+      <div class="card">
+        <div class="card-head"><div><div class="card-title">📡 Estado operadoras</div><div class="card-sub">MTN, Orange y métodos de pago</div></div><button class="topbar-btn btn-ghost" onclick="loadAdminOperators()">↻</button></div>
+        <div style="padding:20px" id="admin-operators-list"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div id="pg-settings" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="card-head"><div class="card-title">⚙️ Configuración del sistema</div></div>
+          <div style="padding:20px">
+            <div class="form-group"><label class="form-label">Comisión internacional (%)</label><input class="form-input" type="number" id="cfg-fee-intl" value="2" step="0.1"></div>
+            <div class="form-group"><label class="form-label">Comisión P2P (%)</label><input class="form-input" type="number" id="cfg-fee-p2p" value="0"></div>
+            <div class="form-group"><label class="form-label">Límite KYC básico (EUR)</label><input class="form-input" type="number" id="cfg-kyc-basic" value="200"></div>
+            <div class="form-group"><label class="form-label">Límite KYC estándar (EUR)</label><input class="form-input" type="number" id="cfg-kyc-std" value="2000"></div>
+            <div class="form-group"><label class="form-label">Mensaje mantenimiento</label><input class="form-input" id="cfg-maintenance" placeholder="Vacío = sin mantenimiento"></div>
+            <button class="btn-block btn-primary" onclick="saveSettings()">💾 Guardar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">🔐 Herramientas admin</div></div>
+          <div style="padding:20px;display:flex;flex-direction:column;gap:8px">
+            <button class="btn-block btn-ghost" onclick="exportFullDB()">📥 Exportar base de datos</button>
+            <button class="btn-block btn-ghost" onclick="generatePDFReport()">📄 Informe PDF</button>
+            <button class="btn-block btn-ghost" onclick="clearAdminCache()">🗑️ Limpiar caché</button>
+            <button class="btn-block" onclick="confirmMaintenance()" style="background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25)">⚠️ Modo mantenimiento</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREAR USUARIO -->
+    <div id="pg-crear" style="display:none">
+      <div style="max-width:580px">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Crear nuevo usuario</div>
+              <div class="card-sub">El usuario puede iniciar sesión inmediatamente</div>
+            </div>
+          </div>
+          <div style="padding:22px">
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label class="form-label">Nombre completo *</label><input class="form-input" id="c-name" placeholder="Nombre Apellido"></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Email *</label><input class="form-input" type="email" id="c-email" placeholder="email@dominio.com"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label class="form-label">Contraseña *</label><input class="form-input" type="password" id="c-pwd" placeholder="Mín. 8 caracteres"></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Teléfono</label><input class="form-input" id="c-phone" placeholder="+240 555 000 000"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="margin:0">
+                <label class="form-label">Rol *</label>
+                <select class="form-input" id="c-role">
+                  <option value="cliente">👤 Cliente</option>
+                  <option value="circular">🏢 Circular Autorizada</option>
+                  <option value="rider">🛵 Rider</option>
+                  <option value="proveedor">🏭 Proveedor</option>
+                  <option value="comercio">🏪 Comercio</option>
+                  <option value="admin">📊 Admin</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin:0">
+                <label class="form-label">País</label>
+                <select class="form-input" id="c-country">
+                  <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+                  <option value="CM">🇨🇲 Camerún</option>
+                  <option value="GA">🇬🇦 Gabón</option>
+                  <option value="SN">🇸🇳 Senegal</option>
+                  <option value="CI">🇨🇮 Costa de Marfil</option>
+                  <option value="ES">🇪🇸 España</option>
+                  <option value="CN">🇨🇳 China</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="margin:0"><label class="form-label">Ciudad</label><input class="form-input" id="c-city" placeholder="Malabo, Douala..."></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Saldo inicial EUR €</label><input class="form-input" type="number" id="c-eur" value="0" min="0"></div>
+            </div>
+            <div id="create-feedback" style="display:none;margin-top:12px;padding:10px 14px;border-radius:var(--r);font-size:13px"></div>
+          <div id="create-ia-code" style="display:none;background:rgba(0,191,255,.08);border:1px solid rgba(0,191,255,.2);border-radius:10px;padding:10px 14px;margin-top:8px;font-family:var(--mono);font-size:14px;font-weight:700;color:var(--cyan);text-align:center"></div>
+            <div class="form-actions">
+              <button class="btn-block btn-primary" onclick="createUser()">✓ Crear usuario</button>
+              <button class="btn-block btn-ghost" onclick="resetCreateForm()" style="background:var(--s2);color:var(--muted);border:1px solid var(--b1)">Limpiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL RECARGAR WALLET -->
+<div class="modal-overlay" id="m-recharge" onclick="if(event.target===this)closeModal('m-recharge')">
+  <div class="modal">
+    <div class="modal-title">💰 Recargar wallet</div>
+    <div id="m-recharge-currency-badge" style="display:inline-block;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:var(--cyan-d);color:var(--cyan);margin-bottom:8px"></div>
+    <div class="modal-sub" id="m-recharge-name">Usuario</div>
+    <input type="hidden" id="m-recharge-id">
+    <div class="wallet-display">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-family:var(--mono)">SALDO ACTUAL</div>
+      <div class="wallet-grid">
+        <div class="wallet-item"><div class="wallet-curr">EUR €</div><div class="wallet-amount" id="cur-eur">0</div></div>
+        <div class="wallet-item"><div class="wallet-curr">XAF</div><div class="wallet-amount" id="cur-xaf">0</div></div>
+        <div class="wallet-item"><div class="wallet-curr">USD $</div><div class="wallet-amount" id="cur-usd">0</div></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">+ EUR €</label><input class="form-input" type="number" id="add-eur" value="1000" min="0"></div>
+      <div><label class="form-label">+ XAF</label><input class="form-input" type="number" id="add-xaf" value="655957" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">+ USD $</label><input class="form-input" type="number" id="add-usd" value="180" min="0"></div>
+      <div><label class="form-label">+ Puntos</label><input class="form-input" type="number" id="add-pts" value="1000" min="0"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="doRecharge()">💰 Recargar ahora</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-recharge')" style="background:var(--s2);color:var(--muted);border:1px solid var(--b1)">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECARGAR TODOS -->
+<div class="modal-overlay" id="m-all-recharge" onclick="if(event.target===this)closeModal('m-all-recharge')">
+  <div class="modal">
+    <div class="modal-title">💰 Recargar todos los wallets</div>
+    <div class="modal-sub">Se aplicará a todos los usuarios excepto admin</div>
+    <div class="form-row">
+      <div><label class="form-label">EUR € por usuario</label><input class="form-input" type="number" id="all-eur" value="1000"></div>
+      <div><label class="form-label">XAF por usuario</label><input class="form-input" type="number" id="all-xaf" value="655957"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">USD $ por usuario</label><input class="form-input" type="number" id="all-usd" value="180"></div>
+      <div><label class="form-label">Puntos por usuario</label><input class="form-input" type="number" id="all-pts" value="500"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="doRechargeAll()">⚡ Recargar todos</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-all-recharge')" style="background:var(--s2);color:var(--muted);border:1px solid var(--b1)">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR USUARIO -->
+<div class="modal-overlay" id="m-edit-user" onclick="if(event.target===this)closeModal('m-edit-user')">
+  <div class="modal">
+    <div class="modal-title">✏️ Editar usuario</div>
+    <div class="modal-sub" id="m-edit-email">email</div>
+    <input type="hidden" id="m-edit-id">
+    <div style="background:rgba(0,191,255,.08);border:1px solid rgba(0,191,255,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--cyan);text-align:center" id="m-edit-ia">IA-XXXXXX</div>
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:10px 14px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">MONEDA PREFERIDA DEL USUARIO</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;font-weight:700" id="m-edit-currency">—</span>
+        <select class="form-input" id="m-edit-currency-sel" style="width:140px;margin:0">
+          <option value="auto">Auto (por país)</option>
+          <option value="EUR">€ EUR</option>
+          <option value="XAF">XAF Franco CFA</option>
+          <option value="XOF">XOF Franco UEMOA</option>
+          <option value="USD">$ USD</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Nombre completo</label><input class="form-input" id="m-edit-name"></div>
+    <div class="form-row">
+      <div><label class="form-label">Teléfono</label><input class="form-input" id="m-edit-phone" placeholder="+240..."></div>
+      <div><label class="form-label">Ciudad</label><input class="form-input" id="m-edit-city" placeholder="Malabo..."></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Rol</label>
+        <select class="form-input" id="m-edit-role">
+          <option value="cliente">👤 Cliente</option>
+          <option value="circular">🏢 Circular</option>
+          <option value="rider">🛵 Rider</option>
+          <option value="proveedor">🏭 Proveedor</option>
+          <option value="comercio">🏪 Comercio</option>
+          <option value="admin">📊 Admin</option>
+        </select>
+      </div>
+      <div><label class="form-label">País</label>
+        <select class="form-input" id="m-edit-country">
+          <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+          <option value="CM">🇨🇲 Camerún</option>
+          <option value="GA">🇬🇦 Gabón</option>
+          <option value="SN">🇸🇳 Senegal</option>
+          <option value="ES">🇪🇸 España</option>
+          <option value="CI">🇨🇮 Costa de Marfil</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="saveEdit()">✓ Guardar</button>
+      <button class="btn-block" onclick="deleteUser()" style="background:var(--red-d);color:var(--red);border:1px solid rgba(239,68,68,.25)">🗑 Eliminar</button>
+      <button class="btn-block" onclick="resetUserPIN()" style="background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25)">🔐 Resetear PIN</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-edit-user')" style="background:var(--s2);color:var(--muted);border:1px solid var(--b1)">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-pwd-sent" onclick="if(event.target===this)closeModal('m-pwd-sent')">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">📧</div>
+    <div class="modal-title">Email enviado</div>
+    <div style="font-size:13px;color:var(--muted);margin:12px 0">Se ha enviado un enlace de restablecimiento a:</div>
+    <div style="font-family:var(--mono);font-size:14px;font-weight:700;color:var(--cyan);background:var(--cyan-d);border-radius:8px;padding:10px;margin-bottom:16px" id="m-pwd-email">—</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">El usuario recibirá un email con un enlace seguro para establecer su nueva contraseña. El enlace expira en 24 horas.</div>
+    <button class="btn-block btn-primary" onclick="closeModal('m-pwd-sent')">✅ Entendido</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-activity"  onclick="if(event.target===this)closeModal('m-activity')">
+  <div class="modal" style="max-width:600px;width:95%">
+    <div class="modal-title" id="m-activity-title">Actividad del usuario</div>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">FECHA</th>
+          <th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">TIPO</th>
+          <th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">IMPORTE</th>
+        </tr></thead>
+        <tbody id="m-activity-list"></tbody>
+      </table>
+    </div>
+    <button class="form-btn" onclick="closeModal('m-activity')" style="margin-top:14px">Cerrar</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-user-txns"  onclick="if(event.target===this)closeModal('m-user-txns')">
+  <div class="modal" style="max-width:680px;width:95%">
+    <div class="modal-title" id="m-txns-title">Transacciones del usuario</div>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="text-align:left;font-size:11px;color:var(--muted);padding:8px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Fecha</th>
+          <th style="text-align:left;font-size:11px;color:var(--muted);padding:8px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Tipo</th>
+          <th style="text-align:left;font-size:11px;color:var(--muted);padding:8px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Importe</th>
+          <th style="text-align:left;font-size:11px;color:var(--muted);padding:8px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Estado</th>
+          <th style="text-align:left;font-size:11px;color:var(--muted);padding:8px 0;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Concepto</th>
+        </tr></thead>
+        <tbody id="m-txns-body"></tbody>
+      </table>
+    </div>
+    <button class="form-btn" onclick="closeModal('m-user-txns')" style="margin-top:18px">Cerrar</button>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+const SB_URL='https://spnfvmvrlexyiljwyola.supabase.co';
+const SB_KEY='sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
+let SB=null, ALL_USERS=[], CURRENT_PAGE='dashboard';
+
+const ROLE_COLORS={cliente:'cyan',circular:'amber',rider:'red',proveedor:'purple',comercio:'green',admin:'gray'};
+const ROLE_EMOJI={cliente:'👤',circular:'🏢',rider:'🛵',proveedor:'🏭',comercio:'🏪',admin:'📊'};
+const AV_COLORS=['#06b6d4','#10b981','#f59e0b','#8b5cf6','#ef4444','#3b82f6'];
+
+function avColor(str){let h=0;for(let c of str)h=c.charCodeAt(0)+h*31;return AV_COLORS[Math.abs(h)%AV_COLORS.length]}
+function initials(name){return (name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function pill(role){return `<span class="pill pill-${ROLE_COLORS[role]||'gray'}">${ROLE_EMOJI[role]||''} ${role}</span>`}
+function fmt_date(d){return new Date(d).toLocaleDateString('es',{day:'numeric',month:'short'})}
+function fmt_num(n){return Number(n).toLocaleString('es')}
+
+async function connectDB(){
+  const url=document.getElementById('sb-url').value.trim()||SB_URL;
+  const key=document.getElementById('sb-key').value.trim()||SB_KEY;
+  const err=document.getElementById('setup-err');
+  err.style.display='none';
+  try{
+    // Use UMD bundle if already loaded (more reliable)
+    if(window.supabase){
+      SB=window.supabase.createClient(url,key);
+    } else {
+      const mod=await import('https://esm.sh/@supabase/supabase-js@2');
+      SB=mod.createClient(url,key);
+    }
+    document.getElementById('setup').style.display='none';
+    loadDashboard();
+    loadUsers();
+    setupAdminRealtime();
+  }catch(e){err.textContent='Error de conexión: '+e.message;err.style.display='block';}
+}
+
+(async function auto(){
+  try{
+    const mod=await import('https://esm.sh/@supabase/supabase-js@2');
+    SB=mod.createClient(SB_URL,SB_KEY);
+    document.getElementById('sb-url').value=SB_URL;
+    document.getElementById('sb-key').value=SB_KEY;
+    document.getElementById('setup').style.display='none';
+    loadDashboard();
+  }catch(e){console.log('manual setup needed');}
+})();
+
+// Auto-refresh cada 30 segundos
+// Show last update time
+function applyUserFilters(){const pin=document.getElementById('filter-pin')?.value||'';
+  var role=document.getElementById('filter-role').value;
+  var country=document.getElementById('filter-country').value;
+  var filtered=ALL_USERS.filter(function(u){
+    if(role&&u.role!==role)return false;
+    if(country&&u.country!==country)return false;
+    return true;
+  });
+  renderUsers(filtered);
+  document.getElementById('users-count-label').textContent=filtered.length+' usuarios';
+}
+
+async function sendMassNotif(){
+  var msg=document.getElementById('notif-msg').value.trim();
+  var target=document.getElementById('notif-target').value;
+  if(!msg){toast('Escribe un mensaje','error');return;}
+  var count=ALL_USERS.filter(function(u){return target==='all'||u.role===target;}).length;
+  if(!confirm('Enviar notificacion a '+count+' usuarios?'))return;
+  toast('Notificacion enviada a '+count+' usuarios','success');
+  document.getElementById('notif-msg').value='';
+}
+
+function exportTxnsCsv(){
+  var rows=[];
+  var trs=document.querySelectorAll('#tb-transactions tr');
+  trs.forEach(function(tr){
+    var cells=[];
+    tr.querySelectorAll('td').forEach(function(td){cells.push(td.textContent.trim());});
+    if(cells.length>0)rows.push(cells.join(','));
+  });
+  if(!rows.length){toast('No hay datos para exportar','error');return;}
+  var csv='Fecha,Usuario,Tipo,Importe,Estado,Ref'+String.fromCharCode(13,10)+rows.join(String.fromCharCode(13,10));
+  var blob=new Blob([csv],{type:'text/csv'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='innovaafric_txns_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();URL.revokeObjectURL(url);
+  toast('Exportado','success');
+}
+
+async function approveKYC(uid, level){
+  const{error}=await SB.from('users').update({kyc_level:level}).eq('id',uid);
+  if(error){toast('Error: '+error.message,'error');return;}
+  toast('KYC nivel '+level+' aprobado','success');
+}
+
+
+
+async function loadKYC(){
+  var tb=document.getElementById('tb-kyc');
+  if(!tb)return;
+  tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin solicitudes pendientes</td></tr>';
+  var countEl=document.getElementById('kyc-count');
+  if(countEl)countEl.textContent='0 pendientes';
+}
+
+function showLastUpdate(){
+  var el=document.getElementById('last-update');
+  if(el)el.textContent='Actualizado: '+new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(()=>{
+  if(CURRENT_PAGE==='dashboard') loadDashboard();
+  if(CURRENT_PAGE==='transactions') loadTransactions();
+  if(CURRENT_PAGE==='users') loadUsers();
+  if(CURRENT_PAGE==='wallets') loadWallets();
+}, 30000);
+
+function setupAdminRealtime(){
+  if(!SB)return;
+  try{
+    SB.channel('admin-realtime-'+Date.now())
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'users'},function(payload){
+        var name=payload.new.full_name||payload.new.email||'Nuevo usuario';
+        toast('🆕 Nuevo usuario: '+name,'success');
+        loadUsers();
+        if(CURRENT_PAGE==='dashboard')loadDashboard();
+      })
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'users'},function(payload){
+        if(CURRENT_PAGE==='users')loadUsers();
+      })
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'wallets'},function(payload){
+        if(CURRENT_PAGE==='wallets')loadWallets();
+        if(CURRENT_PAGE==='dashboard')loadDashboard();
+      })
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'wallets'},function(payload){
+        if(CURRENT_PAGE==='wallets')loadWallets();
+        if(CURRENT_PAGE==='dashboard')loadDashboard();
+      })
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'transactions'},function(payload){
+        if(CURRENT_PAGE==='transactions')loadTransactions();
+        if(CURRENT_PAGE==='dashboard')loadDashboard();
+      })
+      .subscribe(function(status){
+        console.log('Realtime status:', status);
+        var dot=document.getElementById('rt-dot');
+        if(dot){
+          if(status==='SUBSCRIBED'){dot.style.background='var(--green)';dot.title='Realtime conectado';}
+          else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){
+            dot.style.background='var(--red)';dot.title='Realtime desconectado - reconectando...';
+            setTimeout(function(){setupAdminRealtime();},5000);
+          }
+        }
+      });
+    console.log('Realtime activo - escuchando cambios');
+  }catch(e){console.log('realtime err:',e.message);setTimeout(function(){setupAdminRealtime();},5000);}
+}
+
+function nav(page, el){
+  document.querySelectorAll('[id^="pg-"]').forEach(p=>p.style.display='none');
+  document.getElementById('pg-'+page).style.display='block';
+  document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles={dashboard:'Dashboard',users:'Usuarios',wallets:'Wallets',transactions:'Transacciones',riders:'Riders',circulares:'Circulares',orders:'Pedidos',crear:'Nuevo usuario'};
+  document.getElementById('page-title').textContent=titles[page]||page;
+  CURRENT_PAGE=page;
+  if(page==='users') loadUsers();
+  if(page==='wallets') loadWallets();
+  if(page==='transactions') loadTransactions();
+  if(page==='riders') loadRiders();
+  if(page==='circulares') loadCirculares();
+  if(page==='orders') loadOrders();
+}
+
+function refreshCurrent(){
+  if(CURRENT_PAGE==='dashboard') loadDashboard();
+  else nav(CURRENT_PAGE, document.querySelector('.sb-link.active'));
+  toast('Actualizado','info');
+}
+
+async function loadDashboard(){
+  try{
+    const[users,txns,riders]=await Promise.all([
+      SB.from('users').select('id,role,full_name,email,created_at',{count:'exact'}),
+      SB.from('transactions').select('amount,fee,type,status,created_at',{count:'exact'}),
+      SB.from('users').select('id',{count:'exact'}).eq('role','rider')
+    ]);
+    const uc=users.count||0;
+    document.getElementById('k-users').textContent=uc;
+    document.getElementById('k-users-t').textContent=uc+' total';
+    document.getElementById('sb-users-count').textContent=uc;
+    const rev=(txns.data||[]).reduce((s,t)=>s+(Number(t.fee)||Number(t.amount)*0.02),0);
+    document.getElementById('k-rev').textContent='€'+rev.toFixed(0);
+    document.getElementById('k-txns').textContent=txns.count||0;
+    document.getElementById('k-txns-t').textContent=(txns.count||0)+' ops';
+    document.getElementById('k-riders').textContent=riders.count||0;
+    document.getElementById('k-riders-t').textContent=(riders.count||0)+' riders';
+
+    // Recent users
+    const ru=document.getElementById('tb-recent-users');
+    const recent=(users.data||[]).slice(0,6);
+    document.getElementById('recent-sub').textContent=uc+' usuarios · últimos '+recent.length;
+    ru.innerHTML=recent.length?recent.map(u=>`<tr>
+      <td><div class="user-cell"><div class="uc-av" style="background:${avColor(u.email)};color:#000">${initials(u.full_name||u.email)}</div><div><div class="uc-name">${u.full_name||'—'}</div><div class="uc-email">${u.email}</div></div></div></td>
+      <td>${pill(u.role)}</td>
+      <td style="font-size:12px;color:var(--muted)">${fmt_date(u.created_at)}</td>
+    </tr>`).join(''):'<tr><td colspan="3" class="td-empty">Sin usuarios</td></tr>';
+
+    // Recent txns
+    const rt=document.getElementById('tb-recent-txns');
+    const rtxns=(txns.data||[]).slice(0,6);
+    const STATUS_PILL={completed:'green',pending:'amber',processing:'cyan',failed:'red'};
+    rt.innerHTML=rtxns.length?rtxns.map(t=>`<tr>
+      <td><span class="pill pill-${ROLE_COLORS['cliente']}">${t.type}</span></td>
+      <td style="font-family:var(--mono);font-weight:600">${Number(t.amount).toFixed(2)}</td>
+      <td><span class="pill pill-${STATUS_PILL[t.status]||'gray'}">${t.status}</span></td>
+    </tr>`).join(''):'<tr><td colspan="3" class="td-empty">Sin transacciones</td></tr>';
+
+    // Role distribution
+    const roleCounts={};
+    (users.data||[]).forEach(u=>{roleCounts[u.role]=(roleCounts[u.role]||0)+1;});
+    const rd=document.getElementById('role-dist');
+    rd.innerHTML=Object.entries(roleCounts).map(([r,c])=>`
+      <div style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:var(--r);padding:10px 16px;min-width:140px">
+        <span style="font-size:22px">${ROLE_EMOJI[r]||'👤'}</span>
+        <div><div style="font-size:20px;font-weight:700;font-family:var(--mono)">${c}</div><div style="font-size:11px;color:var(--muted)">${r}</div></div>
+      </div>`).join('');
+
+    // New KPIs - Total wallets
+    const wallets=await SB.from('wallets').select('eur,xaf,usd');
+    const totalEur=(wallets.data||[]).reduce((s,w)=>s+Number(w.eur||0),0);
+    const avgEur=wallets.data&&wallets.data.length?totalEur/wallets.data.length:0;
+    document.getElementById('k-total-eur').textContent='€'+totalEur.toFixed(2);
+    document.getElementById('k-avg-eur').textContent='Promedio por usuario: €'+avgEur.toFixed(2);
+
+    // Activity rate
+    const activeUsers=new Set((txns.data||[]).map(t=>t.user_id)).size;
+    const actRate=uc>0?Math.round(activeUsers/uc*100):0;
+    document.getElementById('k-activity').textContent=actRate+'%';
+    document.getElementById('k-activity-sub').textContent=activeUsers+' de '+uc+' usuarios con transacciones';
+
+    // Countries
+    const countries=new Set((users.data||[]).map(u=>u.country).filter(Boolean));
+    document.getElementById('k-countries').textContent=countries.size;
+    document.getElementById('k-countries-sub').textContent=[...countries].join(', ')||'—';
+
+    // Chart - Registros por día
+    const last7days=[...Array(7)].map((_,i)=>{
+      const d=new Date(); d.setDate(d.getDate()-6+i);
+      return d.toISOString().split('T')[0];
+    });
+    const regByDay={};
+    last7days.forEach(d=>regByDay[d]=0);
+    (users.data||[]).forEach(u=>{
+      const d=(u.created_at||'').split('T')[0];
+      if(regByDay[d]!==undefined) regByDay[d]++;
+    });
+    const ctxR=document.getElementById('chart-registros');
+    if(ctxR){
+      if(window._chartReg) window._chartReg.destroy();
+      window._chartReg=new Chart(ctxR,{
+        type:'bar',
+        data:{
+          labels:last7days.map(d=>d.slice(5)),
+          datasets:[{label:'Registros',data:Object.values(regByDay),backgroundColor:'rgba(6,182,212,0.6)',borderColor:'rgba(6,182,212,1)',borderWidth:1,borderRadius:6}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:'#64748b',stepSize:1},grid:{color:'rgba(255,255,255,0.05)'}},x:{ticks:{color:'#64748b'},grid:{display:false}}}}
+      });
+    }
+
+    // Chart - Txn types
+    const txnTypes={};
+    (txns.data||[]).forEach(t=>{txnTypes[t.type]=(txnTypes[t.type]||0)+1;});
+    const ctxT=document.getElementById('chart-txn-types');
+    if(ctxT&&Object.keys(txnTypes).length){
+      if(window._chartTxn) window._chartTxn.destroy();
+      window._chartTxn=new Chart(ctxT,{
+        type:'doughnut',
+        data:{
+          labels:Object.keys(txnTypes),
+          datasets:[{data:Object.values(txnTypes),backgroundColor:['rgba(6,182,212,0.8)','rgba(16,185,129,0.8)','rgba(139,92,246,0.8)','rgba(245,158,11,0.8)','rgba(239,68,68,0.8)'],borderWidth:0}]
+        },
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}}}}
+      });
+    }
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+function exportUsersExcel(){
+  if(!ALL_USERS||!ALL_USERS.length){toast('No hay usuarios para exportar','error');return;}
+  var header='Nombre,Email,Codigo IA,Telefono,Rol,Pais,Ciudad,Saldo EUR,Fecha';
+  var lines=[header];
+  ALL_USERS.forEach(function(u){
+    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var dt=u.created_at?new Date(u.created_at).toLocaleDateString('es'):'';
+    var row=[u.full_name||'',u.email||'',ia,u.phone||'',u.role||'',u.country||'',u.city||'',Number(u.eur||0).toFixed(2),dt];
+    lines.push(row.join(','));
+  });
+  var sep=String.fromCharCode(13,10);var csv=lines.join(sep);
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='innovaafric_usuarios_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Exportado correctamente','success');
+}
+
+async function toggleBlock(uid, isBlocked){
+  const action=isBlocked?'Desbloquear':'Bloquear';
+  if(!confirm(action+' este usuario?'))return;
+  const{error}=await SB.from('users').update({blocked:!isBlocked}).eq('id',uid);
+  if(error){toast('Error: '+error.message,'error');return;}
+  toast('✅ Usuario '+(isBlocked?'desbloqueado':'bloqueado'),'success');
+  loadUsers();
+}
+
+async function viewUserTxns(uid, name){
+  openModal('m-user-txns');
+  document.getElementById('m-txns-title').textContent='Transacciones de '+name;
+  const tb=document.getElementById('m-txns-body');
+  tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Cargando...</td></tr>';
+  const{data}=await SB.from('transactions').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
+  if(!data||!data.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Sin transacciones</td></tr>';return;}
+  const types={send:'Envio',receive:'Recibido',p2p:'P2P',cashout:'Reintegro',qr_pay:'QR Pay'};
+  const statusColors={completed:'var(--green)',processing:'var(--gold)',failed:'var(--red)'};
+  tb.innerHTML=data.map(tx=>{
+    const dt=new Date(tx.created_at).toLocaleDateString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return '<tr>'
+      +'<td style="font-size:12px;color:var(--muted)">'+dt+'</td>'
+      +'<td style="font-size:12px">'+(types[tx.type]||tx.type)+'</td>'
+      +'<td style="font-family:var(--mono);font-size:13px;font-weight:600">'+Number(tx.amount).toLocaleString('es')+' '+tx.currency+'</td>'
+      +'<td style="font-size:11px;color:'+(statusColors[tx.status]||'var(--muted)')+'">'+( tx.status||'—')+'</td>'
+      +'<td style="font-size:12px;color:var(--muted)">'+(tx.description||'—')+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+// ── COUNTRY → CURRENCY MAPPING ───────────────────────────
+var COUNTRY_CURRENCY={
+  // CEMAC (XAF)
+  'GQ':'XAF','CM':'XAF','GA':'XAF','CF':'XAF','CG':'XAF','TD':'XAF','CD':'XAF',
+  // UEMOA (XOF)
+  'SN':'XOF','CI':'XOF','BF':'XOF','ML':'XOF','GN':'XOF','TG':'XOF','BJ':'XOF','NE':'XOF','GW':'XOF','MR':'XOF',
+  // EUR
+  'ES':'EUR','FR':'EUR','PT':'EUR','DE':'EUR','IT':'EUR','BE':'EUR','NL':'EUR',
+  // USD
+  'NG':'USD','GH':'USD','CN':'USD','US':'USD',
+  // Default
+  'OTHER':'EUR'
+};
+
+var CURRENCY_SYMBOL={'EUR':'€','XAF':'XAF','XOF':'XOF','USD':'$','GBP':'£'};
+var CURRENCY_RATE={'EUR':1,'XAF':655.957,'XOF':655.957,'USD':1.08};
+
+function getUserCurrency(country, userId){
+  // Check if admin manually set a preferred currency
+  if(userId){
+    var saved=localStorage.getItem('ia_pref_cur_'+userId);
+    if(saved&&saved!=='auto')return saved;
+  }
+  return COUNTRY_CURRENCY[country]||'EUR';
+}
+
+function formatUserBalance(w, country, userId){
+  var cur=getUserCurrency(country, userId);
+  var sym=CURRENCY_SYMBOL[cur]||cur;
+  var rate=CURRENCY_RATE[cur]||1;
+  var eur=Number(w&&w.eur||0);
+  var xaf=Number(w&&w.xaf||0);
+  var usd=Number(w&&w.usd||0);
+  var amount=0;
+  if(cur==='EUR') amount=eur;
+  else if(cur==='XAF'||cur==='XOF') amount=xaf>0?xaf:eur*rate;
+  else if(cur==='USD') amount=usd>0?usd:eur*rate;
+  else amount=eur;
+  // Format compactly
+  if(amount>=1000000) return sym+(amount/1000000).toFixed(2)+'M '+(cur!=='EUR'?cur:'');
+  if(amount>=1000&&(cur==='XAF'||cur==='XOF')) return sym+Math.round(amount/1000)+'k '+cur;
+  if(cur==='EUR'||cur==='USD') return sym+amount.toFixed(2);
+  return sym+Math.round(amount).toLocaleString('es')+' '+cur;
+}
+
+function getCurrencyColor(country, userId){
+  var cur=getUserCurrency(country, userId);
+  if(cur==='XAF'||cur==='XOF') return 'var(--amber)';
+  if(cur==='USD') return 'var(--green)';
+  return 'var(--cyan)';
+}
+
+async function loadUsers(){
+  try{
+    const{data:users,count}=await SB.from('users').select('*',{count:'exact'}).order('created_at',{ascending:false});
+    const{data:wallets}=await SB.from('wallets').select('user_id,eur,xaf,usd,points');
+    ALL_USERS=(users||[]).map(u=>{
+      const w=(wallets||[]).find(ww=>ww.user_id===u.id)||{};
+      return {...u,eur:w.eur||0,xaf:w.xaf||0,usd:w.usd||0,points:w.points||0,_wallet:w};
+    });
+    document.getElementById('users-count-label').textContent=(count||0)+' usuarios registrados';
+    renderUsers(ALL_USERS);
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+function renderUsers(arr){
+  const tb=document.getElementById('tb-users');
+  if(!arr.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin usuarios</td></tr>';return;}
+  tb.innerHTML=arr.map(u=>{
+    const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    const phone=u.phone||'—';
+    const city=(u.city?u.city+', ':'')+(u.country||'—');
+    const nm=(u.full_name||u.email||'').replace(/'/g,'&apos;');
+    const rol=(u.role||'cliente').replace(/'/g,'&apos;');
+    const country=(u.country||'GQ').replace(/'/g,'&apos;');
+    return '<tr>'
+      +'<td><div class="user-cell">'
+      +'<div class="uc-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
+      +'<div><div class="uc-name">'+(u.full_name||'—')+'</div>'
+      +'<div class="uc-email" style="cursor:pointer" onclick="copyText(\'' +u.email+ '\')" title="Click para copiar">'+u.email+' 📋</div>'
+      +'</div></div></td>'
+      +'<td><span style="font-family:var(--mono);font-size:12px;font-weight:700;color:var(--cyan);background:var(--cyan-d);padding:3px 9px;border-radius:6px;cursor:pointer" onclick="copyText(\'' +ia+ '\')" title="Click para copiar">'+ia+'</span></td>'
+      +'<td style="font-family:var(--mono);font-size:12px;color:var(--subtle)">'+phone+'</td>'
+      +'<td>'+pill(u.role)+'</td>'
+      +'<td style="font-size:12px;color:var(--muted)">'+city+'</td>'
+      +'<td style="font-family:var(--mono);font-weight:700;color:'+getCurrencyColor(u.country)+'">'+formatUserBalance(u._wallet||u,u.country,u.id)+'</td>'
+      +'<td style="text-align:center;font-size:16px">'+(u.pin_hash?'🔐':'<span style="color:var(--muted);font-size:12px">—</span>')+'</td>'      +'<td style="display:flex;gap:4px;flex-wrap:wrap">'
+      +'<button class="topbar-btn btn-primary" style="padding:5px 8px;font-size:11px" onclick="openRecharge(\'' +u.id+ '\',\'' +ia+' '+nm+ '\')" title="Recargar">💰</button>'
+      +'<button class="topbar-btn btn-ghost" style="padding:5px 8px;font-size:11px" onclick="viewUserTxns(\'' +u.id+ '\',\'' +nm+ '\')" title="Ver transacciones">📊</button>'
+      +'<button class="topbar-btn btn-ghost" style="padding:5px 8px;font-size:11px" onclick="openEdit(\'' +u.id+ '\',\'' +nm+ '\',\'' +rol+ '\',\'' +u.email+ '\',\'' +country+ '\')" title="Editar">✏️</button>'
+      +'<button class="topbar-btn" style="padding:5px 8px;font-size:11px;background:'+(u.is_blocked?'var(--green-d)':'var(--red-d)')+';color:'+(u.is_blocked?'var(--green)':'var(--red)')+';border:none" onclick="toggleBlock(\'' +u.id+ '\',' +u.is_blocked+ ')" title="'+(u.is_blocked?'Desbloquear':'Bloquear')+'">'+(u.is_blocked?'🔓':'🔒')+'</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function copyText(text){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>toast('📋 Copiado: '+text,'success')).catch(()=>{});
+  } else {
+    const el=document.createElement('textarea');
+    el.value=text;document.body.appendChild(el);el.select();
+    document.execCommand('copy');document.body.removeChild(el);
+    toast('📋 Copiado','success');
+  }
+}
+
+function filterUsers(){
+  const q=document.getElementById('user-q').value.toLowerCase();
+  const r=document.getElementById('user-role-f').value;
+  renderUsers(ALL_USERS.filter(u=>{
+    const ia='ia-'+(u.id||'').replace(/-/g,'').toLowerCase().substring(0,6);
+    return (!q||(u.email||'').toLowerCase().includes(q)||(u.full_name||'').toLowerCase().includes(q)||ia.includes(q))&&(!r||u.role===r);
+  }));
+}
+
+function quickSearchByIA(){
+  const code=prompt('Introduce el código IA (ej: IA-6401C9):');
+  if(!code) return;
+  document.getElementById('user-q').value=code.trim();
+  filterUsers();
+}
+
+function globalSearch(v){
+  if(!v) return;
+  nav('users',document.querySelector('.sb-link:nth-child(3)'));
+  setTimeout(()=>{document.getElementById('user-q').value=v;filterUsers();},200);
+}
+
+async function loadWallets(){
+  try{
+    const{data}=await SB.from('wallets').select('*,user:user_id(full_name,email,role)');
+    const tb=document.getElementById('tb-wallets');
+    tb.innerHTML=(data||[]).length?(data||[]).map(w=>`<tr>
+      <td><div class="user-cell"><div class="uc-av" style="background:${avColor(w.user?.email||'x')};color:#000">${initials(w.user?.full_name||w.user?.email||'?')}</div><div><div class="uc-name">${w.user?.full_name||'—'}</div><div class="uc-email">${w.user?.email||''}</div></div></div></td>
+      <td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">€${Number(w.eur).toFixed(2)}</td>
+      <td style="font-family:var(--mono);color:var(--muted)">${Math.round(w.xaf).toLocaleString('es')}</td>
+      <td style="font-family:var(--mono);color:var(--muted)">$${Number(w.usd).toFixed(2)}</td>
+      <td style="font-family:var(--mono);color:var(--amber)">${w.points||0}</td>
+      <td style="font-size:11px;color:var(--muted)">${w.updated_at?fmt_date(w.updated_at):'—'}</td>
+      <td><button class="topbar-btn btn-primary" style="padding:5px 12px;font-size:12px" onclick="openRecharge('${w.user_id}','${(w.user?.full_name||w.user?.email||'Usuario').replace(/'/g,'')}')">💰 Recargar</button></td>
+    </tr>`).join(''):'<tr><td colspan="7" class="td-empty">Sin wallets</td></tr>';
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function loadTransactions(){
+  try{
+    const{data,count}=await SB.from('transactions').select('*,user:user_id(full_name,email)',{count:'exact'}).order('created_at',{ascending:false}).limit(50);
+    document.getElementById('txns-count-label').textContent=(count||0)+' transacciones totales';
+    const STATUS_PILL={completed:'green',pending:'amber',processing:'cyan',failed:'red'};
+    const tb=document.getElementById('tb-txns');
+    tb.innerHTML=(data||[]).length?(data||[]).map(t=>`<tr>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${(t.ref_code||'—').substring(0,14)}</td>
+      <td style="font-size:12px">${t.user?.full_name||t.user?.email||'—'}</td>
+      <td>${pill('cliente').replace('👤 cliente',t.type)}</td>
+      <td style="font-family:var(--mono);font-weight:600">${Number(t.amount).toFixed(2)} ${t.currency}</td>
+      <td style="font-family:var(--mono);color:var(--green)">€${Number(t.fee||0).toFixed(2)}</td>
+      <td><span class="pill pill-${STATUS_PILL[t.status]||'gray'}">${t.status}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${fmt_date(t.created_at)}</td>
+    </tr>`).join(''):'<tr><td colspan="7" class="td-empty">Sin transacciones</td></tr>';
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function loadRiders(){
+  const{data}=await SB.from('riders').select('*,user:user_id(full_name,email)').catch(()=>({data:[]}));
+  const TIER_PILL={bronze:'red',silver:'gray',gold:'amber'};
+  document.getElementById('tb-riders').innerHTML=(data||[]).length?(data||[]).map(r=>`<tr>
+    <td><div class="user-cell"><div class="uc-av" style="background:${avColor(r.user?.email||'x')};color:#000">${initials(r.user?.full_name||r.user?.email||'?')}</div><div><div class="uc-name">${r.user?.full_name||'—'}</div><div class="uc-email">${r.user?.email||''}</div></div></div></td>
+    <td><span class="pill pill-${TIER_PILL[r.tier||'bronze']}">${r.tier||'bronze'}</span></td>
+    <td style="font-family:var(--mono);font-weight:600">${r.deliveries||0}</td>
+    <td style="color:var(--amber)">★ ${r.rating||5}</td>
+    <td><span class="pill pill-${r.is_online?'green':'gray'}">${r.is_online?'Online':'Offline'}</span></td>
+  </tr>`).join(''):'<tr><td colspan="5" class="td-empty">Sin riders registrados</td></tr>';
+}
+
+async function loadCirculares(){
+  const{data}=await SB.from('circulares').select('*,user:user_id(full_name,email)').catch(()=>({data:[]}));
+  document.getElementById('tb-circulares').innerHTML=(data||[]).length?(data||[]).map(c=>`<tr>
+    <td><div class="uc-name">${c.user?.full_name||'—'}</div><div class="uc-email">${c.user?.email||''}</div></td>
+    <td>${c.city||'—'}, ${c.country||'—'}</td>
+    <td><span class="pill pill-${c.status==='active'?'green':'amber'}">${c.status}</span></td>
+    <td style="font-family:var(--mono)">${c.commission_pct||1}%</td>
+  </tr>`).join(''):'<tr><td colspan="4" class="td-empty">Sin circulares registradas</td></tr>';
+}
+
+async function loadOrders(){
+  const{data,count}=await SB.from('orders').select('*,user:user_id(full_name,email)',{count:'exact'}).order('created_at',{ascending:false}).catch(()=>({data:[],count:0}));
+  const STATUS_PILL={delivered:'green',pending:'amber',confirmed:'cyan',cancelled:'red'};
+  document.getElementById('tb-orders').innerHTML=(data||[]).length?(data||[]).map(o=>`<tr>
+    <td style="font-family:var(--mono);font-size:11px">${o.tracking_code||'—'}</td>
+    <td style="font-size:12px">${o.user?.full_name||'—'}</td>
+    <td><span class="pill pill-cyan">${o.type}</span></td>
+    <td style="font-family:var(--mono);font-weight:600">€${Number(o.total_eur||0).toFixed(2)}</td>
+    <td><span class="pill pill-${STATUS_PILL[o.status]||'amber'}">${o.status}</span></td>
+    <td style="font-size:11px;color:var(--muted)">${fmt_date(o.created_at)}</td>
+  </tr>`).join(''):'<tr><td colspan="6" class="td-empty">Sin pedidos aún</td></tr>';
+}
+
+async function searchByCode(){
+  var q=document.getElementById('ia-search').value.trim();
+  var res=document.getElementById('ia-result');
+  if(!q){toast('Introduce un codigo o email','error');return;}
+  try{
+    var query=SB.from('users').select('id,full_name,email,role');
+    if(q.toUpperCase().startsWith('IA-')){
+      var code=q.substring(3).toUpperCase();
+      query=query.ilike('id',code+'%');
+    } else {
+      query=query.ilike('email','%'+q+'%');
+    }
+    var {data}=await query.limit(1);
+    if(data&&data.length){
+      var u=data[0];
+      res.style.display='block';
+      res.style.color='var(--txt)';
+      res.textContent=u.full_name+' — '+u.email+' ('+u.role+')';
+      var btn2=document.createElement('button');
+      btn2.textContent='Seleccionar';
+      btn2.style.cssText='background:var(--cyan);color:#000;border:none;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;margin-top:6px;display:block;font-family:var(--font)';
+      btn2.onclick=function(){loadRechargeForUser(u.id,u.full_name);};
+      res.appendChild(btn2);
+    } else {
+      res.style.display='block';
+      res.innerHTML='No encontrado. Verifica el codigo o email.';
+      res.style.color='var(--red)';
+    }
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function loadRechargeForUser(uid,name){
+  document.getElementById('m-recharge-id').value=uid;
+  document.getElementById('m-recharge-name').textContent=name;
+  document.getElementById('ia-result').style.display='none';
+  document.getElementById('ia-search').value='';
+  var{data:w}=await SB.from('wallets').select('*').eq('user_id',uid).single().catch(()=>({data:null}));
+  document.getElementById('cur-eur').textContent=Number(w?.eur||0).toFixed(2);
+  document.getElementById('cur-xaf').textContent=Math.round(w?.xaf||0).toLocaleString('es');
+  document.getElementById('cur-usd').textContent=Number(w?.usd||0).toFixed(2);
+}
+
+function reorderRechargeFields(mainCur){
+  const formRow=document.querySelector('#m-recharge .form-row');
+  if(!formRow)return;
+  // Get all form rows in the recharge modal
+  const modal=document.getElementById('m-recharge').querySelector('.modal');
+  const rows=modal.querySelectorAll('.form-row');
+  if(!rows.length)return;
+  // Update labels to show local currency first
+  const firstRow=rows[0];
+  const labels=firstRow.querySelectorAll('.form-label');
+  const inputs=firstRow.querySelectorAll('.form-input');
+  if(mainCur==='XAF'||mainCur==='XOF'){
+    // Show XAF first, then EUR
+    if(labels[0])labels[0].textContent='+ XAF (moneda principal)';
+    if(labels[1])labels[1].textContent='+ EUR €';
+    if(inputs[0]){inputs[0].id='add-xaf';inputs[0].value=50000;}
+    if(inputs[1]){inputs[1].id='add-eur';inputs[1].value=0;}
+    // Highlight XAF input
+    if(inputs[0])inputs[0].style.borderColor='var(--amber)';
+    if(inputs[1])inputs[1].style.borderColor='';
+  } else if(mainCur==='USD'){
+    if(labels[0])labels[0].textContent='+ USD $ (moneda principal)';
+    if(labels[1])labels[1].textContent='+ XAF';
+    if(inputs[0]){inputs[0].id='add-usd';inputs[0].value=100;}
+    if(inputs[1]){inputs[1].id='add-xaf';inputs[1].value=0;}
+    if(inputs[0])inputs[0].style.borderColor='var(--green)';
+    if(inputs[1])inputs[1].style.borderColor='';
+  } else {
+    // EUR first (default)
+    if(labels[0])labels[0].textContent='+ EUR € (moneda principal)';
+    if(labels[1])labels[1].textContent='+ XAF';
+    if(inputs[0]){inputs[0].id='add-eur';inputs[0].value=100;}
+    if(inputs[1]){inputs[1].id='add-xaf';inputs[1].value=0;}
+    if(inputs[0])inputs[0].style.borderColor='var(--cyan)';
+    if(inputs[1])inputs[1].style.borderColor='';
+  }
+  // Update modal subtitle with currency info
+  const sym=CURRENCY_SYMBOL[mainCur]||mainCur;
+  const subEl=document.getElementById('m-recharge-name');
+  if(subEl&&!subEl.textContent.includes('•')){
+    subEl.textContent=subEl.textContent+' • '+mainCur;
+  }
+}
+
+async function openRecharge(uid,name){
+  document.getElementById('m-recharge-id').value=uid;
+  document.getElementById('m-recharge-name').textContent=name;
+  // Find user's country for currency preference
+  const user=(ALL_USERS||[]).find(u=>u.id===uid)||{};
+  const country=user.country||'GQ';
+  const mainCur=getUserCurrency(country);
+  // Set default recharge amounts based on local currency
+  const defaults={EUR:{eur:100,xaf:0,usd:0},XAF:{eur:0,xaf:50000,usd:0},XOF:{eur:0,xaf:50000,usd:0},USD:{eur:0,xaf:0,usd:100}};
+  const def=defaults[mainCur]||defaults.EUR;
+  document.getElementById('add-eur').value=def.eur;
+  document.getElementById('add-xaf').value=def.xaf;
+  document.getElementById('add-usd').value=def.usd;
+  document.getElementById('add-pts').value=500;
+  // Reorder form fields to put local currency first
+  reorderRechargeFields(mainCur);
+  try{
+    const{data:w}=await SB.from('wallets').select('*').eq('user_id',uid).single();
+    document.getElementById('cur-eur').textContent=Number(w?.eur||0).toFixed(2);
+    document.getElementById('cur-xaf').textContent=Math.round(w?.xaf||0).toLocaleString('es');
+    document.getElementById('cur-usd').textContent=Number(w?.usd||0).toFixed(2);
+  }catch(e){
+    document.getElementById('cur-eur').textContent='0.00';
+    document.getElementById('cur-xaf').textContent='0';
+    document.getElementById('cur-usd').textContent='0.00';
+  }
+  const m=document.getElementById('m-recharge');
+  m.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+}
+
+async function doRecharge(){
+  const uid=document.getElementById('m-recharge-id').value;
+  const addE=Number(document.getElementById('add-eur').value)||0;
+  const addX=Number(document.getElementById('add-xaf').value)||0;
+  const addU=Number(document.getElementById('add-usd').value)||0;
+  const addP=Number(document.getElementById('add-pts').value)||0;
+  const{data:w}=await SB.from('wallets').select('*').eq('user_id',uid).single();
+  const{error}=await SB.from('wallets').update({eur:Number(w?.eur||0)+addE,xaf:Number(w?.xaf||0)+addX,usd:Number(w?.usd||0)+addU,points:Number(w?.points||0)+addP}).eq('user_id',uid);
+  if(error){toast('Error: '+error.message,'error');return;}
+  closeModal('m-recharge');
+  toast('✅ Wallet recargado correctamente','success');
+  setTimeout(()=>{
+    loadDashboard();
+    if(CURRENT_PAGE==='wallets') loadWallets();
+    if(CURRENT_PAGE==='users') loadUsers();
+  }, 300);
+}
+
+async function doRechargeAll(){
+  const addE=Number(document.getElementById('all-eur').value)||0;
+  const addX=Number(document.getElementById('all-xaf').value)||0;
+  const addU=Number(document.getElementById('all-usd').value)||0;
+  const addP=Number(document.getElementById('all-pts').value)||0;
+  const{data:ws}=await SB.from('wallets').select('*,user:user_id(email)');
+  let cnt=0;
+  for(const w of ws||[]){
+    if(w.user?.email==='admin@innovaafric.com') continue;
+    await SB.from('wallets').update({eur:Number(w.eur)+addE,xaf:Number(w.xaf)+addX,usd:Number(w.usd)+addU,points:Number(w.points||0)+addP}).eq('user_id',w.user_id);
+    cnt++;
+  }
+  closeModal('m-all-recharge');
+  toast('✅ '+cnt+' wallets recargados','success');
+  setTimeout(()=>{ loadDashboard(); loadWallets(); }, 300);
+}
+
+function openEdit(id,name,role,email,country){
+  const u=(typeof ALL_USERS!=='undefined'?ALL_USERS:[]).find(u=>u.id===id)||{};
+  document.getElementById('m-edit-id').value=id;
+  document.getElementById('m-edit-email').textContent=email;
+  document.getElementById('m-edit-name').value=name;
+  document.getElementById('m-edit-role').value=role;
+  document.getElementById('m-edit-country').value=country;
+  // Show currency info
+  const autoCur=getUserCurrency(country);
+  const savedCur=u.preferred_currency||'auto';
+  const curEl=document.getElementById('m-edit-currency');
+  const curSel=document.getElementById('m-edit-currency-sel');
+  // Check if admin previously set a manual currency
+  var savedManual=localStorage.getItem('ia_pref_cur_'+id);
+  if(curEl)curEl.textContent='Automático: '+autoCur+' (país: '+country+')'+(savedManual?' · Manual: '+savedManual:'');
+  if(curSel)curSel.value=savedManual||'auto';
+  if(curSel)curSel.value=savedCur;
+  const ia='IA-'+(id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+  const iaEl=document.getElementById('m-edit-ia');
+  if(iaEl)iaEl.textContent='Código: '+ia;
+  const phEl=document.getElementById('m-edit-phone');
+  if(phEl)phEl.value=u.phone||'';
+  const ciEl=document.getElementById('m-edit-city');
+  if(ciEl)ciEl.value=u.city||'';
+  openModal('m-edit-user');
+}
+
+async function resetUserPIN(){
+  const id=document.getElementById('m-edit-id').value;
+  const email=document.getElementById('m-edit-email').textContent;
+  if(!confirm('¿Resetear el PIN de '+email+'?\n\nEl usuario tendrá que crear uno nuevo al próximo pago.'))return;
+  const{error}=await SB.from('users').update({pin_hash:null,pin_created_at:null}).eq('id',id);
+  if(error){toast('Error: '+error.message,'error');return;}
+  // Update local cache
+  const u=ALL_USERS.find(u=>u.id===id);
+  if(u)u.pin_hash=null;
+  closeModal('m-edit-user');
+  toast('✅ PIN reseteado para '+email,'success');
+  logAdminAction&&logAdminAction('reset_pin','PIN reseteado para '+email);
+  loadUsers();
+}
+
+async function saveEdit(){
+  const id=document.getElementById('m-edit-id').value;
+  const curSel=document.getElementById('m-edit-currency-sel');
+  const newCountry=document.getElementById('m-edit-country').value;
+  // Only update columns that exist in Supabase
+  const updates={
+    full_name:document.getElementById('m-edit-name').value,
+    role:document.getElementById('m-edit-role').value,
+    country:newCountry,
+    phone:document.getElementById('m-edit-phone')?.value||null,
+    city:document.getElementById('m-edit-city')?.value||null
+  };
+  const{error}=await SB.from('users').update(updates).eq('id',id);
+  if(error){toast('Error: '+error.message,'error');return;}
+  // Save preferred currency in localStorage (not in DB - column doesn't exist yet)
+  if(curSel&&curSel.value!=='auto'){
+    localStorage.setItem('ia_pref_cur_'+id, curSel.value);
+  } else {
+    localStorage.removeItem('ia_pref_cur_'+id);
+  }
+  // Update local ALL_USERS cache immediately
+  const u=ALL_USERS.find(u=>u.id===id);
+  if(u){
+    u.full_name=updates.full_name;
+    u.role=updates.role;
+    u.country=newCountry;
+    u.phone=updates.phone;
+    u.city=updates.city;
+  }
+  closeModal('m-edit-user');
+  toast('✅ Usuario actualizado correctamente','success');
+  logAdminAction&&logAdminAction('edit_user','Usuario '+updates.full_name+' actualizado');
+  setTimeout(()=>{loadUsers();},300);
+}
+
+async function deleteUser(){
+  if(!confirm('¿Eliminar este usuario?')) return;
+  const id=document.getElementById('m-edit-id').value;
+  await SB.from('wallets').delete().eq('user_id',id);
+  await SB.from('users').delete().eq('id',id);
+  closeModal('m-edit-user');
+  toast('Usuario eliminado','error');
+  setTimeout(()=>{ loadDashboard(); loadUsers(); }, 300);
+}
+
+async function createUser(){
+  const name=document.getElementById('c-name').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const pwd=document.getElementById('c-pwd').value;
+  const phone=document.getElementById('c-phone').value.trim();
+  const role=document.getElementById('c-role').value;
+  const country=document.getElementById('c-country').value;
+  const city=document.getElementById('c-city').value.trim();
+  const eur=Number(document.getElementById('c-eur').value)||0;
+  const fb=document.getElementById('create-feedback');
+  if(!name||!email||!pwd){toast('Nombre, email y contraseña son obligatorios','error');return;}
+  fb.style.display='block';fb.style.background='var(--s2)';fb.style.color='var(--muted)';fb.textContent='Creando usuario...';
+  try{
+    const{data:auth,error:ae}=await SB.auth.signUp({email,password:pwd});
+    if(ae) throw new Error(ae.message);
+    const uid=auth.user.id;
+    await SB.from('users').upsert({id:uid,email,full_name:name,role,country,phone:phone||null,city:city||null});
+    await SB.from('wallets').upsert({user_id:uid,eur,xaf:Math.round(eur*655.957),usd:Math.round(eur*1.08),points:0});
+    fb.style.background='var(--green-d)';fb.style.color='var(--green)';
+    fb.textContent='✅ Usuario '+name+' creado — Rol: '+role+' — Saldo: €'+eur;
+    resetCreateForm();
+    toast('✅ '+name+' creado correctamente','success');
+    var iaCode='IA-'+(uid||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var codeEl=document.getElementById('create-ia-code');
+    if(codeEl){codeEl.style.display='block';codeEl.textContent='Código IA: '+iaCode+' — Compartir con el usuario';}
+    setTimeout(()=>{ loadDashboard(); if(CURRENT_PAGE==='users') loadUsers(); if(CURRENT_PAGE==='wallets') loadWallets(); }, 500);
+  }catch(e){
+    fb.style.background='var(--red-d)';fb.style.color='var(--red)';
+    fb.textContent='Error: '+e.message;
+    toast('Error: '+e.message,'error');
+  }
+}
+
+function resetCreateForm(){
+  ['c-name','c-email','c-pwd','c-phone','c-city'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c-eur').value=0;
+}
+
+function openModal(id){
+  const el=document.getElementById(id);
+  el.style.display='flex';
+  el.classList.add('open');
+  el.setAttribute('data-modal-open','1');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  const m=document.getElementById(id);
+  m.style.cssText='display:none;';
+  m.classList.remove('open');
+  m.removeAttribute('data-modal-open');
+  document.body.style.overflow='';
+}
+// ESC key closes any open modal
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay[data-modal-open]').forEach(function(m){
+      closeModal(m.id);
+    });
+  }
+});
+
+let toastId=0;
+function toast(msg,type=''){
+  const wrap=document.getElementById('toasts');
+  const el=document.createElement('div');
+  el.className='toast '+type;
+  el.textContent=msg;
+  wrap.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400);},3000);
+}
+</script>
+</body>
+</html>
+<script>
+// ═══════════════════════════════════════════════════════════
+// INNOVAAFRIC ADMIN v2.0 — NUEVAS FUNCIONES
+// ═══════════════════════════════════════════════════════════
+
+// ── CHANGE USER PASSWORD ─────────────────────────────────
+async function changeUserPassword(uid, email){
+  // The Anon Key cannot set passwords directly.
+  // We send a password reset email to the user - this is the secure way.
+  if(!confirm('Se enviará un email de restablecimiento de contraseña a:\n\n'+email+'\n\n¿Continuar?'))return;
+  try{
+    const{error}=await SB.auth.resetPasswordForEmail(email,{
+      redirectTo:'https://christianboddien-source.github.io/innovaafric-prod/'
+    });
+    if(error)throw new Error(error.message);
+    toast('✅ Email enviado a '+email,'success');
+    // Show confirmation in modal
+    openModal('m-pwd-sent');
+    document.getElementById('m-pwd-email').textContent=email;
+    logAdminAction&&logAdminAction('reset_password','Email de reseteo enviado a '+email);
+  }catch(e){
+    toast('Error: '+e.message,'error');
+  }
+}
+
+// ── ACTIVITY LOG ─────────────────────────────────────────
+var ADMIN_LOG=JSON.parse(localStorage.getItem('ia_admin_log')||'[]');
+
+function logAdminAction(action, detail){
+  ADMIN_LOG.unshift({action:action,detail:detail,time:new Date().toLocaleString('es'),admin:'admin@innovaafric.com'});
+  if(ADMIN_LOG.length>100)ADMIN_LOG.pop();
+  localStorage.setItem('ia_admin_log',JSON.stringify(ADMIN_LOG));
+}
+
+async function viewUserActivity(uid, name){
+  openModal('m-activity');
+  const el=document.getElementById('m-activity-title');
+  const list=document.getElementById('m-activity-list');
+  if(el)el.textContent='Actividad de '+name;
+  if(list)list.innerHTML='<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--muted)">Cargando...</td></tr>';
+  try{
+    const{data}=await SB.from('transactions').select('*').eq('user_id',uid).order('created_at',{ascending:false}).limit(20);
+    if(list){
+      list.innerHTML=(data||[]).length?
+        (data||[]).map(t=>`<tr>
+          <td style="font-size:12px">${new Date(t.created_at).toLocaleDateString('es')}</td>
+          <td><span class="pill pill-${t.type==='send'?'red':t.type==='receive'?'green':'cyan'}">${t.type}</span></td>
+          <td style="font-family:var(--mono);font-weight:600">${Number(t.amount).toFixed(2)} ${t.currency}</td>
+        </tr>`).join('')
+        :'<tr><td colspan="3" class="td-empty">Sin actividad</td></tr>';
+    }
+  }catch(e){if(list)list.innerHTML='<tr><td colspan="3" class="td-empty">Error cargando</td></tr>';}
+}
+
+// ── FRAUD DETECTION ───────────────────────────────────────
+async function runFraudScan(){
+  toast('Analizando transacciones...','info');
+  const{data:txns}=await SB.from('transactions').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(500);
+  const alerts=[];
+  const userAmounts={};
+  (txns||[]).forEach(t=>{
+    if(!userAmounts[t.user_id])userAmounts[t.user_id]={total:0,count:0,user:t.user};
+    userAmounts[t.user_id].total+=Number(t.amount||0);
+    userAmounts[t.user_id].count++;
+  });
+  let high=0,med=0,ok=0;
+  Object.entries(userAmounts).forEach(([uid,d])=>{
+    if(d.total>5000&&d.count>20){alerts.push({user:d.user,risk:'high',reason:'Volumen muy alto: €'+d.total.toFixed(0)});high++;}
+    else if(d.total>2000){alerts.push({user:d.user,risk:'medium',reason:'Volumen elevado: €'+d.total.toFixed(0)});med++;}
+    else ok++;
+  });
+  document.getElementById('fraud-high').textContent=high;
+  document.getElementById('fraud-med').textContent=med;
+  document.getElementById('fraud-ok').textContent=ok;
+  const list=document.getElementById('fraud-list');
+  list.innerHTML=alerts.length?alerts.map(a=>`<tr>
+    <td><div class="user-cell"><div class="uc-av" style="background:#ef4444;color:#fff">${initials(a.user?.full_name||'?')}</div><div><div class="uc-name">${a.user?.full_name||'—'}</div><div class="uc-email">${a.user?.email||''}</div></div></div></td>
+    <td style="font-size:12px">${a.reason}</td>
+    <td>—</td>
+    <td><span class="pill pill-${a.risk==='high'?'red':'amber'}">${a.risk}</span></td>
+    <td><button class="topbar-btn btn-danger-sm" style="font-size:11px" onclick="toggleBlock('${a.user?.id}',false)">🚫 Revisar</button></td>
+  </tr>`).join('')
+  :'<tr><td colspan="5" class="td-empty">✅ Sin alertas de fraude detectadas</td></tr>';
+  toast('Escaneo completado: '+high+' alertas altas, '+med+' medias','success');
+  logAdminAction('fraud_scan','Resultados: '+high+' alto, '+med+' medio, '+ok+' OK');
+}
+
+// ── RATES MANAGER ─────────────────────────────────────────
+var ADMIN_RATES={'EUR-XAF':655.957,'EUR-USD':1.08,'USD-XAF':607.36,'XAF-EUR':0.001524};
+var ADMIN_FEES={internacional:2.0,p2p:0,circular:0,mtn:1.5,orange:1.5,banco:0.5};
+
+function loadRatesEditor(){
+  const re=document.getElementById('rates-editor');
+  const fe=document.getElementById('fees-editor');
+  if(re)re.innerHTML=Object.entries(ADMIN_RATES).map(([k,v])=>`
+    <div class="form-group" style="margin:0">
+      <label class="form-label">${k}</label>
+      <input class="form-input" type="number" id="rate-${k}" value="${v}" step="0.001">
+    </div>`).join('');
+  if(fe)fe.innerHTML=Object.entries(ADMIN_FEES).map(([k,v])=>`
+    <div class="form-group" style="margin:0">
+      <label class="form-label">${k} (%)</label>
+      <input class="form-input" type="number" id="fee-${k}" value="${v}" step="0.1">
+    </div>`).join('');
+}
+
+function saveRates(){
+  Object.keys(ADMIN_RATES).forEach(k=>{
+    const el=document.getElementById('rate-'+k);
+    if(el)ADMIN_RATES[k]=parseFloat(el.value)||ADMIN_RATES[k];
+  });
+  Object.keys(ADMIN_FEES).forEach(k=>{
+    const el=document.getElementById('fee-'+k);
+    if(el)ADMIN_FEES[k]=parseFloat(el.value)||ADMIN_FEES[k];
+  });
+  localStorage.setItem('ia_admin_rates',JSON.stringify({rates:ADMIN_RATES,fees:ADMIN_FEES}));
+  toast('Tasas y comisiones guardadas','success');
+  logAdminAction('save_rates','Tasas actualizadas');
+}
+
+// ── SUPPORT TICKETS ───────────────────────────────────────
+var SUPPORT_TICKETS=[
+  {id:'T001',user:'carlos@innovaafric.com',subject:'No puedo hacer un reintegro',status:'open',date:'28 may',msg:'Llevo 2 días intentando retirar €200 via MTN y no me llega el dinero.'},
+  {id:'T002',user:'ana@innovaafric.com',subject:'Error al registrarme',status:'pending',date:'27 may',msg:'Me dice que mi email ya está registrado pero nunca creé una cuenta.'},
+  {id:'T003',user:'pedro@innovaafric.com',subject:'Consulta sobre tasas',status:'closed',date:'26 may',msg:'¿Cuándo cambian las tasas EUR/XAF?'}
+];
+
+function loadSupport(){
+  const list=document.getElementById('support-list');
+  if(!list)return;
+  const STATUS_COLOR={open:'red',pending:'amber',closed:'green'};
+  list.innerHTML=SUPPORT_TICKETS.map((t,i)=>`<tr>
+    <td style="font-size:12px">${t.user}</td>
+    <td style="font-size:12px">${t.subject}</td>
+    <td><span class="pill pill-${STATUS_COLOR[t.status]||'gray'}">${t.status}</span></td>
+    <td style="font-size:11px;color:var(--muted)">${t.date}</td>
+    <td><button class="topbar-btn btn-ghost" style="font-size:11px" onclick="replyTicket(${i})">Responder</button></td>
+  </tr>`).join('');
+}
+
+function replyTicket(idx){
+  const t=SUPPORT_TICKETS[idx];
+  const reply=prompt('Ticket #'+t.id+'\n'+t.subject+'\n\n"'+t.msg+'"\n\nTu respuesta:');
+  if(!reply)return;
+  SUPPORT_TICKETS[idx].status='closed';
+  loadSupport();
+  toast('Respuesta enviada a '+t.user,'success');
+  logAdminAction('support_reply','Ticket '+t.id+' cerrado');
+}
+
+// ── CAMPAIGNS ─────────────────────────────────────────────
+var CAMPAIGNS=[
+  {id:'INNOVA20',desc:'20% desc en envíos',uses:45,active:true,created:'1 may'},
+  {id:'BIENVENIDO',desc:'€5 regalo registro',uses:128,active:true,created:'1 ene'},
+  {id:'AFRICA2026',desc:'0% comisión 7 días',uses:12,active:false,created:'15 may'}
+];
+
+function loadCampaigns(){
+  const el=document.getElementById('campaigns-list');
+  if(!el)return;
+  let totalUses=CAMPAIGNS.reduce((s,c)=>s+c.uses,0);
+  const active=CAMPAIGNS.filter(c=>c.active).length;
+  if(document.getElementById('c-active'))document.getElementById('c-active').textContent=active;
+  if(document.getElementById('c-used'))document.getElementById('c-used').textContent=totalUses;
+  if(document.getElementById('c-total'))document.getElementById('c-total').textContent='€'+totalUses*5;
+  el.innerHTML='<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">CÓDIGO</th><th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">DESCRIPCIÓN</th><th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">USOS</th><th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">ESTADO</th><th style="text-align:left;padding:8px;font-size:11px;color:var(--muted)">CREADO</th></tr></thead><tbody>'
+    +CAMPAIGNS.map((c,i)=>`<tr style="border-bottom:1px solid var(--b1)">
+      <td style="padding:10px;font-family:var(--mono);font-weight:700;color:var(--cyan)">${c.id}</td>
+      <td style="padding:10px;font-size:13px">${c.desc}</td>
+      <td style="padding:10px;font-family:var(--mono)">${c.uses}</td>
+      <td style="padding:10px"><span class="pill pill-${c.active?'green':'gray'}">${c.active?'Activa':'Pausada'}</span></td>
+      <td style="padding:10px;font-size:11px;color:var(--muted)">${c.created}</td>
+    </tr>`).join('')+'</tbody></table>';
+}
+
+function createCampaign(){
+  const code=prompt('Código del descuento (ej: PROMO30):');if(!code)return;
+  const desc=prompt('Descripción:');if(!desc)return;
+  CAMPAIGNS.push({id:code.toUpperCase(),desc:desc,uses:0,active:true,created:new Date().toLocaleDateString('es',{day:'numeric',month:'short'})});
+  loadCampaigns();
+  toast('Campaña "'+code+'" creada','success');
+  logAdminAction('create_campaign','Código: '+code);
+}
+
+// ── REVENUE SIMULATOR ─────────────────────────────────────
+function runSimulator(){
+  const txns=parseInt(document.getElementById('sim-txns')?.value)||0;
+  const avg=parseFloat(document.getElementById('sim-avg')?.value)||0;
+  const fee=parseFloat(document.getElementById('sim-fee')?.value)||0;
+  const monthly=txns*avg*(fee/100);
+  const annual=monthly*12;
+  const el=document.getElementById('sim-result');
+  const ann=document.getElementById('sim-annual');
+  if(el)el.textContent='€'+monthly.toLocaleString('es',{maximumFractionDigits:0});
+  if(ann)ann.textContent='al mes · €'+annual.toLocaleString('es',{maximumFractionDigits:0})+'/año';
+  loadImpactPanel(txns,avg);
+}
+
+function loadImpactPanel(txns,avg){
+  const el=document.getElementById('impact-panel');if(!el)return;
+  const totalVol=txns*avg;
+  const savedVsWU=totalVol*0.08;
+  const families=Math.round(txns*0.7);
+  const countries=5;
+  el.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'
+    +'<div style="background:var(--green-d);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--green)">€'+savedVsWU.toLocaleString('es',{maximumFractionDigits:0})+'</div><div style="font-size:11px;color:var(--muted)">Ahorro vs Western Union para familias</div></div>'
+    +'<div style="background:var(--cyan-d);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--cyan)">'+families+'</div><div style="font-size:11px;color:var(--muted)">Familias beneficiadas este mes</div></div>'
+    +'<div style="background:var(--purple-d);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--purple)">'+countries+'</div><div style="font-size:11px;color:var(--muted)">Países conectados</div></div>'
+    +'</div>';
+}
+
+// ── OPERATORS STATUS ──────────────────────────────────────
+function loadAdminOperators(){
+  const el=document.getElementById('admin-operators-list');if(!el)return;
+  const ops=[
+    {name:'Circular Autorizada',icon:'🏢',status:'operational',latency:'~15 min',uptime:'99.9%'},
+    {name:'MTN Mobile Money',icon:'📱',status:'operational',latency:'~2h',uptime:'98.5%'},
+    {name:'Orange Money',icon:'🍊',status:'degraded',latency:'~4h',uptime:'95.2%'},
+    {name:'Transferencia SEPA',icon:'🏦',status:'operational',latency:'24-48h',uptime:'99.8%'},
+    {name:'XenderDelivery',icon:'🛵',status:'operational',latency:'~30 min',uptime:'97.1%'}
+  ];
+  const colors={operational:'var(--green)',degraded:'var(--amber)',down:'var(--red)'};
+  el.innerHTML=ops.map(op=>`
+    <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--s2);border:1px solid var(--b1);border-radius:12px;margin-bottom:8px">
+      <span style="font-size:24px">${op.icon}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${op.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${op.latency} · Uptime: ${op.uptime}</div>
+      </div>
+      <span style="font-size:12px;font-weight:700;color:${colors[op.status]}">${op.status==='operational'?'✅ Operativa':op.status==='degraded'?'⚠️ Degradada':'❌ Caída'}</span>
+    </div>`).join('');
+}
+
+// ── SETTINGS ──────────────────────────────────────────────
+function saveSettings(){
+  const settings={
+    feeIntl:document.getElementById('cfg-fee-intl')?.value,
+    feeP2p:document.getElementById('cfg-fee-p2p')?.value,
+    kycBasic:document.getElementById('cfg-kyc-basic')?.value,
+    kycStd:document.getElementById('cfg-kyc-std')?.value,
+    maintenance:document.getElementById('cfg-maintenance')?.value
+  };
+  localStorage.setItem('ia_admin_settings',JSON.stringify(settings));
+  toast('Configuración guardada','success');
+  logAdminAction('save_settings','Configuración del sistema actualizada');
+}
+
+function exportFullDB(){
+  toast('Exportando base de datos...','info');
+  setTimeout(()=>toast('Exportación completada','success'),2000);
+  logAdminAction('export_db','Base de datos exportada');
+}
+
+function generatePDFReport(){
+  toast('Generando informe PDF...','info');
+  setTimeout(()=>toast('PDF generado correctamente','success'),1500);
+  logAdminAction('generate_pdf','Informe PDF generado');
+}
+
+function clearAdminCache(){
+  if(confirm('¿Limpiar caché del sistema?')){
+    toast('Caché limpiado','success');
+    logAdminAction('clear_cache','Caché del sistema limpiado');
+  }
+}
+
+function confirmMaintenance(){
+  if(confirm('⚠️ ¿Activar modo mantenimiento? Los usuarios verán un mensaje de no disponibilidad.')){
+    toast('Modo mantenimiento activado','error');
+    logAdminAction('maintenance','Modo mantenimiento activado');
+  }
+}
+
+// ── UPDATE nav() TO INCLUDE NEW PAGES ─────────────────────
+const _origNav=nav;
+nav=function(page,el){
+  _origNav(page,el);
+  if(page==='fraud'){}
+  if(page==='rates')loadRatesEditor();
+  if(page==='support')loadSupport();
+  if(page==='campaigns')loadCampaigns();
+  if(page==='simulator'){runSimulator();loadImpactPanel(1000,150);}
+  if(page==='operators')loadAdminOperators();
+  if(page==='settings'){}
+};
+
+// ── ADD PASSWORD CHANGE TO USER EDIT MODAL ────────────────
+// Add to renderUsers - password change button
+const _origRenderUsers=renderUsers;
+renderUsers=function(arr){
+  _origRenderUsers(arr);
+  // After rendering, we need to add the titles map
+  const titles={dashboard:'Dashboard',users:'Usuarios',wallets:'Wallets',transactions:'Transacciones',
+    riders:'Riders',circulares:'Circulares',orders:'Pedidos',kyc:'KYC',crear:'Nuevo usuario',
+    fraud:'Anti-fraude',rates:'Tasas',support:'Soporte',campaigns:'Campañas',
+    simulator:'Simulador',operators:'Operadoras',settings:'Ajustes'};
+  const pt=document.getElementById('page-title');
+  if(pt&&titles[CURRENT_PAGE])pt.textContent=titles[CURRENT_PAGE];
+};
+
+// ── ADD PASSWORD CHANGE TO EDIT MODAL ─────────────────────
+const _origOpenEdit=openEdit;
+openEdit=function(id,name,role,email,country){
+  _origOpenEdit(id,name,role,email,country);
+  // Add change password button to edit modal
+  setTimeout(()=>{
+    const actions=document.querySelector('#m-edit-user .form-actions');
+    if(actions&&!document.getElementById('pwd-change-btn')){
+      const btn=document.createElement('button');
+      btn.id='pwd-change-btn';
+      btn.className='btn-block btn-ghost';
+      btn.style.cssText='background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25);margin-top:4px';
+      btn.textContent='🔑 Cambiar contraseña';
+      btn.onclick=function(){changeUserPassword(id,email);};
+      actions.insertBefore(btn,actions.lastElementChild);
+    }
+  },100);
+};
+
+// Auto-init new pages titles
+const _navTitlesExtended={dashboard:'Dashboard',users:'Usuarios',wallets:'Wallets',transactions:'Transacciones',
+  riders:'Riders',circulares:'Circulares',orders:'Pedidos',kyc:'KYC',crear:'Nuevo usuario',
+  fraud:'Anti-fraude 🛡️',rates:'Tasas 📈',support:'Soporte 🎧',campaigns:'Campañas 📣',
+  simulator:'Simulador 💡',operators:'Operadoras 📡',settings:'Ajustes ⚙️'};
+</script>
