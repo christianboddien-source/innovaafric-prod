@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XenderMoney — Send · Receive · Pay</title>
+  <meta name="description" content="XenderMoney is the fastest way to send money across Africa, Europe, and Latin America. Mobile Money, bank transfers, and card payments in one wallet." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0F1A2E;
+      --navy-mid: #1E3050;
+      --navy-card: #162440;
+      --orange: #F5A623;
+      --orange-dark: #E0921A;
+      --orange-glow: rgba(245,166,35,0.18);
+      --white: #FFFFFF;
+      --grey: #8A9AB8;
+      --grey-light: #C8D0DC;
+      --success: #22C55E;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6%; height: 70px;
+      background: rgba(15,26,46,0.95); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(245,166,35,0.12);
+    }
+
+    .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .logo-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy-mid), var(--navy-card));
+      border: 1px solid rgba(245,166,35,0.25);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .logo-text { font-size: 18px; font-weight: 800; }
+    .logo-text span { color: var(--orange); }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--grey); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-ghost { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.5); }
+    .btn-orange { background: var(--orange); color: var(--navy); border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 120px 6% 80px;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-bg-glow {
+      position: absolute; top: 50%; right: 5%; transform: translateY(-50%);
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; width: 100%; max-width: 1200px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--orange-glow); border: 1px solid rgba(245,166,35,0.3);
+      border-radius: 100px; padding: 6px 16px; margin-bottom: 24px;
+      font-size: 12px; font-weight: 600; color: var(--orange); letter-spacing: 1px;
+    }
+    .hero-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    h1 { font-size: clamp(40px, 5.5vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 22px; }
+    h1 em { font-style: normal; color: var(--orange); }
+
+    .hero-sub { font-size: 17px; color: var(--grey); line-height: 1.75; max-width: 500px; margin-bottom: 40px; }
+
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn-lg { padding: 16px 36px; font-size: 16px; font-weight: 700; border-radius: 12px; text-decoration: none; transition: all .25s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-lg.primary { background: var(--orange); color: var(--navy); }
+    .btn-lg.primary:hover { background: var(--orange-dark); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(245,166,35,0.28); }
+    .btn-lg.secondary { background: rgba(255,255,255,0.06); color: var(--white); border: 1.5px solid rgba(255,255,255,0.15); }
+    .btn-lg.secondary:hover { background: rgba(255,255,255,0.1); }
+
+    .trust-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .trust-row span { font-size: 13px; color: var(--grey); }
+    .trust-badges { display: flex; gap: 10px; }
+    .trust-badge {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--grey-light);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── PHONE MOCKUP ── */
+    .phone-mockup {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+
+    .phone-frame {
+      width: 260px; background: var(--navy-card);
+      border-radius: 36px; border: 2px solid rgba(245,166,35,0.2);
+      padding: 16px; box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 60px rgba(245,166,35,0.06);
+      position: relative; z-index: 2;
+    }
+
+    .phone-notch {
+      width: 80px; height: 24px; background: var(--navy);
+      border-radius: 0 0 16px 16px; margin: 0 auto 12px;
+    }
+
+    .phone-screen { border-radius: 24px; overflow: hidden; background: var(--navy); }
+
+    .screen-header {
+      background: linear-gradient(135deg, var(--navy-mid), var(--navy-card));
+      padding: 20px 16px 24px;
+    }
+    .screen-greeting { font-size: 11px; color: var(--grey); margin-bottom: 4px; }
+    .screen-name { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+
+    .screen-balance {
+      background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(245,166,35,0.05));
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 16px; padding: 16px;
+    }
+    .balance-label { font-size: 10px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .balance-amount { font-size: 26px; font-weight: 900; color: var(--orange); }
+    .balance-currency { font-size: 12px; color: var(--grey); margin-top: 2px; }
+
+    .screen-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 16px; }
+    .action-btn { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .action-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .action-label { font-size: 9px; color: var(--grey); text-align: center; }
+
+    .screen-tx { padding: 0 16px 16px; }
+    .tx-title { font-size: 11px; font-weight: 700; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .tx-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tx-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(245,166,35,0.15); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--orange); flex-shrink: 0; }
+    .tx-info { flex: 1; }
+    .tx-name { font-size: 12px; font-weight: 600; }
+    .tx-date { font-size: 10px; color: var(--grey); }
+    .tx-amount { font-size: 13px; font-weight: 700; }
+    .tx-amount.credit { color: var(--success); }
+    .tx-amount.debit { color: var(--grey-light); }
+
+    .phone-float-1 {
+      position: absolute; top: -20px; right: -30px;
+      background: var(--navy-card); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 16px; padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .float-label { font-size: 10px; color: var(--grey); margin-bottom: 2px; }
+    .float-value { font-size: 14px; font-weight: 800; color: var(--orange); }
+
+    .phone-float-2 {
+      position: absolute; bottom: 20px; left: -40px;
+      background: var(--navy-card); border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 16px; padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .float-icon { font-size: 20px; }
+    .float-text { display: flex; flex-direction: column; }
+    .float-text span:first-child { font-size: 10px; color: var(--grey); }
+    .float-text span:last-child { font-size: 13px; font-weight: 700; color: var(--success); }
+
+    /* ── STATS ── */
+    .stats-bar {
+      background: rgba(255,255,255,0.03); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 6%;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 36px; font-weight: 900; color: var(--orange); }
+    .stat-lbl { font-size: 13px; color: var(--grey); margin-top: 4px; }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 100px 6%; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--orange); display: block; margin-bottom: 14px; }
+    .section-title { font-size: clamp(30px, 4vw, 50px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 18px; }
+    .section-sub { font-size: 16px; color: var(--grey); line-height: 1.75; max-width: 520px; }
+
+    /* ── FEATURES ── */
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 64px; }
+    .feature-card {
+      background: var(--navy-card); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px; padding: 36px 28px; transition: all .3s;
+    }
+    .feature-card:hover { border-color: rgba(245,166,35,0.25); transform: translateY(-4px); }
+    .feature-emoji { font-size: 36px; margin-bottom: 20px; display: block; }
+    .feature-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-desc { font-size: 14px; color: var(--grey); line-height: 1.7; }
+
+    /* ── MOBILE MONEY ── */
+    #mobilemoney { background: rgba(255,255,255,0.02); }
+    .mm-header { text-align: center; margin-bottom: 64px; }
+    .mm-header .section-sub { margin: 0 auto; }
+
+    .operators-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 48px; }
+    .operator-card {
+      background: var(--navy-card); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 24px 20px; text-align: center; transition: all .3s;
+    }
+    .operator-card:hover { border-color: var(--op-color); transform: translateY(-3px); }
+    .op-emoji { font-size: 32px; margin-bottom: 10px; display: block; }
+    .op-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--op-color); }
+    .op-countries { font-size: 11px; color: var(--grey); }
+
+    .countries-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .country-pill {
+      background: var(--orange-glow); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 100px; padding: 6px 16px; font-size: 13px; font-weight: 500; color: var(--orange);
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── HOW TO SEND ── */
+    .send-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 64px; }
+    .send-step { text-align: center; }
+    .step-circle {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: var(--navy);
+      margin: 0 auto 18px; position: relative;
+    }
+    .step-circle::after {
+      content: ''; position: absolute; top: 50%; left: 100%; width: calc(100% + 24px);
+      height: 2px; background: rgba(245,166,35,0.2); transform: translateY(-50%);
+    }
+    .send-steps .send-step:last-child .step-circle::after { display: none; }
+    .step-ttl { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .step-dsc { font-size: 13px; color: var(--grey); line-height: 1.6; }
+
+    /* ── PRICING ── */
+    #pricing { background: rgba(255,255,255,0.02); }
+    .pricing-header { text-align: center; margin-bottom: 64px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 900px; margin: 0 auto; }
+    .plan-card {
+      background: var(--navy-card); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 36px 28px; position: relative;
+    }
+    .plan-card.featured {
+      border-color: var(--orange); background: linear-gradient(160deg, rgba(245,166,35,0.08), var(--navy-card));
+    }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--orange); color: var(--navy);
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      padding: 4px 14px; border-radius: 100px;
+    }
+    .plan-name { font-size: 14px; font-weight: 700; color: var(--grey); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .plan-price { font-size: 42px; font-weight: 900; color: var(--white); margin-bottom: 4px; }
+    .plan-price span { font-size: 16px; font-weight: 400; color: var(--grey); }
+    .plan-desc { font-size: 13px; color: var(--grey); margin-bottom: 28px; line-height: 1.6; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .plan-features li { font-size: 14px; color: var(--grey-light); display: flex; align-items: center; gap: 10px; }
+    .plan-features li::before { content: '✓'; color: var(--orange); font-weight: 700; }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center; padding: 100px 6%;
+      background: linear-gradient(135deg, rgba(245,166,35,0.1) 0%, rgba(245,166,35,0.03) 100%);
+      border-top: 1px solid rgba(245,166,35,0.15);
+    }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 52px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; }
+    .cta-section p { font-size: 17px; color: var(--grey); margin-bottom: 40px; }
+
+    /* ── FOOTER ── */
+    footer { background: #080E1A; padding: 70px 6% 36px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
+    .footer-brand { font-size: 22px; font-weight: 900; margin-bottom: 14px; }
+    .footer-brand span { color: var(--orange); }
+    .footer-tagline { font-size: 14px; color: var(--grey); line-height: 1.7; max-width: 260px; }
+    .footer-col-title { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white); margin-bottom: 18px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .footer-links a { font-size: 14px; color: var(--grey); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--orange); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 13px; color: var(--grey); }
+    .footer-slogan { font-size: 12px; font-weight: 700; color: var(--orange); letter-spacing: 2px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .phone-mockup { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .send-steps { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-top > :first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .send-steps { grid-template-columns: 1fr; }
+      .step-circle::after { display: none; }
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">💰</div>
+    <div class="logo-text">Xender<span>Money</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#mobilemoney">Mobile Money</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#" class="btn-ghost">Log in</a>
+    <a href="#" class="btn-orange">Open account</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Available in 8+ African Countries</div>
+      <h1>Send Money<br />Across <em>Africa</em><br />Instantly</h1>
+      <p class="hero-sub">
+        XenderMoney is the fastest, most affordable way to send and receive money across Africa, Europe, and Latin America. One wallet, every payment method.
+      </p>
+      <div class="hero-btns">
+        <a href="#" class="btn-lg primary">Open Free Account →</a>
+        <a href="#how" class="btn-lg secondary">See how it works</a>
+      </div>
+      <div class="trust-row">
+        <span>Trusted by thousands of users</span>
+        <div class="trust-badges">
+          <div class="trust-badge">🔒 Encrypted</div>
+          <div class="trust-badge">✓ KYC Verified</div>
+          <div class="trust-badge">⚡ Instant</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="phone-mockup">
+      <div class="phone-float-1">
+        <div class="float-label">Transfer sent</div>
+        <div class="float-value">+45,000 XAF</div>
+      </div>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="screen-header">
+            <div class="screen-greeting">Good morning 👋</div>
+            <div class="screen-name">Kofi A.</div>
+            <div class="screen-balance">
+              <div class="balance-label">Total Balance</div>
+              <div class="balance-amount">247,500</div>
+              <div class="balance-currency">XAF · Central African Franc</div>
+            </div>
+          </div>
+          <div class="screen-actions">
+            <div class="action-btn">
+              <div class="action-icon">📤</div>
+              <div class="action-label">Send</div>
+            </div>
+            <div class="action-btn">
+              <div class="action-icon">📥</div>
+              <div class="action-label">Receive</div>
+            </div>
+            <div class="action-btn">
+              <div class="action-icon">📱</div>
+              <div class="action-label">MoMo</div>
+            </div>
+            <div class="action-btn">
+              <div class="action-icon">💳</div>
+              <div class="action-label">Card</div>
+            </div>
+          </div>
+          <div class="screen-tx">
+            <div class="tx-title">Recent</div>
+            <div class="tx-item">
+              <div class="tx-avatar">AM</div>
+              <div class="tx-info">
+                <div class="tx-name">Amara M.</div>
+                <div class="tx-date">Today 09:42</div>
+              </div>
+              <div class="tx-amount credit">+12,000</div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-avatar">FD</div>
+              <div class="tx-info">
+                <div class="tx-name">XenderShop</div>
+                <div class="tx-date">Yesterday</div>
+              </div>
+              <div class="tx-amount debit">-8,500</div>
+            </div>
+            <div class="tx-item">
+              <div class="tx-avatar">MT</div>
+              <div class="tx-info">
+                <div class="tx-name">MTN MoMo</div>
+                <div class="tx-date">Jun 01</div>
+              </div>
+              <div class="tx-amount credit">+50,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-float-2">
+        <div class="float-icon">✅</div>
+        <div class="float-text">
+          <span>Transfer complete</span>
+          <span>Delivered in 3s</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat reveal"><div class="stat-num">8+</div><div class="stat-lbl">African countries</div></div>
+  <div class="stat reveal"><div class="stat-num">5</div><div class="stat-lbl">Mobile Money operators</div></div>
+  <div class="stat reveal"><div class="stat-num">&lt;5s</div><div class="stat-lbl">Average transfer time</div></div>
+  <div class="stat reveal"><div class="stat-num">0%</div><div class="stat-lbl">Fees on first transfer</div></div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal">
+    <span class="section-label">Why XenderMoney</span>
+    <h2 class="section-title">Everything you need<br />in one wallet</h2>
+    <p class="section-sub">Built for the African diaspora and local users — every payment method, every currency, one app.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-emoji">⚡</span>
+      <h3 class="feature-title">Instant Transfers</h3>
+      <p class="feature-desc">Send money to any XenderMoney user in under 5 seconds. No delays, no bank hours — available 24/7.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-emoji">📱</span>
+      <h3 class="feature-title">Mobile Money</h3>
+      <p class="feature-desc">Top up and cash out via MTN MoMo, Orange Money, Wave, Moov, and Airtel Money across 8 countries.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-emoji">💳</span>
+      <h3 class="feature-title">Card Payments</h3>
+      <p class="feature-desc">European users can fund their wallet with Visa or Mastercard via Stripe. Instant currency conversion included.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-emoji">🌍</span>
+      <h3 class="feature-title">Multi-Currency</h3>
+      <p class="feature-desc">Hold XAF, EUR, USD, GHS, RWF and more. Transfer across currencies with live exchange rates.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-emoji">🔒</span>
+      <h3 class="feature-title">KYC & Compliance</h3>
+      <p class="feature-desc">3-level KYC system. Level 1 in minutes with just your phone. Level 3 unlocks unlimited transfers.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-emoji">🔔</span>
+      <h3 class="feature-title">Real-Time Alerts</h3>
+      <p class="feature-desc">Instant push notifications for every transaction. Full history with filters, search, and export.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MOBILE MONEY -->
+<section id="mobilemoney">
+  <div class="mm-header reveal">
+    <span class="section-label">Mobile Money</span>
+    <h2 class="section-title">5 Operators.<br />8 Countries.</h2>
+    <p class="section-sub">We've integrated the most trusted Mobile Money networks across West and Central Africa.</p>
+  </div>
+
+  <div class="operators-grid">
+    <div class="operator-card reveal" style="--op-color:#FFCC00;">
+      <span class="op-emoji">🟡</span>
+      <div class="op-name">MTN MoMo</div>
+      <div class="op-countries">CM · GH · RW · CI</div>
+    </div>
+    <div class="operator-card reveal" style="--op-color:#FF6600;">
+      <span class="op-emoji">🟠</span>
+      <div class="op-name">Orange Money</div>
+      <div class="op-countries">CM · SN · CI · ML</div>
+    </div>
+    <div class="operator-card reveal" style="--op-color:#1A9BFC;">
+      <span class="op-emoji">🔵</span>
+      <div class="op-name">Wave</div>
+      <div class="op-countries">SN · CI · ML · BF</div>
+    </div>
+    <div class="operator-card reveal" style="--op-color:#0070C0;">
+      <span class="op-emoji">🔷</span>
+      <div class="op-name">Moov Money</div>
+      <div class="op-countries">CI · BF · ML · GN</div>
+    </div>
+    <div class="operator-card reveal" style="--op-color:#E40000;">
+      <span class="op-emoji">🔴</span>
+      <div class="op-name">Airtel Money</div>
+      <div class="op-countries">GH · RW</div>
+    </div>
+  </div>
+
+  <div class="countries-row reveal">
+    <div class="country-pill">🇨🇲 Cameroon</div>
+    <div class="country-pill">🇸🇳 Senegal</div>
+    <div class="country-pill">🇬🇳 Guinea</div>
+    <div class="country-pill">🇨🇮 Côte d'Ivoire</div>
+    <div class="country-pill">🇲🇱 Mali</div>
+    <div class="country-pill">🇧🇫 Burkina Faso</div>
+    <div class="country-pill">🇷🇼 Rwanda</div>
+    <div class="country-pill">🇬🇭 Ghana</div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="reveal">
+    <span class="section-label">How it works</span>
+    <h2 class="section-title">Send money in<br />4 simple steps</h2>
+  </div>
+  <div class="send-steps">
+    <div class="send-step reveal">
+      <div class="step-circle">1</div>
+      <h3 class="step-ttl">Create Account</h3>
+      <p class="step-dsc">Sign up in 2 minutes with your phone number. No bank account required.</p>
+    </div>
+    <div class="send-step reveal">
+      <div class="step-circle">2</div>
+      <h3 class="step-ttl">Add Money</h3>
+      <p class="step-dsc">Top up via Mobile Money, bank transfer, or card. Funds available instantly.</p>
+    </div>
+    <div class="send-step reveal">
+      <div class="step-circle">3</div>
+      <h3 class="step-ttl">Enter Recipient</h3>
+      <p class="step-dsc">Search by name, phone number, or XenderMoney ID. Confirm details.</p>
+    </div>
+    <div class="send-step reveal">
+      <div class="step-circle">4</div>
+      <h3 class="step-ttl">Money Sent!</h3>
+      <p class="step-dsc">Transfer delivered in seconds. Both parties receive instant notification.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-header reveal">
+    <span class="section-label">Pricing</span>
+    <h2 class="section-title">Simple, transparent fees</h2>
+    <p class="section-sub" style="margin:0 auto;">No hidden charges. You always know what you pay before you send.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="plan-card reveal">
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">Free <span>/ month</span></div>
+      <p class="plan-desc">Perfect for getting started. Low limits, full access to core features.</p>
+      <ul class="plan-features">
+        <li>Up to 100,000 XAF / month</li>
+        <li>Mobile Money top-up</li>
+        <li>Send to XenderMoney users</li>
+        <li>KYC Level 1</li>
+        <li>Transaction history</li>
+      </ul>
+      <a href="#" class="btn-orange" style="display:block;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;">Get started free</a>
+    </div>
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">MOST POPULAR</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">2,500 <span>XAF / mo</span></div>
+      <p class="plan-desc">For regular senders. Higher limits and priority processing.</p>
+      <ul class="plan-features">
+        <li>Up to 1,000,000 XAF / month</li>
+        <li>All Mobile Money operators</li>
+        <li>Bank & card transfers</li>
+        <li>KYC Level 2</li>
+        <li>Multi-currency wallet</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="btn-orange" style="display:block;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;">Start Pro</a>
+    </div>
+    <div class="plan-card reveal">
+      <div class="plan-name">Business</div>
+      <div class="plan-price">9,900 <span>XAF / mo</span></div>
+      <p class="plan-desc">For businesses and high-volume transfers across borders.</p>
+      <ul class="plan-features">
+        <li>Unlimited transfers</li>
+        <li>International SWIFT/SEPA</li>
+        <li>API access</li>
+        <li>KYC Level 3</li>
+        <li>Bulk payments</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <a href="#" class="btn-ghost" style="display:block;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:700;">Contact sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <h2>Start Sending Money Today</h2>
+    <p>Open your free XenderMoney account in under 2 minutes.</p>
+    <a href="#" class="btn-lg primary" style="display:inline-flex;">Create Free Account →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">Xender<span>Money</span></div>
+      <p class="footer-tagline">The fastest way to send and receive money across Africa, Europe, and Latin America. We Simplify Life.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Product</p>
+      <ul class="footer-links">
+        <li><a href="#">Send Money</a></li>
+        <li><a href="#">Mobile Money</a></li>
+        <li><a href="#">Card Payments</a></li>
+        <li><a href="#">Business API</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Company</p>
+      <ul class="footer-links">
+        <li><a href="https://innovaafric.com">InnovaAFRIC</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Legal</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Compliance</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 XenderMoney · An InnovaAFRIC product</p>
+    <span class="footer-slogan">SEND · RECEIVE · PAY</span>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
