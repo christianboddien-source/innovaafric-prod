@@ -3,136 +3,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XenderShop — Shop · Deliver · Enjoy</title>
-  <meta name="description" content="XenderShop connects African buyers to global products at local prices. Pay with Mobile Money and get delivered fast." />
+  <title>XenderShop — Global E-Commerce for Africa</title>
+  <meta name="description" content="XenderShop: millions of products from AliExpress delivered to your door in Africa. Pay with Mobile Money, EUR, USD or FCFA." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #F0FEFA;
-      --bg2: #E4F9F4;
-      --teal: #00C9A7;
-      --teal-dark: #00A88B;
-      --teal-mid: #009E82;
-      --orange: #F5A623;
-      --orange-dark: #E0921A;
-      --dark: #0D2B22;
-      --grey: #5A7A6E;
-      --grey-light: #8AAAA0;
-      --border: rgba(0,0,0,0.07);
-      --white: #FFFFFF;
+      --teal: #00C9A7; --teal-dark: #00A88B; --teal-mid: #009E82;
+      --orange: #F5A623; --orange-dark: #E0921A;
+      --dark: #0D2B22; --grey: #5A7A6E; --grey-light: #8AAAA0;
+      --bg: #F0FEFA; --bg2: #E4F9F4; --white: #FFFFFF;
+      --border: rgba(0,0,0,0.07); --red: #E53E3E; --blue: #2B8DC7;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
 
+    /* ANNOUNCEMENT BAR */
+    .announce-bar {
+      background: linear-gradient(90deg, var(--dark) 0%, #1a4a35 50%, var(--dark) 100%);
+      color: white; text-align: center; padding: 8px 20px; font-size: 12px; font-weight: 600;
+      letter-spacing: .3px; position: relative; z-index: 101;
+    }
+    .announce-bar span { color: var(--teal); }
+
     /* NAV */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 6%; height: 68px;
-      background: rgba(255,255,255,0.93); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; left: 0; right: 0; z-index: 100;
+      background: white; border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 17px; }
-    .logo-text { font-size: 17px; font-weight: 800; color: var(--dark); }
+    .nav-top {
+      display: flex; align-items: center; gap: 16px;
+      padding: 10px 4%; border-bottom: 1px solid var(--border);
+    }
+    .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+    .logo-icon { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .logo-text { font-size: 16px; font-weight: 800; color: var(--dark); }
     .logo-text span { color: var(--orange); }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a { color: var(--grey); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover { color: var(--dark); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .search-bar {
+      flex: 1; display: flex; max-width: 600px;
+      border: 2px solid var(--teal); border-radius: 10px; overflow: hidden;
+    }
+    .search-bar select {
+      border: none; padding: 10px 12px; font-size: 13px; font-weight: 600;
+      color: var(--dark); background: var(--bg); cursor: pointer; outline: none;
+      border-right: 1px solid rgba(0,201,167,0.3);
+    }
+    .search-bar input {
+      flex: 1; border: none; padding: 10px 14px; font-size: 14px; outline: none; color: var(--dark);
+    }
+    .search-btn {
+      background: var(--teal); color: white; border: none; padding: 10px 20px;
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: background .2s;
+    }
+    .search-btn:hover { background: var(--teal-dark); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; flex-shrink: 0; }
+    .currency-switcher { display: flex; gap: 2px; background: var(--bg); border-radius: 8px; padding: 3px; }
+    .cur-btn {
+      border: none; background: transparent; border-radius: 6px; padding: 5px 8px;
+      font-size: 11px; font-weight: 700; color: var(--grey); cursor: pointer; transition: all .2s;
+    }
+    .cur-btn.active { background: var(--teal); color: white; }
+    .cur-btn:hover:not(.active) { background: rgba(0,201,167,0.15); color: var(--teal-dark); }
+    .btn-nav { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; }
+    .cart-btn { position: relative; background: none; border: 2px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 18px; cursor: pointer; transition: all .2s; }
+    .cart-btn:hover { border-color: var(--teal); }
+    .cart-count { position: absolute; top: -6px; right: -6px; background: var(--red); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .nav-bottom {
+      display: flex; align-items: center; gap: 0;
+      padding: 0 4%; overflow-x: auto; scrollbar-width: none;
+    }
+    .nav-bottom::-webkit-scrollbar { display: none; }
+    .nav-cat-link {
+      padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--grey);
+      text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent;
+      transition: all .2s; display: flex; align-items: center; gap: 5px;
+    }
+    .nav-cat-link:hover, .nav-cat-link.active { color: var(--teal-dark); border-bottom-color: var(--teal); }
     .lang-switcher { display: flex; gap: 3px; }
     .lb-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
     .lb-btn.active { background: var(--teal); border-color: var(--teal); color: white; }
-    .lb-btn:hover { border-color: var(--teal); color: var(--teal); }
-    .btn-nav { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
-    .btn-nav:hover { background: var(--teal-dark); }
 
-    /* HERO */
-    .hero {
-      min-height: 100vh; display: flex; align-items: center;
-      padding: 100px 6% 80px;
-      background: linear-gradient(160deg, var(--white) 0%, var(--bg) 60%, var(--bg2) 100%);
+    /* HERO BANNER SLIDER */
+    .hero-slider { position: relative; overflow: hidden; height: 360px; }
+    .slide {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; padding: 0 6%;
+      opacity: 0; transition: opacity .7s ease; pointer-events: none;
     }
-    .hero-inner { max-width: 820px; }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.25);
-      border-radius: 100px; padding: 6px 14px; margin-bottom: 32px;
-      font-size: 12px; font-weight: 600; color: var(--teal-dark); letter-spacing: .5px;
-    }
-    .hero-tag::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--teal); animation:blink 2s infinite; }
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .slide.active { opacity: 1; pointer-events: auto; }
+    .slide-1 { background: linear-gradient(130deg, #0D2B22 0%, #1a5a3e 40%, #00C9A7 100%); }
+    .slide-2 { background: linear-gradient(130deg, #1a0a00 0%, #7c3800 40%, #F5A623 100%); }
+    .slide-3 { background: linear-gradient(130deg, #0a1628 0%, #1E3050 40%, #2B8DC7 100%); }
+    .slide-content { z-index: 2; max-width: 520px; }
+    .slide-tag { display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px; text-transform: uppercase; }
+    .slide h2 { font-size: clamp(22px,3vw,40px); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px; }
+    .slide p { font-size: 15px; color: rgba(255,255,255,0.8); margin-bottom: 24px; }
+    .btn-slide { display: inline-block; background: white; color: var(--dark); padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 800; text-decoration: none; transition: all .2s; }
+    .btn-slide:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .slide-badge { position: absolute; right: 8%; top: 50%; transform: translateY(-50%); text-align: center; }
+    .slide-badge .badge-circle { width: 130px; height: 130px; border-radius: 50%; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+    .badge-pct { font-size: 42px; font-weight: 900; line-height: 1; }
+    .badge-off { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+    .slider-dots { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all .3s; }
+    .dot.active { background: white; width: 22px; border-radius: 4px; }
+    .slider-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; transition: background .2s; }
+    .slider-nav:hover { background: rgba(255,255,255,0.35); }
+    .slider-prev { left: 16px; }
+    .slider-next { right: 16px; }
 
-    h1 { font-size: clamp(26px, 3.5vw, 44px); font-weight: 900; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px; color: var(--dark); }
-    h1 .accent-teal { color: var(--teal); }
-    h1 .accent-orange { color: var(--orange); }
-    .hero-sub { font-size: 19px; color: var(--grey); line-height: 1.7; max-width: 580px; margin-bottom: 48px; }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
-    .btn-primary { background: var(--teal); color: white; border-radius: 12px; padding: 16px 32px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,201,167,0.25); }
-    .btn-outline { background: transparent; color: var(--dark); border: 2px solid rgba(13,43,34,0.2); border-radius: 12px; padding: 14px 32px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
-
-    .hero-stats { display: flex; gap: 48px; padding-top: 48px; border-top: 1px solid var(--border); flex-wrap: wrap; }
-    .stat-item { display: flex; flex-direction: column; gap: 4px; }
-    .stat-num { font-size: 32px; font-weight: 900; color: var(--teal); }
-    .stat-lbl { font-size: 13px; color: var(--grey); font-weight: 500; }
+    /* PROMO STRIP */
+    .promo-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .promo-item { display: flex; align-items: center; gap: 10px; padding: 14px 20px; border-right: 1px solid var(--border); background: white; }
+    .promo-item:last-child { border-right: none; }
+    .promo-icon { font-size: 22px; flex-shrink: 0; }
+    .promo-text strong { font-size: 13px; font-weight: 700; color: var(--dark); display: block; }
+    .promo-text span { font-size: 11px; color: var(--grey); }
 
     /* SECTION COMMON */
-    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 14px; }
-    .sec-title { font-size: clamp(20px, 2.6vw, 34px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; color: var(--dark); }
-    .sec-sub { font-size: 16px; color: var(--grey); line-height: 1.75; max-width: 500px; }
-
-    /* HOW */
-    #how { padding: 100px 6%; background: var(--bg); }
-    .how-header { margin-bottom: 64px; }
-    .how-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
-    .how-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; text-align: center; transition: all .3s; }
-    .how-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,201,167,0.1); border-color: rgba(0,201,167,0.3); }
-    .how-num { width: 48px; height: 48px; border-radius: 50%; background: var(--teal); color: white; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
-    .how-ttl { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
-    .how-dsc { font-size: 13px; color: var(--grey); line-height: 1.65; }
+    .section { padding: 60px 4%; }
+    .section-bg { background: var(--bg); }
+    .sec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
+    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 6px; }
+    .sec-title { font-size: clamp(18px, 2.4vw, 28px); font-weight: 900; letter-spacing: -1px; color: var(--dark); }
+    .see-all { font-size: 13px; font-weight: 700; color: var(--teal); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .see-all:hover { color: var(--teal-dark); }
 
     /* CATEGORIES */
-    #categories { padding: 100px 6%; background: white; }
-    .cats-header { text-align: center; margin-bottom: 64px; }
-    .cats-header .sec-sub { margin: 0 auto; }
-    .cats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
-    .cat-card { background: var(--bg); border: 1.5px solid transparent; border-radius: 16px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all .25s; }
-    .cat-card:hover { border-color: var(--teal); background: white; box-shadow: 0 8px 32px rgba(0,201,167,0.12); transform: translateY(-3px); }
-    .cat-emoji { font-size: 36px; margin-bottom: 12px; display: block; }
-    .cat-name { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
-    .cat-count { font-size: 11px; color: var(--grey-light); }
+    .cats-mega { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; }
+    .cat-item {
+      background: white; border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 20px 12px; text-align: center; cursor: pointer; transition: all .25s;
+      text-decoration: none; color: var(--dark);
+    }
+    .cat-item:hover { border-color: var(--teal); background: var(--bg); box-shadow: 0 6px 24px rgba(0,201,167,0.12); transform: translateY(-3px); }
+    .cat-emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+    .cat-name { font-size: 12px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+    .cat-sub { font-size: 10px; color: var(--grey-light); }
+    .subcats { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .subcat-chip {
+      background: var(--bg); border: 1px solid rgba(0,201,167,0.2); border-radius: 20px;
+      padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--dark);
+      cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .subcat-chip:hover { background: var(--teal); color: white; border-color: var(--teal); }
 
-    /* FEATURES */
-    #features { padding: 100px 6%; background: var(--bg); }
-    .feat-header { text-align: center; margin-bottom: 64px; }
-    .feat-header .sec-sub { margin: 0 auto; }
-    .feat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-    .feat-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 32px 28px; transition: all .3s; }
-    .feat-card:hover { border-color: rgba(0,201,167,0.3); transform: translateY(-4px); }
-    .feat-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(0,201,167,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; }
-    .feat-ttl { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
-    .feat-dsc { font-size: 14px; color: var(--grey); line-height: 1.7; }
+    /* PROMO BANNER */
+    .banner-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 4% 40px; }
+    .promo-banner {
+      border-radius: 16px; padding: 32px 36px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between; min-height: 160px;
+    }
+    .promo-banner-1 { background: linear-gradient(135deg, #0D2B22 0%, #1a5a3e 100%); }
+    .promo-banner-2 { background: linear-gradient(135deg, #7c1a00 0%, #E0921A 100%); }
+    .pbn-content { z-index: 1; }
+    .pbn-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+    .pbn-h { font-size: clamp(16px,2vw,22px); font-weight: 900; color: white; margin-bottom: 8px; line-height: 1.2; }
+    .pbn-p { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+    .btn-banner { display: inline-block; background: white; color: var(--dark); padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 800; text-decoration: none; transition: all .2s; }
+    .btn-banner:hover { transform: translateY(-2px); }
+    .pbn-deco { font-size: 80px; opacity: 0.15; position: absolute; right: 24px; bottom: -10px; line-height: 1; }
 
-    /* PAYMENT */
-    #payment { padding: 100px 6%; background: white; }
-    .pay-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 64px; }
-    .pay-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-    .pay-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 7px; transition: all .2s; }
-    .pay-chip:hover { border-color: var(--teal); background: rgba(0,201,167,0.05); }
-    .pay-visual { background: var(--bg); border: 1px solid rgba(0,201,167,0.2); border-radius: 20px; padding: 8px; overflow: hidden; }
-    .pay-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-radius: 12px; transition: background .2s; }
-    .pay-row:hover { background: white; }
-    .pay-method { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--dark); }
-    .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
-    .badge-teal { background: rgba(0,201,167,0.12); color: var(--teal-dark); }
-    .badge-orange { background: rgba(245,166,35,0.12); color: var(--orange-dark); }
+    /* BANNER FULL WIDTH */
+    .banner-full {
+      margin: 0 4% 40px; border-radius: 16px; padding: 28px 40px;
+      background: linear-gradient(135deg, #0a1628 0%, #1E3050 50%, #2B8DC7 100%);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .banner-full-text {}
+    .banner-full-tag { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 6px; }
+    .banner-full h3 { font-size: clamp(18px,2.5vw,28px); font-weight: 900; color: white; margin-bottom: 6px; }
+    .banner-full p { font-size: 14px; color: rgba(255,255,255,0.7); }
+    .banner-full-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .btn-bfull { padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all .2s; }
+    .btn-bfull-w { background: white; color: var(--dark); }
+    .btn-bfull-w:hover { background: var(--bg); transform: translateY(-2px); }
+    .btn-bfull-o { background: var(--orange); color: white; }
+    .btn-bfull-o:hover { background: var(--orange-dark); transform: translateY(-2px); }
+
+    /* PRODUCTS GRID */
+    .products-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .product-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 14px;
+      overflow: hidden; transition: all .25s; cursor: pointer;
+    }
+    .product-card:hover { border-color: rgba(0,201,167,0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.09); transform: translateY(-3px); }
+    .product-img { background: var(--bg); height: 160px; display: flex; align-items: center; justify-content: center; font-size: 52px; position: relative; }
+    .product-badge { position: absolute; top: 8px; left: 8px; background: var(--red); color: white; border-radius: 6px; padding: 3px 8px; font-size: 10px; font-weight: 800; }
+    .product-badge-new { background: var(--teal); }
+    .product-info { padding: 12px; }
+    .product-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-rating { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+    .stars { color: var(--orange); font-size: 11px; }
+    .rating-count { font-size: 10px; color: var(--grey-light); }
+    .product-price { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+    .price-main { font-size: 17px; font-weight: 900; color: var(--teal-dark); }
+    .price-local { font-size: 11px; font-weight: 600; color: var(--grey); background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+    .price-old { font-size: 11px; color: var(--grey-light); text-decoration: line-through; }
+    .btn-add { width: 100%; margin-top: 10px; background: var(--teal); color: white; border: none; border-radius: 8px; padding: 9px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s; }
+    .btn-add:hover { background: var(--teal-dark); }
+    .btn-add:active { transform: scale(0.97); }
+
+    /* CURRENCY CONVERTER */
+    .converter-section { background: linear-gradient(135deg, var(--dark) 0%, #1a5a3e 100%); padding: 60px 4%; }
+    .converter-inner { max-width: 820px; margin: 0 auto; }
+    .converter-inner .sec-label { color: rgba(255,255,255,0.5); }
+    .converter-inner .sec-title { color: white; margin-bottom: 8px; }
+    .converter-inner p { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 36px; }
+    .converter-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; background: rgba(255,255,255,0.08); border-radius: 16px; padding: 28px; border: 1px solid rgba(255,255,255,0.1); }
+    .conv-side label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 8px; }
+    .conv-input-wrap { display: flex; border-radius: 10px; overflow: hidden; border: 1.5px solid rgba(255,255,255,0.15); }
+    .conv-input-wrap select { background: rgba(255,255,255,0.1); border: none; color: white; padding: 12px 10px; font-size: 14px; font-weight: 700; cursor: pointer; outline: none; }
+    .conv-input-wrap input { flex: 1; background: rgba(255,255,255,0.07); border: none; color: white; padding: 12px 14px; font-size: 20px; font-weight: 800; outline: none; min-width: 0; }
+    .conv-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+    .conv-arrow { font-size: 28px; color: var(--teal); text-align: center; }
+    .conv-rates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+    .conv-rate { background: rgba(255,255,255,0.07); border-radius: 10px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.08); }
+    .conv-rate .rate-flag { font-size: 18px; margin-bottom: 4px; }
+    .conv-rate .rate-label { font-size: 10px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 1px; }
+    .conv-rate .rate-value { font-size: 16px; font-weight: 900; color: var(--teal); }
+
+    /* FLASH DEALS */
+    .flash-section { padding: 60px 4%; background: var(--bg); }
+    .flash-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .flash-badge { background: var(--red); color: white; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 900; letter-spacing: .5px; display: flex; align-items: center; gap: 6px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.8} }
+    .flash-countdown { display: flex; gap: 6px; align-items: center; }
+    .countdown-unit { background: var(--dark); color: white; border-radius: 6px; padding: 6px 10px; font-size: 18px; font-weight: 900; min-width: 44px; text-align: center; }
+    .countdown-sep { color: var(--dark); font-size: 18px; font-weight: 900; }
+    .flash-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .flash-card { background: white; border-radius: 14px; overflow: hidden; border: 1.5px solid rgba(229,62,62,0.2); transition: all .25s; }
+    .flash-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(229,62,62,0.12); }
+    .flash-img { background: linear-gradient(135deg, #fff5f5, #ffe8e8); height: 130px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+    .flash-info { padding: 10px 12px; }
+    .flash-name { font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 6px; line-height: 1.4; height: 34px; overflow: hidden; }
+    .flash-price { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .flash-new { font-size: 16px; font-weight: 900; color: var(--red); }
+    .flash-old { font-size: 12px; color: var(--grey-light); text-decoration: line-through; }
+    .flash-bar { background: #f0f0f0; border-radius: 4px; height: 6px; margin-bottom: 6px; overflow: hidden; }
+    .flash-bar-fill { background: var(--red); height: 100%; border-radius: 4px; }
+    .flash-sold { font-size: 10px; color: var(--grey); }
+    .btn-flash { width: 100%; background: var(--red); color: white; border: none; border-radius: 8px; padding: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-flash:hover { background: #c0392b; }
+
+    /* ALIEXPRESS PARTNERSHIP */
+    .ali-section { padding: 60px 4%; background: white; }
+    .ali-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .ali-badge { display: inline-flex; align-items: center; gap: 8px; background: #ff6600; color: white; border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 800; margin-bottom: 20px; letter-spacing: .5px; }
+    .ali-h { font-size: clamp(20px,2.5vw,32px); font-weight: 900; color: var(--dark); letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px; }
+    .ali-p { font-size: 15px; color: var(--grey); line-height: 1.75; margin-bottom: 24px; }
+    .ali-points { display: flex; flex-direction: column; gap: 12px; }
+    .ali-point { display: flex; align-items: flex-start; gap: 10px; }
+    .ali-point-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .ali-point-text { font-size: 14px; color: var(--grey); line-height: 1.5; }
+    .ali-point-text strong { color: var(--dark); }
+    .ali-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ali-card { background: var(--bg); border-radius: 14px; padding: 20px; border: 1px solid rgba(0,201,167,0.15); text-align: center; }
+    .ali-card-num { font-size: 28px; font-weight: 900; color: var(--teal); }
+    .ali-card-lbl { font-size: 12px; color: var(--grey); font-weight: 500; margin-top: 4px; }
+
+    /* PAYMENT STRIP */
+    .pay-strip { background: var(--bg); padding: 40px 4%; }
+    .pay-strip-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+    .pay-strip-inner .sec-title { margin-bottom: 24px; }
+    .pay-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .pay-chip { background: white; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 18px; font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 7px; transition: all .2s; }
+    .pay-chip:hover { border-color: var(--teal); background: rgba(0,201,167,0.04); }
 
     /* CONTACT */
-    .contact-section { padding: 90px 6%; background: #f0faf5; text-align: center; }
-    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 880px; margin: 36px auto 0; }
+    .contact-section { padding: 70px 4%; background: #f0faf5; text-align: center; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 880px; margin: 32px auto 0; }
     .contact-card { background: white; border-radius: 16px; padding: 28px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.07); transition: transform .25s; }
     .contact-card:hover { transform: translateY(-4px); }
     .contact-icon { font-size: 28px; margin-bottom: 10px; }
@@ -142,164 +283,412 @@
     .contact-desc { font-size: 12px; color: #6b7a8d; line-height: 1.5; }
 
     /* CTA */
-    .cta { padding: 120px 6%; text-align: center; background: var(--dark); }
+    .cta { padding: 100px 4%; text-align: center; background: var(--dark); }
     .cta h2 { font-size: clamp(22px,3vw,38px); font-weight: 900; letter-spacing:-2px; color: white; margin-bottom: 16px; }
     .cta h2 span { color: var(--teal); }
-    .cta p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
-    .btn-cta { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 16px 36px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-block; }
-    .btn-cta:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,201,167,0.3); }
+    .cta p { font-size: 16px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
+    .btn-cta { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 16px 36px; font-size: 16px; font-weight: 700; text-decoration: none; display: inline-block; transition: all .2s; }
+    .btn-cta:hover { background: var(--teal-dark); transform: translateY(-2px); }
 
     /* FOOTER */
-    footer { background: #081810; padding: 64px 6% 32px; }
-    .foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
-    .foot-brand { font-size: 20px; font-weight: 900; color: white; margin-bottom: 12px; }
+    footer { background: #081810; padding: 56px 4% 28px; }
+    .foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .foot-brand { font-size: 18px; font-weight: 900; color: white; margin-bottom: 10px; }
     .foot-brand span { color: var(--orange); }
-    .foot-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 240px; }
-    .foot-col-ttl { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 16px; }
-    .foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .foot-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 220px; }
+    .foot-col-ttl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
+    .foot-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .foot-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color .2s; }
     .foot-links a:hover { color: var(--teal); }
-    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .foot-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
     .foot-slogan { font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 2px; }
 
-    @media (max-width: 900px) {
-      .how-grid { grid-template-columns: 1fr 1fr; }
-      .cats-grid { grid-template-columns: repeat(2,1fr); }
-      .feat-grid { grid-template-columns: 1fr 1fr; }
-      .pay-inner { grid-template-columns: 1fr; gap: 40px; }
-      .foot-top { grid-template-columns: 1fr 1fr; }
-      .foot-top > :first-child { grid-column: 1/-1; }
-    }
-    @media (max-width: 600px) {
-      .nav-links { display: none; }
-      .how-grid, .feat-grid { grid-template-columns: 1fr; }
-      .cats-grid { grid-template-columns: repeat(2,1fr); }
-      .hero-stats { gap: 24px; }
-    }
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 1024px) {
+      .cats-mega { grid-template-columns: repeat(4, 1fr); }
+      .products-grid, .flash-grid { grid-template-columns: repeat(3, 1fr); }
+      .ali-inner { grid-template-columns: 1fr; gap: 32px; }
+      .foot-top { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-bottom { display: none; }
+      .promo-strip { grid-template-columns: 1fr 1fr; }
+      .cats-mega { grid-template-columns: repeat(4, 1fr); }
+      .products-grid, .flash-grid { grid-template-columns: repeat(2, 1fr); }
+      .banner-row { grid-template-columns: 1fr; }
+      .conv-rates { grid-template-columns: repeat(2, 1fr); }
+      .converter-grid { grid-template-columns: 1fr; }
+      .conv-arrow { transform: rotate(90deg); }
+      .hero-slider { height: 280px; }
+      .slide-badge { display: none; }
+      .foot-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .nav-top { flex-wrap: wrap; }
+      .search-bar { order: 3; width: 100%; max-width: 100%; }
+      .promo-strip { grid-template-columns: 1fr; }
+      .cats-mega { grid-template-columns: repeat(3, 1fr); }
+      .products-grid, .flash-grid { grid-template-columns: repeat(2, 1fr); }
+      .currency-switcher { display: none; }
+    }
   </style>
 </head>
 <body>
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="announce-bar" id="announce-bar">
+  🎉 <span data-i18n="announce_text">FREE delivery on orders over $30 · Powered by AliExpress API · Pay with Mobile Money</span> 🎉
+</div>
+
+<!-- NAV -->
 <nav>
-  <a href="#" class="logo">
-    <div class="logo-icon">🛍️</div>
-    <div class="logo-text">Xender<span>Shop</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#how" data-i18n="nav_how">How it works</a></li>
-    <li><a href="#categories" data-i18n="nav_cat">Categories</a></li>
-    <li><a href="#features" data-i18n="nav_feat">Features</a></li>
-    <li><a href="#payment" data-i18n="nav_pay">Payment</a></li>
-  </ul>
-  <div class="nav-right">
-    <div class="lang-switcher">
-      <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
-      <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
-      <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
+  <div class="nav-top">
+    <a href="#" class="logo">
+      <div class="logo-icon">🛍️</div>
+      <div class="logo-text">Xender<span>Shop</span></div>
+    </a>
+    <div class="search-bar">
+      <select id="search-cat-select">
+        <option data-i18n="nav_all">All</option>
+        <option data-i18n="c1">Electronics</option>
+        <option data-i18n="c2">Fashion</option>
+        <option data-i18n="c3">Home</option>
+        <option data-i18n="c5">Beauty</option>
+        <option data-i18n="c7">Sports</option>
+      </select>
+      <input type="text" id="search-input" placeholder="Search millions of products..." data-i18n-placeholder="search_placeholder" />
+      <button class="search-btn">🔍</button>
     </div>
-    <a href="#" class="btn-nav" data-i18n="nav_cta">Start Shopping</a>
+    <div class="nav-actions">
+      <div class="currency-switcher">
+        <button class="cur-btn active" onclick="setCurrency('USD')">USD</button>
+        <button class="cur-btn" onclick="setCurrency('EUR')">EUR</button>
+        <button class="cur-btn" onclick="setCurrency('FCFA')">FCFA</button>
+        <button class="cur-btn" onclick="setCurrency('XOF')">XOF</button>
+      </div>
+      <div class="lang-switcher">
+        <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
+        <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
+        <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
+      </div>
+      <button class="cart-btn" title="Cart">🛒<span class="cart-count" id="cart-count">0</span></button>
+      <a href="#" class="btn-nav" data-i18n="nav_cta">Sign In</a>
+    </div>
+  </div>
+  <div class="nav-bottom">
+    <a href="#categories" class="nav-cat-link active">📱 <span data-i18n="c1">Electronics</span></a>
+    <a href="#categories" class="nav-cat-link">👗 <span data-i18n="c2">Fashion</span></a>
+    <a href="#categories" class="nav-cat-link">🏠 <span data-i18n="c3">Home</span></a>
+    <a href="#categories" class="nav-cat-link">💄 <span data-i18n="c5">Beauty</span></a>
+    <a href="#categories" class="nav-cat-link">☀️ <span data-i18n="c4">Solar</span></a>
+    <a href="#categories" class="nav-cat-link">🧸 <span data-i18n="c6">Kids</span></a>
+    <a href="#categories" class="nav-cat-link">⚽ <span data-i18n="c7">Sports</span></a>
+    <a href="#categories" class="nav-cat-link">🔧 <span data-i18n="c8">Tools</span></a>
+    <a href="#categories" class="nav-cat-link">🌽 <span data-i18n="c9">Food</span></a>
+    <a href="#categories" class="nav-cat-link">💊 <span data-i18n="c10">Health</span></a>
+    <a href="#categories" class="nav-cat-link">🚗 <span data-i18n="c11">Auto</span></a>
+    <a href="#categories" class="nav-cat-link">📚 <span data-i18n="c12">Books</span></a>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-tag" data-i18n="hero_badge">Global Products · Local Prices</div>
-    <h1 data-i18n="hero_h1">Shop Global,<br/><span class="accent-teal">Pay Local</span>,<br/><span class="accent-orange">Delivered Fast</span></h1>
-    <p class="hero-sub" data-i18n="hero_sub">XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered to your door.</p>
-    <div class="hero-btns">
-      <a href="#categories" class="btn-primary" data-i18n="hero_btn1">Browse Products →</a>
-      <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
+<!-- HERO SLIDER -->
+<div class="hero-slider" id="slider">
+  <div class="slide slide-1 active">
+    <div class="slide-content">
+      <div class="slide-tag" data-i18n="slide1_tag">AliExpress × Africa</div>
+      <h2 data-i18n="slide1_h">Shop Global,<br/>Pay with Mobile Money</h2>
+      <p data-i18n="slide1_p">Millions of products from China & Europe. Delivered to your door in Africa.</p>
+      <a href="#categories" class="btn-slide" data-i18n="slide1_btn">Discover Products →</a>
     </div>
-    <div class="hero-stats">
-      <div class="stat-item"><span class="stat-num">1M+</span><span class="stat-lbl" data-i18n="s1l">Products available</span></div>
-      <div class="stat-item"><span class="stat-num">8</span><span class="stat-lbl" data-i18n="s2l">African countries</span></div>
-      <div class="stat-item"><span class="stat-num">-40%</span><span class="stat-lbl" data-i18n="s3l">vs retail prices</span></div>
-      <div class="stat-item"><span class="stat-num">24h</span><span class="stat-lbl" data-i18n="s4l">Express delivery</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW -->
-<section id="how">
-  <div class="how-header reveal">
-    <span class="sec-label" data-i18n="sec_how">How it works</span>
-    <h2 class="sec-title" data-i18n="sec_how_h">Shop in 4 simple steps</h2>
-    <p class="sec-sub" data-i18n="sec_how_sub">From discovery to your doorstep — as easy as buying locally.</p>
-  </div>
-  <div class="how-grid">
-    <div class="how-card reveal"><div class="how-num">1</div><h3 class="how-ttl" data-i18n="h1t">Browse</h3><p class="how-dsc" data-i18n="h1d">Search millions of products filtered by category, price, and delivery time.</p></div>
-    <div class="how-card reveal"><div class="how-num">2</div><h3 class="how-ttl" data-i18n="h2t">Add to Cart</h3><p class="how-dsc" data-i18n="h2d">Choose your items. Prices are automatically shown in your local currency.</p></div>
-    <div class="how-card reveal"><div class="how-num">3</div><h3 class="how-ttl" data-i18n="h3t">Pay Your Way</h3><p class="how-dsc" data-i18n="h3d">Mobile Money, XenderMoney wallet, bank transfer or card — all accepted.</p></div>
-    <div class="how-card reveal"><div class="how-num">4</div><h3 class="how-ttl" data-i18n="h4t">Delivered</h3><p class="how-dsc" data-i18n="h4d">A XenderDelivery rider picks up your order. Track it live on your phone.</p></div>
-  </div>
-</section>
-
-<!-- CATEGORIES -->
-<section id="categories">
-  <div class="cats-header reveal">
-    <span class="sec-label" data-i18n="sec_cat">Categories</span>
-    <h2 class="sec-title" data-i18n="sec_cat_h">Everything You Need</h2>
-    <p class="sec-sub" data-i18n="sec_cat_sub">From electronics to solar energy — sourced globally, priced locally.</p>
-  </div>
-  <div class="cats-grid">
-    <div class="cat-card reveal"><span class="cat-emoji">📱</span><div class="cat-name" data-i18n="c1">Electronics</div><div class="cat-count">120,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">👗</span><div class="cat-name" data-i18n="c2">Fashion</div><div class="cat-count">85,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">🏠</span><div class="cat-name" data-i18n="c3">Home & Living</div><div class="cat-count">60,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">☀️</span><div class="cat-name" data-i18n="c4">Solar Energy</div><div class="cat-count">8,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">💄</span><div class="cat-name" data-i18n="c5">Beauty</div><div class="cat-count">45,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">🧸</span><div class="cat-name" data-i18n="c6">Kids & Baby</div><div class="cat-count">30,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">⚽</span><div class="cat-name" data-i18n="c7">Sports</div><div class="cat-count">25,000+ items</div></div>
-    <div class="cat-card reveal"><span class="cat-emoji">🔧</span><div class="cat-name" data-i18n="c8">Tools & Auto</div><div class="cat-count">40,000+ items</div></div>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="feat-header reveal">
-    <span class="sec-label" data-i18n="sec_feat">Why XenderShop</span>
-    <h2 class="sec-title" data-i18n="sec_feat_h">Built for African Shoppers</h2>
-    <p class="sec-sub" data-i18n="sec_feat_sub">We solve the real challenges of online shopping in Africa.</p>
-  </div>
-  <div class="feat-grid">
-    <div class="feat-card reveal"><div class="feat-icon">💰</div><h3 class="feat-ttl" data-i18n="f1t">Up to 40% Cheaper</h3><p class="feat-dsc" data-i18n="f1d">Direct from global suppliers via AliExpress API. No middlemen, no markup. Prices in your local currency.</p></div>
-    <div class="feat-card reveal"><div class="feat-icon">📱</div><h3 class="feat-ttl" data-i18n="f2t">Mobile Money First</h3><p class="feat-dsc" data-i18n="f2d">Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required.</p></div>
-    <div class="feat-card reveal"><div class="feat-icon">🛵</div><h3 class="feat-ttl" data-i18n="f3t">Same-Day Delivery</h3><p class="feat-dsc" data-i18n="f3d">XenderDelivery riders pick up and deliver in hours. Live GPS tracking included.</p></div>
-    <div class="feat-card reveal"><div class="feat-icon">🔒</div><h3 class="feat-ttl" data-i18n="f4t">Buyer Protection</h3><p class="feat-dsc" data-i18n="f4d">Full refund guarantee if your item doesn't arrive or isn't as described.</p></div>
-    <div class="feat-card reveal"><div class="feat-icon">🌍</div><h3 class="feat-ttl" data-i18n="f5t">Local Currencies</h3><p class="feat-dsc" data-i18n="f5d">All prices in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.</p></div>
-    <div class="feat-card reveal"><div class="feat-icon">⚡</div><h3 class="feat-ttl" data-i18n="f6t">Live Order Tracking</h3><p class="feat-dsc" data-i18n="f6d">Know where your order is at every step. SMS and push notifications in your language.</p></div>
-  </div>
-</section>
-
-<!-- PAYMENT -->
-<section id="payment">
-  <div class="reveal">
-    <span class="sec-label" data-i18n="sec_pay">Payment</span>
-    <h2 class="sec-title" data-i18n="sec_pay_h">Pay the Way You Want</h2>
-  </div>
-  <div class="pay-inner">
-    <div class="reveal">
-      <p class="sec-sub" data-i18n="sec_pay_sub">Every major payment method across Africa and Europe. No bank account needed — Mobile Money is enough to start shopping.</p>
-      <div class="pay-chips">
-        <div class="pay-chip">🟡 MTN MoMo</div>
-        <div class="pay-chip">🟠 Orange Money</div>
-        <div class="pay-chip">🔵 Wave</div>
-        <div class="pay-chip">🔷 Moov Money</div>
-        <div class="pay-chip">🔴 Airtel Money</div>
-        <div class="pay-chip">💳 Visa / Mastercard</div>
-        <div class="pay-chip">🏦 Bank Transfer</div>
-        <div class="pay-chip">💰 XenderMoney</div>
+    <div class="slide-badge">
+      <div class="badge-circle">
+        <div class="badge-pct">-40%</div>
+        <div class="badge-off" data-i18n="slide_off">OFF</div>
       </div>
     </div>
-    <div class="pay-visual reveal">
-      <div class="pay-row"><div class="pay-method"><span>🟡</span> MTN MoMo</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
-      <div class="pay-row"><div class="pay-method"><span>🟠</span> Orange Money</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
-      <div class="pay-row"><div class="pay-method"><span>🔵</span> Wave</div><span class="badge badge-orange" data-i18n="free_fee">0% fees</span></div>
-      <div class="pay-row"><div class="pay-method"><span>💰</span> XenderMoney</div><span class="badge badge-orange" data-i18n="free_fee">0% fees</span></div>
-      <div class="pay-row"><div class="pay-method"><span>💳</span> Card (Stripe)</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
+  </div>
+  <div class="slide slide-2">
+    <div class="slide-content">
+      <div class="slide-tag" data-i18n="slide2_tag">Flash Deals · 24h only</div>
+      <h2 data-i18n="slide2_h">Today's Flash Deals<br/>Up to 60% Off</h2>
+      <p data-i18n="slide2_p">Limited stock. Electronics, fashion, beauty — every day new deals.</p>
+      <a href="#flash" class="btn-slide" data-i18n="slide2_btn">See Flash Deals →</a>
+    </div>
+    <div class="slide-badge">
+      <div class="badge-circle">
+        <div class="badge-pct">-60%</div>
+        <div class="badge-off" data-i18n="slide_off">OFF</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide slide-3">
+    <div class="slide-content">
+      <div class="slide-tag" data-i18n="slide3_tag">New · Solar & Energy</div>
+      <h2 data-i18n="slide3_h">Solar Panels &<br/>Energy Independence</h2>
+      <p data-i18n="slide3_p">Quality solar solutions from top Asian manufacturers. Power your life.</p>
+      <a href="#categories" class="btn-slide" data-i18n="slide3_btn">View Solar Products →</a>
+    </div>
+    <div class="slide-badge">
+      <div class="badge-circle">
+        <div class="badge-pct">-35%</div>
+        <div class="badge-off" data-i18n="slide_off">OFF</div>
+      </div>
+    </div>
+  </div>
+  <button class="slider-nav slider-prev" onclick="prevSlide()">‹</button>
+  <button class="slider-nav slider-next" onclick="nextSlide()">›</button>
+  <div class="slider-dots">
+    <div class="dot active" onclick="goSlide(0)"></div>
+    <div class="dot" onclick="goSlide(1)"></div>
+    <div class="dot" onclick="goSlide(2)"></div>
+  </div>
+</div>
+
+<!-- PROMO STRIP -->
+<div class="promo-strip">
+  <div class="promo-item"><div class="promo-icon">🚚</div><div class="promo-text"><strong data-i18n="promo1_h">Free Delivery</strong><span data-i18n="promo1_p">On orders over $30</span></div></div>
+  <div class="promo-item"><div class="promo-icon">🔒</div><div class="promo-text"><strong data-i18n="promo2_h">Buyer Protection</strong><span data-i18n="promo2_p">100% money back guarantee</span></div></div>
+  <div class="promo-item"><div class="promo-icon">📱</div><div class="promo-text"><strong data-i18n="promo3_h">Mobile Money</strong><span data-i18n="promo3_p">MTN · Orange · Wave · Airtel</span></div></div>
+  <div class="promo-item"><div class="promo-icon">🌍</div><div class="promo-text"><strong data-i18n="promo4_h">11 Countries</strong><span data-i18n="promo4_p">Delivered across Africa</span></div></div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories" class="section">
+  <div class="sec-header reveal">
+    <div>
+      <span class="sec-label" data-i18n="sec_cat_label">Categories</span>
+      <h2 class="sec-title" data-i18n="sec_cat_h">Everything You Need</h2>
+    </div>
+    <a href="#" class="see-all" data-i18n="see_all">See all →</a>
+  </div>
+  <div class="cats-mega reveal">
+    <a href="#" class="cat-item"><span class="cat-emoji">📱</span><div class="cat-name" data-i18n="c1">Electronics</div><div class="cat-sub">120K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">👗</span><div class="cat-name" data-i18n="c2">Fashion</div><div class="cat-sub">85K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🏠</span><div class="cat-name" data-i18n="c3">Home & Living</div><div class="cat-sub">60K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">☀️</span><div class="cat-name" data-i18n="c4">Solar Energy</div><div class="cat-sub">8K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">💄</span><div class="cat-name" data-i18n="c5">Beauty</div><div class="cat-sub">45K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🧸</span><div class="cat-name" data-i18n="c6">Kids & Baby</div><div class="cat-sub">30K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">⚽</span><div class="cat-name" data-i18n="c7">Sports</div><div class="cat-sub">25K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🔧</span><div class="cat-name" data-i18n="c8">Tools & Auto</div><div class="cat-sub">40K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🌽</span><div class="cat-name" data-i18n="c9">Food & Grocery</div><div class="cat-sub">18K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">💊</span><div class="cat-name" data-i18n="c10">Health</div><div class="cat-sub">22K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🚗</span><div class="cat-name" data-i18n="c11">Auto Parts</div><div class="cat-sub">35K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">📚</span><div class="cat-name" data-i18n="c12">Books & School</div><div class="cat-sub">12K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🌿</span><div class="cat-name" data-i18n="c13">Garden</div><div class="cat-sub">9K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🏗️</span><div class="cat-name" data-i18n="c14">Construction</div><div class="cat-sub">15K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">🎮</span><div class="cat-name" data-i18n="c15">Gaming</div><div class="cat-sub">11K+ items</div></a>
+    <a href="#" class="cat-item"><span class="cat-emoji">📷</span><div class="cat-name" data-i18n="c16">Photo & Video</div><div class="cat-sub">7K+ items</div></a>
+  </div>
+  <!-- Subcategories -->
+  <div class="subcats reveal" style="margin-top:24px;">
+    <span style="font-size:12px;font-weight:700;color:var(--grey);margin-right:8px;" data-i18n="subcat_label">Popular subcategories:</span>
+    <a href="#" class="subcat-chip" data-i18n="sub1">Smartphones</a>
+    <a href="#" class="subcat-chip" data-i18n="sub2">Laptops</a>
+    <a href="#" class="subcat-chip" data-i18n="sub3">Earbuds & Headphones</a>
+    <a href="#" class="subcat-chip" data-i18n="sub4">Smart Watches</a>
+    <a href="#" class="subcat-chip" data-i18n="sub5">Women's Dresses</a>
+    <a href="#" class="subcat-chip" data-i18n="sub6">Men's Shoes</a>
+    <a href="#" class="subcat-chip" data-i18n="sub7">Skincare & Serums</a>
+    <a href="#" class="subcat-chip" data-i18n="sub8">Hair Extensions</a>
+    <a href="#" class="subcat-chip" data-i18n="sub9">Solar Panels</a>
+    <a href="#" class="subcat-chip" data-i18n="sub10">LED Lights</a>
+    <a href="#" class="subcat-chip" data-i18n="sub11">Baby Clothes</a>
+    <a href="#" class="subcat-chip" data-i18n="sub12">Kitchen Appliances</a>
+    <a href="#" class="subcat-chip" data-i18n="sub13">Yoga & Fitness</a>
+    <a href="#" class="subcat-chip" data-i18n="sub14">Car Accessories</a>
+    <a href="#" class="subcat-chip" data-i18n="sub15">Vitamins & Supplements</a>
+    <a href="#" class="subcat-chip" data-i18n="sub16">Gaming Controllers</a>
+  </div>
+</section>
+
+<!-- PROMO BANNERS -->
+<div class="banner-row">
+  <div class="promo-banner promo-banner-1 reveal">
+    <div class="pbn-content">
+      <div class="pbn-tag" data-i18n="pbn1_tag">New Arrivals</div>
+      <div class="pbn-h" data-i18n="pbn1_h">Latest Electronics<br/>From Asia</div>
+      <div class="pbn-p" data-i18n="pbn1_p">Phones, tablets, accessories. Direct from manufacturers.</div>
+      <a href="#" class="btn-banner" data-i18n="pbn1_btn">Shop Electronics →</a>
+    </div>
+    <div class="pbn-deco">📱</div>
+  </div>
+  <div class="promo-banner promo-banner-2 reveal">
+    <div class="pbn-content">
+      <div class="pbn-tag" data-i18n="pbn2_tag">Summer Collection</div>
+      <div class="pbn-h" data-i18n="pbn2_h">African Fashion<br/>Meets Global Style</div>
+      <div class="pbn-p" data-i18n="pbn2_p">Dresses, suits, shoes — up to 50% off retail prices.</div>
+      <a href="#" class="btn-banner" data-i18n="pbn2_btn">Shop Fashion →</a>
+    </div>
+    <div class="pbn-deco">👗</div>
+  </div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section section-bg">
+  <div class="sec-header reveal">
+    <div>
+      <span class="sec-label" data-i18n="sec_feat_label">Featured</span>
+      <h2 class="sec-title" data-i18n="sec_feat_h">Trending Products</h2>
+    </div>
+    <a href="#" class="see-all" data-i18n="see_all">See all →</a>
+  </div>
+  <div class="products-grid" id="products-grid">
+    <!-- Products injected by JS -->
+  </div>
+</section>
+
+<!-- BANNER FULL WIDTH -->
+<div class="banner-full reveal">
+  <div class="banner-full-text">
+    <div class="banner-full-tag" data-i18n="bfull_tag">Exclusive Partnership</div>
+    <h3 data-i18n="bfull_h">XenderShop × AliExpress — 500M+ Products, African Prices</h3>
+    <p data-i18n="bfull_p">We connect directly to AliExpress API. Real-time catalog, real factory prices, delivered to you.</p>
+  </div>
+  <div class="banner-full-actions">
+    <a href="#categories" class="btn-bfull btn-bfull-w" data-i18n="bfull_btn1">Start Shopping →</a>
+    <a href="../xenderbigshop/" class="btn-bfull btn-bfull-o" data-i18n="bfull_btn2">Sell Here</a>
+  </div>
+</div>
+
+<!-- FLASH DEALS -->
+<section id="flash" class="flash-section">
+  <div class="flash-header reveal">
+    <div class="flash-badge">⚡ <span data-i18n="flash_title">Flash Deals</span></div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:13px;color:var(--grey);font-weight:600;" data-i18n="flash_ends">Ends in:</span>
+      <div class="flash-countdown">
+        <div class="countdown-unit" id="cd-h">08</div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit" id="cd-m">47</div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit" id="cd-s">32</div>
+      </div>
+    </div>
+    <a href="#" class="see-all" style="margin-left:auto;" data-i18n="see_all">See all →</a>
+  </div>
+  <div class="flash-grid" id="flash-grid">
+    <!-- Flash deals injected by JS -->
+  </div>
+</section>
+
+<!-- CURRENCY CONVERTER -->
+<section class="converter-section" id="converter">
+  <div class="converter-inner">
+    <span class="sec-label" data-i18n="conv_label">Currency Converter</span>
+    <h2 class="sec-title" data-i18n="conv_h">Convert Prices Instantly</h2>
+    <p data-i18n="conv_p">See any price in USD, EUR, FCFA (XAF) or XOF — updated daily rates.</p>
+    <div class="converter-grid">
+      <div class="conv-side">
+        <label data-i18n="conv_from">From</label>
+        <div class="conv-input-wrap">
+          <select id="conv-from-cur">
+            <option value="USD">🇺🇸 USD</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="FCFA">🇨🇲 FCFA</option>
+            <option value="XOF">🇸🇳 XOF</option>
+          </select>
+          <input type="number" id="conv-from-val" value="100" placeholder="100" oninput="doConvert()" />
+        </div>
+      </div>
+      <div class="conv-arrow">⇄</div>
+      <div class="conv-side">
+        <label data-i18n="conv_to">To</label>
+        <div class="conv-input-wrap">
+          <select id="conv-to-cur" onchange="doConvert()">
+            <option value="FCFA">🇨🇲 FCFA</option>
+            <option value="EUR">🇪🇺 EUR</option>
+            <option value="USD">🇺🇸 USD</option>
+            <option value="XOF">🇸🇳 XOF</option>
+          </select>
+          <input type="number" id="conv-to-val" placeholder="65,500" readonly />
+        </div>
+      </div>
+    </div>
+    <div class="conv-rates">
+      <div class="conv-rate"><div class="rate-flag">🇺🇸</div><div class="rate-label">1 USD</div><div class="rate-value" id="rate-usd">= 655 FCFA</div></div>
+      <div class="conv-rate"><div class="rate-flag">🇪🇺</div><div class="rate-label">1 EUR</div><div class="rate-value" id="rate-eur">= 655.96 FCFA</div></div>
+      <div class="conv-rate"><div class="rate-flag">🇨🇲</div><div class="rate-label">1000 FCFA</div><div class="rate-value" id="rate-fcfa">= $1.53 USD</div></div>
+      <div class="conv-rate"><div class="rate-flag">🇸🇳</div><div class="rate-label">1000 XOF</div><div class="rate-value" id="rate-xof">= €1.52 EUR</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ALIEXPRESS PARTNERSHIP -->
+<section class="ali-section">
+  <div class="ali-inner">
+    <div class="reveal">
+      <div class="ali-badge">🔗 Powered by AliExpress API</div>
+      <h2 class="ali-h" data-i18n="ali_h">Direct Access to 500 Million Products — Factory Prices</h2>
+      <p class="ali-p" data-i18n="ali_p">XenderShop integrates directly with the AliExpress API to bring you authentic factory prices, real-time inventory, and fast cross-border shipping to Africa. No middlemen. No markup. Pure savings.</p>
+      <div class="ali-points">
+        <div class="ali-point">
+          <div class="ali-point-icon">✅</div>
+          <div class="ali-point-text"><strong data-i18n="ali_p1_h">Real-time catalog sync</strong> — <span data-i18n="ali_p1_b">500M+ SKUs updated every hour</span></div>
+        </div>
+        <div class="ali-point">
+          <div class="ali-point-icon">💰</div>
+          <div class="ali-point-text"><strong data-i18n="ali_p2_h">Factory prices</strong> — <span data-i18n="ali_p2_b">Up to 40% cheaper than local retailers</span></div>
+        </div>
+        <div class="ali-point">
+          <div class="ali-point-icon">🚚</div>
+          <div class="ali-point-text"><strong data-i18n="ali_p3_h">XenderDelivery last-mile</strong> — <span data-i18n="ali_p3_b">Asia→Europe→Africa logistics chain</span></div>
+        </div>
+        <div class="ali-point">
+          <div class="ali-point-icon">🔒</div>
+          <div class="ali-point-text"><strong data-i18n="ali_p4_h">Buyer protection</strong> — <span data-i18n="ali_p4_b">Full refund if item doesn't arrive</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="ali-visual reveal">
+      <div class="ali-card"><div class="ali-card-num">500M+</div><div class="ali-card-lbl" data-i18n="ali_stat1">Products Available</div></div>
+      <div class="ali-card"><div class="ali-card-num">-40%</div><div class="ali-card-lbl" data-i18n="ali_stat2">vs Retail Price</div></div>
+      <div class="ali-card"><div class="ali-card-num">11</div><div class="ali-card-lbl" data-i18n="ali_stat3">African Countries</div></div>
+      <div class="ali-card"><div class="ali-card-num">24h</div><div class="ali-card-lbl" data-i18n="ali_stat4">Express Delivery</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MORE PROMO BANNERS -->
+<div class="banner-row">
+  <div class="promo-banner reveal" style="background:linear-gradient(135deg,#1a3a00,#4caf50)">
+    <div class="pbn-content">
+      <div class="pbn-tag" data-i18n="pbn3_tag">Solar & Clean Energy</div>
+      <div class="pbn-h" data-i18n="pbn3_h">Power Your Home<br/>with Solar</div>
+      <div class="pbn-p" data-i18n="pbn3_p">Panels, batteries, inverters. Pay in FCFA or Mobile Money.</div>
+      <a href="#" class="btn-banner" data-i18n="pbn3_btn">Shop Solar →</a>
+    </div>
+    <div class="pbn-deco">☀️</div>
+  </div>
+  <div class="promo-banner reveal" style="background:linear-gradient(135deg,#1a0a2e,#7B2D8B)">
+    <div class="pbn-content">
+      <div class="pbn-tag" data-i18n="pbn4_tag">Beauty & Wellness</div>
+      <div class="pbn-h" data-i18n="pbn4_h">Glow Up with<br/>Premium Skincare</div>
+      <div class="pbn-p" data-i18n="pbn4_p">Korean, European and African brands. Delivered to your door.</div>
+      <a href="#" class="btn-banner" data-i18n="pbn4_btn">Shop Beauty →</a>
+    </div>
+    <div class="pbn-deco">💄</div>
+  </div>
+</div>
+
+<!-- PAYMENT -->
+<section class="pay-strip">
+  <div class="pay-strip-inner">
+    <span class="sec-label" data-i18n="sec_pay_label">Payment</span>
+    <h2 class="sec-title reveal" data-i18n="sec_pay_h">Pay the Way You Want</h2>
+    <div class="pay-chips reveal">
+      <div class="pay-chip">🟡 MTN MoMo</div>
+      <div class="pay-chip">🟠 Orange Money</div>
+      <div class="pay-chip">🔵 Wave</div>
+      <div class="pay-chip">🔷 Moov Money</div>
+      <div class="pay-chip">🔴 Airtel Money</div>
+      <div class="pay-chip">💳 Visa / Mastercard</div>
+      <div class="pay-chip">🏦 Bank Transfer</div>
+      <div class="pay-chip">💰 XenderMoney</div>
+      <div class="pay-chip">🇪🇺 SEPA</div>
+      <div class="pay-chip">💲 USD / EUR / FCFA / XOF</div>
     </div>
   </div>
 </section>
@@ -309,14 +698,15 @@
   <div class="reveal">
     <h2 data-i18n="cta_h">Start Shopping <span>Globally</span> Today</h2>
     <p data-i18n="cta_p">Millions of products. African prices. Delivered to your door.</p>
-    <a href="#" class="btn-cta" data-i18n="cta_btn">Browse Products →</a>
+    <a href="#categories" class="btn-cta" data-i18n="cta_btn">Browse Products →</a>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section class="contact-section reveal" id="contact">
-  <h2 class="sec-title" data-i18n="contact_h">Contact & Help</h2>
-  <p style="font-size:16px;color:#6b7a8d;max-width:540px;margin:0 auto;" data-i18n="contact_p">Need help with an order, want to become a vendor, or have a press inquiry? We are here.</p>
+  <span class="sec-label" data-i18n="contact_label">Contact</span>
+  <h2 style="font-size:clamp(20px,2.4vw,30px);font-weight:900;color:var(--dark);letter-spacing:-1px;margin-bottom:10px" data-i18n="contact_h">Contact & Help</h2>
+  <p style="font-size:15px;color:#6b7a8d;max-width:520px;margin:0 auto;" data-i18n="contact_p">Need help with an order, want to become a vendor, or have a press inquiry? We are here.</p>
   <div class="contact-grid">
     <div class="contact-card">
       <div class="contact-icon">🛍️</div>
@@ -350,7 +740,7 @@
   <div class="foot-top">
     <div>
       <div class="foot-brand">Xender<span>Shop</span></div>
-      <p class="foot-desc" data-i18n="foot_desc">Global shopping for Africa. Pay local, shop global, delivered fast. We Simplify Life.</p>
+      <p class="foot-desc" data-i18n="foot_desc">Global shopping for Africa. Powered by AliExpress API. Pay local, shop global, delivered fast. We Simplify Life.</p>
     </div>
     <div>
       <p class="foot-col-ttl" data-i18n="foot_shop">Shop</p>
@@ -359,6 +749,16 @@
         <li><a href="#" data-i18n="c2">Fashion</a></li>
         <li><a href="#" data-i18n="c3">Home & Living</a></li>
         <li><a href="#" data-i18n="c4">Solar Energy</a></li>
+        <li><a href="#" data-i18n="c5">Beauty</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="foot-col-ttl" data-i18n="foot_more">More</p>
+      <ul class="foot-links">
+        <li><a href="#" data-i18n="c7">Sports</a></li>
+        <li><a href="#" data-i18n="c9">Food & Grocery</a></li>
+        <li><a href="#" data-i18n="c10">Health</a></li>
+        <li><a href="#flash" data-i18n="flash_title">Flash Deals</a></li>
       </ul>
     </div>
     <div>
@@ -366,8 +766,8 @@
       <ul class="foot-links">
         <li><a href="../innovaafric/">InnovaAFRIC</a></li>
         <li><a href="../xendermoney/">XenderMoney</a></li>
-        <li><a href="#">XenderBigShop</a></li>
-        <li><a href="#">XenderDelivery</a></li>
+        <li><a href="../xenderbigshop/">XenderBigShop</a></li>
+        <li><a href="../xenderdelivery/">XenderDelivery</a></li>
       </ul>
     </div>
     <div>
@@ -376,145 +776,352 @@
         <li><a href="#" data-i18n="foot_privacy">Privacy Policy</a></li>
         <li><a href="#" data-i18n="foot_terms">Terms of Service</a></li>
         <li><a href="#" data-i18n="foot_buyer">Buyer Protection</a></li>
+        <li><a href="#" data-i18n="foot_seller">Seller Rules</a></li>
       </ul>
     </div>
   </div>
   <div class="foot-bottom">
-    <span class="foot-copy" data-i18n="foot_copy">© 2026 XenderShop · An InnovaAFRIC product</span>
+    <span class="foot-copy" data-i18n="foot_copy">© 2026 XenderShop · An InnovaAFRIC product · Powered by AliExpress</span>
     <span class="foot-slogan">SHOP · DELIVER · ENJOY</span>
   </div>
 </footer>
 
 <script>
-  const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.08});
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+// ─── CURRENCY ───
+const RATES = { USD:1, EUR:0.922, FCFA:655, XOF:655 };
+let CURRENCY = localStorage.getItem('xs_cur') || 'USD';
+const CUR_SYMBOLS = { USD:'$', EUR:'€', FCFA:'', XOF:'' };
+const CUR_SUFFIX = { USD:'', EUR:'', FCFA:' FCFA', XOF:' XOF' };
 
-  const TR = {
-    es:{
-      nav_how:'Cómo funciona', nav_cat:'Categorías', nav_feat:'Características', nav_pay:'Pagos', nav_cta:'Comprar',
-      hero_badge:'Productos Globales · Precios Locales',
-      hero_h1:'Compra Global,<br/><span class="accent-teal">Paga Local</span>,<br/><span class="accent-orange">Entrega Rápida</span>',
-      hero_sub:'XenderShop conecta a compradores africanos con millones de productos internacionales. Paga con Mobile Money, transferencia o tarjeta. Entregado a tu puerta.',
-      hero_btn1:'Ver Productos →', hero_btn2:'Cómo funciona',
-      s1l:'Productos disponibles', s2l:'Países africanos', s3l:'vs precios retail', s4l:'Entrega express',
-      sec_how:'Cómo funciona', sec_how_h:'Compra en 4 pasos simples', sec_how_sub:'Del descubrimiento a tu puerta — tan fácil como comprar localmente.',
-      h1t:'Buscar', h1d:'Busca millones de productos filtrados por categoría, precio y tiempo de entrega.',
-      h2t:'Añadir al Carrito', h2d:'Elige tus artículos. Los precios se muestran automáticamente en tu moneda local.',
-      h3t:'Paga a tu Manera', h3d:'Mobile Money, wallet XenderMoney, transferencia bancaria o tarjeta — todos aceptados.',
-      h4t:'Entregado', h4d:'Un rider de XenderDelivery recoge tu pedido. Síguelo en vivo desde tu teléfono.',
-      sec_cat:'Categorías', sec_cat_h:'Todo lo que Necesitas', sec_cat_sub:'Desde electrónica hasta energía solar — de fuentes globales, precios locales.',
-      c1:'Electrónica', c2:'Moda', c3:'Hogar y Deco', c4:'Energía Solar', c5:'Belleza', c6:'Niños y Bebés', c7:'Deportes', c8:'Herramientas y Auto',
-      sec_feat:'Por qué XenderShop', sec_feat_h:'Diseñado para Compradores Africanos', sec_feat_sub:'Resolvemos los verdaderos retos de las compras online en África.',
-      f1t:'Hasta 40% más Barato', f1d:'Directo de proveedores globales vía AliExpress. Sin intermediarios, sin recargo. Precios en tu moneda local.',
-      f2t:'Mobile Money Primero', f2d:'Paga con MTN, Orange, Wave, Moov o Airtel Money. No necesitas tarjeta ni cuenta bancaria.',
-      f3t:'Entrega el Mismo Día', f3d:'Los riders de XenderDelivery entregan en horas. Seguimiento GPS en vivo incluido.',
-      f4t:'Protección al Comprador', f4d:'Garantía de reembolso completo si tu artículo no llega o no es como se describe.',
-      f5t:'Monedas Locales', f5d:'Todos los precios en XAF, GHS, RWF, EUR y más. Tasas de cambio en tiempo real.',
-      f6t:'Seguimiento en Vivo', f6d:'Sabe dónde está tu pedido en cada paso. SMS y notificaciones push en tu idioma.',
-      sec_pay:'Pago', sec_pay_h:'Paga como Quieras',
-      sec_pay_sub:'Todos los métodos de pago en África y Europa. Sin cuenta bancaria — con Mobile Money puedes empezar.',
-      instant:'Instantáneo', free_fee:'0% comisión',
-      contact_h:'Contacto & Ayuda', contact_p:'¿Necesitas ayuda con un pedido, quieres ser vendedor o tienes una consulta de prensa? Estamos aquí.',
-      contact_cust:'Soporte al Cliente', contact_cust_d:'Seguimiento de pedidos, devoluciones, pagos — respuesta en 24h.',
-      contact_vend:'Sé Vendedor', contact_vend_d:'Lista tus productos y llega a millones de clientes en toda África.',
-      contact_par:'Asociaciones', contact_par_d:'Oportunidades de asociación en logística, pagos y marcas.',
-      contact_gen:'General', contact_gen_d:'¿Otra pregunta o sugerencia? Escríbenos.',
-      cta_h:'Empieza a Comprar <span>Globalmente</span> Hoy', cta_p:'Millones de productos. Precios africanos. Entregados a tu puerta.',
-      cta_btn:'Ver Productos →',
-      foot_desc:'Compras globales para África. Paga local, compra global, entregado rápido. We Simplify Life.',
-      foot_shop:'Comprar', foot_ecosystem:'Ecosistema', foot_legal:'Legal',
-      foot_privacy:'Privacidad', foot_terms:'Términos', foot_buyer:'Protección Comprador',
-      foot_copy:'© 2026 XenderShop · Un producto de InnovaAFRIC'
-    },
-    en:{
-      nav_how:'How it works', nav_cat:'Categories', nav_feat:'Features', nav_pay:'Payment', nav_cta:'Start Shopping',
-      hero_badge:'Global Products · Local Prices',
-      hero_h1:'Shop Global,<br/><span class="accent-teal">Pay Local</span>,<br/><span class="accent-orange">Delivered Fast</span>',
-      hero_sub:'XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered to your door.',
-      hero_btn1:'Browse Products →', hero_btn2:'How it works',
-      s1l:'Products available', s2l:'African countries', s3l:'vs retail prices', s4l:'Express delivery',
-      sec_how:'How it works', sec_how_h:'Shop in 4 simple steps', sec_how_sub:'From discovery to your doorstep — as easy as buying locally.',
-      h1t:'Browse', h1d:'Search millions of products filtered by category, price, and delivery time.',
-      h2t:'Add to Cart', h2d:'Choose your items. Prices are automatically shown in your local currency.',
-      h3t:'Pay Your Way', h3d:'Mobile Money, XenderMoney wallet, bank transfer or card — all accepted.',
-      h4t:'Delivered', h4d:'A XenderDelivery rider picks up your order. Track it live on your phone.',
-      sec_cat:'Categories', sec_cat_h:'Everything You Need', sec_cat_sub:'From electronics to solar energy — sourced globally, priced locally.',
-      c1:'Electronics', c2:'Fashion', c3:'Home & Living', c4:'Solar Energy', c5:'Beauty', c6:'Kids & Baby', c7:'Sports', c8:'Tools & Auto',
-      sec_feat:'Why XenderShop', sec_feat_h:'Built for African Shoppers', sec_feat_sub:'We solve the real challenges of online shopping in Africa.',
-      f1t:'Up to 40% Cheaper', f1d:'Direct from global suppliers via AliExpress API. No middlemen, no markup. Prices in your local currency.',
-      f2t:'Mobile Money First', f2d:'Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required.',
-      f3t:'Same-Day Delivery', f3d:'XenderDelivery riders pick up and deliver in hours. Live GPS tracking included.',
-      f4t:'Buyer Protection', f4d:"Full refund guarantee if your item doesn't arrive or isn't as described.",
-      f5t:'Local Currencies', f5d:'All prices in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.',
-      f6t:'Live Order Tracking', f6d:'Know where your order is at every step. SMS and push notifications in your language.',
-      sec_pay:'Payment', sec_pay_h:'Pay the Way You Want',
-      sec_pay_sub:'Every major payment method across Africa and Europe. No bank account needed — Mobile Money is enough.',
-      instant:'Instant', free_fee:'0% fees',
-      contact_h:'Contact & Help', contact_p:'Need help with an order, want to become a vendor, or have a press inquiry? We are here.',
-      contact_cust:'Customer Support', contact_cust_d:'Order tracking, returns, payment issues — reply within 24h.',
-      contact_vend:'Become a Vendor', contact_vend_d:'List your products and reach millions of customers across Africa.',
-      contact_par:'Partnerships', contact_par_d:'Logistics, payment, and brand partnership opportunities.',
-      contact_gen:'General', contact_gen_d:'Any other question or feedback? Drop us a message.',
-      cta_h:'Start Shopping <span>Globally</span> Today', cta_p:'Millions of products. African prices. Delivered to your door.',
-      cta_btn:'Browse Products →',
-      foot_desc:'Global shopping for Africa. Pay local, shop global, delivered fast. We Simplify Life.',
-      foot_shop:'Shop', foot_ecosystem:'Ecosystem', foot_legal:'Legal',
-      foot_privacy:'Privacy Policy', foot_terms:'Terms of Service', foot_buyer:'Buyer Protection',
-      foot_copy:'© 2026 XenderShop · An InnovaAFRIC product'
-    },
-    fr:{
-      nav_how:'Comment ça marche', nav_cat:'Catégories', nav_feat:'Fonctionnalités', nav_pay:'Paiement', nav_cta:'Commencer',
-      hero_badge:'Produits Mondiaux · Prix Locaux',
-      hero_h1:'Achetez Mondial,<br/><span class="accent-teal">Payez Local</span>,<br/><span class="accent-orange">Livré Vite</span>',
-      hero_sub:"XenderShop connecte les acheteurs africains à des millions de produits internationaux. Payez avec Mobile Money, virement ou carte. Livré à votre porte.",
-      hero_btn1:'Voir les Produits →', hero_btn2:'Comment ça marche',
-      s1l:'Produits disponibles', s2l:'Pays africains', s3l:'vs prix retail', s4l:'Livraison express',
-      sec_how:'Comment ça marche', sec_how_h:'Achetez en 4 étapes simples', sec_how_sub:"De la découverte à votre porte — aussi simple qu'acheter localement.",
-      h1t:'Parcourir', h1d:'Recherchez des millions de produits filtrés par catégorie, prix et délai de livraison.',
-      h2t:'Ajouter au Panier', h2d:'Choisissez vos articles. Les prix sont automatiquement affichés dans votre devise locale.',
-      h3t:'Payez à votre Façon', h3d:'Mobile Money, wallet XenderMoney, virement bancaire ou carte — tout est accepté.',
-      h4t:'Livré', h4d:'Un livreur XenderDelivery récupère votre commande. Suivez-la en direct sur votre téléphone.',
-      sec_cat:'Catégories', sec_cat_h:'Tout ce dont Vous Avez Besoin', sec_cat_sub:"De l'électronique à l'énergie solaire — sourcé mondialement, au prix local.",
-      c1:'Électronique', c2:'Mode', c3:'Maison & Déco', c4:'Énergie Solaire', c5:'Beauté', c6:'Enfants & Bébé', c7:'Sports', c8:'Outils & Auto',
-      sec_feat:'Pourquoi XenderShop', sec_feat_h:'Conçu pour les Acheteurs Africains', sec_feat_sub:"Nous résolvons les vrais défis du shopping en ligne en Afrique.",
-      f1t:"Jusqu'à 40% Moins Cher", f1d:"Directement des fournisseurs mondiaux via l'API AliExpress. Sans intermédiaires. Prix dans votre devise.",
-      f2t:'Mobile Money en Premier', f2d:'Payez avec MTN, Orange, Wave, Moov ou Airtel Money. Pas de carte nécessaire.',
-      f3t:'Livraison le Jour Même', f3d:'Les livreurs XenderDelivery récupèrent et livrent en quelques heures. Suivi GPS en direct.',
-      f4t:'Protection Acheteur', f4d:"Garantie de remboursement complet si votre article n'arrive pas ou n'est pas conforme.",
-      f5t:'Devises Locales', f5d:'Tous les prix en XAF, GHS, RWF, EUR et plus. Taux de change en temps réel.',
-      f6t:'Suivi en Direct', f6d:'Sachez où est votre commande à chaque étape. SMS et notifications push dans votre langue.',
-      sec_pay:'Paiement', sec_pay_h:'Payez Comme Vous Voulez',
-      sec_pay_sub:"Toutes les méthodes de paiement en Afrique et en Europe. Pas de compte bancaire nécessaire — Mobile Money suffit.",
-      instant:'Instantané', free_fee:'0% frais',
-      contact_h:'Contact & Aide', contact_p:"Besoin d'aide pour une commande, envie de devenir vendeur ou demande presse ? Nous sommes là.",
-      contact_cust:'Support Client', contact_cust_d:'Suivi de commande, retours, paiements — réponse sous 24h.',
-      contact_vend:'Devenez Vendeur', contact_vend_d:"Listez vos produits et atteignez des millions de clients en Afrique.",
-      contact_par:'Partenariats', contact_par_d:'Opportunités de partenariat logistique, paiement et marques.',
-      contact_gen:'Général', contact_gen_d:"Une autre question ou suggestion ? Envoyez-nous un message.",
-      cta_h:'Commencez à Acheter <span>Mondialement</span> Aujourd\'hui', cta_p:'Des millions de produits. Des prix africains. Livrés à votre porte.',
-      cta_btn:'Voir les Produits →',
-      foot_desc:"Shopping mondial pour l'Afrique. Payez local, achetez mondial, livré vite. We Simplify Life.",
-      foot_shop:'Boutique', foot_ecosystem:'Écosystème', foot_legal:'Légal',
-      foot_privacy:'Confidentialité', foot_terms:'Conditions', foot_buyer:'Protection Acheteur',
-      foot_copy:"© 2026 XenderShop · Un produit InnovaAFRIC"
-    }
-  };
-
-  let LANG = localStorage.getItem('ia_lang') || 'en';
-  function setLang(l) {
-    LANG = l; localStorage.setItem('ia_lang', l);
-    document.documentElement.lang = l;
-    ['es','en','fr'].forEach(id => {
-      const b = document.getElementById('lb-'+id);
-      if(b) b.className = 'lb-btn'+(id===l?' active':'');
-    });
-    const T = TR[l]||TR.en;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      const k = el.getAttribute('data-i18n');
-      if(T[k]!==undefined) el.innerHTML = T[k];
-    });
+function setCurrency(cur) {
+  CURRENCY = cur;
+  localStorage.setItem('xs_cur', cur);
+  document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.cur-btn[onclick="setCurrency('${cur}')"]`);
+  if(btn) btn.classList.add('active');
+  renderProducts();
+  renderFlash();
+}
+function fmtPrice(usd) {
+  const val = usd * RATES[CURRENCY];
+  const sym = CUR_SYMBOLS[CURRENCY];
+  const suf = CUR_SUFFIX[CURRENCY];
+  if (CURRENCY === 'FCFA' || CURRENCY === 'XOF') return Math.round(val).toLocaleString() + suf;
+  return sym + val.toFixed(2) + suf;
+}
+function localPrice(usd) {
+  if (CURRENCY !== 'FCFA' && CURRENCY !== 'XOF') {
+    return Math.round(usd * RATES['FCFA']).toLocaleString() + ' FCFA';
   }
-  setLang(LANG);
+  return '$' + usd.toFixed(2);
+}
+
+// ─── PRODUCTS DATA ───
+const PRODUCTS = [
+  { emoji:'📱', name_en:'Wireless Bluetooth Earbuds Pro', name_es:'Auriculares Inalámbricos Bluetooth Pro', name_fr:'Écouteurs Sans Fil Bluetooth Pro', price:24.99, old:44.99, rating:4.8, reviews:2341, badge:'-44%', cat:'Electronics' },
+  { emoji:'💡', name_en:'RGB LED Smart Strip 5m', name_es:'Tira LED RGB Inteligente 5m', name_fr:'Ruban LED RGB Intelligent 5m', price:12.50, old:19.99, rating:4.6, reviews:1876, badge:'-37%', cat:'Home' },
+  { emoji:'⌚', name_en:'Smart Watch Fitness Pro', name_es:'Reloj Inteligente Fitness Pro', name_fr:'Montre Connectée Fitness Pro', price:39.99, old:79.99, rating:4.7, reviews:3120, badge:'-50%', cat:'Electronics' },
+  { emoji:'👗', name_en:'African Print Ankara Dress', name_es:'Vestido Estampado Africano Ankara', name_fr:'Robe Imprimée Africaine Ankara', price:19.99, old:34.99, rating:4.9, reviews:987, badge:'NEW', cat:'Fashion', badgeNew:true },
+  { emoji:'☀️', name_en:'Portable Solar Charger 20W', name_es:'Cargador Solar Portátil 20W', name_fr:'Chargeur Solaire Portable 20W', price:35.00, old:55.00, rating:4.5, reviews:654, badge:'-36%', cat:'Solar' },
+  { emoji:'💆', name_en:'Vitamin C Serum Set 3-Pack', name_es:'Set Sérum Vitamina C 3 unidades', name_fr:'Set Sérum Vitamine C 3 pièces', price:22.00, old:38.00, rating:4.8, reviews:4521, badge:'-42%', cat:'Beauty' },
+  { emoji:'🎒', name_en:'Kids Waterproof Backpack', name_es:'Mochila Impermeable Infantil', name_fr:'Sac à Dos Imperméable Enfant', price:14.99, old:24.99, rating:4.7, reviews:1234, badge:'-40%', cat:'Kids' },
+  { emoji:'🔧', name_en:'Professional Tool Set 108pcs', name_es:'Set Herramientas Profesional 108pz', name_fr:'Coffret Outils Professionnel 108pcs', price:45.00, old:69.99, rating:4.6, reviews:789, badge:'-36%', cat:'Tools' },
+  { emoji:'📷', name_en:'Mini Action Camera 4K WiFi', name_es:'Mini Cámara de Acción 4K WiFi', name_fr:'Mini Caméra d\'Action 4K WiFi', price:49.99, old:89.99, rating:4.5, reviews:562, badge:'-44%', cat:'Electronics' },
+  { emoji:'🧘', name_en:'Non-Slip Yoga Mat 6mm', name_es:'Esterilla de Yoga Antideslizante 6mm', name_fr:'Tapis de Yoga Antidérapant 6mm', price:16.50, old:26.99, rating:4.7, reviews:3456, badge:'-39%', cat:'Sports' },
+];
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  const L = LANG || 'en';
+  grid.innerHTML = PRODUCTS.map(p => {
+    const nm = p['name_'+L] || p.name_en;
+    return `<div class="product-card">
+      <div class="product-img">${p.emoji}<span class="product-badge${p.badgeNew?' product-badge-new':''}">${p.badge}</span></div>
+      <div class="product-info">
+        <div class="product-name">${nm}</div>
+        <div class="product-rating"><span class="stars">★★★★★</span><span class="rating-count">(${p.reviews.toLocaleString()})</span></div>
+        <div class="product-price">
+          <span class="price-main">${fmtPrice(p.price)}</span>
+          <span class="price-old">${fmtPrice(p.old)}</span>
+        </div>
+        <div class="product-price" style="margin-top:2px"><span class="price-local">${localPrice(p.price)}</span></div>
+        <button class="btn-add" onclick="addToCart(this)" data-i18n="btn_add">Add to Cart</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.btn-add[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if(TR[LANG] && TR[LANG][k]) el.textContent = TR[LANG][k];
+  });
+}
+
+let cartCount = 0;
+function addToCart(btn) {
+  cartCount++;
+  document.getElementById('cart-count').textContent = cartCount;
+  btn.textContent = '✓ Added!';
+  btn.style.background = '#22C55E';
+  setTimeout(() => {
+    btn.style.background = '';
+    const k = btn.getAttribute('data-i18n');
+    if(TR[LANG] && TR[LANG][k]) btn.textContent = TR[LANG][k];
+    else btn.textContent = 'Add to Cart';
+  }, 1400);
+}
+
+// ─── FLASH DEALS ───
+const FLASH = [
+  { emoji:'💻', name_en:'Laptop Stand Adjustable', name_es:'Soporte Portátil Ajustable', name_fr:'Support PC Réglable', price:8.99, old:19.99, sold:78 },
+  { emoji:'🔌', name_en:'USB-C Hub 7-in-1', name_es:'Hub USB-C 7 en 1', name_fr:'Hub USB-C 7-en-1', price:15.99, old:34.99, sold:65 },
+  { emoji:'🎧', name_en:'Noise Cancel Headphones', name_es:'Auriculares Cancelación Ruido', name_fr:'Casque Réduction Bruit', price:29.99, old:69.99, sold:91 },
+  { emoji:'💅', name_en:'Nail Polish Set 24 Colors', name_es:'Set Esmaltes 24 Colores', name_fr:'Set Vernis 24 Couleurs', price:9.50, old:22.00, sold:55 },
+  { emoji:'🚿', name_en:'Shower Filter Vitamin C', name_es:'Filtro Ducha Vitamina C', name_fr:'Filtre Douche Vitamine C', price:11.99, old:24.99, sold:43 },
+];
+
+function renderFlash() {
+  const grid = document.getElementById('flash-grid');
+  const L = LANG || 'en';
+  grid.innerHTML = FLASH.map(p => {
+    const nm = p['name_'+L] || p.name_en;
+    const disc = Math.round((1 - p.price/p.old)*100);
+    return `<div class="flash-card">
+      <div class="flash-img">${p.emoji}</div>
+      <div class="flash-info">
+        <div class="flash-name">${nm}</div>
+        <div class="flash-price">
+          <span class="flash-new">${fmtPrice(p.price)}</span>
+          <span class="flash-old">${fmtPrice(p.old)}</span>
+        </div>
+        <div class="flash-bar"><div class="flash-bar-fill" style="width:${p.sold}%"></div></div>
+        <div class="flash-sold">${p.sold}% <span data-i18n="flash_sold">sold</span></div>
+        <button class="btn-flash" onclick="addToCart(this)" data-i18n="btn_buy">Buy Now</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('[data-i18n="flash_sold"]').forEach(el => {
+    if(TR[LANG] && TR[LANG].flash_sold) el.textContent = TR[LANG].flash_sold;
+  });
+  document.querySelectorAll('.btn-flash[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if(TR[LANG] && TR[LANG][k]) el.textContent = TR[LANG][k];
+  });
+}
+
+// ─── SLIDER ───
+let slideIdx = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+function goSlide(i) {
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx = (i + slides.length) % slides.length;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+}
+function nextSlide() { goSlide(slideIdx + 1); }
+function prevSlide() { goSlide(slideIdx - 1); }
+setInterval(() => nextSlide(), 5000);
+
+// ─── COUNTDOWN ───
+function runCountdown() {
+  let h = 8, m = 47, s = 32;
+  setInterval(() => {
+    s--; if(s<0){s=59;m--;} if(m<0){m=59;h--;} if(h<0){h=23;m=59;s=59;}
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  }, 1000);
+}
+runCountdown();
+
+// ─── CURRENCY CONVERTER ───
+function doConvert() {
+  const fromCur = document.getElementById('conv-from-cur').value;
+  const toCur = document.getElementById('conv-to-cur').value;
+  const fromVal = parseFloat(document.getElementById('conv-from-val').value) || 0;
+  const inUSD = fromVal / RATES[fromCur];
+  const result = inUSD * RATES[toCur];
+  document.getElementById('conv-to-val').value = result.toFixed(2);
+}
+document.getElementById('conv-from-cur').addEventListener('change', doConvert);
+document.getElementById('conv-from-val').addEventListener('input', doConvert);
+doConvert();
+
+// ─── TRANSLATIONS ───
+const TR = {
+  es:{
+    announce_text:'ENVÍO GRATIS en pedidos mayores de $30 · Impulsado por AliExpress API · Paga con Mobile Money',
+    nav_all:'Todo', nav_cta:'Iniciar Sesión',
+    search_placeholder:'Busca millones de productos...',
+    slide1_tag:'AliExpress × África', slide1_h:'Compra Global,<br/>Paga con Mobile Money', slide1_p:'Millones de productos de China y Europa. Entregados a tu puerta en África.',
+    slide1_btn:'Descubrir Productos →', slide_off:'DTO',
+    slide2_tag:'Flash Deals · Solo 24h', slide2_h:'Ofertas Flash de Hoy<br/>Hasta 60% de Descuento', slide2_p:'Stock limitado. Electrónica, moda, belleza — nuevas ofertas cada día.', slide2_btn:'Ver Ofertas Flash →',
+    slide3_tag:'Nuevo · Solar & Energía', slide3_h:'Paneles Solares &<br/>Independencia Energética', slide3_p:'Soluciones solares de calidad de fabricantes asiáticos.', slide3_btn:'Ver Productos Solares →',
+    promo1_h:'Envío Gratis', promo1_p:'En pedidos mayores de $30', promo2_h:'Protección Comprador', promo2_p:'Garantía de devolución 100%',
+    promo3_h:'Mobile Money', promo3_p:'MTN · Orange · Wave · Airtel', promo4_h:'11 Países', promo4_p:'Entrega en toda África',
+    sec_cat_label:'Categorías', sec_cat_h:'Todo lo que Necesitas', see_all:'Ver todo →',
+    c1:'Electrónica', c2:'Moda', c3:'Hogar y Deco', c4:'Energía Solar', c5:'Belleza', c6:'Niños y Bebés',
+    c7:'Deportes', c8:'Herramientas y Auto', c9:'Alimentación', c10:'Salud', c11:'Auto', c12:'Libros y Escuela',
+    c13:'Jardín', c14:'Construcción', c15:'Gaming', c16:'Foto y Vídeo',
+    subcat_label:'Subcategorías populares:', sub1:'Smartphones', sub2:'Portátiles', sub3:'Auriculares', sub4:'Relojes Inteligentes',
+    sub5:'Vestidos de Mujer', sub6:'Zapatos de Hombre', sub7:'Sérums y Cremas', sub8:'Extensiones de Cabello',
+    sub9:'Paneles Solares', sub10:'Iluminación LED', sub11:'Ropa de Bebé', sub12:'Electrodomésticos',
+    sub13:'Yoga y Fitness', sub14:'Accesorios de Coche', sub15:'Vitaminas', sub16:'Mandos de Gaming',
+    pbn1_tag:'Nuevas Llegadas', pbn1_h:'Última Electrónica<br/>de Asia', pbn1_p:'Teléfonos, tablets, accesorios. Directamente de fabricantes.', pbn1_btn:'Comprar Electrónica →',
+    pbn2_tag:'Colección Verano', pbn2_h:'Moda Africana<br/>Estilo Global', pbn2_p:'Vestidos, trajes, zapatos — hasta 50% menos que en tiendas.', pbn2_btn:'Comprar Moda →',
+    pbn3_tag:'Solar y Energía Limpia', pbn3_h:'Potencia tu Hogar<br/>con Solar', pbn3_p:'Paneles, baterías, inversores. Paga en FCFA o Mobile Money.', pbn3_btn:'Comprar Solar →',
+    pbn4_tag:'Belleza y Bienestar', pbn4_h:'Brilla con<br/>Cosmética Premium', pbn4_p:'Marcas coreanas, europeas y africanas. Entregadas a tu puerta.', pbn4_btn:'Comprar Belleza →',
+    sec_feat_label:'Destacados', sec_feat_h:'Productos Tendencia',
+    bfull_tag:'Asociación Exclusiva', bfull_h:'XenderShop × AliExpress — 500M+ Productos, Precios Africanos', bfull_p:'Nos conectamos directamente a la API de AliExpress. Catálogo en tiempo real, precios de fábrica, entregado a ti.', bfull_btn1:'Empezar a Comprar →', bfull_btn2:'Vender Aquí',
+    flash_title:'Ofertas Flash', flash_ends:'Termina en:', flash_sold:'vendido',
+    conv_label:'Conversor de Moneda', conv_h:'Convierte Precios al Instante', conv_p:'Ve cualquier precio en USD, EUR, FCFA (XAF) o XOF — tasas actualizadas diariamente.',
+    conv_from:'Desde', conv_to:'A',
+    ali_h:'Acceso Directo a 500 Millones de Productos — Precios de Fábrica',
+    ali_p:'XenderShop se integra directamente con la API de AliExpress para traerte precios auténticos de fábrica, inventario en tiempo real y envío rápido transfronterizo a África.',
+    ali_p1_h:'Sincronización del catálogo en tiempo real', ali_p1_b:'500M+ SKUs actualizados cada hora',
+    ali_p2_h:'Precios de fábrica', ali_p2_b:'Hasta 40% más barato que los minoristas locales',
+    ali_p3_h:'Última milla XenderDelivery', ali_p3_b:'Cadena logística Asia→Europa→África',
+    ali_p4_h:'Protección al comprador', ali_p4_b:'Reembolso total si el artículo no llega',
+    ali_stat1:'Productos Disponibles', ali_stat2:'vs Precio Retail', ali_stat3:'Países Africanos', ali_stat4:'Entrega Express',
+    sec_pay_label:'Pago', sec_pay_h:'Paga como Quieras',
+    btn_add:'Añadir al Carrito', btn_buy:'Comprar Ahora',
+    cta_h:'Empieza a Comprar <span>Globalmente</span> Hoy', cta_p:'Millones de productos. Precios africanos. Entregados a tu puerta.',
+    cta_btn:'Ver Productos →',
+    contact_label:'Contacto', contact_h:'Contacto & Ayuda', contact_p:'¿Necesitas ayuda con un pedido, quieres ser vendedor o tienes una consulta de prensa? Estamos aquí.',
+    contact_cust:'Soporte al Cliente', contact_cust_d:'Seguimiento de pedidos, devoluciones, pagos — respuesta en 24h.',
+    contact_vend:'Sé Vendedor', contact_vend_d:'Lista tus productos y llega a millones de clientes en toda África.',
+    contact_par:'Asociaciones', contact_par_d:'Oportunidades de asociación en logística, pagos y marcas.',
+    contact_gen:'General', contact_gen_d:'¿Otra pregunta o sugerencia? Escríbenos.',
+    foot_desc:'Compras globales para África. Impulsado por AliExpress API. We Simplify Life.',
+    foot_shop:'Comprar', foot_more:'Más', foot_ecosystem:'Ecosistema', foot_legal:'Legal',
+    foot_privacy:'Privacidad', foot_terms:'Términos', foot_buyer:'Protección Comprador', foot_seller:'Reglas Vendedor',
+    foot_copy:'© 2026 XenderShop · Un producto de InnovaAFRIC · Impulsado por AliExpress'
+  },
+  en:{
+    announce_text:'FREE delivery on orders over $30 · Powered by AliExpress API · Pay with Mobile Money',
+    nav_all:'All', nav_cta:'Sign In',
+    search_placeholder:'Search millions of products...',
+    slide1_tag:'AliExpress × Africa', slide1_h:'Shop Global,<br/>Pay with Mobile Money', slide1_p:'Millions of products from China & Europe. Delivered to your door in Africa.',
+    slide1_btn:'Discover Products →', slide_off:'OFF',
+    slide2_tag:'Flash Deals · 24h only', slide2_h:"Today's Flash Deals<br/>Up to 60% Off", slide2_p:'Limited stock. Electronics, fashion, beauty — every day new deals.', slide2_btn:'See Flash Deals →',
+    slide3_tag:'New · Solar & Energy', slide3_h:'Solar Panels &<br/>Energy Independence', slide3_p:'Quality solar solutions from top Asian manufacturers. Power your life.', slide3_btn:'View Solar Products →',
+    promo1_h:'Free Delivery', promo1_p:'On orders over $30', promo2_h:'Buyer Protection', promo2_p:'100% money back guarantee',
+    promo3_h:'Mobile Money', promo3_p:'MTN · Orange · Wave · Airtel', promo4_h:'11 Countries', promo4_p:'Delivered across Africa',
+    sec_cat_label:'Categories', sec_cat_h:'Everything You Need', see_all:'See all →',
+    c1:'Electronics', c2:'Fashion', c3:'Home & Living', c4:'Solar Energy', c5:'Beauty', c6:'Kids & Baby',
+    c7:'Sports', c8:'Tools & Auto', c9:'Food & Grocery', c10:'Health', c11:'Auto Parts', c12:'Books & School',
+    c13:'Garden', c14:'Construction', c15:'Gaming', c16:'Photo & Video',
+    subcat_label:'Popular subcategories:', sub1:'Smartphones', sub2:'Laptops', sub3:'Earbuds & Headphones', sub4:'Smart Watches',
+    sub5:"Women's Dresses", sub6:"Men's Shoes", sub7:'Skincare & Serums', sub8:'Hair Extensions',
+    sub9:'Solar Panels', sub10:'LED Lights', sub11:'Baby Clothes', sub12:'Kitchen Appliances',
+    sub13:'Yoga & Fitness', sub14:'Car Accessories', sub15:'Vitamins & Supplements', sub16:'Gaming Controllers',
+    pbn1_tag:'New Arrivals', pbn1_h:'Latest Electronics<br/>From Asia', pbn1_p:'Phones, tablets, accessories. Direct from manufacturers.', pbn1_btn:'Shop Electronics →',
+    pbn2_tag:'Summer Collection', pbn2_h:'African Fashion<br/>Meets Global Style', pbn2_p:"Dresses, suits, shoes — up to 50% off retail prices.", pbn2_btn:'Shop Fashion →',
+    pbn3_tag:'Solar & Clean Energy', pbn3_h:'Power Your Home<br/>with Solar', pbn3_p:'Panels, batteries, inverters. Pay in FCFA or Mobile Money.', pbn3_btn:'Shop Solar →',
+    pbn4_tag:'Beauty & Wellness', pbn4_h:'Glow Up with<br/>Premium Skincare', pbn4_p:'Korean, European and African brands. Delivered to your door.', pbn4_btn:'Shop Beauty →',
+    sec_feat_label:'Featured', sec_feat_h:'Trending Products',
+    bfull_tag:'Exclusive Partnership', bfull_h:'XenderShop × AliExpress — 500M+ Products, African Prices', bfull_p:'We connect directly to AliExpress API. Real-time catalog, real factory prices, delivered to you.', bfull_btn1:'Start Shopping →', bfull_btn2:'Sell Here',
+    flash_title:'Flash Deals', flash_ends:'Ends in:', flash_sold:'sold',
+    conv_label:'Currency Converter', conv_h:'Convert Prices Instantly', conv_p:'See any price in USD, EUR, FCFA (XAF) or XOF — updated daily rates.',
+    conv_from:'From', conv_to:'To',
+    ali_h:'Direct Access to 500 Million Products — Factory Prices',
+    ali_p:'XenderShop integrates directly with the AliExpress API to bring you authentic factory prices, real-time inventory, and fast cross-border shipping to Africa. No middlemen. No markup. Pure savings.',
+    ali_p1_h:'Real-time catalog sync', ali_p1_b:'500M+ SKUs updated every hour',
+    ali_p2_h:'Factory prices', ali_p2_b:'Up to 40% cheaper than local retailers',
+    ali_p3_h:'XenderDelivery last-mile', ali_p3_b:'Asia→Europe→Africa logistics chain',
+    ali_p4_h:'Buyer protection', ali_p4_b:"Full refund if item doesn't arrive",
+    ali_stat1:'Products Available', ali_stat2:'vs Retail Price', ali_stat3:'African Countries', ali_stat4:'Express Delivery',
+    sec_pay_label:'Payment', sec_pay_h:'Pay the Way You Want',
+    btn_add:'Add to Cart', btn_buy:'Buy Now',
+    cta_h:'Start Shopping <span>Globally</span> Today', cta_p:'Millions of products. African prices. Delivered to your door.',
+    cta_btn:'Browse Products →',
+    contact_label:'Contact', contact_h:'Contact & Help', contact_p:'Need help with an order, want to become a vendor, or have a press inquiry? We are here.',
+    contact_cust:'Customer Support', contact_cust_d:'Order tracking, returns, payment issues — reply within 24h.',
+    contact_vend:'Become a Vendor', contact_vend_d:'List your products and reach millions of customers across Africa.',
+    contact_par:'Partnerships', contact_par_d:'Logistics, payment, and brand partnership opportunities.',
+    contact_gen:'General', contact_gen_d:'Any other question or feedback? Drop us a message.',
+    foot_desc:'Global shopping for Africa. Powered by AliExpress API. We Simplify Life.',
+    foot_shop:'Shop', foot_more:'More', foot_ecosystem:'Ecosystem', foot_legal:'Legal',
+    foot_privacy:'Privacy Policy', foot_terms:'Terms of Service', foot_buyer:'Buyer Protection', foot_seller:'Seller Rules',
+    foot_copy:'© 2026 XenderShop · An InnovaAFRIC product · Powered by AliExpress'
+  },
+  fr:{
+    announce_text:"LIVRAISON GRATUITE pour les commandes supérieures à $30 · Propulsé par l'API AliExpress · Payez avec Mobile Money",
+    nav_all:'Tout', nav_cta:'Se Connecter',
+    search_placeholder:'Recherchez des millions de produits...',
+    slide1_tag:'AliExpress × Afrique', slide1_h:'Achetez Mondial,<br/>Payez avec Mobile Money', slide1_p:"Des millions de produits de Chine et d'Europe. Livrés à votre porte en Afrique.",
+    slide1_btn:'Découvrir les Produits →', slide_off:'REM',
+    slide2_tag:'Flash Deals · 24h seulement', slide2_h:"Les Flash Deals du Jour<br/>Jusqu'à 60% de Réduction", slide2_p:'Stock limité. Électronique, mode, beauté — de nouvelles offres chaque jour.', slide2_btn:'Voir les Flash Deals →',
+    slide3_tag:'Nouveau · Solaire & Énergie', slide3_h:'Panneaux Solaires &<br/>Indépendance Énergétique', slide3_p:'Solutions solaires de qualité des meilleurs fabricants asiatiques.', slide3_btn:'Voir Produits Solaires →',
+    promo1_h:'Livraison Gratuite', promo1_p:'Pour les commandes supérieures à $30', promo2_h:'Protection Acheteur', promo2_p:'Remboursement 100% garanti',
+    promo3_h:'Mobile Money', promo3_p:'MTN · Orange · Wave · Airtel', promo4_h:'11 Pays', promo4_p:"Livré dans toute l'Afrique",
+    sec_cat_label:'Catégories', sec_cat_h:'Tout ce dont Vous Avez Besoin', see_all:'Voir tout →',
+    c1:'Électronique', c2:'Mode', c3:'Maison & Déco', c4:'Énergie Solaire', c5:'Beauté', c6:'Enfants & Bébé',
+    c7:'Sports', c8:'Outils & Auto', c9:'Alimentation', c10:'Santé', c11:'Pièces Auto', c12:'Livres & École',
+    c13:'Jardin', c14:'Construction', c15:'Gaming', c16:'Photo & Vidéo',
+    subcat_label:'Sous-catégories populaires:', sub1:'Smartphones', sub2:'Ordinateurs', sub3:'Écouteurs', sub4:'Montres Connectées',
+    sub5:'Robes Femmes', sub6:'Chaussures Hommes', sub7:'Sérums & Crèmes', sub8:'Extensions Capillaires',
+    sub9:'Panneaux Solaires', sub10:'Éclairage LED', sub11:'Vêtements Bébé', sub12:'Électroménager',
+    sub13:'Yoga & Fitness', sub14:'Accessoires Auto', sub15:'Vitamines', sub16:'Manettes Gaming',
+    pbn1_tag:'Nouveautés', pbn1_h:'Dernière Électronique<br/>d\'Asie', pbn1_p:'Téléphones, tablettes, accessoires. Directement des fabricants.', pbn1_btn:'Acheter Électronique →',
+    pbn2_tag:'Collection Été', pbn2_h:'Mode Africaine<br/>Style Global', pbn2_p:"Robes, costumes, chaussures — jusqu'à 50% moins cher.", pbn2_btn:'Acheter Mode →',
+    pbn3_tag:'Solaire & Énergie Propre', pbn3_h:'Alimentez votre Maison<br/>avec le Solaire', pbn3_p:'Panneaux, batteries, onduleurs. Payez en FCFA ou Mobile Money.', pbn3_btn:'Acheter Solaire →',
+    pbn4_tag:'Beauté & Bien-être', pbn4_h:'Rayonnez avec<br/>des Cosmétiques Premium', pbn4_p:'Marques coréennes, européennes et africaines. Livrées à votre porte.', pbn4_btn:'Acheter Beauté →',
+    sec_feat_label:'À la Une', sec_feat_h:'Produits Tendance',
+    bfull_tag:'Partenariat Exclusif', bfull_h:'XenderShop × AliExpress — 500M+ Produits, Prix Africains', bfull_p:"Nous nous connectons directement à l'API AliExpress. Catalogue temps réel, prix d'usine réels, livrés chez vous.", bfull_btn1:'Commencer à Acheter →', bfull_btn2:'Vendre Ici',
+    flash_title:'Flash Deals', flash_ends:'Se termine dans:', flash_sold:'vendu',
+    conv_label:'Convertisseur de Devises', conv_h:'Convertissez les Prix Instantanément', conv_p:'Voir tout prix en USD, EUR, FCFA (XAF) ou XOF — taux mis à jour quotidiennement.',
+    conv_from:'De', conv_to:'Vers',
+    ali_h:"Accès Direct à 500 Millions de Produits — Prix d'Usine",
+    ali_p:"XenderShop s'intègre directement à l'API AliExpress pour vous apporter de vrais prix d'usine, un inventaire en temps réel et une livraison transfrontalière rapide vers l'Afrique.",
+    ali_p1_h:'Synchronisation catalogue temps réel', ali_p1_b:'500M+ SKUs mis à jour chaque heure',
+    ali_p2_h:"Prix d'usine", ali_p2_b:"Jusqu'à 40% moins cher que les détaillants locaux",
+    ali_p3_h:'Dernier kilomètre XenderDelivery', ali_p3_b:'Chaîne logistique Asie→Europe→Afrique',
+    ali_p4_h:'Protection acheteur', ali_p4_b:"Remboursement total si l'article n'arrive pas",
+    ali_stat1:'Produits Disponibles', ali_stat2:'vs Prix Retail', ali_stat3:'Pays Africains', ali_stat4:'Livraison Express',
+    sec_pay_label:'Paiement', sec_pay_h:'Payez Comme Vous Voulez',
+    btn_add:'Ajouter au Panier', btn_buy:'Acheter Maintenant',
+    cta_h:"Commencez à Acheter <span>Mondialement</span> Aujourd'hui", cta_p:"Des millions de produits. Des prix africains. Livrés à votre porte.",
+    cta_btn:'Voir les Produits →',
+    contact_label:'Contact', contact_h:'Contact & Aide', contact_p:"Besoin d'aide pour une commande ? Envie de devenir vendeur ? Nous sommes là.",
+    contact_cust:'Support Client', contact_cust_d:'Suivi de commande, retours, paiements — réponse sous 24h.',
+    contact_vend:'Devenez Vendeur', contact_vend_d:"Listez vos produits et atteignez des millions de clients en Afrique.",
+    contact_par:'Partenariats', contact_par_d:'Opportunités logistique, paiement et marques.',
+    contact_gen:'Général', contact_gen_d:"Une question ou suggestion ? Envoyez-nous un message.",
+    foot_desc:"Shopping mondial pour l'Afrique. Propulsé par l'API AliExpress. We Simplify Life.",
+    foot_shop:'Boutique', foot_more:'Plus', foot_ecosystem:'Écosystème', foot_legal:'Légal',
+    foot_privacy:'Confidentialité', foot_terms:'Conditions', foot_buyer:'Protection Acheteur', foot_seller:'Règles Vendeur',
+    foot_copy:"© 2026 XenderShop · Un produit InnovaAFRIC · Propulsé par AliExpress"
+  }
+};
+
+let LANG = localStorage.getItem('ia_lang') || 'en';
+function setLang(l) {
+  LANG = l; localStorage.setItem('ia_lang', l);
+  document.documentElement.lang = l;
+  ['es','en','fr'].forEach(id => {
+    const b = document.getElementById('lb-'+id);
+    if(b) b.className = 'lb-btn'+(id===l?' active':'');
+  });
+  const T = TR[l] || TR.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if(T[k]!==undefined) { el.classList.remove('lang-fade'); void el.offsetWidth; el.classList.add('lang-fade'); el.innerHTML = T[k]; }
+  });
+  const si = document.getElementById('search-input');
+  if(si && T.search_placeholder) si.placeholder = T.search_placeholder;
+  renderProducts();
+  renderFlash();
+}
+
+// Reveal
+const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.06});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Init
+setCurrency(CURRENCY);
+setLang(LANG);
 </script>
+<style>.lang-fade{animation:fadeSwitch .3s ease}@keyframes fadeSwitch{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}</style>
 </body>
 </html>
