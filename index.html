@@ -655,6 +655,10 @@ body.light-mode{
         <div class="ac" onclick="goTo('bot')"><div class="ai">🤖</div><div class="al">InnovaBot</div></div>
         <div class="ac" onclick="goTo('pos')"><div class="ai">🏪</div><div class="al">POS</div></div>
         <div class="ac" onclick="goTo('request')"><div class="ai">🔗</div><div class="al">Solicitar</div></div>
+        <div class="ac" onclick="goTo('insurance')"><div class="ai">🛡️</div><div class="al">Seguro</div></div>
+        <div class="ac" onclick="goTo('investment')"><div class="ai">📈</div><div class="al">Inversión</div></div>
+        <div class="ac" onclick="goTo('giftcard')"><div class="ai">🎁</div><div class="al">Gift Card</div></div>
+        <div class="ac" onclick="goTo('qrpay')"><div class="ai">📷</div><div class="al">Pago QR</div></div>
       </div>
       <!-- OFFER BANNER -->
       <div id="offer-banner" style="background:linear-gradient(135deg,rgba(255,209,102,.1),rgba(255,107,107,.08));border:1px solid rgba(255,209,102,.25);border-radius:16px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="goTo('shop')">
@@ -2553,7 +2557,155 @@ body.light-mode{
       <button class="btn btn-cy" style="margin-top:14px" onclick="createEscrow()">🔐 Nueva transacción Escrow</button>
     </div>
 
+    <!-- ── SEGURO ── -->
+    <div class="sc" id="sc-insurance">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">🛡️ Xender<span style="color:var(--cy)">Seguro</span></div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Protección para ti, tu familia y tu negocio</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);border-radius:14px;padding:14px;cursor:pointer" onclick="toast('Seguro de Vida seleccionado','cyan')">
+          <div style="font-size:22px;margin-bottom:6px">❤️</div>
+          <div style="font-size:12px;font-weight:700;color:var(--cy)">Vida</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">desde 500 XAF/mes</div>
+        </div>
+        <div style="background:rgba(0,255,178,.06);border:1px solid rgba(0,255,178,.15);border-radius:14px;padding:14px;cursor:pointer" onclick="toast('Seguro Médico seleccionado','green')">
+          <div style="font-size:22px;margin-bottom:6px">🏥</div>
+          <div style="font-size:12px;font-weight:700;color:var(--gr)">Médico</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">desde 800 XAF/mes</div>
+        </div>
+        <div style="background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);border-radius:14px;padding:14px;cursor:pointer" onclick="toast('Seguro de Viaje seleccionado','gold')">
+          <div style="font-size:22px;margin-bottom:6px">✈️</div>
+          <div style="font-size:12px;font-weight:700;color:#ffd166">Viaje</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">desde 1,200 XAF/viaje</div>
+        </div>
+        <div style="background:rgba(199,125,255,.06);border:1px solid rgba(199,125,255,.15);border-radius:14px;padding:14px;cursor:pointer" onclick="toast('Seguro Negocio seleccionado','purple')">
+          <div style="font-size:22px;margin-bottom:6px">🏪</div>
+          <div style="font-size:12px;font-weight:700;color:#c77dff">Negocio</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">desde 2,000 XAF/mes</div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-radius:14px;padding:14px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--mu);margin-bottom:8px">TU COBERTURA ACTIVA</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:12px">
+          <span style="font-size:18px">❤️</span>
+          <div style="flex:1"><div style="font-weight:600">Seguro de Vida Básico</div><div style="color:var(--mu);font-size:10px">Válido hasta dic 2026 · 500 XAF/mes</div></div>
+          <span style="background:rgba(0,255,178,.15);color:var(--gr);font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">ACTIVO</span>
+        </div>
+      </div>
+      <button class="btn btn-cy" onclick="toast('Contratando nuevo seguro…','cyan')">➕ Contratar seguro</button>
+    </div>
+
+    <!-- ── INVERSIÓN ── -->
+    <div class="sc" id="sc-investment">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">📈 Xender<span style="color:#00FFB2">Invest</span></div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Haz crecer tu dinero desde 1,000 XAF</div>
+      <!-- Portfolio summary -->
+      <div style="background:linear-gradient(135deg,rgba(0,255,178,.08),rgba(0,229,255,.05));border:1px solid rgba(0,255,178,.2);border-radius:16px;padding:16px;margin-bottom:14px">
+        <div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Portfolio total</div>
+        <div style="font-size:28px;font-weight:900;color:#00FFB2;font-family:var(--fs)">125,400 <span style="font-size:14px">XAF</span></div>
+        <div style="font-size:11px;color:var(--gr);margin-top:4px">↑ +8.4% este mes · +12,340 XAF</div>
+      </div>
+      <!-- Options -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="toast('Fondo África seleccionado','green')">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,255,178,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🌍</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700">Fondo África Growth</div><div style="font-size:10px;color:var(--mu)">Riesgo moderado · +12% anual</div></div>
+          <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#00FFB2">+12%</div><div style="font-size:9px;color:var(--mu)">anual</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="toast('Ahorro Plus seleccionado','cyan')">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,229,255,.12);display:flex;align-items:center;justify-content:center;font-size:16px">🏦</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700">Ahorro Plus</div><div style="font-size:10px;color:var(--mu)">Riesgo bajo · +7% anual</div></div>
+          <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:var(--cy)">+7%</div><div style="font-size:9px;color:var(--mu)">anual</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="toast('Cripto Basket seleccionado','gold')">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,209,102,.12);display:flex;align-items:center;justify-content:center;font-size:16px">₿</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700">Cripto Basket</div><div style="font-size:10px;color:var(--mu)">Riesgo alto · variable</div></div>
+          <div style="text-align:right"><div style="font-size:12px;font-weight:800;color:#ffd166">±25%</div><div style="font-size:9px;color:var(--mu)">anual</div></div>
+        </div>
+      </div>
+      <button class="btn btn-gr" onclick="toast('Abriendo formulario de inversión…','green')">📈 Invertir ahora</button>
+    </div>
+
+    <!-- ── GIFT CARD ── -->
+    <div class="sc" id="sc-giftcard">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">🎁 Gift Cards</div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Regala saldo para gastar en el ecosistema</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="background:linear-gradient(135deg,#FF4010,#FF7A00);border-radius:14px;padding:14px;cursor:pointer;text-align:center" onclick="toast('Gift Card XenderShop seleccionada','red')">
+          <div style="font-size:20px;margin-bottom:4px">🛍️</div>
+          <div style="font-size:11px;font-weight:800;color:#fff">XenderShop</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.7);margin-top:2px">1K–100K XAF</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#0D2B4E,#1A4A7A);border-radius:14px;padding:14px;cursor:pointer;text-align:center" onclick="toast('Gift Card XenderMoney seleccionada','cyan')">
+          <div style="font-size:20px;margin-bottom:4px">💸</div>
+          <div style="font-size:11px;font-weight:800;color:#F5A623">XenderMoney</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">1K–500K XAF</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#3D1C00,#6B3A00);border-radius:14px;padding:14px;cursor:pointer;text-align:center" onclick="toast('Gift Card BigShop seleccionada','gold')">
+          <div style="font-size:20px;margin-bottom:4px">🏪</div>
+          <div style="font-size:11px;font-weight:800;color:#E0921A">XenderBigShop</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">5K–1M XAF</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#0B1525,#1E3050);border-radius:14px;padding:14px;cursor:pointer;text-align:center" onclick="toast('Gift Card Delivery seleccionada','amber')">
+          <div style="font-size:20px;margin-bottom:4px">🚚</div>
+          <div style="font-size:11px;font-weight:800;color:#F59E0B">XenderDelivery</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:2px">500–20K XAF</div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px;margin-bottom:12px">
+        <div style="font-size:10px;color:var(--mu);margin-bottom:6px">MONTO DE LA GIFT CARD</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button style="background:rgba(0,229,255,.1);border:1px solid var(--cy);border-radius:8px;padding:6px 12px;color:var(--cy);font-size:12px;font-weight:700;cursor:pointer">5,000</button>
+          <button style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:6px 12px;color:var(--t);font-size:12px;cursor:pointer">10,000</button>
+          <button style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:6px 12px;color:var(--t);font-size:12px;cursor:pointer">25,000</button>
+          <button style="background:var(--card);border:1px solid var(--b);border-radius:8px;padding:6px 12px;color:var(--t);font-size:12px;cursor:pointer">50,000</button>
+        </div>
+      </div>
+      <button class="btn btn-cy" onclick="toast('🎁 Gift Card generada — compartiendo…','cyan')">🎁 Generar Gift Card</button>
+    </div>
+
+    <!-- ── PAGO QR ── -->
+    <div class="sc" id="sc-qrpay">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">📷 Pago <span style="color:var(--cy)">QR</span></div>
+      <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Cobra o paga escaneando un código</div>
+      <!-- Tabs -->
+      <div style="display:flex;gap:6px;margin-bottom:16px;background:var(--card);border-radius:12px;padding:4px">
+        <button id="qr-tab-show" onclick="qrTab('show')" style="flex:1;padding:8px;border-radius:9px;border:none;font-size:12px;font-weight:700;cursor:pointer;background:var(--cy);color:#000">Mi QR</button>
+        <button id="qr-tab-scan" onclick="qrTab('scan')" style="flex:1;padding:8px;border-radius:9px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:none;color:var(--mu)">Escanear</button>
+      </div>
+      <div id="qr-pane-show">
+        <!-- QR code visual -->
+        <div style="display:flex;justify-content:center;margin-bottom:16px">
+          <div style="background:#fff;border-radius:16px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.3)">
+            <div style="width:160px;height:160px;display:grid;grid-template-columns:repeat(8,1fr);gap:2px">
+              <!-- Simplified QR pattern -->
+              <script>
+              (function(){var p=[1,1,1,1,1,1,1,0,1,0,1,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,0,1,0,0,0,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0];p.forEach(function(v){document.write('<div style="background:'+(v?'#000':'#fff')+'"></div>');})})();
+              </script>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-bottom:14px">
+          <div style="font-size:13px;font-weight:700">@kofi.agyeman</div>
+          <div style="font-size:11px;color:var(--mu)">Escanea para enviarme dinero</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-cy" style="flex:1" onclick="toast('QR copiado al portapapeles','cyan')">📋 Copiar enlace</button>
+          <button class="btn" style="flex:1;background:var(--card);border:1px solid var(--b)" onclick="toast('Compartiendo QR…','green')">📤 Compartir</button>
+        </div>
+      </div>
+      <div id="qr-pane-scan" style="display:none">
+        <div style="background:var(--card);border:2px dashed var(--cy);border-radius:16px;padding:40px;text-align:center;margin-bottom:14px">
+          <div style="font-size:48px;margin-bottom:10px">📷</div>
+          <div style="font-size:13px;font-weight:600;color:var(--cy)">Apunta la cámara al QR</div>
+          <div style="font-size:11px;color:var(--mu);margin-top:4px">O ingresa el código manualmente</div>
+        </div>
+        <input type="text" placeholder="Código QR manual…" style="width:100%;background:var(--card);border:1px solid var(--b);border-radius:12px;padding:12px 14px;color:var(--t);font-size:13px;outline:none;margin-bottom:10px">
+        <button class="btn btn-cy" onclick="toast('✅ QR leído — cargando destinatario…','cyan')">Confirmar pago →</button>
+      </div>
+    </div>
+
   </div><!-- /screens -->
+<script>function qrTab(t){document.getElementById('qr-pane-show').style.display=t==='show'?'block':'none';document.getElementById('qr-pane-scan').style.display=t==='scan'?'block':'none';document.getElementById('qr-tab-show').style.background=t==='show'?'var(--cy)':'none';document.getElementById('qr-tab-show').style.color=t==='show'?'#000':'var(--mu)';document.getElementById('qr-tab-scan').style.background=t==='scan'?'var(--cy)':'none';document.getElementById('qr-tab-scan').style.color=t==='scan'?'#000':'var(--mu)';}</script>
 
   <!-- SERVICES POPUP MENU -->
   <div class="svc-menu" id="svc-menu">

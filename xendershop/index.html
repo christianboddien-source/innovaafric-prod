@@ -228,7 +228,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     </div>
     <div class="nav-actions">
       <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span>Cuenta</span></a>
-      <a href="#" class="nav-icon-btn cart-wrap"><span class="icon">🛒</span><span>Carrito</span><span class="cart-badge">3</span></a>
+      <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span>Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
       <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span>Deseos</span></a>
       <div class="lang-row">
         <button class="lb active" onclick="setLang('es')">ES</button>
@@ -561,6 +561,80 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 </div>
 
 </div><!-- /page-wrap -->
+
+<!-- ═══ CART SIDEBAR ═══ -->
+<div id="cart-overlay" onclick="closeCart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;"></div>
+<div id="cart-sidebar" style="position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100vh;background:#fff;z-index:1000;box-shadow:-4px 0 40px rgba(0,0,0,.15);display:flex;flex-direction:column;transition:right .3s ease;">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f0f0f0;">
+    <div style="font-size:16px;font-weight:900;color:#1a1a1a;">🛒 Mi Carrito <span id="cart-header-count" style="font-size:12px;color:#999;font-weight:500;">(3 artículos)</span></div>
+    <button onclick="closeCart()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#666;padding:4px;">✕</button>
+  </div>
+  <!-- Items -->
+  <div style="flex:1;overflow-y:auto;padding:16px 24px;" id="cart-items">
+    <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f5f5f5;">
+      <div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">📱</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:3px;">Smartphone 5G 128GB AMOLED</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">Color: Negro · Talla: —</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:15px;font-weight:900;color:#FF4010;">€89.00</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="cartQty(this,-1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">−</button>
+            <span style="font-size:13px;font-weight:700;min-width:16px;text-align:center;">1</span>
+            <button onclick="cartQty(this,1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f5f5f5;">
+      <div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">👟</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:3px;">Zapatillas Running Pro Knit</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">Color: Blanco · Talla: 42</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:15px;font-weight:900;color:#FF4010;">€32.50</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="cartQty(this,-1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">−</button>
+            <span style="font-size:13px;font-weight:700;min-width:16px;text-align:center;">1</span>
+            <button onclick="cartQty(this,1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;padding:14px 0;">
+      <div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">💆</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:3px;">Sérum Vitamina C + Retinol 30ml</div>
+        <div style="font-size:11px;color:#999;margin-bottom:8px;">Tipo: Piel mixta</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:15px;font-weight:900;color:#FF4010;">€7.99</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="cartQty(this,-1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">−</button>
+            <span style="font-size:13px;font-weight:700;min-width:16px;text-align:center;">2</span>
+            <button onclick="cartQty(this,1)" style="width:26px;height:26px;border-radius:6px;border:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#333;">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Promo code -->
+  <div style="padding:0 24px 12px;"><div style="display:flex;gap:8px;"><input id="promo-input" type="text" placeholder="Código promocional" style="flex:1;border:1px solid #e8e8e8;border-radius:8px;padding:10px 12px;font-size:13px;outline:none;"><button onclick="applyPromo()" style="background:#FF4010;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aplicar</button></div></div>
+  <!-- Summary -->
+  <div style="padding:16px 24px;border-top:1px solid #f0f0f0;background:#fafafa;">
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;"><span>Subtotal</span><span>€137.48</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:6px;"><span>Envío</span><span>Gratis ✈️</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:16px;padding-top:10px;border-top:1px solid #e8e8e8;"><span>Total</span><span style="color:#FF4010;">€137.48</span></div>
+    <button onclick="alert('Procediendo al pago con XenderMoney…')" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">Pagar con XenderMoney →</button>
+    <button onclick="closeCart()" style="width:100%;background:none;border:none;padding:10px;font-size:13px;color:#999;cursor:pointer;margin-top:4px;">Seguir comprando</button>
+  </div>
+</div>
+<script>
+function openCart(){document.getElementById('cart-sidebar').style.right='0';document.getElementById('cart-overlay').style.display='block';document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('cart-sidebar').style.right='-420px';document.getElementById('cart-overlay').style.display='none';document.body.style.overflow='';}
+function cartQty(btn,d){var sp=btn.parentElement.querySelector('span');var v=parseInt(sp.textContent)+d;if(v<1)v=1;sp.textContent=v;}
+function applyPromo(){var v=document.getElementById('promo-input').value.trim().toUpperCase();if(v==='INNOVA10'){alert('✅ Código aplicado — 10% descuento');}else{alert('Código no válido');}}
+</script>
 
 <!-- ═══ VENDEDORES DESTACADOS ═══ -->
 <div style="background:#fff;padding:48px 20px 0;">
