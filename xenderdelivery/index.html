@@ -596,6 +596,121 @@
   </div>
 </section>
 
+<!-- ═══ CALCULADORA DE GANANCIAS ═══ -->
+<section style="padding:80px 6%;background:#0B1525;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <span style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F59E0B;">Riders</span>
+      <h2 style="font-size:clamp(22px,2.5vw,34px);font-weight:900;color:#F0F4FF;margin-top:10px;">Calcula tus ganancias como Rider</h2>
+      <p style="font-size:15px;color:rgba(240,244,255,0.5);margin-top:10px;">Elige tu vehículo y tus horas — ve cuánto puedes ganar cada mes.</p>
+    </div>
+    <div style="background:#131F35;border:1px solid rgba(245,158,11,0.2);border-radius:24px;padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">
+      <!-- Controls -->
+      <div>
+        <div style="margin-bottom:24px;">
+          <label style="font-size:12px;font-weight:700;color:rgba(240,244,255,0.6);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:10px;">Vehículo</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="rdCalc('moto')" id="rd-moto" style="background:rgba(245,158,11,0.15);border:2px solid #F59E0B;border-radius:10px;padding:12px 8px;color:#F59E0B;font-size:13px;font-weight:700;cursor:pointer;">🏍️ Moto</button>
+            <button onclick="rdCalc('bici')" id="rd-bici" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 8px;color:rgba(240,244,255,0.5);font-size:13px;font-weight:600;cursor:pointer;">🚲 Bici</button>
+            <button onclick="rdCalc('furg')" id="rd-furg" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 8px;color:rgba(240,244,255,0.5);font-size:13px;font-weight:600;cursor:pointer;">🚐 Furgoneta</button>
+            <button onclick="rdCalc('cam')" id="rd-cam" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 8px;color:rgba(240,244,255,0.5);font-size:13px;font-weight:600;cursor:pointer;">🚛 Camión</button>
+          </div>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label style="font-size:12px;font-weight:700;color:rgba(240,244,255,0.6);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:10px;">Horas por día: <span id="rd-hrs-lbl" style="color:#F59E0B;">6h</span></label>
+          <input type="range" id="rd-hrs" min="2" max="12" value="6" oninput="rdCalc(null)" style="width:100%;accent-color:#F59E0B;">
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:rgba(240,244,255,0.6);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:10px;">Días por semana: <span id="rd-days-lbl" style="color:#F59E0B;">5 días</span></label>
+          <input type="range" id="rd-days" min="1" max="7" value="5" oninput="rdCalc(null)" style="width:100%;accent-color:#F59E0B;">
+        </div>
+      </div>
+      <!-- Result -->
+      <div style="background:#0A1628;border-radius:16px;padding:28px;text-align:center;">
+        <div style="font-size:11px;color:rgba(240,244,255,0.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Ganancia estimada / mes</div>
+        <div id="rd-result" style="font-size:42px;font-weight:900;color:#F59E0B;margin-bottom:4px;">97,200</div>
+        <div style="font-size:13px;color:rgba(240,244,255,0.4);margin-bottom:24px;">XAF · ≈ €148</div>
+        <div style="display:flex;flex-direction:column;gap:10px;text-align:left;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(240,244,255,0.5);">Por entrega (est.)</span><span id="rd-per" style="color:#F0F4FF;font-weight:700;">1,800 XAF</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(240,244,255,0.5);">Entregas/día (est.)</span><span id="rd-del" style="color:#F0F4FF;font-weight:700;">9</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;"><span style="color:rgba(240,244,255,0.5);">Pago semanal</span><span id="rd-week" style="color:#00FFB2;font-weight:800;">22,680 XAF</span></div>
+        </div>
+        <a href="#" style="display:block;margin-top:20px;background:#F59E0B;border-radius:10px;padding:12px;font-size:13px;font-weight:700;color:#050B18;text-decoration:none;">Registrarme como Rider →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CIUDADES ACTIVAS ═══ -->
+<section style="padding:60px 6%;background:#0D1B2E;">
+  <div style="text-align:center;margin-bottom:36px;">
+    <h2 style="font-size:22px;font-weight:900;color:#F0F4FF;">📍 Ciudades con cobertura activa</h2>
+    <p style="font-size:13px;color:rgba(240,244,255,0.4);margin-top:8px;">Operando en 3 continentes · Expansión continua</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto;">
+    <div style="background:#131F35;border:1px solid rgba(245,158,11,0.15);border-radius:16px;padding:20px;">
+      <div style="font-size:13px;font-weight:800;color:#F59E0B;margin-bottom:14px;">🌍 África Central &amp; Oeste</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Douala</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Yaoundé</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Lagos</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Abidjan</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Dakar</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Accra</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Bamako</span>
+        <span style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Libreville</span>
+      </div>
+    </div>
+    <div style="background:#131F35;border:1px solid rgba(66,168,225,0.15);border-radius:16px;padding:20px;">
+      <div style="font-size:13px;font-weight:800;color:#42A8E1;margin-bottom:14px;">🌍 Europa</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="background:rgba(66,168,225,0.08);border:1px solid rgba(66,168,225,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Madrid</span>
+        <span style="background:rgba(66,168,225,0.08);border:1px solid rgba(66,168,225,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">París</span>
+        <span style="background:rgba(66,168,225,0.08);border:1px solid rgba(66,168,225,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Barcelona</span>
+        <span style="background:rgba(66,168,225,0.08);border:1px solid rgba(66,168,225,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Lisboa</span>
+        <span style="background:rgba(66,168,225,0.08);border:1px solid rgba(66,168,225,0.2);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Bruxelles</span>
+        <span style="background:rgba(66,168,225,0.06);border:1px solid rgba(66,168,225,0.1);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.35);">+ próximamente</span>
+      </div>
+    </div>
+    <div style="background:#131F35;border:1px solid rgba(0,255,178,0.12);border-radius:16px;padding:20px;">
+      <div style="font-size:13px;font-weight:800;color:#00FFB2;margin-bottom:14px;">🌎 Latinoamérica</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <span style="background:rgba(0,255,178,0.06);border:1px solid rgba(0,255,178,0.15);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">São Paulo</span>
+        <span style="background:rgba(0,255,178,0.06);border:1px solid rgba(0,255,178,0.15);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Bogotá</span>
+        <span style="background:rgba(0,255,178,0.06);border:1px solid rgba(0,255,178,0.15);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.7);">Ciudad de México</span>
+        <span style="background:rgba(0,255,178,0.04);border:1px solid rgba(0,255,178,0.08);border-radius:5px;padding:3px 9px;font-size:11px;color:rgba(240,244,255,0.35);">+ 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+var rdVehicle='moto';
+var rdRates={moto:{per:1800,del:9},bici:{per:900,del:7},furg:{per:3500,del:6},cam:{per:7000,del:4}};
+function rdCalc(v){
+  if(v){
+    rdVehicle=v;
+    ['moto','bici','furg','cam'].forEach(function(k){
+      var btn=document.getElementById('rd-'+k);
+      if(k===v){btn.style.background='rgba(245,158,11,0.15)';btn.style.border='2px solid #F59E0B';btn.style.color='#F59E0B';}
+      else{btn.style.background='rgba(255,255,255,0.03)';btn.style.border='1px solid rgba(255,255,255,0.1)';btn.style.color='rgba(240,244,255,0.5)';}
+    });
+  }
+  var hrs=parseInt(document.getElementById('rd-hrs').value);
+  var days=parseInt(document.getElementById('rd-days').value);
+  document.getElementById('rd-hrs-lbl').textContent=hrs+'h';
+  document.getElementById('rd-days-lbl').textContent=days+' día'+(days>1?'s':'');
+  var r=rdRates[rdVehicle];
+  var perDay=r.per*r.del*(hrs/8);
+  var perWeek=perDay*days;
+  var perMonth=perWeek*4;
+  document.getElementById('rd-result').textContent=Math.round(perMonth).toLocaleString();
+  document.getElementById('rd-per').textContent=r.per.toLocaleString()+' XAF';
+  document.getElementById('rd-del').textContent=Math.round(r.del*(hrs/8));
+  document.getElementById('rd-week').textContent=Math.round(perWeek).toLocaleString()+' XAF';
+}
+</script>
+
 <section class="cta">
   <h2 class="reveal" data-i18n="cta_h">¿Listo para entregar más rápido?</h2>
   <p class="reveal" data-i18n="cta_p">Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.</p>
