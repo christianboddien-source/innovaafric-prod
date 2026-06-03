@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InnovaAFRIC — We Simplify Life</title>
   <meta name="description" content="InnovaAFRIC is a tricontinental tech ecosystem simplifying finance, commerce, and logistics across Africa, Europe, and Latin America." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -652,224 +652,336 @@
 </section>
 
 <!-- APP IN ACTION -->
-<section style="padding:90px 6%;background:#F4F8FF;">
+<section style="padding:90px 6%;background:#0A1628;">
   <div class="sec-head reveal" style="text-align:center;margin-bottom:56px;">
-    <span class="sec-label" data-i18n="ops_label">App Operations</span>
-    <h2 class="sec-title" data-i18n="ops_h">The App in Action</h2>
-    <p class="sec-sub" data-i18n="ops_sub">From your phone, manage money, shop, pay, track deliveries and run your business — all in one ecosystem.</p>
+    <span class="sec-label" style="background:rgba(0,229,255,0.1);color:#00E5FF;border-color:rgba(0,229,255,0.2);" data-i18n="ops_label">App Operations</span>
+    <h2 class="sec-title" style="color:#fff;" data-i18n="ops_h">The App in Action</h2>
+    <p class="sec-sub" style="color:rgba(240,244,255,0.55);" data-i18n="ops_sub">From your phone, manage money, shop, pay, track deliveries and run your business — all in one ecosystem.</p>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;max-width:1100px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;margin:0 auto;">
     <!-- Op 1: Send Money -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#2B8DC7,#0D2B4E);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERMONEY</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><span style="color:#fff;font-size:13px;font-weight:600;">💳 Balance</span><span style="color:#F5A623;font-weight:800;font-size:16px;">328,500 FCFA</span></div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;margin-bottom:10px;">
-            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-bottom:6px;" data-i18n="ops_recipient">Recipient</div>
-            <div style="color:#fff;font-weight:600;font-size:13px;">👤 Marie D. · +237 6XX XXX</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <div style="flex:1;background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_send_btn">Send 50,000 FCFA</div>
+    <!-- ── PHONE 1: Home Screen ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:#0A1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;background:linear-gradient(135deg,#00E5FF,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">InnovaAFRIC</div>
+        <div style="display:flex;align-items:center;gap:6px;"><div style="width:6px;height:6px;background:#00FFB2;border-radius:50%;"></div><span style="font-size:9px;color:#00FFB2;font-weight:700;">LIVE</span></div>
+      </div>
+      <div style="padding:16px;">
+        <div style="background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(199,125,255,0.06));border:1px solid rgba(0,229,255,0.15);border-radius:18px;padding:16px;margin-bottom:12px;">
+          <div style="font-size:9px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;" data-i18n="ops_bal">Balance</div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#F0F4FF;letter-spacing:-.5px;">€ 1,248.50</div>
+          <div style="font-size:12px;color:rgba(240,244,255,0.45);margin-bottom:12px;">818,168 XAF · $1,348</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <div style="background:rgba(0,255,178,0.08);border:1px solid rgba(0,255,178,0.2);border-radius:20px;padding:3px 10px;font-size:11px;color:#00FFB2;">EUR <b>1,248.50</b></div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(240,244,255,0.6);">XAF <b>818K</b></div>
+            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(240,244,255,0.6);">Pts <b>1,420</b></div>
           </div>
         </div>
-        <div style="position:absolute;top:16px;right:16px;background:#F5A623;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">INSTANT</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px;">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💸</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_send">Send</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💰</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_rcv">Receive</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🏦</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Withdraw</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💱</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">FX</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">⚡</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Bills</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🫂</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Tontines</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🌍</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Live Map</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🏪</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">POS</div></div>
+        </div>
+        <div style="background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:16px;">🔥</span>
+          <div style="flex:1;font-size:10px;font-weight:700;color:#FFD166;">OFERTA DEL DÍA · Kit Solar -15%</div>
+          <span style="font-size:10px;color:#FFD166;font-weight:700;">23:45:12</span>
+        </div>
       </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops1_h">Instant Money Transfers</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops1_p">Send money to family across Africa in seconds. USD, EUR, FCFA or XOF — the recipient sees the local currency automatically.</p>
+      <div style="padding:12px 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops1_h">Instant Money Transfers</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops1_p">Send money to family across Africa in seconds. USD, EUR, FCFA or XOF — the recipient sees the local currency automatically.</p>
       </div>
     </div>
-    <!-- Op 2: Recharge -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#16A34A,#0E7A32);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">RECHARGE — AIRTIME & BILLS</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">📱</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">MTN</div></div>
-            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">🟠</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">Orange</div></div>
-            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">💙</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">Wave</div></div>
-            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">⚡</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;" data-i18n="ops_elec">Electricity</div></div>
+
+    <!-- ── PHONE 2: Send Money ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:#0A1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:16px;">←</span>
+        <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#F0F4FF;flex:1;">💸 <span data-i18n="app_send">Send Money</span></span>
+      </div>
+      <div style="padding:16px;">
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;margin-bottom:14px;">
+          <span style="font-size:11px;color:rgba(240,244,255,0.45);">Available</span>
+          <span style="font-size:13px;font-weight:800;color:#00E5FF;font-family:'Syne',sans-serif;">1,248.50 EUR</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:12px;">
+          <div style="flex:1;background:rgba(0,229,255,0.1);border:1.5px solid #00E5FF;border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">🌍</div><div style="font-size:10px;font-weight:600;color:#00E5FF;margin-top:3px;">International</div></div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">↔️</div><div style="font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);margin-top:3px;">P2P Free</div></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:11px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;" data-i18n="ops_recipient">Recipient</div>
+          <div style="font-size:13px;font-weight:600;color:#F0F4FF;">👤 Marie Dikongué · +237 699 XXX</div>
+          <div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:3px;">🇨🇲 Cameroon · MTN Mobile Money</div>
+        </div>
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:11px;color:rgba(240,244,255,0.4);margin-bottom:4px;">Recipient gets</div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#00E5FF;">65,596 XAF</div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;">
+            <span style="color:rgba(240,244,255,0.4);">Fee (2%)</span><span style="color:#00FFB2;font-weight:700;">€2.00</span>
           </div>
-          <div style="background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_rch_btn">Recharge Now</div>
-        </div>
-        <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">24/7</div>
-      </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops2_h">Airtime & Bill Payments</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops2_p">Recharge mobile credit, pay electricity, water and internet bills for you or a family member — any operator, any country, instantly.</p>
-      </div>
-    </div>
-    <!-- Op 3: Shop -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#7C3AED,#4C1D95);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERSHOP × ALIEXPRESS</div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:24px;">📱</span><div><div style="color:#fff;font-size:12px;font-weight:600;">Smartphone Pro Max</div><div style="color:#F5A623;font-weight:700;font-size:13px;">32,750 FCFA</div></div></div>
-          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:24px;">👟</span><div><div style="color:#fff;font-size:12px;font-weight:600;">Sneakers Urban</div><div style="color:#F5A623;font-weight:700;font-size:13px;">8,200 FCFA</div></div></div>
-          <div style="background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_cart_btn">Add to Cart · Pay with Wallet</div>
-        </div>
-        <div style="position:absolute;top:16px;right:16px;background:#F5A623;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">-40%</div>
-      </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops3_h">Global Shopping, Local Prices</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops3_p">Browse millions of AliExpress products directly from your phone. Pay in FCFA or XOF. Delivered to your door by XenderDelivery.</p>
-      </div>
-    </div>
-    <!-- Op 4: Pay at store -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#DC2626,#7F1D1D);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:16px;" data-i18n="ops_tap">TAP TO PAY — NFC / QR CODE</div>
-          <div style="text-align:center;margin-bottom:14px;">
-            <div style="width:80px;height:80px;background:rgba(255,255,255,0.15);border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:36px;border:2px solid rgba(255,255,255,0.3);">📲</div>
-          </div>
-          <div style="text-align:center;color:#fff;font-size:13px;margin-bottom:8px;font-weight:600;" data-i18n="ops_store">Restaurant Le Baobab</div>
-          <div style="text-align:center;color:#F5A623;font-size:20px;font-weight:800;">12,500 FCFA</div>
-        </div>
-        <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">QR / NFC</div>
-      </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops4_h">Pay at Public Establishments</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops4_p">Pay at restaurants, pharmacies, supermarkets and any affiliated merchant with a simple QR code or NFC — zero cash, instant confirmation.</p>
-      </div>
-    </div>
-    <!-- Op 5: Delivery tracking -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#0891B2,#164E63);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERDELIVERY — LIVE TRACKING</div>
-          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:#F5A623;border-radius:50%;flex-shrink:0;"></div><div style="color:#fff;font-size:11px;">📦 <span data-i18n="ops_picked">Order picked up</span> — 14:32</div></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:#22C55E;border-radius:50%;flex-shrink:0;"></div><div style="color:#fff;font-size:11px;">🏍️ <span data-i18n="ops_otw">Rider on the way</span> — 14:41</div></div>
-            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:rgba(255,255,255,0.2);border-radius:50%;flex-shrink:0;"></div><div style="color:rgba(255,255,255,0.4);font-size:11px;">✅ <span data-i18n="ops_eta">ETA 15:10</span></div></div>
-          </div>
-          <div style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);border-radius:8px;padding:8px;text-align:center;color:#22C55E;font-size:11px;font-weight:700;" data-i18n="ops_eta_label">≈ 29 min remaining</div>
-        </div>
-      </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops5_h">Live Delivery Tracking</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops5_p">Follow every order in real time on the map. GPS updates every 30 seconds. Get notified when your rider is nearby.</p>
-      </div>
-    </div>
-    <!-- Op 6: Wallet statement -->
-    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
-      <div style="background:linear-gradient(135deg,#F5A623,#E0921A);padding:28px 24px;position:relative;">
-        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:18px;font-family:monospace;">
-          <div style="color:rgba(255,255,255,0.7);font-size:11px;margin-bottom:12px;" data-i18n="ops_stmt">WALLET STATEMENT · JUNE 2026</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">➕ <span data-i18n="ops_dep">Deposit EUR</span></span><span style="color:#fff;font-weight:700;font-size:11px;">+65,500 FCFA</span></div>
-            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">🛒 XenderShop</span><span style="color:rgba(255,255,255,0.7);font-size:11px;">-32,750 FCFA</span></div>
-            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">💸 <span data-i18n="ops_transf">Transfer</span></span><span style="color:rgba(255,255,255,0.7);font-size:11px;">-15,000 FCFA</span></div>
-            <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:8px;display:flex;justify-content:space-between;"><span style="color:#fff;font-size:12px;font-weight:700;" data-i18n="ops_bal">Balance</span><span style="color:#fff;font-size:14px;font-weight:800;">328,500 FCFA</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:3px;">
+            <span style="color:rgba(240,244,255,0.4);">vs WU (-10%)</span><span style="color:#00FFB2;font-weight:700;">Save €8.00</span>
           </div>
         </div>
+        <div style="background:linear-gradient(135deg,#00E5FF,#00B4D8);border-radius:12px;padding:13px;text-align:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#050B18;" data-i18n="ops_send_btn">💸 Confirm Transfer →</div>
       </div>
-      <div style="padding:20px 24px;">
-        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops6_h">Complete Wallet History</h4>
-        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops6_p">Every deposit, transfer, purchase and payment — logged, categorized and exportable. Full financial transparency in your pocket.</p>
+      <div style="padding:12px 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops2_h">Airtime & Bill Payments</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops2_p">Recharge mobile credit, pay electricity, water and internet bills for you or a family member — any operator, any country, instantly.</p>
+      </div>
+    </div>
+
+    <!-- ── PHONE 3: Converter ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:#0A1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:16px;">←</span>
+        <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#F0F4FF;flex:1;">💱 Currency Converter</span>
+      </div>
+      <div style="padding:16px;">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:6px;">
+          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">I have</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#F0F4FF;flex:1;">100</div>
+            <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.25);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#00E5FF;">EUR €</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin:4px 0;"><div style="width:32px;height:32px;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.25);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:#00E5FF;">⇅</div></div>
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">I get</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#00E5FF;flex:1;">65,596</div>
+            <div style="background:rgba(255,209,102,0.1);border:1px solid rgba(255,209,102,0.3);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#FFD166;">XAF</div>
+          </div>
+        </div>
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:10px;padding:10px;text-align:center;margin-bottom:12px;">
+          <div style="font-size:9px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;">Applied rate</div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#00E5FF;">1 EUR = 655.957 XAF</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;"><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-bottom:3px;">1 EUR</div><div style="font-size:13px;font-weight:700;color:#00E5FF;">655.96 XAF</div></div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:10px;"><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-bottom:3px;">1 USD</div><div style="font-size:13px;font-weight:700;color:#FFD166;">607.36 XAF</div></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops3_h">Global Shopping, Local Prices</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops3_p">Browse millions of AliExpress products directly from your phone. Pay in FCFA or XOF. Delivered to your door by XenderDelivery.</p>
+      </div>
+    </div>
+
+    <!-- ── PHONE 4: XenderShop ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:linear-gradient(135deg,rgba(0,137,123,0.2),rgba(230,81,0,0.15));border:1px solid rgba(0,137,123,0.25);border-radius:16px;margin:16px 16px 0;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:20px;">🛒</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#E65100;">Shop</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);">× AliExpress · 500M+ products</div></div>
+        <div style="margin-left:auto;background:rgba(0,137,123,0.15);border:1px solid rgba(0,137,123,0.3);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#00897B;">FCFA ▾</div>
+      </div>
+      <div style="padding:12px 16px;display:flex;gap:6px;overflow-x:auto;">
+        <div style="background:rgba(0,137,123,0.15);border:1px solid rgba(0,137,123,0.4);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:#00897B;white-space:nowrap;">📱 Electronics</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">👗 Fashion</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">🏠 Home</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">⚡ Solar</div>
+      </div>
+      <div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
+          <div style="background:rgba(0,137,123,0.08);height:64px;display:flex;align-items:center;justify-content:center;font-size:32px;">📱</div>
+          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;">Smartphone Pro</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Syne',sans-serif;">32,750 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);">from China 🇨🇳</div></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
+          <div style="background:rgba(0,137,123,0.08);height:64px;display:flex;align-items:center;justify-content:center;font-size:32px;">⚡</div>
+          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;">Kit Solar Hogar</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Syne',sans-serif;">164,875 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);">-15% hoy 🔥</div></div>
+        </div>
+      </div>
+      <div style="padding:0 16px 16px;"><div style="background:linear-gradient(135deg,#00897B,#E65100);border-radius:12px;padding:11px;text-align:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:#fff;" data-i18n="ops_cart_btn">Add to Cart · Pay with Wallet</div></div>
+      <div style="padding:0 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops4_h">Pay at Public Establishments</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops4_p">Pay at restaurants, pharmacies, supermarkets and any affiliated merchant with a simple QR code or NFC — zero cash, instant confirmation.</p>
+      </div>
+    </div>
+
+    <!-- ── PHONE 5: Delivery Tracking ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:linear-gradient(135deg,rgba(245,124,0,0.2),rgba(26,58,92,0.3));border:1px solid rgba(245,124,0,0.25);border-radius:16px;margin:16px 16px 0;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:20px;">🚚</div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#F57C00;">Delivery</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);">Live GPS · Order #IA-9284</div></div>
+        <div style="margin-left:auto;background:rgba(0,255,178,0.1);border:1px solid rgba(0,255,178,0.25);border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700;color:#00FFB2;">ON WAY</div>
+      </div>
+      <div style="padding:14px 16px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px;margin-bottom:12px;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;position:relative;">
+              <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#F57C00,#FFD166);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">📦</div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;">Order picked up</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;">14:32 · Pharmacy Centrale</div></div>
+              <div style="margin-left:auto;font-size:10px;color:#00FFB2;font-weight:700;">✓</div>
+            </div>
+            <div style="margin-left:14px;width:1px;height:16px;background:rgba(255,255,255,0.1);"></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(245,124,0,0.15);border:2px solid #F57C00;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">🏍️</div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;">Rider in transit</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;">14:41 · 2.3 km away</div></div>
+            </div>
+            <div style="margin-left:14px;width:1px;height:16px;background:rgba(255,255,255,0.07);"></div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;opacity:0.5;">✅</div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:rgba(240,244,255,0.4);">Delivered</div><div style="font-size:10px;color:rgba(240,244,255,0.25);margin-top:1px;">ETA 15:10</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(0,255,178,0.08);border:1px solid rgba(0,255,178,0.2);border-radius:10px;padding:10px;text-align:center;">
+          <span style="font-size:13px;font-weight:700;color:#00FFB2;" data-i18n="ops_eta_label">≈ 29 min remaining</span>
+        </div>
+      </div>
+      <div style="padding:0 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops5_h">Live Delivery Tracking</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops5_p">Follow every order in real time on the map. GPS updates every 30 seconds. Get notified when your rider is nearby.</p>
+      </div>
+    </div>
+
+    <!-- ── PHONE 6: Transaction History ── -->
+    <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
+      <div style="background:#0A1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:16px;">←</span>
+        <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#F0F4FF;flex:1;">📊 <span data-i18n="ops_stmt">History</span></span>
+        <div style="display:flex;gap:4px;">
+          <div style="background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.25);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#FF4D6D;">PDF</div>
+          <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:700;color:#00E5FF;">CSV</div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+          <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.35);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:#00E5FF;white-space:nowrap;">All</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Sent</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Received</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Bills</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,255,178,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">💰</div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_dep">Deposit EUR</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 3 · 09:14</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#00FFB2;font-family:'Syne',sans-serif;">+65,500 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Confirmed</div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,229,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;">🛒</div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;">XenderShop</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 2 · 15:30</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Syne',sans-serif;">-32,750 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Delivered</div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(199,125,255,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">💸</div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_transf">Transfer · Marie D.</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 1 · 11:02</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Syne',sans-serif;">-15,000 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Sent</div></div>
+          </div>
+        </div>
+        <div style="background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.15);border-radius:10px;padding:10px 12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;color:rgba(240,244,255,0.5);" data-i18n="ops_bal">Balance</span>
+          <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#FFD166;">328,500 XAF</span>
+        </div>
+      </div>
+      <div style="padding:0 16px 16px;">
+        <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;" data-i18n="ops6_h">Complete Wallet History</h4>
+        <p style="font-size:12px;color:rgba(240,244,255,0.5);line-height:1.6;" data-i18n="ops6_p">Every deposit, transfer, purchase and payment — logged, categorized and exportable. Full financial transparency in your pocket.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ERP + DASHBOARD -->
-<section style="padding:90px 6%;background:#fff;">
+<section style="padding:90px 6%;background:#0A1628;">
   <div class="sec-head reveal" style="text-align:center;margin-bottom:60px;">
-    <span class="sec-label" style="background:rgba(124,58,237,0.08);color:#7C3AED;" data-i18n="erp_label">ERP Intelligence</span>
-    <h2 class="sec-title" data-i18n="erp_h">30+ Modules. One Smart Platform.</h2>
-    <p class="sec-sub" data-i18n="erp_sub">InnovaAFRIC is powered by an enterprise-grade ERP that processes thousands of transactions simultaneously — in real time, across 35 countries.</p>
+    <span class="sec-label" style="background:rgba(199,125,255,0.1);color:#C77DFF;border-color:rgba(199,125,255,0.2);" data-i18n="erp_label">ERP Intelligence</span>
+    <h2 class="sec-title" style="color:#fff;" data-i18n="erp_h">30+ Modules. One Smart Platform.</h2>
+    <p class="sec-sub" style="color:rgba(240,244,255,0.55);" data-i18n="erp_sub">InnovaAFRIC is powered by an enterprise-grade ERP that processes thousands of transactions simultaneously — in real time, across 35 countries.</p>
   </div>
   <!-- Dashboard preview -->
-  <div class="reveal" style="max-width:1060px;margin:0 auto 64px;background:#0D2B4E;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(13,43,78,0.25);">
-    <!-- Dashboard top bar -->
-    <div style="background:#1A3A5C;padding:14px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.07);">
+  <div class="reveal" style="max-width:1060px;margin:0 auto 64px;background:#050B18;border:1px solid rgba(0,229,255,0.12);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div style="background:#0A1628;padding:14px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.07);">
       <div style="display:flex;gap:6px;"><div style="width:12px;height:12px;border-radius:50%;background:#FF5F57;"></div><div style="width:12px;height:12px;border-radius:50%;background:#FFBD2E;"></div><div style="width:12px;height:12px;border-radius:50%;background:#28CA41;"></div></div>
-      <div style="background:rgba(255,255,255,0.07);border-radius:6px;padding:6px 16px;color:rgba(255,255,255,0.5);font-size:12px;font-family:monospace;">InnovaAFRIC ERP Dashboard · v4.7</div>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;"><div style="width:8px;height:8px;background:#22C55E;border-radius:50%;"></div><span style="color:#22C55E;font-size:11px;font-weight:700;" data-i18n="dash_live">LIVE</span></div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:6px;padding:5px 14px;color:rgba(240,244,255,0.4);font-size:11px;font-family:monospace;">InnovaAFRIC ERP Dashboard · v4.7</div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;"><div style="width:7px;height:7px;background:#00FFB2;border-radius:50%;box-shadow:0 0 6px #00FFB2;"></div><span style="color:#00FFB2;font-size:10px;font-weight:700;" data-i18n="dash_live">LIVE</span></div>
     </div>
-    <!-- KPI row -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.05);">
-      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi1">Total Volume (24h)</div><div style="color:#F5A623;font-size:22px;font-weight:800;">$2.4M</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +18.3%</div></div>
-      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi2">Active Users</div><div style="color:#42A8E1;font-size:22px;font-weight:800;">142,508</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +4.7%</div></div>
-      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi3">Transactions Today</div><div style="color:#fff;font-size:22px;font-weight:800;">38,921</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +9.1%</div></div>
-      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi4">Countries Active</div><div style="color:#fff;font-size:22px;font-weight:800;">35</div><div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:4px;">3 continents</div></div>
+      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi1">Total Volume (24h)</div><div style="color:#FFD166;font-size:20px;font-weight:800;font-family:'Syne',sans-serif;">$2.4M</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +18.3%</div></div>
+      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi2">Active Users</div><div style="color:#00E5FF;font-size:20px;font-weight:800;font-family:'Syne',sans-serif;">142,508</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +4.7%</div></div>
+      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi3">Transactions Today</div><div style="color:#F0F4FF;font-size:20px;font-weight:800;font-family:'Syne',sans-serif;">38,921</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +9.1%</div></div>
+      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi4">Countries Active</div><div style="color:#F0F4FF;font-size:20px;font-weight:800;font-family:'Syne',sans-serif;">35</div><div style="color:rgba(240,244,255,0.35);font-size:10px;margin-top:4px;">3 continents</div></div>
     </div>
-    <!-- Module grid -->
-    <div style="padding:24px;display:grid;grid-template-columns:200px 1fr;gap:16px;">
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        <div style="background:rgba(66,168,225,0.15);border-left:3px solid #42A8E1;border-radius:6px;padding:8px 12px;color:#42A8E1;font-size:12px;font-weight:600;" data-i18n="dash_mod1">💳 Wallets & KYC</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod2">💸 Transfers</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod3">🛒 Orders</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod4">🚚 Deliveries</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod5">📊 Analytics</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod6">👥 Users & Roles</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod7">🎁 Loyalty</div>
-        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;opacity:0.5;">⋯ +23 more</div>
+    <div style="padding:22px;display:grid;grid-template-columns:180px 1fr;gap:16px;">
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="background:rgba(0,229,255,0.1);border-left:3px solid #00E5FF;border-radius:6px;padding:7px 11px;color:#00E5FF;font-size:11px;font-weight:600;" data-i18n="dash_mod1">💳 Wallets & KYC</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod2">💸 Transfers</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod3">🛒 Orders</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod4">🚚 Deliveries</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod5">📊 Analytics</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod6">👥 Users & Roles</div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod7">🎁 Loyalty</div>
+        <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.2);font-size:11px;">⋯ +23 modules</div>
       </div>
-      <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:18px;">
-        <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-bottom:14px;" data-i18n="dash_chart">TRANSFER VOLUME · LAST 7 DAYS</div>
-        <div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:12px;">
-          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:55%;"></div>
-          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:70%;"></div>
-          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:45%;"></div>
-          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:80%;"></div>
-          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:65%;"></div>
-          <div style="flex:1;background:rgba(66,168,225,0.4);border-radius:4px 4px 0 0;height:90%;"></div>
-          <div style="flex:1;background:#42A8E1;border-radius:4px 4px 0 0;height:100%;position:relative;"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);color:#F5A623;font-size:10px;font-weight:700;white-space:nowrap;">$2.4M</div></div>
+      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px;">
+        <div style="color:rgba(240,244,255,0.4);font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;" data-i18n="dash_chart">TRANSFER VOLUME · LAST 7 DAYS</div>
+        <div style="display:flex;align-items:flex-end;gap:7px;height:75px;margin-bottom:12px;">
+          <div style="flex:1;background:rgba(0,229,255,0.15);border-radius:3px 3px 0 0;height:55%;"></div>
+          <div style="flex:1;background:rgba(0,229,255,0.15);border-radius:3px 3px 0 0;height:70%;"></div>
+          <div style="flex:1;background:rgba(0,229,255,0.15);border-radius:3px 3px 0 0;height:45%;"></div>
+          <div style="flex:1;background:rgba(0,229,255,0.2);border-radius:3px 3px 0 0;height:80%;"></div>
+          <div style="flex:1;background:rgba(0,229,255,0.2);border-radius:3px 3px 0 0;height:65%;"></div>
+          <div style="flex:1;background:rgba(0,229,255,0.35);border-radius:3px 3px 0 0;height:88%;"></div>
+          <div style="flex:1;background:#00E5FF;border-radius:3px 3px 0 0;height:100%;position:relative;"><div style="position:absolute;top:-17px;left:50%;transform:translateX(-50%);color:#FFD166;font-size:9px;font-weight:700;white-space:nowrap;">$2.4M</div></div>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;">
-          <div style="background:rgba(34,197,94,0.15);border-radius:6px;padding:8px 14px;"><span style="color:#22C55E;font-size:12px;font-weight:700;" data-i18n="dash_avg">Avg. response: 1.2s</span></div>
-          <div style="background:rgba(245,166,35,0.15);border-radius:6px;padding:8px 14px;"><span style="color:#F5A623;font-size:12px;font-weight:700;" data-i18n="dash_uptime">Uptime: 99.98%</span></div>
+        <div style="display:flex;gap:8px;justify-content:space-between;">
+          <div style="background:rgba(0,255,178,0.08);border:1px solid rgba(0,255,178,0.15);border-radius:8px;padding:7px 12px;"><span style="color:#00FFB2;font-size:11px;font-weight:700;" data-i18n="dash_avg">Avg. response: 1.2s</span></div>
+          <div style="background:rgba(255,209,102,0.08);border:1px solid rgba(255,209,102,0.15);border-radius:8px;padding:7px 12px;"><span style="color:#FFD166;font-size:11px;font-weight:700;" data-i18n="dash_uptime">Uptime: 99.98%</span></div>
         </div>
       </div>
     </div>
   </div>
   <!-- ERP modules grid -->
   <div class="reveal" style="max-width:1060px;margin:0 auto;">
-    <h3 style="text-align:center;font-size:20px;font-weight:700;color:#0D2B4E;margin-bottom:32px;" data-i18n="erp_mods_h">What Our 30+ Modules Can Do</h3>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🪪</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m1_h">KYC & Identity</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m1_p">Batch verification, document OCR, fraud scoring, biometric checks</div></div>
+    <h3 style="text-align:center;font-size:20px;font-weight:700;color:#fff;margin-bottom:32px;" data-i18n="erp_mods_h">What Our 30+ Modules Can Do</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🪪</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m1_h">KYC & Identity</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m1_p">Batch verification, document OCR, fraud scoring, biometric checks</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">💳</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m2_h">Multi-Wallet Engine</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m2_p">USD, EUR, FCFA, XOF — real-time balance, instant FX conversion, transaction history</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">💳</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m2_h">Multi-Wallet Engine</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m2_p">USD, EUR, FCFA, XOF — real-time balance, instant FX conversion, history</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🏦</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m3_h">Loans & Microfinance</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m3_p">Automated credit scoring, instant micro-loans, repayment scheduling</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🏦</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m3_h">Loans & Microfinance</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m3_p">Automated credit scoring, instant micro-loans, repayment scheduling</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🏪</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m4_h">Vendor Management</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m4_p">Onboarding, inventory, subscriptions, escrow, settlement</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🏪</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m4_h">Vendor Management</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m4_p">Onboarding, inventory, subscriptions, escrow, settlement</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">📦</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m5_h">Order & Logistics</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m5_p">Real-time order flow, rider dispatch, live GPS tracking, proof of delivery</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">📦</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m5_h">Order & Logistics</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m5_p">Real-time order flow, rider dispatch, live GPS tracking, proof of delivery</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🎯</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m6_h">Loyalty & Rewards</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m6_p">Points, tiers, referral chains, cashback, coupons, tontines</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🎯</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m6_h">Loyalty & Rewards</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m6_p">Points, tiers, referral chains, cashback, coupons, tontines</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">📊</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m7_h">Analytics & BI</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m7_p">Country-level dashboards, revenue funnels, user segmentation, CSV export</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">📊</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m7_h">Analytics & BI</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m7_p">Country dashboards, revenue funnels, user segmentation, CSV export</div></div>
       </div>
-      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🔔</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m8_h">Smart Alerts</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m8_p">Fraud detection, threshold alerts, push notifications, SMS & email automation</div></div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🔔</span>
+        <div><div style="font-weight:700;font-size:13px;color:#F0F4FF;margin-bottom:4px;" data-i18n="erp_m8_h">Smart Alerts</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m8_p">Fraud detection, threshold alerts, push notifications, SMS & email automation</div></div>
       </div>
-      <div style="background:linear-gradient(135deg,rgba(43,141,199,0.08),rgba(245,166,35,0.08));border:1px solid rgba(43,141,199,0.2);border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
-        <span style="font-size:28px;flex-shrink:0;">🌍</span>
-        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m9_h">Multi-Country Roles</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m9_p">18 roles across 3 continents: SuperAdmin, Country Manager, Circular Agent, Compliance Officer…</div></div>
+      <div style="background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.15);border-radius:16px;padding:18px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:26px;flex-shrink:0;">🌍</span>
+        <div><div style="font-weight:700;font-size:13px;color:#00E5FF;margin-bottom:4px;" data-i18n="erp_m9_h">Multi-Country Roles</div><div style="font-size:11px;color:rgba(240,244,255,0.45);line-height:1.5;" data-i18n="erp_m9_p">18 roles across 3 continents: SuperAdmin, Country Manager, Circular Agent, Compliance Officer…</div></div>
       </div>
     </div>
     <div style="text-align:center;margin-top:32px;">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:#F4F8FF;border:1px solid #2B8DC7;border-radius:40px;padding:12px 28px;">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:40px;padding:12px 28px;">
         <span style="font-size:20px;">⚡</span>
-        <span style="font-size:14px;font-weight:700;color:#0D2B4E;" data-i18n="erp_speed">Processes thousands of transactions simultaneously — avg. response time: 1.2 seconds</span>
+        <span style="font-size:13px;font-weight:700;color:#00E5FF;" data-i18n="erp_speed">Processes thousands of transactions simultaneously — avg. response time: 1.2 seconds</span>
       </div>
     </div>
   </div>
