@@ -243,6 +243,10 @@ body.light-mode{
 .xd-step-sub{font-size:11px;color:var(--mu);margin-top:2px}
 .xd-sign-box{background:var(--card);border:2px dashed var(--xd-o);border-radius:14px;height:100px;display:flex;align-items:center;justify-content:center;cursor:crosshair;position:relative;overflow:hidden}
 .xd-sign-canvas{width:100%;height:100%;touch-action:none}
+.xd-tab-btn{flex:1;padding:8px 4px;border-radius:9px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fd);color:var(--mu);background:none;transition:all .25s;white-space:nowrap}
+.xd-tab-btn.on{background:linear-gradient(135deg,var(--xd-o),var(--go));color:#000;font-weight:800}
+#xd-map .leaflet-container{background:#0A1628}
+#xd-map{border-radius:16px;}
 
 /* ══ BILLS AMPLIADO ══ */
 .bill-cat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
@@ -1805,83 +1809,278 @@ body.light-mode{
       </div>
     </div>
 
-    <!-- XENDERDELIVERY -->
+    <!-- XENDERDELIVERY — FULL MODULE -->
     <div class="sc" id="sc-delivery">
+
+      <!-- Header -->
       <div class="xd-header">
         <span style="font-size:28px">🚚</span>
-        <div>
+        <div style="flex:1">
           <div class="xd-logo-text"><span class="x1">Xender</span><span class="x2">Delivery</span></div>
           <div style="font-size:10px;color:var(--mu)">Seguimiento en tiempo real · We Simplify Life</div>
         </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;font-weight:700;color:var(--gr)">● En línea</div>
+          <div style="font-size:9px;color:var(--mu)">12 riders activos</div>
+        </div>
       </div>
-      <!-- Mis pedidos activos -->
-      <div style="font-size:13px;font-weight:700;margin-bottom:10px">📦 Mis pedidos activos</div>
-      <div id="delivery-orders">
-        <!-- Demo order -->
-        <div class="xd-track" id="demo-order-1">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+
+      <!-- TABS -->
+      <div style="display:flex;gap:4px;background:var(--card);border:1px solid var(--b);border-radius:12px;padding:3px;margin-bottom:14px">
+        <button onclick="xdTab('orders')" id="xdt-orders" class="xd-tab-btn on">📦 Mis Pedidos</button>
+        <button onclick="xdTab('order')" id="xdt-order" class="xd-tab-btn">🛒 Pedir</button>
+        <button onclick="xdTab('rider')" id="xdt-rider" class="xd-tab-btn">🏍️ Ser Rider</button>
+      </div>
+
+      <!-- ═══ TAB: MIS PEDIDOS ═══ -->
+      <div id="xd-pane-orders">
+
+        <!-- MAPA EN VIVO -->
+        <div style="position:relative;border-radius:16px;overflow:hidden;margin-bottom:12px;border:1px solid var(--b)">
+          <div id="xd-map" style="height:180px;width:100%;background:var(--g1)"></div>
+          <div style="position:absolute;top:8px;left:8px;background:rgba(5,11,24,.85);backdrop-filter:blur(8px);border:1px solid var(--b);border-radius:10px;padding:6px 10px;font-size:10px;font-weight:700;color:var(--xd-o)">🔴 Rider en vivo</div>
+          <div style="position:absolute;bottom:8px;right:8px;background:rgba(5,11,24,.85);backdrop-filter:blur(8px);border:1px solid var(--b);border-radius:10px;padding:6px 10px;">
+            <div style="font-size:11px;font-weight:800;color:var(--gr)">ETA: <span id="xd-eta">12 min</span></div>
+          </div>
+        </div>
+
+        <!-- RIDER INFO CARD -->
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px">
+          <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--xd-o),var(--go));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🏍️</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700">Carlos M.</div>
+            <div style="font-size:11px;color:var(--mu)">Moto · Yaoundé · 1.2 km</div>
+            <div style="font-size:11px;color:var(--go)">★ 4.9 · 1,240 entregas</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button style="background:var(--gr-d);border:1px solid rgba(0,255,178,.2);color:var(--gr);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd)">📞 Llamar</button>
+            <button style="background:var(--cy-d);border:1px solid rgba(0,229,255,.2);color:var(--cy);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd)">💬 Chat</button>
+          </div>
+        </div>
+
+        <!-- ORDER 1: EN RUTA -->
+        <div class="xd-track">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
             <div>
-              <div style="font-size:13px;font-weight:700">Auriculares BT Pro</div>
-              <div style="font-size:11px;color:var(--mu)">Pedido #XD-20451 · XenderShop</div>
+              <div style="font-size:13px;font-weight:700">Chez Aminata · Pollo Yassa</div>
+              <div style="font-size:11px;color:var(--mu)">Pedido #XD-20451 · Hace 8 min</div>
             </div>
-            <span style="font-size:10px;background:var(--xd-od);color:var(--xd-o);padding:3px 10px;border-radius:20px;font-weight:700">En tránsito</span>
+            <span style="font-size:10px;background:var(--xd-od);color:var(--xd-o);padding:3px 10px;border-radius:20px;font-weight:700">En ruta 🏍️</span>
+          </div>
+          <!-- Progress bar -->
+          <div style="background:var(--b);border-radius:20px;height:6px;margin-bottom:10px;overflow:hidden">
+            <div style="background:linear-gradient(90deg,var(--xd-o),var(--go));height:100%;width:75%;border-radius:20px;transition:width 1s"></div>
           </div>
           <div class="xd-steps">
-            <div class="xd-step">
-              <div class="xd-step-dot done">✓</div>
-              <div class="xd-step-info"><div class="xd-step-name">Pedido confirmado</div><div class="xd-step-sub">Shanghai, China · Hace 3 días</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot done">✓</div>
-              <div class="xd-step-info"><div class="xd-step-name">Recogido en almacén</div><div class="xd-step-sub">Guangzhou Export Hub · Hace 2 días</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot active">✈️</div>
-              <div class="xd-step-info"><div class="xd-step-name">En tránsito → Hub España</div><div class="xd-step-sub">Madrid Barajas · Est. 2 días</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot pending">🏭</div>
-              <div class="xd-step-info"><div class="xd-step-name">Hub logístico Madrid</div><div class="xd-step-sub">Pendiente</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot pending">🛃</div>
-              <div class="xd-step-info"><div class="xd-step-name">Aduana destino</div><div class="xd-step-sub">Pendiente</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot pending">🚴</div>
-              <div class="xd-step-info"><div class="xd-step-name">En ruta con rider</div><div class="xd-step-sub">Pendiente</div></div>
-            </div>
-            <div class="xd-step">
-              <div class="xd-step-dot pending">🏠</div>
-              <div class="xd-step-info"><div class="xd-step-name">Entregado</div><div class="xd-step-sub">Pendiente</div></div>
+            <div class="xd-step"><div class="xd-step-dot done">✓</div><div class="xd-step-info"><div class="xd-step-name">Pedido recibido</div><div class="xd-step-sub">Hace 8 min · 14:32</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot done">✓</div><div class="xd-step-info"><div class="xd-step-name">Restaurante confirmó</div><div class="xd-step-sub">Chez Aminata · Hace 6 min</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot done">✓</div><div class="xd-step-info"><div class="xd-step-name">Rider recogió el pedido</div><div class="xd-step-sub">Carlos M. · Hace 3 min</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot active" style="animation:pulse 1.5s infinite">🏍️</div><div class="xd-step-info"><div class="xd-step-name">En camino a tu puerta</div><div class="xd-step-sub">1.2 km · ~12 min</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot pending">🏠</div><div class="xd-step-info"><div class="xd-step-name">Entregado</div><div class="xd-step-sub">Pendiente</div></div></div>
+          </div>
+          <!-- Confirm delivery -->
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button onclick="showDeliveryCode()" style="padding:10px;border-radius:10px;background:var(--xd-od);border:1px solid rgba(245,124,0,.3);color:var(--xd-o);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd)">🔢 Código PIN</button>
+            <button onclick="showSignaturePad()" style="padding:10px;border-radius:10px;background:var(--cy-d);border:1px solid rgba(0,229,255,.2);color:var(--cy);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd)">✍️ Firma digital</button>
+          </div>
+          <div id="delivery-code-box" style="display:none;margin-top:10px">
+            <input class="inp" id="delivery-confirm-code" placeholder="Código de 6 dígitos" style="text-align:center;font-size:20px;font-weight:800;letter-spacing:.3em">
+            <button class="btn btn-cy" onclick="confirmDeliveryCode()" style="background:linear-gradient(135deg,var(--xd-o),var(--go))">✅ Confirmar entrega →</button>
+          </div>
+          <div id="signature-box" style="display:none;margin-top:10px">
+            <div style="font-size:11px;color:var(--mu);margin-bottom:6px">Firma en el recuadro</div>
+            <div class="xd-sign-box" id="sign-box"><canvas class="xd-sign-canvas" id="sign-canvas"></canvas></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button onclick="clearSignature()" style="flex:1;padding:10px;border-radius:10px;background:var(--re-d);border:1px solid rgba(255,77,109,.2);color:var(--re);font-size:11px;cursor:pointer;font-family:var(--fd)">🗑 Borrar</button>
+              <button onclick="confirmSignature()" style="flex:2;padding:10px;border-radius:10px;background:var(--xd-od);border:1px solid rgba(245,124,0,.3);color:var(--xd-o);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd)">✅ Confirmar</button>
             </div>
           </div>
         </div>
-      </div>
-      <!-- Verificación de entrega (para riders) -->
-      <div style="font-size:13px;font-weight:700;margin-bottom:10px;margin-top:16px">✅ Confirmar entrega</div>
-      <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px">
-        <div style="font-size:12px;color:var(--mu);margin-bottom:12px">El cliente puede confirmar con código o firma digital</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <button onclick="showDeliveryCode()" style="padding:12px;border-radius:12px;background:var(--xd-od);border:1px solid rgba(245,124,0,.3);color:var(--xd-o);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fd)">🔢 Código PIN</button>
-          <button onclick="showSignaturePad()" style="padding:12px;border-radius:12px;background:var(--cy-d);border:1px solid rgba(0,229,255,.2);color:var(--cy);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fd)">✍️ Firma digital</button>
-        </div>
-        <div id="delivery-code-box" style="display:none">
-          <input class="inp" id="delivery-confirm-code" placeholder="Código de 6 dígitos del cliente" style="text-align:center;font-size:20px;font-weight:800;letter-spacing:.3em">
-          <button class="btn btn-cy" onclick="confirmDeliveryCode()" style="background:linear-gradient(135deg,var(--xd-o),var(--go))">✅ Confirmar entrega →</button>
-        </div>
-        <div id="signature-box" style="display:none">
-          <div style="font-size:11px;color:var(--mu);margin-bottom:8px">Cliente: firma en el recuadro</div>
-          <div class="xd-sign-box" id="sign-box">
-            <canvas class="xd-sign-canvas" id="sign-canvas"></canvas>
+
+        <!-- ORDER 2: EN PROCESAMIENTO -->
+        <div class="xd-track">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div>
+              <div style="font-size:13px;font-weight:700">Auriculares BT Pro</div>
+              <div style="font-size:11px;color:var(--mu)">Pedido #XD-20449 · XenderShop</div>
+            </div>
+            <span style="font-size:10px;background:var(--cy-d);color:var(--cy);padding:3px 10px;border-radius:20px;font-weight:700">En tránsito ✈️</span>
           </div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button onclick="clearSignature()" style="flex:1;padding:10px;border-radius:10px;background:var(--re-d);border:1px solid rgba(255,77,109,.2);color:var(--re);font-size:12px;cursor:pointer;font-family:var(--fd)">🗑 Borrar</button>
-            <button onclick="confirmSignature()" style="flex:2;padding:10px;border-radius:10px;background:var(--xd-od);border:1px solid rgba(245,124,0,.3);color:var(--xd-o);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fd)">✅ Confirmar firma</button>
+          <div style="background:var(--b);border-radius:20px;height:6px;margin-bottom:10px;overflow:hidden">
+            <div style="background:linear-gradient(90deg,var(--cy),var(--pu));height:100%;width:45%;border-radius:20px"></div>
+          </div>
+          <div class="xd-steps">
+            <div class="xd-step"><div class="xd-step-dot done">✓</div><div class="xd-step-info"><div class="xd-step-name">Pedido confirmado</div><div class="xd-step-sub">Shanghai, China · Hace 3 días</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot done">✓</div><div class="xd-step-info"><div class="xd-step-name">Recogido en almacén</div><div class="xd-step-sub">Guangzhou Export Hub · Hace 2 días</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot active">✈️</div><div class="xd-step-info"><div class="xd-step-name">En tránsito → Hub Madrid</div><div class="xd-step-sub">Madrid Barajas · Est. 2 días</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot pending">🏭</div><div class="xd-step-info"><div class="xd-step-name">Hub logístico</div><div class="xd-step-sub">Pendiente</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot pending">🛃</div><div class="xd-step-info"><div class="xd-step-name">Aduana destino</div><div class="xd-step-sub">Pendiente</div></div></div>
+            <div class="xd-step"><div class="xd-step-dot pending">🏠</div><div class="xd-step-info"><div class="xd-step-name">Entregado</div><div class="xd-step-sub">Pendiente</div></div></div>
           </div>
         </div>
-      </div>
-    </div>
+
+      </div><!-- /pane-orders -->
+
+      <!-- ═══ TAB: PEDIR ═══ -->
+      <div id="xd-pane-order" style="display:none">
+
+        <!-- Categorías -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+          <div onclick="xdCat(this,'food')" class="xd-cat-btn on" style="text-align:center;padding:10px 4px;border-radius:12px;cursor:pointer;border:1.5px solid rgba(245,124,0,.4);background:var(--xd-od)"><div style="font-size:20px">🍽️</div><div style="font-size:10px;font-weight:700;color:var(--xd-o)">Comida</div></div>
+          <div onclick="xdCat(this,'pharma')" class="xd-cat-btn" style="text-align:center;padding:10px 4px;border-radius:12px;cursor:pointer;border:1px solid var(--b);background:var(--card)"><div style="font-size:20px">💊</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Farmacia</div></div>
+          <div onclick="xdCat(this,'market')" class="xd-cat-btn" style="text-align:center;padding:10px 4px;border-radius:12px;cursor:pointer;border:1px solid var(--b);background:var(--card)"><div style="font-size:20px">🛒</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Mercado</div></div>
+          <div onclick="xdCat(this,'other')" class="xd-cat-btn" style="text-align:center;padding:10px 4px;border-radius:12px;cursor:pointer;border:1px solid var(--b);background:var(--card)"><div style="font-size:20px">📦</div><div style="font-size:10px;font-weight:700;color:var(--mu)">Otro</div></div>
+        </div>
+
+        <!-- Buscador -->
+        <div style="display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--b);border-radius:12px;padding:10px 14px;margin-bottom:12px">
+          <span style="font-size:14px">🔍</span>
+          <input placeholder="Buscar restaurante, farmacia…" style="border:none;background:transparent;outline:none;font-size:13px;color:var(--txt);font-family:var(--fd);width:100%"/>
+        </div>
+
+        <!-- Lista establecimientos -->
+        <div style="font-size:12px;font-weight:700;color:var(--mu);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Cercano a ti</div>
+        <div id="xd-places">
+
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="xdSelectPlace('Chez Aminata')">
+            <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#0D2B22,#1a5a3e);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🍽️</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Chez Aminata</div>
+              <div style="font-size:11px;color:var(--mu)">Cocina africana · 0.8 km</div>
+              <div style="font-size:11px;color:var(--go)">★ 4.9 · 20–35 min · Envío 500 XAF</div>
+            </div>
+            <div style="font-size:10px;background:var(--gr-d);color:var(--gr);padding:3px 8px;border-radius:20px;font-weight:700">Abierto</div>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="xdSelectPlace('Pharmacie Ondoa')">
+            <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#0a2040,#1a4080);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">💊</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Pharmacie Ondoa</div>
+              <div style="font-size:11px;color:var(--mu)">Farmacia certificada · 1.2 km</div>
+              <div style="font-size:11px;color:var(--go)">★ 4.8 · 15–25 min · Envío 300 XAF</div>
+            </div>
+            <div style="font-size:10px;background:var(--gr-d);color:var(--gr);padding:3px 8px;border-radius:20px;font-weight:700">Abierto</div>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="xdSelectPlace('SuperMarché Mbaye')">
+            <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#1a3a00,#3a7000);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🛒</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">SuperMarché Mbaye</div>
+              <div style="font-size:11px;color:var(--mu)">Supermercado · 1.8 km</div>
+              <div style="font-size:11px;color:var(--go)">★ 4.6 · 30–45 min · Envío 700 XAF</div>
+            </div>
+            <div style="font-size:10px;background:var(--gr-d);color:var(--gr);padding:3px 8px;border-radius:20px;font-weight:700">Abierto</div>
+          </div>
+
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="xdSelectPlace('Pizza Congo')">
+            <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,#3a0000,#8a1000);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🍕</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Pizza Congo</div>
+              <div style="font-size:11px;color:var(--mu)">Pizzería · Fast food · 2.1 km</div>
+              <div style="font-size:11px;color:var(--go)">★ 4.5 · 25–40 min · Envío 500 XAF</div>
+            </div>
+            <div style="font-size:10px;background:var(--gr-d);color:var(--gr);padding:3px 8px;border-radius:20px;font-weight:700">Abierto</div>
+          </div>
+
+        </div>
+
+        <!-- Form de pedido rápido (oculto) -->
+        <div id="xd-order-form" style="display:none;background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px;margin-top:4px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px" id="xd-place-title">Pedido en Chez Aminata</div>
+          <label style="font-size:11px;color:var(--mu);margin-bottom:4px;display:block">Descripción del pedido</label>
+          <textarea class="inp" placeholder="Ej: 1 Pollo Yassa + 1 Ndolé + 2 Coca-Cola" style="resize:none;height:70px;margin-bottom:8px"></textarea>
+          <label style="font-size:11px;color:var(--mu);margin-bottom:4px;display:block">Dirección de entrega</label>
+          <input class="inp" placeholder="Calle, número, referencia…" style="margin-bottom:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div>
+              <div style="font-size:11px;color:var(--mu)">Pagar con</div>
+              <div style="font-size:13px;font-weight:700;color:var(--cy)">💱 XenderMoney</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:11px;color:var(--mu)">Envío estimado</div>
+              <div style="font-size:13px;font-weight:700;color:var(--xd-o)">500 XAF · 20–35 min</div>
+            </div>
+          </div>
+          <button class="btn btn-cy" style="background:linear-gradient(135deg,var(--xd-o),var(--go));color:#000" onclick="xdPlaceOrder()">🚀 Confirmar pedido →</button>
+        </div>
+
+      </div><!-- /pane-order -->
+
+      <!-- ═══ TAB: SER RIDER ═══ -->
+      <div id="xd-pane-rider" style="display:none">
+
+        <!-- Disponibilidad toggle -->
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:14px;font-weight:700">Estado</div>
+            <div style="font-size:11px;color:var(--mu)">Actívate para recibir pedidos</div>
+          </div>
+          <div id="xd-toggle" onclick="xdToggleRider()" style="width:52px;height:28px;border-radius:20px;background:var(--gr);cursor:pointer;position:relative;transition:background .3s">
+            <div style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;background:#fff;transition:right .3s"></div>
+          </div>
+        </div>
+
+        <!-- Estadísticas del día -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:14px;padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--xd-o)">8</div>
+            <div style="font-size:10px;color:var(--mu)">Entregas hoy</div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:14px;padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--gr)">4,200</div>
+            <div style="font-size:10px;color:var(--mu)">XAF ganados</div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--b);border-radius:14px;padding:12px;text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--go)">★ 4.9</div>
+            <div style="font-size:10px;color:var(--mu)">Mi rating</div>
+          </div>
+        </div>
+
+        <!-- Pedidos disponibles en zona -->
+        <div style="font-size:12px;font-weight:700;color:var(--mu);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Pedidos disponibles</div>
+
+        <div class="xd-track">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+            <div>
+              <div style="font-size:13px;font-weight:700">Chez Aminata → Cliente</div>
+              <div style="font-size:11px;color:var(--mu)">0.8 km recogida · 2.1 km entrega</div>
+              <div style="font-size:11px;color:var(--xd-o)">Comisión: 800 XAF</div>
+            </div>
+            <span style="font-size:10px;background:var(--re-d);color:var(--re);padding:3px 8px;border-radius:20px;font-weight:700">3 min</span>
+          </div>
+          <button data-delivery="IA-20451" onclick="acceptDelivery('IA-20451')" style="width:100%;background:linear-gradient(135deg,var(--gr),var(--cy));color:#000;border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fd)">✅ Aceptar entrega →</button>
+        </div>
+
+        <div class="xd-track">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+            <div>
+              <div style="font-size:13px;font-weight:700">Pharmacie Ondoa → Cliente</div>
+              <div style="font-size:11px;color:var(--mu)">1.2 km recogida · 3.4 km entrega</div>
+              <div style="font-size:11px;color:var(--xd-o)">Comisión: 1,200 XAF</div>
+            </div>
+            <span style="font-size:10px;background:var(--cy-d);color:var(--cy);padding:3px 8px;border-radius:20px;font-weight:700">Nuevo</span>
+          </div>
+          <button data-delivery="IA-20449" onclick="acceptDelivery('IA-20449')" style="width:100%;background:linear-gradient(135deg,var(--gr),var(--cy));color:#000;border:none;border-radius:10px;padding:10px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fd)">✅ Aceptar entrega →</button>
+        </div>
+
+        <!-- Ganancias semanales mini chart -->
+        <div style="background:var(--card);border:1px solid var(--b);border-radius:16px;padding:16px;margin-top:4px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px">📈 Ganancias esta semana</div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:60px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:40%"></div><div style="font-size:9px;color:var(--mu)">L</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:65%"></div><div style="font-size:9px;color:var(--mu)">M</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:80%"></div><div style="font-size:9px;color:var(--mu)">M</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:55%"></div><div style="font-size:9px;color:var(--mu)">J</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:linear-gradient(180deg,var(--xd-o),var(--go));border-radius:4px 4px 0 0;width:100%;height:100%"></div><div style="font-size:9px;color:var(--mu)">V</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:70%"></div><div style="font-size:9px;color:var(--mu)">S</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="background:var(--xd-od);border-radius:4px 4px 0 0;width:100%;height:45%"></div><div style="font-size:9px;color:var(--mu)">D</div></div>
+          </div>
+          <div style="text-align:center;margin-top:8px;font-size:13px;font-weight:800;color:var(--gr)">Total semana: 28,400 XAF</div>
+        </div>
+
+      </div><!-- /pane-rider -->
+
+    </div><!-- /sc-delivery -->
 
     <!-- BILLS AMPLIADO -->
     <div class="sc" id="sc-bills">
@@ -4157,8 +4356,83 @@ function openStore(storeId){
 // ══════════════════════════════════════════════════════
 // XENDERDELIVERY
 // ══════════════════════════════════════════════════════
+// XenderDelivery — tabs, map, order flow
+var xdMapInited=false;
+var xdMapObj=null;
+var xdRiderMarker=null;
+var xdRiderLat=3.848,xdRiderLng=11.502;
+var xdEtaSecs=12*60;
+
 function loadDelivery(){
   loadDeliveryOrders();
+  xdTab('orders');
+}
+
+function xdTab(tab){
+  ['orders','order','rider'].forEach(function(t){
+    document.getElementById('xd-pane-'+t).style.display='none';
+    document.getElementById('xdt-'+t).classList.remove('on');
+  });
+  document.getElementById('xd-pane-'+tab).style.display='block';
+  document.getElementById('xdt-'+tab).classList.add('on');
+  if(tab==='orders') xdInitMap();
+}
+
+function xdInitMap(){
+  if(xdMapInited)return;
+  if(typeof L==='undefined')return;
+  xdMapInited=true;
+  var m=L.map('xd-map',{zoomControl:false,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(m);
+  m.setView([3.848,11.502],15);
+  // Destination marker (home)
+  var homeIcon=L.divIcon({html:'<div style="font-size:20px">🏠</div>',iconSize:[28,28],iconAnchor:[14,14],className:''});
+  L.marker([3.848,11.502],{icon:homeIcon}).addTo(m).bindPopup('Tu dirección');
+  // Restaurant marker
+  var restIcon=L.divIcon({html:'<div style="font-size:20px">🍽️</div>',iconSize:[28,28],iconAnchor:[14,14],className:''});
+  L.marker([3.856,11.494],{icon:restIcon}).addTo(m).bindPopup('Chez Aminata');
+  // Rider marker (animated)
+  var riderIcon=L.divIcon({html:'<div style="font-size:22px;animation:pulse 1s infinite">🏍️</div>',iconSize:[28,28],iconAnchor:[14,14],className:''});
+  xdRiderMarker=L.marker([xdRiderLat+0.003,xdRiderLng-0.004],{icon:riderIcon}).addTo(m);
+  xdMapObj=m;
+  // Simulate rider movement
+  setInterval(function(){
+    if(!xdRiderMarker)return;
+    var pos=xdRiderMarker.getLatLng();
+    xdRiderMarker.setLatLng([pos.lat-0.00015,pos.lng+0.0001]);
+    // ETA countdown
+    if(xdEtaSecs>0){xdEtaSecs--;var m2=Math.floor(xdEtaSecs/60),s=xdEtaSecs%60;var el=document.getElementById('xd-eta');if(el)el.textContent=m2+'min '+String(s).padStart(2,'0')+'s';}
+  },2000);
+}
+
+function xdCat(el,cat){
+  document.querySelectorAll('.xd-cat-btn').forEach(function(b){
+    b.style.borderColor='var(--b)';b.style.background='var(--card)';
+    b.querySelector('div:last-child').style.color='var(--mu)';
+  });
+  el.style.borderColor='rgba(245,124,0,.4)';el.style.background='var(--xd-od)';
+  el.querySelector('div:last-child').style.color='var(--xd-o)';
+}
+
+function xdSelectPlace(name){
+  document.getElementById('xd-place-title').textContent='Pedido en '+name;
+  document.getElementById('xd-order-form').style.display='block';
+  document.getElementById('xd-order-form').scrollIntoView({behavior:'smooth'});
+}
+
+function xdPlaceOrder(){
+  toast('✅ Pedido enviado — buscando rider…','green');
+  document.getElementById('xd-order-form').style.display='none';
+  setTimeout(function(){xdTab('orders');},800);
+}
+
+function xdToggleRider(){
+  var t=document.getElementById('xd-toggle');
+  var isOn=t.style.background.includes('gr');
+  t.style.background=isOn?'var(--re)':'var(--gr)';
+  t.querySelector('div').style.right=isOn?'auto':'4px';
+  t.querySelector('div').style.left=isOn?'4px':'auto';
+  toast(isOn?'🔴 Desconectado':'🟢 Disponible para pedidos',isOn?'red':'green');
 }
 function loadDeliveryOrders(){
   // Load from Supabase if available
