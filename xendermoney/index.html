@@ -83,10 +83,15 @@
     .hero-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: blink 2s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    h1 { font-size: clamp(40px, 5.5vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 22px; }
+    h1 { font-size: clamp(26px, 3.5vw, 46px); font-weight: 900; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 22px; }
     h1 em { font-style: normal; color: var(--orange); }
 
-    .hero-sub { font-size: 17px; color: var(--grey); line-height: 1.75; max-width: 500px; margin-bottom: 40px; }
+    .hero-sub { font-size: 15px; color: var(--grey); line-height: 1.75; max-width: 480px; margin-bottom: 36px; }
+
+    /* Lang fade */
+    body { transition: none; }
+    .lang-fade { animation: fadeSwitch .25s ease; }
+    @keyframes fadeSwitch { 0%{opacity:.4} 100%{opacity:1} }
 
     .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
     .btn-lg { padding: 16px 36px; font-size: 16px; font-weight: 700; border-radius: 12px; text-decoration: none; transition: all .25s; display: inline-flex; align-items: center; gap: 8px; }
@@ -493,6 +498,114 @@
   </div>
 </section>
 
+<!-- APP SCREENS -->
+<section id="appscreens" style="background:rgba(255,255,255,0.02);padding:100px 6%;">
+  <div class="reveal" style="text-align:center;margin-bottom:64px;">
+    <span class="section-label" data-i18n="sec_app">The App</span>
+    <h2 class="section-title" data-i18n="sec_app_h">Everything in your pocket</h2>
+    <p class="section-sub" style="margin:0 auto;" data-i18n="sec_app_sub">A powerful wallet designed for Africa. Send, receive, pay and manage — all from one screen.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1100px;margin:0 auto;">
+
+    <!-- Screen 1: Home -->
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <div style="width:180px;background:var(--navy-card);border-radius:28px;border:1.5px solid rgba(245,166,35,0.2);padding:12px;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+        <div style="width:60px;height:16px;background:var(--navy);border-radius:0 0 10px 10px;margin:0 auto 10px;"></div>
+        <div style="background:linear-gradient(135deg,var(--navy-mid),var(--navy-card));border-radius:18px;padding:14px 12px;">
+          <div style="font-size:9px;color:var(--grey);margin-bottom:3px;">Good morning 👋</div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:12px;">Kofi A.</div>
+          <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:12px;">
+            <div style="font-size:8px;color:var(--grey);letter-spacing:1px;margin-bottom:3px;">TOTAL BALANCE</div>
+            <div style="font-size:22px;font-weight:900;color:var(--orange);">247,500</div>
+            <div style="font-size:9px;color:var(--grey);">XAF · Central African Franc</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0;">
+            <div style="text-align:center;"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;margin:0 auto;">📤</div><div style="font-size:7px;color:var(--grey);margin-top:3px;">Send</div></div>
+            <div style="text-align:center;"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;margin:0 auto;">📥</div><div style="font-size:7px;color:var(--grey);margin-top:3px;">Receive</div></div>
+            <div style="text-align:center;"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;margin:0 auto;">📱</div><div style="font-size:7px;color:var(--grey);margin-top:3px;">MoMo</div></div>
+            <div style="text-align:center;"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;margin:0 auto;">💳</div><div style="font-size:7px;color:var(--grey);margin-top:3px;">Card</div></div>
+          </div>
+          <div style="font-size:8px;color:var(--grey);font-weight:700;letter-spacing:1px;margin-bottom:6px;">RECENT</div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;"><div style="width:24px;height:24px;border-radius:50%;background:rgba(245,166,35,0.15);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--orange);">AM</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;">Amara M.</div><div style="font-size:7px;color:var(--grey);">Today</div></div><div style="font-size:9px;font-weight:700;color:#22C55E;">+12,000</div></div>
+          <div style="display:flex;align-items:center;gap:7px;"><div style="width:24px;height:24px;border-radius:50%;background:rgba(245,166,35,0.15);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--orange);">MT</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;">MTN MoMo</div><div style="font-size:7px;color:var(--grey);">Yesterday</div></div><div style="font-size:9px;font-weight:700;color:#22C55E;">+50,000</div></div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--grey);text-align:center;" data-i18n="app_s1">Home · Wallet</p>
+    </div>
+
+    <!-- Screen 2: Send Money -->
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <div style="width:180px;background:var(--navy-card);border-radius:28px;border:1.5px solid rgba(245,166,35,0.2);padding:12px;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+        <div style="width:60px;height:16px;background:var(--navy);border-radius:0 0 10px 10px;margin:0 auto 10px;"></div>
+        <div style="background:var(--navy);border-radius:18px;padding:14px 12px;">
+          <div style="font-size:11px;font-weight:700;text-align:center;margin-bottom:14px;" data-i18n="app_send_title">Send Money</div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="font-size:7px;color:var(--grey);margin-bottom:4px;" data-i18n="app_recipient">Recipient</div>
+            <div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(245,166,35,0.2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--orange);">FD</div><div><div style="font-size:9px;font-weight:600;">Fatou D.</div><div style="font-size:7px;color:var(--grey);">@fatou.dakar</div></div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="font-size:7px;color:var(--grey);margin-bottom:4px;" data-i18n="app_amount">Amount</div>
+            <div style="font-size:20px;font-weight:900;color:var(--orange);">25,000</div>
+            <div style="font-size:8px;color:var(--grey);">XAF</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px;margin-bottom:12px;">
+            <div style="font-size:7px;color:var(--grey);margin-bottom:2px;" data-i18n="app_note">Note</div>
+            <div style="font-size:8px;color:var(--grey-light);">Pour le loyer 🏠</div>
+          </div>
+          <div style="background:var(--orange);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:10px;font-weight:700;color:var(--navy);" data-i18n="app_confirm">Confirm & Send →</div></div>
+          <div style="text-align:center;margin-top:8px;font-size:7px;color:var(--grey);" data-i18n="app_fee">Fee: 0 XAF · Arrives in &lt;5s</div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--grey);text-align:center;" data-i18n="app_s2">Send Money</p>
+    </div>
+
+    <!-- Screen 3: Mobile Money -->
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <div style="width:180px;background:var(--navy-card);border-radius:28px;border:1.5px solid rgba(245,166,35,0.2);padding:12px;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+        <div style="width:60px;height:16px;background:var(--navy);border-radius:0 0 10px 10px;margin:0 auto 10px;"></div>
+        <div style="background:var(--navy);border-radius:18px;padding:14px 12px;">
+          <div style="font-size:11px;font-weight:700;text-align:center;margin-bottom:14px;">Mobile Money</div>
+          <div style="font-size:7px;color:var(--grey);margin-bottom:8px;" data-i18n="app_select_op">Select operator</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+            <div style="background:rgba(255,204,0,0.08);border:1px solid rgba(255,204,0,0.25);border-radius:8px;padding:8px;display:flex;align-items:center;gap:8px;"><div style="font-size:14px;">🟡</div><div><div style="font-size:9px;font-weight:700;color:#FFCC00;">MTN MoMo</div><div style="font-size:7px;color:var(--grey);">CM · GH · RW · CI</div></div></div>
+            <div style="background:rgba(255,102,0,0.08);border:1px solid rgba(255,102,0,0.2);border-radius:8px;padding:8px;display:flex;align-items:center;gap:8px;"><div style="font-size:14px;">🟠</div><div><div style="font-size:9px;font-weight:700;color:#FF6600;">Orange Money</div><div style="font-size:7px;color:var(--grey);">CM · SN · CI · ML</div></div></div>
+            <div style="background:rgba(26,155,252,0.08);border:1px solid rgba(26,155,252,0.2);border-radius:8px;padding:8px;display:flex;align-items:center;gap:8px;"><div style="font-size:14px;">🔵</div><div><div style="font-size:9px;font-weight:700;color:#1A9BFC;">Wave</div><div style="font-size:7px;color:var(--grey);">SN · CI · ML · BF</div></div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px;margin-bottom:10px;">
+            <div style="font-size:7px;color:var(--grey);margin-bottom:2px;" data-i18n="app_phone">Phone number</div>
+            <div style="font-size:11px;font-weight:700;">+237 6XX XXX XXX</div>
+          </div>
+          <div style="background:var(--orange);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:9px;font-weight:700;color:var(--navy);" data-i18n="app_topup">Top Up Now</div></div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--grey);text-align:center;" data-i18n="app_s3">Mobile Money</p>
+    </div>
+
+    <!-- Screen 4: History -->
+    <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <div style="width:180px;background:var(--navy-card);border-radius:28px;border:1.5px solid rgba(245,166,35,0.2);padding:12px;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+        <div style="width:60px;height:16px;background:var(--navy);border-radius:0 0 10px 10px;margin:0 auto 10px;"></div>
+        <div style="background:var(--navy);border-radius:18px;padding:14px 12px;">
+          <div style="font-size:11px;font-weight:700;text-align:center;margin-bottom:14px;" data-i18n="app_hist_title">History</div>
+          <div style="background:rgba(255,255,255,0.04);border-radius:8px;padding:6px;margin-bottom:8px;display:flex;gap:4px;">
+            <div style="background:var(--orange);border-radius:5px;padding:4px 8px;font-size:7px;font-weight:700;color:var(--navy);" data-i18n="app_all">All</div>
+            <div style="border-radius:5px;padding:4px 8px;font-size:7px;color:var(--grey);" data-i18n="app_sent">Sent</div>
+            <div style="border-radius:5px;padding:4px 8px;font-size:7px;color:var(--grey);" data-i18n="app_received">Received</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">↓</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;">MTN MoMo</div><div style="font-size:7px;color:var(--grey);">Jun 03 · 09:12</div></div><div style="font-size:8px;font-weight:700;color:#22C55E;">+50,000</div></div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,166,35,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">↑</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;">Fatou D.</div><div style="font-size:7px;color:var(--grey);">Jun 02 · 14:30</div></div><div style="font-size:8px;font-weight:700;color:var(--grey-light);">-25,000</div></div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;font-size:9px;">↓</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;">Amara M.</div><div style="font-size:7px;color:var(--grey);">Jun 01 · 11:05</div></div><div style="font-size:8px;font-weight:700;color:#22C55E;">+12,000</div></div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px;background:rgba(255,255,255,0.03);border-radius:8px;"><div style="width:22px;height:22px;border-radius:50%;background:rgba(245,166,35,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;">↑</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;">XenderShop</div><div style="font-size:7px;color:var(--grey);">May 31 · 08:20</div></div><div style="font-size:8px;font-weight:700;color:var(--grey-light);">-8,500</div></div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;font-weight:600;color:var(--grey);text-align:center;" data-i18n="app_s4">Transaction History</p>
+    </div>
+
+  </div>
+</section>
+
 <!-- MOBILE MONEY -->
 <section id="mobilemoney">
   <div class="mm-header reveal">
@@ -697,7 +810,13 @@
       sec_price_sub:'Sin cargos ocultos. Siempre sabes lo que pagas antes de enviar.',
       cta_h:'Empieza a Enviar Dinero Hoy',
       cta_p:'Abre tu cuenta gratuita de XenderMoney en menos de 2 minutos.',
-      cta_btn:'Crear Cuenta Gratis →'
+      cta_btn:'Crear Cuenta Gratis →',
+      sec_app:'La App', sec_app_h:'Todo en tu bolsillo', sec_app_sub:'Una wallet potente diseñada para África. Envía, recibe, paga y gestiona — todo desde una pantalla.',
+      app_s1:'Inicio · Wallet', app_s2:'Enviar Dinero', app_s3:'Mobile Money', app_s4:'Historial',
+      app_send_title:'Enviar Dinero', app_recipient:'Destinatario', app_amount:'Importe', app_note:'Nota',
+      app_confirm:'Confirmar y Enviar →', app_fee:'Comisión: 0 XAF · Llega en <5s',
+      app_select_op:'Selecciona operador', app_phone:'Número de teléfono', app_topup:'Recargar Ahora',
+      app_hist_title:'Historial', app_all:'Todo', app_sent:'Enviado', app_received:'Recibido'
     },
     en:{
       nav_login:'Log in', nav_open:'Open account',
@@ -715,7 +834,13 @@
       sec_price_sub:'No hidden charges. You always know what you pay before you send.',
       cta_h:'Start Sending Money Today',
       cta_p:'Open your free XenderMoney account in under 2 minutes.',
-      cta_btn:'Create Free Account →'
+      cta_btn:'Create Free Account →',
+      sec_app:'The App', sec_app_h:'Everything in your pocket', sec_app_sub:'A powerful wallet designed for Africa. Send, receive, pay and manage — all from one screen.',
+      app_s1:'Home · Wallet', app_s2:'Send Money', app_s3:'Mobile Money', app_s4:'History',
+      app_send_title:'Send Money', app_recipient:'Recipient', app_amount:'Amount', app_note:'Note',
+      app_confirm:'Confirm & Send →', app_fee:'Fee: 0 XAF · Arrives in <5s',
+      app_select_op:'Select operator', app_phone:'Phone number', app_topup:'Top Up Now',
+      app_hist_title:'History', app_all:'All', app_sent:'Sent', app_received:'Received'
     },
     fr:{
       nav_login:'Se connecter', nav_open:'Ouvrir un compte',
@@ -733,7 +858,13 @@
       sec_price_sub:'Pas de frais cachés. Vous savez toujours ce que vous payez avant d\'envoyer.',
       cta_h:'Commencez à Envoyer de l\'Argent Aujourd\'hui',
       cta_p:'Ouvrez votre compte XenderMoney gratuit en moins de 2 minutes.',
-      cta_btn:'Créer un Compte Gratuit →'
+      cta_btn:'Créer un Compte Gratuit →',
+      sec_app:"L'App", sec_app_h:'Tout dans votre poche', sec_app_sub:"Un wallet puissant conçu pour l'Afrique. Envoyez, recevez, payez et gérez — tout depuis un seul écran.",
+      app_s1:'Accueil · Wallet', app_s2:'Envoyer', app_s3:'Mobile Money', app_s4:'Historique',
+      app_send_title:"Envoyer de l'Argent", app_recipient:'Destinataire', app_amount:'Montant', app_note:'Note',
+      app_confirm:'Confirmer et Envoyer →', app_fee:'Frais: 0 XAF · Arrive en <5s',
+      app_select_op:'Sélectionner opérateur', app_phone:'Numéro de téléphone', app_topup:'Recharger Maintenant',
+      app_hist_title:'Historique', app_all:'Tout', app_sent:'Envoyé', app_received:'Reçu'
     }
   };
 
@@ -749,7 +880,12 @@
     const T = TR[l] || TR.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const k = el.getAttribute('data-i18n');
-      if (T[k] !== undefined) el.innerHTML = T[k];
+      if (T[k] !== undefined) {
+        el.innerHTML = T[k];
+        el.classList.remove('lang-fade');
+        void el.offsetWidth;
+        el.classList.add('lang-fade');
+      }
     });
   }
 
