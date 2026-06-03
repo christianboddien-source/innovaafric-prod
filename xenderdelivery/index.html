@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XenderDelivery — Entregas en África</title>
+<meta name="description" content="XenderDelivery: servicio de entrega rápido, seguro y confiable en toda África.">
+<style>
+  :root{
+    --bg:#0B1525;--bg2:#0F1A2E;--bg3:#162440;--amber:#F59E0B;--amber-light:#FBC02D;--amber-dim:rgba(245,158,11,0.15);
+    --text:#E8EDF5;--muted:#8A9AB8;--white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{text-decoration:none;color:inherit}
+
+  /* NAV */
+  nav{position:fixed;top:0;width:100%;background:rgba(11,21,37,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,158,11,0.12);z-index:999;padding:0 5%}
+  .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav-logo{font-size:1.4rem;font-weight:900;color:var(--white)}
+  .nav-logo span{color:var(--amber)}
+  .nav-links{display:flex;gap:1.5rem;align-items:center}
+  .nav-links a{font-size:.9rem;font-weight:600;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--amber)}
+  .lang-btns{display:flex;gap:.4rem}
+  .lang-btns button{background:none;border:1px solid rgba(245,158,11,0.25);border-radius:6px;padding:3px 8px;font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .2s}
+  .lang-btns button:hover,.lang-btns button.active{background:var(--amber);color:#000;border-color:var(--amber)}
+  .btn-nav{background:var(--amber);color:#000;padding:.45rem 1.2rem;border-radius:8px;font-weight:700;font-size:.85rem;transition:background .2s}
+  .btn-nav:hover{background:var(--amber-light)}
+
+  /* HERO */
+  .hero{min-height:100vh;background:linear-gradient(145deg,var(--bg) 0%,var(--bg2) 60%,var(--bg3) 100%);display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(245,158,11,0.08) 0%,transparent 70%);pointer-events:none}
+  .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;z-index:1}
+  .hero-badge{display:inline-block;background:var(--amber-dim);color:var(--amber);padding:.35rem 1rem;border-radius:20px;font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:1.5rem;border:1px solid rgba(245,158,11,0.2)}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;color:var(--white);margin-bottom:1.2rem}
+  .hero h1 em{color:var(--amber);font-style:normal}
+  .hero p{font-size:1.05rem;color:var(--muted);margin-bottom:2rem;max-width:480px}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn-primary{background:var(--amber);color:#000;padding:.85rem 2rem;border-radius:12px;font-weight:700;font-size:1rem;transition:all .2s;box-shadow:0 4px 20px rgba(245,158,11,0.3)}
+  .btn-primary:hover{background:var(--amber-light);transform:translateY(-2px)}
+  .btn-secondary{background:transparent;color:var(--text);padding:.85rem 2rem;border-radius:12px;font-weight:700;font-size:1rem;border:2px solid rgba(255,255,255,0.15);transition:all .2s}
+  .btn-secondary:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* TRUCK VISUAL */
+  .truck-visual{display:flex;flex-direction:column;gap:1rem}
+  .track-card{background:var(--bg3);border-radius:16px;padding:1.2rem 1.5rem;border:1px solid rgba(245,158,11,0.12)}
+  .track-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+  .track-id{font-size:.75rem;color:var(--muted)}
+  .track-status{font-size:.75rem;font-weight:700;color:var(--amber);background:var(--amber-dim);padding:.2rem .6rem;border-radius:6px}
+  .track-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
+  .track-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),var(--amber-light))}
+  .track-info{display:flex;justify-content:space-between;margin-top:.5rem;font-size:.78rem;color:var(--muted)}
+  .mini-stat{background:var(--bg3);border-radius:12px;padding:.9rem 1.2rem;border:1px solid rgba(245,158,11,0.1);display:flex;align-items:center;gap:.8rem}
+  .mini-stat-icon{font-size:1.5rem}
+  .mini-stat-val{font-size:1.2rem;font-weight:900;color:var(--amber)}
+  .mini-stat-lbl{font-size:.75rem;color:var(--muted)}
+  .mini-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+
+  /* STATS */
+  .stats{background:var(--bg2);padding:3rem 5%;border-top:1px solid rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.08)}
+  .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+  .stat-num{font-size:2.2rem;font-weight:900;color:var(--amber)}
+  .stat-lbl{font-size:.85rem;color:var(--muted);font-weight:600}
+
+  /* SECTIONS */
+  section{padding:80px 5%}
+  .section-inner{max-width:1200px;margin:0 auto}
+  .section-tag{font-size:.75rem;font-weight:700;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:.8rem}
+  .section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--white);margin-bottom:1rem}
+  .section-sub{font-size:1.05rem;color:var(--muted);max-width:560px}
+
+  /* FEATURES */
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .feat-card{background:var(--bg2);border-radius:20px;padding:2rem;border:1px solid rgba(245,158,11,0.1);transition:all .25s}
+  .feat-card:hover{border-color:rgba(245,158,11,0.3);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+  .feat-icon{width:52px;height:52px;border-radius:14px;background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem}
+  .feat-card h3{font-size:1.05rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+  .feat-card p{font-size:.88rem;color:var(--muted)}
+
+  /* HOW */
+  .how{background:var(--bg3);padding:80px 5%}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+  .step{text-align:center;padding:1.5rem 1rem}
+  .step-num{width:52px;height:52px;border-radius:50%;background:var(--amber);color:#000;font-size:1.2rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+  .step h4{font-size:1rem;font-weight:800;color:var(--white);margin-bottom:.5rem}
+  .step p{font-size:.88rem;color:var(--muted)}
+
+  /* ZONES */
+  .zones{background:var(--bg);padding:80px 5%}
+  .zones-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .zone-card{background:var(--bg2);border-radius:20px;padding:2rem;border:1px solid rgba(245,158,11,0.1);text-align:center;transition:all .25s}
+  .zone-card:hover{border-color:rgba(245,158,11,0.25);transform:translateY(-3px)}
+  .zone-flag{font-size:2.5rem;margin-bottom:.8rem}
+  .zone-name{font-size:1.1rem;font-weight:800;color:var(--white);margin-bottom:.4rem}
+  .zone-countries{font-size:.83rem;color:var(--muted)}
+  .zone-pill{display:inline-flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-top:.6rem}
+  .pill{background:var(--amber-dim);color:var(--amber);border-radius:6px;font-size:.7rem;padding:.15rem .5rem;font-weight:600}
+
+  /* RIDERS */
+  .riders{background:var(--bg2);padding:80px 5%}
+  .riders-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+  .riders-text h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:900;color:var(--white);margin-bottom:1rem}
+  .riders-text p{font-size:1rem;color:var(--muted);margin-bottom:1.5rem}
+  .riders-list{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+  .riders-list li{display:flex;gap:.8rem;align-items:flex-start;font-size:.9rem;color:var(--muted)}
+  .riders-list li::before{content:"✓";color:var(--amber);font-weight:900;font-size:1rem;flex-shrink:0;margin-top:.1rem}
+  .rider-card{background:var(--bg3);border-radius:20px;padding:2rem;border:1px solid rgba(245,158,11,0.12)}
+  .rider-card h4{font-size:1rem;font-weight:800;color:var(--white);margin-bottom:1rem}
+  .rider-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .rs{background:var(--bg2);border-radius:12px;padding:.8rem;text-align:center}
+  .rs-val{font-size:1.4rem;font-weight:900;color:var(--amber)}
+  .rs-lbl{font-size:.73rem;color:var(--muted)}
+
+  /* CTA */
+  .cta{background:linear-gradient(135deg,var(--bg3) 0%,#0A1628 100%);padding:80px 5%;text-align:center;border-top:1px solid rgba(245,158,11,0.1);border-bottom:1px solid rgba(245,158,11,0.1)}
+  .cta h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--white);margin-bottom:1rem}
+  .cta p{font-size:1.05rem;color:var(--muted);margin-bottom:2.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+  .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .btn-cta{padding:.9rem 2.2rem;border-radius:12px;font-weight:700;font-size:1rem;transition:all .2s}
+  .btn-cta-a{background:var(--amber);color:#000;box-shadow:0 4px 20px rgba(245,158,11,.3)}
+  .btn-cta-a:hover{background:var(--amber-light);transform:translateY(-2px)}
+  .btn-cta-o{background:transparent;color:var(--text);border:2px solid rgba(255,255,255,.15)}
+  .btn-cta-o:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* FOOTER */
+  footer{background:#060D18;color:var(--muted);padding:40px 5%;text-align:center}
+  .footer-logo{font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:.5rem}
+  .footer-logo span{color:var(--amber)}
+  footer p{font-size:.85rem}
+  .footer-links{display:flex;gap:1.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+  .footer-links a{font-size:.85rem;transition:color .2s}
+  .footer-links a:hover{color:var(--amber)}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(30px);transition:all .6s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  @media(max-width:768px){
+    .hero-inner,.riders-grid{grid-template-columns:1fr}
+    .truck-visual{display:none}
+    .stats-inner{grid-template-columns:repeat(2,1fr)}
+    .features-grid,.steps,.zones-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Xender<span>Delivery</span></div>
+    <div class="nav-links">
+      <a href="#features" data-i18n="nav_feat">Servicios</a>
+      <a href="#zones" data-i18n="nav_zones">Zonas</a>
+      <a href="#riders" data-i18n="nav_riders">Riders</a>
+      <a href="../" data-i18n="nav_eco">Ecosistema</a>
+      <div class="lang-btns">
+        <button onclick="setLang('es')" id="lb-es">ES</button>
+        <button onclick="setLang('en')" id="lb-en">EN</button>
+        <button onclick="setLang('fr')" id="lb-fr">FR</button>
+      </div>
+      <a href="#riders" class="btn-nav" data-i18n="nav_join">Ser Rider</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge" data-i18n="hero_badge">DELIVERY · AFRICA</div>
+      <h1 data-i18n="hero_h1">Entrega <em>rápida</em> en toda África</h1>
+      <p data-i18n="hero_p">XenderDelivery conecta a comercios con una red de riders verificados. Entregas el mismo día, seguimiento en tiempo real.</p>
+      <div class="hero-btns">
+        <a href="#features" class="btn-primary" data-i18n="hero_btn1">Enviar Ahora</a>
+        <a href="#riders" class="btn-secondary" data-i18n="hero_btn2">Ser Rider</a>
+      </div>
+    </div>
+    <div class="truck-visual">
+      <div class="track-card">
+        <div class="track-header">
+          <span class="track-id">XD-2024-08471</span>
+          <span class="track-status" data-i18n="track_status">EN RUTA</span>
+        </div>
+        <div class="track-bar"><div class="track-fill" style="width:68%"></div></div>
+        <div class="track-info">
+          <span data-i18n="track_from">Abidjan</span>
+          <span>🚚 68%</span>
+          <span data-i18n="track_to">Accra</span>
+        </div>
+      </div>
+      <div class="mini-stats-row">
+        <div class="mini-stat">
+          <div class="mini-stat-icon">⚡</div>
+          <div><div class="mini-stat-val">2h</div><div class="mini-stat-lbl" data-i18n="ms1">Tiempo promedio</div></div>
+        </div>
+        <div class="mini-stat">
+          <div class="mini-stat-icon">📍</div>
+          <div><div class="mini-stat-val">Live</div><div class="mini-stat-lbl" data-i18n="ms2">Seguimiento GPS</div></div>
+        </div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-icon">🛡️</div>
+        <div><div class="mini-stat-val">100%</div><div class="mini-stat-lbl" data-i18n="ms3">Entregas aseguradas</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div class="reveal"><div class="stat-num">5K+</div><div class="stat-lbl" data-i18n="stat1">Riders Activos</div></div>
+    <div class="reveal"><div class="stat-num">1M+</div><div class="stat-lbl" data-i18n="stat2">Entregas Realizadas</div></div>
+    <div class="reveal"><div class="stat-num">20</div><div class="stat-lbl" data-i18n="stat3">Ciudades Cubiertas</div></div>
+    <div class="reveal"><div class="stat-num">98%</div><div class="stat-lbl" data-i18n="stat4">Tasa de Éxito</div></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="feat_tag">SERVICIOS</div>
+    <h2 class="section-title reveal" data-i18n="feat_title">Entrega inteligente</h2>
+    <p class="section-sub reveal" data-i18n="feat_sub">Tecnología avanzada para cada envío, grande o pequeño.</p>
+    <div class="features-grid">
+      <div class="feat-card reveal">
+        <div class="feat-icon">⚡</div>
+        <h3 data-i18n="f1_h">Entrega Express</h3>
+        <p data-i18n="f1_p">Mismo día dentro de la ciudad. Riders disponibles 24/7 para entregas urgentes.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">📍</div>
+        <h3 data-i18n="f2_h">Seguimiento GPS</h3>
+        <p data-i18n="f2_p">Rastrea tu paquete en tiempo real desde el panel. Notificaciones en cada etapa.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🛡️</div>
+        <h3 data-i18n="f3_h">Seguro de Envío</h3>
+        <p data-i18n="f3_p">Cada paquete está asegurado. Compensación automática ante pérdida o daño.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">🏪</div>
+        <h3 data-i18n="f4_h">API para Tiendas</h3>
+        <p data-i18n="f4_p">Integración directa con XenderBigShop y XenderShop. Un clic para programar recogida.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">📦</div>
+        <h3 data-i18n="f5_h">Bultos y Palés</h3>
+        <p data-i18n="f5_p">Desde sobres hasta envíos industriales. Vehículos adaptados para cada tamaño.</p>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon">💰</div>
+        <h3 data-i18n="f6_h">Cobro a Destino</h3>
+        <p data-i18n="f6_p">El cliente paga en la entrega con Mobile Money. Fondos directamente a tu cuenta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="how_tag">CÓMO FUNCIONA</div>
+    <h2 class="section-title reveal" data-i18n="how_title">Envía en 4 pasos</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h4 data-i18n="s1_h">Programa el envío</h4>
+        <p data-i18n="s1_p">Ingresa origen, destino y tamaño del paquete. Obtén precio al instante.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h4 data-i18n="s2_h">Rider asignado</h4>
+        <p data-i18n="s2_p">Un rider verificado es asignado en minutos. Ves su perfil y ubicación en tiempo real.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h4 data-i18n="s3_h">Recogida & entrega</h4>
+        <p data-i18n="s3_p">El rider recoge y entrega. Seguimiento GPS en cada kilómetro del trayecto.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h4 data-i18n="s4_h">Confirmación</h4>
+        <p data-i18n="s4_p">El destinatario firma digitalmente. Recibe notificación y comprobante inmediato.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="zones" class="zones">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="zones_tag">ZONAS DE COBERTURA</div>
+    <h2 class="section-title reveal" data-i18n="zones_title">Operamos en 3 continentes</h2>
+    <p class="section-sub reveal" data-i18n="zones_sub">Presencia en África, Europa y América Latina para la diáspora africana.</p>
+    <div class="zones-grid">
+      <div class="zone-card reveal">
+        <div class="zone-flag">🌍</div>
+        <div class="zone-name" data-i18n="z1_name">África Occidental</div>
+        <div class="zone-countries" data-i18n="z1_sub">Hub principal de operaciones</div>
+        <div class="zone-pill">
+          <span class="pill">Senegal</span><span class="pill">CI</span><span class="pill">Ghana</span><span class="pill">Mali</span><span class="pill">BF</span><span class="pill">Togo</span>
+        </div>
+      </div>
+      <div class="zone-card reveal">
+        <div class="zone-flag">🌍</div>
+        <div class="zone-name" data-i18n="z2_name">África Central</div>
+        <div class="zone-countries" data-i18n="z2_sub">Expansión activa 2024–2025</div>
+        <div class="zone-pill">
+          <span class="pill">Camerún</span><span class="pill">RDC</span><span class="pill">Congo</span><span class="pill">Gabón</span>
+        </div>
+      </div>
+      <div class="zone-card reveal">
+        <div class="zone-flag">🌐</div>
+        <div class="zone-name" data-i18n="z3_name">Diáspora Global</div>
+        <div class="zone-countries" data-i18n="z3_sub">Para la comunidad africana</div>
+        <div class="zone-pill">
+          <span class="pill">Francia</span><span class="pill">España</span><span class="pill">UK</span><span class="pill">LATAM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="riders" class="riders">
+  <div class="section-inner">
+    <div class="riders-grid">
+      <div class="riders-text">
+        <div class="section-tag" data-i18n="rider_tag">SÉ RIDER</div>
+        <h2 data-i18n="rider_title">Gana dinero con tu moto o bici</h2>
+        <p data-i18n="rider_p">Únete a nuestra red de riders y genera ingresos extra con total flexibilidad de horarios.</p>
+        <ul class="riders-list">
+          <li data-i18n="rl1">Registro en 10 minutos con verificación de identidad</li>
+          <li data-i18n="rl2">Elige tus propias horas de trabajo</li>
+          <li data-i18n="rl3">Pagos diarios directo a tu Mobile Money</li>
+          <li data-i18n="rl4">Seguro de accidente incluido</li>
+          <li data-i18n="rl5">Bonificaciones por rendimiento y zonas peak</li>
+        </ul>
+        <a href="#" class="btn-primary" style="display:inline-block;margin-top:1.5rem" data-i18n="rider_btn">Registrarme como Rider</a>
+      </div>
+      <div class="rider-card reveal">
+        <h4 data-i18n="rc_title">Ingresos Rider Mensual</h4>
+        <div class="rider-stats">
+          <div class="rs"><div class="rs-val">$450</div><div class="rs-lbl" data-i18n="rs1">Promedio mensual</div></div>
+          <div class="rs"><div class="rs-val">4.9★</div><div class="rs-lbl" data-i18n="rs2">Rating medio</div></div>
+          <div class="rs"><div class="rs-val">8h</div><div class="rs-lbl" data-i18n="rs3">Jornada típica</div></div>
+          <div class="rs"><div class="rs-val">Daily</div><div class="rs-lbl" data-i18n="rs4">Frecuencia de pago</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 class="reveal" data-i18n="cta_h">¿Listo para entregar más rápido?</h2>
+  <p class="reveal" data-i18n="cta_p">Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.</p>
+  <div class="cta-btns">
+    <a href="#features" class="btn-cta btn-cta-a" data-i18n="cta_btn1">Empezar a Enviar</a>
+    <a href="../" class="btn-cta btn-cta-o" data-i18n="cta_btn2">Ver Ecosistema</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Xender<span>Delivery</span></div>
+  <p style="margin-bottom:.5rem;font-size:.8rem;letter-spacing:1px" data-i18n="footer_slogan">WE SIMPLIFY LIFE</p>
+  <div class="footer-links">
+    <a href="../">InnovaAFRIC</a>
+    <a href="../xendermoney/">XenderMoney</a>
+    <a href="../xendershop/">XenderShop</a>
+    <a href="../xenderbigshop/">XenderBigShop</a>
+  </div>
+  <p>&copy; 2026 XenderDelivery · InnovaAFRIC Ecosystem</p>
+</footer>
+
+<script>
+const TR={
+  es:{
+    nav_feat:"Servicios",nav_zones:"Zonas",nav_riders:"Riders",nav_eco:"Ecosistema",nav_join:"Ser Rider",
+    hero_badge:"DELIVERY · AFRICA",hero_h1:"Entrega <em>rápida</em> en toda África",
+    hero_p:"XenderDelivery conecta a comercios con una red de riders verificados. Entregas el mismo día, seguimiento en tiempo real.",
+    hero_btn1:"Enviar Ahora",hero_btn2:"Ser Rider",
+    track_status:"EN RUTA",track_from:"Abidjan",track_to:"Accra",
+    ms1:"Tiempo promedio",ms2:"Seguimiento GPS",ms3:"Entregas aseguradas",
+    stat1:"Riders Activos",stat2:"Entregas Realizadas",stat3:"Ciudades Cubiertas",stat4:"Tasa de Éxito",
+    feat_tag:"SERVICIOS",feat_title:"Entrega inteligente",feat_sub:"Tecnología avanzada para cada envío, grande o pequeño.",
+    f1_h:"Entrega Express",f1_p:"Mismo día dentro de la ciudad. Riders disponibles 24/7 para entregas urgentes.",
+    f2_h:"Seguimiento GPS",f2_p:"Rastrea tu paquete en tiempo real desde el panel. Notificaciones en cada etapa.",
+    f3_h:"Seguro de Envío",f3_p:"Cada paquete está asegurado. Compensación automática ante pérdida o daño.",
+    f4_h:"API para Tiendas",f4_p:"Integración directa con XenderBigShop y XenderShop. Un clic para programar recogida.",
+    f5_h:"Bultos y Palés",f5_p:"Desde sobres hasta envíos industriales. Vehículos adaptados para cada tamaño.",
+    f6_h:"Cobro a Destino",f6_p:"El cliente paga en la entrega con Mobile Money. Fondos directamente a tu cuenta.",
+    how_tag:"CÓMO FUNCIONA",how_title:"Envía en 4 pasos",
+    s1_h:"Programa el envío",s1_p:"Ingresa origen, destino y tamaño del paquete. Obtén precio al instante.",
+    s2_h:"Rider asignado",s2_p:"Un rider verificado es asignado en minutos. Ves su perfil y ubicación en tiempo real.",
+    s3_h:"Recogida & entrega",s3_p:"El rider recoge y entrega. Seguimiento GPS en cada kilómetro del trayecto.",
+    s4_h:"Confirmación",s4_p:"El destinatario firma digitalmente. Recibe notificación y comprobante inmediato.",
+    zones_tag:"ZONAS DE COBERTURA",zones_title:"Operamos en 3 continentes",
+    zones_sub:"Presencia en África, Europa y América Latina para la diáspora africana.",
+    z1_name:"África Occidental",z1_sub:"Hub principal de operaciones",
+    z2_name:"África Central",z2_sub:"Expansión activa 2024–2025",
+    z3_name:"Diáspora Global",z3_sub:"Para la comunidad africana",
+    rider_tag:"SÉ RIDER",rider_title:"Gana dinero con tu moto o bici",
+    rider_p:"Únete a nuestra red de riders y genera ingresos extra con total flexibilidad de horarios.",
+    rl1:"Registro en 10 minutos con verificación de identidad",rl2:"Elige tus propias horas de trabajo",
+    rl3:"Pagos diarios directo a tu Mobile Money",rl4:"Seguro de accidente incluido",
+    rl5:"Bonificaciones por rendimiento y zonas peak",rider_btn:"Registrarme como Rider",
+    rc_title:"Ingresos Rider Mensual",rs1:"Promedio mensual",rs2:"Rating medio",rs3:"Jornada típica",rs4:"Frecuencia de pago",
+    cta_h:"¿Listo para entregar más rápido?",cta_p:"Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.",
+    cta_btn1:"Empezar a Enviar",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
+  },
+  en:{
+    nav_feat:"Services",nav_zones:"Zones",nav_riders:"Riders",nav_eco:"Ecosystem",nav_join:"Become Rider",
+    hero_badge:"DELIVERY · AFRICA",hero_h1:"<em>Fast</em> delivery across Africa",
+    hero_p:"XenderDelivery connects businesses with a network of verified riders. Same-day delivery, real-time tracking.",
+    hero_btn1:"Send Now",hero_btn2:"Become a Rider",
+    track_status:"IN TRANSIT",track_from:"Abidjan",track_to:"Accra",
+    ms1:"Average time",ms2:"GPS Tracking",ms3:"Insured deliveries",
+    stat1:"Active Riders",stat2:"Deliveries Made",stat3:"Cities Covered",stat4:"Success Rate",
+    feat_tag:"SERVICES",feat_title:"Smart delivery",feat_sub:"Advanced technology for every shipment, large or small.",
+    f1_h:"Express Delivery",f1_p:"Same day within the city. Riders available 24/7 for urgent deliveries.",
+    f2_h:"GPS Tracking",f2_p:"Track your package in real time from the dashboard. Notifications at every stage.",
+    f3_h:"Shipping Insurance",f3_p:"Every package is insured. Automatic compensation for loss or damage.",
+    f4_h:"Store API",f4_p:"Direct integration with XenderBigShop and XenderShop. One click to schedule pickup.",
+    f5_h:"Parcels & Pallets",f5_p:"From envelopes to industrial shipments. Vehicles adapted for every size.",
+    f6_h:"Cash on Delivery",f6_p:"Customer pays on delivery with Mobile Money. Funds go directly to your account.",
+    how_tag:"HOW IT WORKS",how_title:"Ship in 4 steps",
+    s1_h:"Schedule the shipment",s1_p:"Enter origin, destination and package size. Get instant pricing.",
+    s2_h:"Rider assigned",s2_p:"A verified rider is assigned in minutes. See their profile and real-time location.",
+    s3_h:"Pickup & delivery",s3_p:"Rider picks up and delivers. GPS tracking every kilometer of the route.",
+    s4_h:"Confirmation",s4_p:"Recipient signs digitally. Receive notification and proof immediately.",
+    zones_tag:"COVERAGE ZONES",zones_title:"We operate on 3 continents",
+    zones_sub:"Presence in Africa, Europe and Latin America for the African diaspora.",
+    z1_name:"West Africa",z1_sub:"Main operations hub",
+    z2_name:"Central Africa",z2_sub:"Active expansion 2024–2025",
+    z3_name:"Global Diaspora",z3_sub:"For the African community",
+    rider_tag:"BECOME A RIDER",rider_title:"Earn money with your bike or moto",
+    rider_p:"Join our rider network and earn extra income with total schedule flexibility.",
+    rl1:"Register in 10 minutes with identity verification",rl2:"Choose your own working hours",
+    rl3:"Daily payments directly to your Mobile Money",rl4:"Accident insurance included",
+    rl5:"Bonuses for performance and peak zones",rider_btn:"Register as a Rider",
+    rc_title:"Monthly Rider Earnings",rs1:"Monthly average",rs2:"Average rating",rs3:"Typical shift",rs4:"Payment frequency",
+    cta_h:"Ready to deliver faster?",cta_p:"Join over 5,000 riders and thousands of merchants who trust XenderDelivery.",
+    cta_btn1:"Start Shipping",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
+  },
+  fr:{
+    nav_feat:"Services",nav_zones:"Zones",nav_riders:"Riders",nav_eco:"Écosystème",nav_join:"Devenir Rider",
+    hero_badge:"LIVRAISON · AFRIQUE",hero_h1:"Livraison <em>rapide</em> partout en Afrique",
+    hero_p:"XenderDelivery connecte les commerces à un réseau de riders vérifiés. Livraison le jour même, suivi en temps réel.",
+    hero_btn1:"Envoyer Maintenant",hero_btn2:"Devenir Rider",
+    track_status:"EN ROUTE",track_from:"Abidjan",track_to:"Accra",
+    ms1:"Temps moyen",ms2:"Suivi GPS",ms3:"Livraisons assurées",
+    stat1:"Riders Actifs",stat2:"Livraisons Effectuées",stat3:"Villes Couvertes",stat4:"Taux de Succès",
+    feat_tag:"SERVICES",feat_title:"Livraison intelligente",feat_sub:"Technologie avancée pour chaque envoi, grand ou petit.",
+    f1_h:"Livraison Express",f1_p:"Le jour même en ville. Riders disponibles 24/7 pour les livraisons urgentes.",
+    f2_h:"Suivi GPS",f2_p:"Suivez votre colis en temps réel depuis le tableau de bord. Notifications à chaque étape.",
+    f3_h:"Assurance Envoi",f3_p:"Chaque colis est assuré. Compensation automatique en cas de perte ou dommage.",
+    f4_h:"API Boutiques",f4_p:"Intégration directe avec XenderBigShop et XenderShop. Un clic pour planifier la collecte.",
+    f5_h:"Colis & Palettes",f5_p:"Des enveloppes aux envois industriels. Véhicules adaptés à chaque taille.",
+    f6_h:"Paiement à la Livraison",f6_p:"Le client paie à la livraison avec Mobile Money. Fonds directement sur votre compte.",
+    how_tag:"COMMENT ÇA MARCHE",how_title:"Envoyez en 4 étapes",
+    s1_h:"Planifiez l'envoi",s1_p:"Entrez l'origine, la destination et la taille du colis. Obtenez un prix instantané.",
+    s2_h:"Rider assigné",s2_p:"Un rider vérifié est assigné en quelques minutes. Voyez son profil et sa localisation en temps réel.",
+    s3_h:"Collecte & livraison",s3_p:"Le rider collecte et livre. Suivi GPS chaque kilomètre du trajet.",
+    s4_h:"Confirmation",s4_p:"Le destinataire signe numériquement. Recevez notification et reçu immédiatement.",
+    zones_tag:"ZONES DE COUVERTURE",zones_title:"Nous opérons sur 3 continents",
+    zones_sub:"Présence en Afrique, Europe et Amérique Latine pour la diaspora africaine.",
+    z1_name:"Afrique de l'Ouest",z1_sub:"Hub principal d'opérations",
+    z2_name:"Afrique Centrale",z2_sub:"Expansion active 2024–2025",
+    z3_name:"Diaspora Mondiale",z3_sub:"Pour la communauté africaine",
+    rider_tag:"DEVENIR RIDER",rider_title:"Gagnez de l'argent avec votre moto ou vélo",
+    rider_p:"Rejoignez notre réseau de riders et générez des revenus supplémentaires avec une totale flexibilité d'horaires.",
+    rl1:"Inscription en 10 minutes avec vérification d'identité",rl2:"Choisissez vos propres horaires de travail",
+    rl3:"Paiements quotidiens directement sur votre Mobile Money",rl4:"Assurance accident incluse",
+    rl5:"Bonus de performance et zones de pointe",rider_btn:"M'inscrire comme Rider",
+    rc_title:"Revenus Mensuels Rider",rs1:"Moyenne mensuelle",rs2:"Note moyenne",rs3:"Journée typique",rs4:"Fréquence de paiement",
+    cta_h:"Prêt à livrer plus vite ?",cta_p:"Rejoignez plus de 5 000 riders et des milliers de commerçants qui font confiance à XenderDelivery.",
+    cta_btn1:"Commencer à Envoyer",cta_btn2:"Voir l'Écosystème",footer_slogan:"WE SIMPLIFY LIFE"
+  }
+};
+let LANG=localStorage.getItem('ia_lang')||'es';
+function setLang(l){
+  LANG=l;localStorage.setItem('ia_lang',l);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(TR[l][k]!==undefined)el.innerHTML=TR[l][k];
+  });
+  document.querySelectorAll('.lang-btns button').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('lb-'+l);
+  if(btn)btn.classList.add('active');
+  document.documentElement.lang=l;
+}
+setLang(LANG);
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

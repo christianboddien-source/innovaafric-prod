@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XenderBigShop — Marketplace Africa</title>
+<meta name="description" content="XenderBigShop: el marketplace B2B y retail más grande de África. Compra y vende en todo el continente.">
+<style>
+  :root{
+    --bg:#FFF8EE;--bg2:#FFF0D6;--orange:#E0921A;--orange-light:#F5A623;--dark:#3D1C00;--dark2:#7A4000;--cream:#FFFBF4;
+    --text:#3D2800;--muted:#8B6A3A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{text-decoration:none;color:inherit}
+
+  /* NAV */
+  nav{position:fixed;top:0;width:100%;background:rgba(255,248,238,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(224,146,26,0.15);z-index:999;padding:0 5%}
+  .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav-logo{font-size:1.4rem;font-weight:900;color:var(--dark)}
+  .nav-logo span{color:var(--orange)}
+  .nav-links{display:flex;gap:1.5rem;align-items:center}
+  .nav-links a{font-size:.9rem;font-weight:600;color:var(--muted);transition:color .2s}
+  .nav-links a:hover{color:var(--orange)}
+  .lang-btns{display:flex;gap:.4rem}
+  .lang-btns button{background:none;border:1px solid rgba(224,146,26,0.3);border-radius:6px;padding:3px 8px;font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .2s}
+  .lang-btns button:hover,.lang-btns button.active{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .btn-nav{background:var(--orange);color:#fff;padding:.45rem 1.2rem;border-radius:8px;font-weight:700;font-size:.85rem;transition:background .2s}
+  .btn-nav:hover{background:var(--dark2)}
+
+  /* HERO */
+  .hero{min-height:100vh;background:linear-gradient(145deg,#fff 0%,var(--bg) 50%,var(--bg2) 100%);display:flex;align-items:center;padding:100px 5% 60px}
+  .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+  .hero-badge{display:inline-block;background:rgba(224,146,26,0.12);color:var(--orange);padding:.35rem 1rem;border-radius:20px;font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:1.5rem}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;color:var(--dark);margin-bottom:1.2rem}
+  .hero h1 em{color:var(--orange);font-style:normal}
+  .hero p{font-size:1.1rem;color:var(--muted);margin-bottom:2rem;max-width:480px}
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+  .btn-primary{background:var(--orange);color:#fff;padding:.85rem 2rem;border-radius:12px;font-weight:700;font-size:1rem;transition:all .2s;box-shadow:0 4px 20px rgba(224,146,26,0.35)}
+  .btn-primary:hover{background:var(--dark2);transform:translateY(-2px)}
+  .btn-secondary{background:transparent;color:var(--dark);padding:.85rem 2rem;border-radius:12px;font-weight:700;font-size:1rem;border:2px solid rgba(61,28,0,0.2);transition:all .2s}
+  .btn-secondary:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* MARKETPLACE VISUAL */
+  .marketplace-visual{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  .market-card{background:#fff;border-radius:14px;padding:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:1px solid rgba(224,146,26,0.1)}
+  .market-card-icon{font-size:2rem;margin-bottom:.5rem}
+  .market-card h4{font-size:.85rem;font-weight:700;color:var(--dark);margin-bottom:.2rem}
+  .market-card p{font-size:.75rem;color:var(--muted)}
+  .market-card.highlight{background:var(--orange);color:#fff}
+  .market-card.highlight h4,.market-card.highlight p{color:#fff}
+
+  /* STATS */
+  .stats{background:#fff;padding:3rem 5%;border-top:1px solid rgba(224,146,26,0.1);border-bottom:1px solid rgba(224,146,26,0.1)}
+  .stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+  .stat-num{font-size:2.2rem;font-weight:900;color:var(--orange)}
+  .stat-lbl{font-size:.85rem;color:var(--muted);font-weight:600}
+
+  /* SECTIONS */
+  section{padding:80px 5%}
+  .section-inner{max-width:1200px;margin:0 auto}
+  .section-tag{font-size:.75rem;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:.8rem}
+  .section-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:900;color:var(--dark);margin-bottom:1rem}
+  .section-sub{font-size:1.05rem;color:var(--muted);max-width:560px}
+
+  /* CATEGORIES */
+  .categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-top:3rem}
+  .cat-card{background:#fff;border-radius:16px;padding:1.5rem 1rem;text-align:center;border:1px solid rgba(224,146,26,0.1);transition:all .25s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+  .cat-card:hover{border-color:var(--orange);transform:translateY(-4px);box-shadow:0 8px 24px rgba(224,146,26,0.18)}
+  .cat-icon{font-size:2.2rem;margin-bottom:.6rem}
+  .cat-name{font-size:.85rem;font-weight:700;color:var(--dark)}
+
+  /* VENDORS */
+  .vendors{background:var(--bg2);padding:80px 5%}
+  .vendors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .vendor-card{background:#fff;border-radius:20px;padding:2rem;border:1px solid rgba(224,146,26,0.12);transition:all .25s;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+  .vendor-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(224,146,26,0.15)}
+  .vendor-icon{width:52px;height:52px;border-radius:14px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.2rem}
+  .vendor-card h3{font-size:1.1rem;font-weight:800;color:var(--dark);margin-bottom:.5rem}
+  .vendor-card p{font-size:.9rem;color:var(--muted);line-height:1.6}
+
+  /* HOW IT WORKS */
+  .how{background:#fff;padding:80px 5%}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:3rem}
+  .step{text-align:center;padding:1.5rem 1rem}
+  .step-num{width:52px;height:52px;border-radius:50%;background:var(--orange);color:#fff;font-size:1.2rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+  .step h4{font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:.5rem}
+  .step p{font-size:.88rem;color:var(--muted)}
+
+  /* SUBSCRIPTIONS */
+  .plans{background:var(--bg);padding:80px 5%}
+  .plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+  .plan-card{background:#fff;border-radius:20px;padding:2rem;border:2px solid rgba(224,146,26,0.1);transition:all .25s}
+  .plan-card.featured{border-color:var(--orange);box-shadow:0 8px 32px rgba(224,146,26,0.2)}
+  .plan-badge{display:inline-block;background:var(--orange);color:#fff;padding:.2rem .7rem;border-radius:6px;font-size:.7rem;font-weight:700;margin-bottom:1rem}
+  .plan-name{font-size:1.2rem;font-weight:900;color:var(--dark);margin-bottom:.3rem}
+  .plan-price{font-size:2.2rem;font-weight:900;color:var(--orange);margin:.5rem 0}
+  .plan-price span{font-size:.9rem;font-weight:400;color:var(--muted)}
+  .plan-features{list-style:none;margin:1.2rem 0 1.5rem}
+  .plan-features li{font-size:.88rem;color:var(--muted);padding:.4rem 0;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;gap:.5rem}
+  .plan-features li::before{content:"✓";color:var(--orange);font-weight:900}
+  .btn-plan{width:100%;padding:.75rem;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer;border:none;transition:all .2s}
+  .btn-plan-primary{background:var(--orange);color:#fff}
+  .btn-plan-primary:hover{background:var(--dark2)}
+  .btn-plan-outline{background:transparent;color:var(--orange);border:2px solid var(--orange)!important;border-radius:10px}
+  .btn-plan-outline:hover{background:var(--orange);color:#fff}
+
+  /* CTA */
+  .cta{background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 100%);padding:80px 5%;text-align:center}
+  .cta h2{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:#fff;margin-bottom:1rem}
+  .cta p{font-size:1.05rem;color:rgba(255,255,255,.7);margin-bottom:2.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+  .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+  .btn-cta{padding:.9rem 2.2rem;border-radius:12px;font-weight:700;font-size:1rem;transition:all .2s}
+  .btn-cta-w{background:#fff;color:var(--dark)}
+  .btn-cta-w:hover{background:var(--bg);transform:translateY(-2px)}
+  .btn-cta-o{background:var(--orange);color:#fff;box-shadow:0 4px 16px rgba(224,146,26,.4)}
+  .btn-cta-o:hover{background:var(--orange-light);transform:translateY(-2px)}
+
+  /* FOOTER */
+  footer{background:#2A0E00;color:rgba(255,255,255,.6);padding:40px 5%;text-align:center}
+  .footer-logo{font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:.5rem}
+  .footer-logo span{color:var(--orange-light)}
+  footer p{font-size:.85rem}
+  .footer-links{display:flex;gap:1.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+  .footer-links a{font-size:.85rem;transition:color .2s}
+  .footer-links a:hover{color:var(--orange-light)}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(30px);transition:all .6s ease}
+  .reveal.visible{opacity:1;transform:none}
+
+  @media(max-width:768px){
+    .hero-inner{grid-template-columns:1fr}
+    .marketplace-visual{display:none}
+    .stats-inner{grid-template-columns:repeat(2,1fr)}
+    .vendors-grid,.steps,.plans-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Xender<span>BigShop</span></div>
+    <div class="nav-links">
+      <a href="#categories" data-i18n="nav_cat">Categorías</a>
+      <a href="#vendors" data-i18n="nav_vend">Vendedores</a>
+      <a href="#plans" data-i18n="nav_plans">Planes</a>
+      <a href="../" data-i18n="nav_eco">Ecosistema</a>
+      <div class="lang-btns">
+        <button onclick="setLang('es')" id="lb-es">ES</button>
+        <button onclick="setLang('en')" id="lb-en">EN</button>
+        <button onclick="setLang('fr')" id="lb-fr">FR</button>
+      </div>
+      <a href="#plans" class="btn-nav" data-i18n="nav_start">Empezar</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge" data-i18n="hero_badge">MARKETPLACE · AFRICA</div>
+      <h1 data-i18n="hero_h1">El marketplace <em>más grande</em> de África</h1>
+      <p data-i18n="hero_p">Compra y vende en todo el continente africano. Miles de vendedores, millones de productos, pagos seguros.</p>
+      <div class="hero-btns">
+        <a href="#categories" class="btn-primary" data-i18n="hero_btn1">Ver Productos</a>
+        <a href="#vendors" class="btn-secondary" data-i18n="hero_btn2">Vender Aquí</a>
+      </div>
+    </div>
+    <div class="marketplace-visual">
+      <div class="market-card">
+        <div class="market-card-icon">🛒</div>
+        <h4 data-i18n="mc1_h">Compra Fácil</h4>
+        <p data-i18n="mc1_p">Miles de productos</p>
+      </div>
+      <div class="market-card highlight">
+        <div class="market-card-icon">🏪</div>
+        <h4 data-i18n="mc2_h">Tu Tienda</h4>
+        <p data-i18n="mc2_p">Vende en África</p>
+      </div>
+      <div class="market-card">
+        <div class="market-card-icon">🔒</div>
+        <h4 data-i18n="mc3_h">Pagos Seguros</h4>
+        <p data-i18n="mc3_p">Escrow protegido</p>
+      </div>
+      <div class="market-card">
+        <div class="market-card-icon">🚚</div>
+        <h4 data-i18n="mc4_h">Envío Rápido</h4>
+        <p data-i18n="mc4_p">Toda África</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div class="reveal"><div class="stat-num">50K+</div><div class="stat-lbl" data-i18n="stat1">Vendedores Activos</div></div>
+    <div class="reveal"><div class="stat-num">2M+</div><div class="stat-lbl" data-i18n="stat2">Productos Listados</div></div>
+    <div class="reveal"><div class="stat-num">35</div><div class="stat-lbl" data-i18n="stat3">Países Cubiertos</div></div>
+    <div class="reveal"><div class="stat-num">4.8★</div><div class="stat-lbl" data-i18n="stat4">Valoración Media</div></div>
+  </div>
+</div>
+
+<section id="categories">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="cat_tag">CATEGORÍAS</div>
+    <h2 class="section-title reveal" data-i18n="cat_title">Todo lo que necesitas</h2>
+    <p class="section-sub reveal" data-i18n="cat_sub">Desde electrónica hasta moda, alimentos y servicios B2B.</p>
+    <div class="categories-grid">
+      <div class="cat-card reveal"><div class="cat-icon">📱</div><div class="cat-name" data-i18n="cat1">Electrónica</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">👗</div><div class="cat-name" data-i18n="cat2">Moda & Ropa</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🛋️</div><div class="cat-name" data-i18n="cat3">Hogar & Deco</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🌽</div><div class="cat-name" data-i18n="cat4">Alimentos</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🔧</div><div class="cat-name" data-i18n="cat5">Herramientas</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">💊</div><div class="cat-name" data-i18n="cat6">Salud</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">🏗️</div><div class="cat-name" data-i18n="cat7">Construcción</div></div>
+      <div class="cat-card reveal"><div class="cat-icon">📦</div><div class="cat-name" data-i18n="cat8">Mayoreo B2B</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="vendors" class="vendors">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="vend_tag">PARA VENDEDORES</div>
+    <h2 class="section-title reveal" data-i18n="vend_title">Haz crecer tu negocio</h2>
+    <p class="section-sub reveal" data-i18n="vend_sub">Herramientas profesionales para vender en todo el continente.</p>
+    <div class="vendors-grid">
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">🏪</div>
+        <h3 data-i18n="v1_h">Panel de Vendedor</h3>
+        <p data-i18n="v1_p">Dashboard completo con estadísticas, gestión de inventario, pedidos y clientes en tiempo real.</p>
+      </div>
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">📊</div>
+        <h3 data-i18n="v2_h">Analytics Avanzado</h3>
+        <p data-i18n="v2_p">Informes detallados de ventas, tendencias de mercado y comportamiento de compradores por región.</p>
+      </div>
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">💳</div>
+        <h3 data-i18n="v3_h">Cobros Integrados</h3>
+        <p data-i18n="v3_p">Acepta Mobile Money (MTN, Orange, Wave), tarjetas Visa/Mastercard y transferencias bancarias.</p>
+      </div>
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">🚚</div>
+        <h3 data-i18n="v4_h">Logística Conectada</h3>
+        <p data-i18n="v4_p">Integración directa con XenderDelivery. Gestiona envíos desde tu panel sin salir de la plataforma.</p>
+      </div>
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">🤝</div>
+        <h3 data-i18n="v5_h">Protección Escrow</h3>
+        <p data-i18n="v5_p">Los fondos se retienen hasta que el comprador confirme la entrega. Cero riesgo de fraude.</p>
+      </div>
+      <div class="vendor-card reveal">
+        <div class="vendor-icon">🌍</div>
+        <h3 data-i18n="v6_h">Alcance Continental</h3>
+        <p data-i18n="v6_p">Vende desde Senegal hasta Sudáfrica, de Marruecos a Mozambique. 35 países, un solo panel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="how_tag">CÓMO FUNCIONA</div>
+    <h2 class="section-title reveal" data-i18n="how_title">Empieza en 4 pasos</h2>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h4 data-i18n="s1_h">Crea tu cuenta</h4>
+        <p data-i18n="s1_p">Registro en 2 minutos. Verifica tu identidad con KYC básico.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h4 data-i18n="s2_h">Abre tu tienda</h4>
+        <p data-i18n="s2_p">Personaliza tu perfil, sube productos con fotos y precios.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h4 data-i18n="s3_h">Recibe pedidos</h4>
+        <p data-i18n="s3_p">Gestiona órdenes desde el panel. Notificaciones en tiempo real.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h4 data-i18n="s4_h">Cobra seguro</h4>
+        <p data-i18n="s4_p">Fondos liberados automáticamente al confirmar la entrega.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plans" class="plans">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="plans_tag">PLANES VENDEDOR</div>
+    <h2 class="section-title reveal" data-i18n="plans_title">Elige tu plan</h2>
+    <p class="section-sub reveal" data-i18n="plans_sub">Desde emprendedores hasta grandes empresas, tenemos el plan para ti.</p>
+    <div class="plans-grid">
+      <div class="plan-card reveal">
+        <div class="plan-name" data-i18n="plan1_name">Starter</div>
+        <div class="plan-price">$0<span data-i18n="plan_mo">/mes</span></div>
+        <ul class="plan-features">
+          <li data-i18n="p1f1">Hasta 50 productos</li>
+          <li data-i18n="p1f2">Panel básico</li>
+          <li data-i18n="p1f3">Comisión 5%</li>
+          <li data-i18n="p1f4">Soporte email</li>
+        </ul>
+        <button class="btn-plan btn-plan-outline" data-i18n="plan_free">Gratis</button>
+      </div>
+      <div class="plan-card featured reveal">
+        <div class="plan-badge" data-i18n="plan_pop">MÁS POPULAR</div>
+        <div class="plan-name" data-i18n="plan2_name">Business</div>
+        <div class="plan-price">$29<span data-i18n="plan_mo">/mes</span></div>
+        <ul class="plan-features">
+          <li data-i18n="p2f1">Productos ilimitados</li>
+          <li data-i18n="p2f2">Analytics avanzado</li>
+          <li data-i18n="p2f3">Comisión 2.5%</li>
+          <li data-i18n="p2f4">Soporte prioritario</li>
+          <li data-i18n="p2f5">Logística integrada</li>
+        </ul>
+        <button class="btn-plan btn-plan-primary" data-i18n="plan_start">Comenzar</button>
+      </div>
+      <div class="plan-card reveal">
+        <div class="plan-name" data-i18n="plan3_name">Enterprise</div>
+        <div class="plan-price">$99<span data-i18n="plan_mo">/mes</span></div>
+        <ul class="plan-features">
+          <li data-i18n="p3f1">Multi-tienda</li>
+          <li data-i18n="p3f2">API personalizada</li>
+          <li data-i18n="p3f3">Comisión 1%</li>
+          <li data-i18n="p3f4">Gestor dedicado</li>
+          <li data-i18n="p3f5">SLA garantizado</li>
+        </ul>
+        <button class="btn-plan btn-plan-outline" data-i18n="plan_contact">Contactar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 class="reveal" data-i18n="cta_h">¿Listo para vender en África?</h2>
+  <p class="reveal" data-i18n="cta_p">Únete a 50,000 vendedores que ya confían en XenderBigShop.</p>
+  <div class="cta-btns">
+    <a href="#plans" class="btn-cta btn-cta-o" data-i18n="cta_btn1">Abrir mi tienda</a>
+    <a href="../" class="btn-cta btn-cta-w" data-i18n="cta_btn2">Ver Ecosistema</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Xender<span>BigShop</span></div>
+  <p style="margin-bottom:.5rem;font-size:.8rem;letter-spacing:1px" data-i18n="footer_slogan">WE SIMPLIFY LIFE</p>
+  <div class="footer-links">
+    <a href="../">InnovaAFRIC</a>
+    <a href="../xendermoney/">XenderMoney</a>
+    <a href="../xendershop/">XenderShop</a>
+    <a href="../xenderdelivery/">XenderDelivery</a>
+  </div>
+  <p>&copy; 2026 XenderBigShop · InnovaAFRIC Ecosystem</p>
+</footer>
+
+<script>
+const TR={
+  es:{
+    nav_cat:"Categorías",nav_vend:"Vendedores",nav_plans:"Planes",nav_eco:"Ecosistema",nav_start:"Empezar",
+    hero_badge:"MARKETPLACE · AFRICA",hero_h1:"El marketplace <em>más grande</em> de África",
+    hero_p:"Compra y vende en todo el continente africano. Miles de vendedores, millones de productos, pagos seguros.",
+    hero_btn1:"Ver Productos",hero_btn2:"Vender Aquí",
+    mc1_h:"Compra Fácil",mc1_p:"Miles de productos",mc2_h:"Tu Tienda",mc2_p:"Vende en África",
+    mc3_h:"Pagos Seguros",mc3_p:"Escrow protegido",mc4_h:"Envío Rápido",mc4_p:"Toda África",
+    stat1:"Vendedores Activos",stat2:"Productos Listados",stat3:"Países Cubiertos",stat4:"Valoración Media",
+    cat_tag:"CATEGORÍAS",cat_title:"Todo lo que necesitas",
+    cat_sub:"Desde electrónica hasta moda, alimentos y servicios B2B.",
+    cat1:"Electrónica",cat2:"Moda & Ropa",cat3:"Hogar & Deco",cat4:"Alimentos",
+    cat5:"Herramientas",cat6:"Salud",cat7:"Construcción",cat8:"Mayoreo B2B",
+    vend_tag:"PARA VENDEDORES",vend_title:"Haz crecer tu negocio",
+    vend_sub:"Herramientas profesionales para vender en todo el continente.",
+    v1_h:"Panel de Vendedor",v1_p:"Dashboard completo con estadísticas, gestión de inventario, pedidos y clientes en tiempo real.",
+    v2_h:"Analytics Avanzado",v2_p:"Informes detallados de ventas, tendencias de mercado y comportamiento de compradores por región.",
+    v3_h:"Cobros Integrados",v3_p:"Acepta Mobile Money (MTN, Orange, Wave), tarjetas Visa/Mastercard y transferencias bancarias.",
+    v4_h:"Logística Conectada",v4_p:"Integración directa con XenderDelivery. Gestiona envíos desde tu panel sin salir de la plataforma.",
+    v5_h:"Protección Escrow",v5_p:"Los fondos se retienen hasta que el comprador confirme la entrega. Cero riesgo de fraude.",
+    v6_h:"Alcance Continental",v6_p:"Vende desde Senegal hasta Sudáfrica, de Marruecos a Mozambique. 35 países, un solo panel.",
+    how_tag:"CÓMO FUNCIONA",how_title:"Empieza en 4 pasos",
+    s1_h:"Crea tu cuenta",s1_p:"Registro en 2 minutos. Verifica tu identidad con KYC básico.",
+    s2_h:"Abre tu tienda",s2_p:"Personaliza tu perfil, sube productos con fotos y precios.",
+    s3_h:"Recibe pedidos",s3_p:"Gestiona órdenes desde el panel. Notificaciones en tiempo real.",
+    s4_h:"Cobra seguro",s4_p:"Fondos liberados automáticamente al confirmar la entrega.",
+    plans_tag:"PLANES VENDEDOR",plans_title:"Elige tu plan",
+    plans_sub:"Desde emprendedores hasta grandes empresas, tenemos el plan para ti.",
+    plan1_name:"Starter",plan_mo:"/mes",plan_free:"Gratis",plan_pop:"MÁS POPULAR",
+    plan2_name:"Business",plan_start:"Comenzar",plan3_name:"Enterprise",plan_contact:"Contactar",
+    p1f1:"Hasta 50 productos",p1f2:"Panel básico",p1f3:"Comisión 5%",p1f4:"Soporte email",
+    p2f1:"Productos ilimitados",p2f2:"Analytics avanzado",p2f3:"Comisión 2.5%",p2f4:"Soporte prioritario",p2f5:"Logística integrada",
+    p3f1:"Multi-tienda",p3f2:"API personalizada",p3f3:"Comisión 1%",p3f4:"Gestor dedicado",p3f5:"SLA garantizado",
+    cta_h:"¿Listo para vender en África?",cta_p:"Únete a 50,000 vendedores que ya confían en XenderBigShop.",
+    cta_btn1:"Abrir mi tienda",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
+  },
+  en:{
+    nav_cat:"Categories",nav_vend:"Vendors",nav_plans:"Plans",nav_eco:"Ecosystem",nav_start:"Get Started",
+    hero_badge:"MARKETPLACE · AFRICA",hero_h1:"Africa's <em>biggest</em> marketplace",
+    hero_p:"Buy and sell across the African continent. Thousands of vendors, millions of products, secure payments.",
+    hero_btn1:"Browse Products",hero_btn2:"Start Selling",
+    mc1_h:"Easy Shopping",mc1_p:"Thousands of products",mc2_h:"Your Store",mc2_p:"Sell in Africa",
+    mc3_h:"Secure Payments",mc3_p:"Escrow protected",mc4_h:"Fast Shipping",mc4_p:"All Africa",
+    stat1:"Active Vendors",stat2:"Listed Products",stat3:"Countries Covered",stat4:"Average Rating",
+    cat_tag:"CATEGORIES",cat_title:"Everything you need",
+    cat_sub:"From electronics to fashion, food, and B2B wholesale.",
+    cat1:"Electronics",cat2:"Fashion & Clothing",cat3:"Home & Decor",cat4:"Food",
+    cat5:"Tools",cat6:"Health",cat7:"Construction",cat8:"B2B Wholesale",
+    vend_tag:"FOR VENDORS",vend_title:"Grow your business",
+    vend_sub:"Professional tools to sell across the continent.",
+    v1_h:"Vendor Dashboard",v1_p:"Full dashboard with stats, inventory management, orders and customers in real time.",
+    v2_h:"Advanced Analytics",v2_p:"Detailed sales reports, market trends and buyer behavior by region.",
+    v3_h:"Integrated Payments",v3_p:"Accept Mobile Money (MTN, Orange, Wave), Visa/Mastercard cards and bank transfers.",
+    v4_h:"Connected Logistics",v4_p:"Direct integration with XenderDelivery. Manage shipments from your panel without leaving the platform.",
+    v5_h:"Escrow Protection",v5_p:"Funds are held until the buyer confirms delivery. Zero fraud risk.",
+    v6_h:"Continental Reach",v6_p:"Sell from Senegal to South Africa, Morocco to Mozambique. 35 countries, one panel.",
+    how_tag:"HOW IT WORKS",how_title:"Start in 4 steps",
+    s1_h:"Create your account",s1_p:"Register in 2 minutes. Verify your identity with basic KYC.",
+    s2_h:"Open your store",s2_p:"Customize your profile, upload products with photos and prices.",
+    s3_h:"Receive orders",s3_p:"Manage orders from the panel. Real-time notifications.",
+    s4_h:"Get paid safely",s4_p:"Funds released automatically upon delivery confirmation.",
+    plans_tag:"VENDOR PLANS",plans_title:"Choose your plan",
+    plans_sub:"From entrepreneurs to large companies, we have the plan for you.",
+    plan1_name:"Starter",plan_mo:"/month",plan_free:"Free",plan_pop:"MOST POPULAR",
+    plan2_name:"Business",plan_start:"Get Started",plan3_name:"Enterprise",plan_contact:"Contact Us",
+    p1f1:"Up to 50 products",p1f2:"Basic dashboard",p1f3:"5% commission",p1f4:"Email support",
+    p2f1:"Unlimited products",p2f2:"Advanced analytics",p2f3:"2.5% commission",p2f4:"Priority support",p2f5:"Integrated logistics",
+    p3f1:"Multi-store",p3f2:"Custom API",p3f3:"1% commission",p3f4:"Dedicated manager",p3f5:"Guaranteed SLA",
+    cta_h:"Ready to sell in Africa?",cta_p:"Join 50,000 vendors who already trust XenderBigShop.",
+    cta_btn1:"Open my store",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
+  },
+  fr:{
+    nav_cat:"Catégories",nav_vend:"Vendeurs",nav_plans:"Plans",nav_eco:"Écosystème",nav_start:"Commencer",
+    hero_badge:"MARKETPLACE · AFRIQUE",hero_h1:"Le <em>plus grand</em> marketplace d'Afrique",
+    hero_p:"Achetez et vendez dans tout le continent africain. Des milliers de vendeurs, des millions de produits, paiements sécurisés.",
+    hero_btn1:"Voir les Produits",hero_btn2:"Vendre Ici",
+    mc1_h:"Achat Facile",mc1_p:"Des milliers de produits",mc2_h:"Votre Boutique",mc2_p:"Vendez en Afrique",
+    mc3_h:"Paiements Sécurisés",mc3_p:"Escrow protégé",mc4_h:"Livraison Rapide",mc4_p:"Toute l'Afrique",
+    stat1:"Vendeurs Actifs",stat2:"Produits Listés",stat3:"Pays Couverts",stat4:"Note Moyenne",
+    cat_tag:"CATÉGORIES",cat_title:"Tout ce dont vous avez besoin",
+    cat_sub:"De l'électronique à la mode, l'alimentation et les services B2B.",
+    cat1:"Électronique",cat2:"Mode & Vêtements",cat3:"Maison & Déco",cat4:"Alimentation",
+    cat5:"Outils",cat6:"Santé",cat7:"Construction",cat8:"Gros B2B",
+    vend_tag:"POUR LES VENDEURS",vend_title:"Développez votre activité",
+    vend_sub:"Outils professionnels pour vendre dans tout le continent.",
+    v1_h:"Tableau de Bord Vendeur",v1_p:"Dashboard complet avec statistiques, gestion des stocks, commandes et clients en temps réel.",
+    v2_h:"Analytiques Avancées",v2_p:"Rapports de ventes détaillés, tendances du marché et comportement des acheteurs par région.",
+    v3_h:"Paiements Intégrés",v3_p:"Acceptez Mobile Money (MTN, Orange, Wave), cartes Visa/Mastercard et virements bancaires.",
+    v4_h:"Logistique Connectée",v4_p:"Intégration directe avec XenderDelivery. Gérez les expéditions depuis votre panel.",
+    v5_h:"Protection Escrow",v5_p:"Les fonds sont retenus jusqu'à ce que l'acheteur confirme la livraison. Zéro risque de fraude.",
+    v6_h:"Portée Continentale",v6_p:"Vendez du Sénégal à l'Afrique du Sud, du Maroc au Mozambique. 35 pays, un seul panel.",
+    how_tag:"COMMENT ÇA MARCHE",how_title:"Commencez en 4 étapes",
+    s1_h:"Créez votre compte",s1_p:"Inscription en 2 minutes. Vérifiez votre identité avec KYC de base.",
+    s2_h:"Ouvrez votre boutique",s2_p:"Personnalisez votre profil, ajoutez des produits avec photos et prix.",
+    s3_h:"Recevez des commandes",s3_p:"Gérez les commandes depuis le panel. Notifications en temps réel.",
+    s4_h:"Encaissez en sécurité",s4_p:"Fonds libérés automatiquement à la confirmation de la livraison.",
+    plans_tag:"PLANS VENDEUR",plans_title:"Choisissez votre plan",
+    plans_sub:"Des entrepreneurs aux grandes entreprises, nous avons le plan pour vous.",
+    plan1_name:"Starter",plan_mo:"/mois",plan_free:"Gratuit",plan_pop:"LE PLUS POPULAIRE",
+    plan2_name:"Business",plan_start:"Commencer",plan3_name:"Enterprise",plan_contact:"Nous Contacter",
+    p1f1:"Jusqu'à 50 produits",p1f2:"Tableau de bord basique",p1f3:"Commission 5%",p1f4:"Support email",
+    p2f1:"Produits illimités",p2f2:"Analytiques avancées",p2f3:"Commission 2.5%",p2f4:"Support prioritaire",p2f5:"Logistique intégrée",
+    p3f1:"Multi-boutique",p3f2:"API personnalisée",p3f3:"Commission 1%",p3f4:"Gestionnaire dédié",p3f5:"SLA garanti",
+    cta_h:"Prêt à vendre en Afrique ?",cta_p:"Rejoignez 50 000 vendeurs qui font déjà confiance à XenderBigShop.",
+    cta_btn1:"Ouvrir ma boutique",cta_btn2:"Voir l'Écosystème",footer_slogan:"WE SIMPLIFY LIFE"
+  }
+};
+let LANG=localStorage.getItem('ia_lang')||'es';
+function setLang(l){
+  LANG=l;localStorage.setItem('ia_lang',l);
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(TR[l][k]!==undefined)el.innerHTML=TR[l][k];
+  });
+  document.querySelectorAll('.lang-btns button').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('lb-'+l);
+  if(btn)btn.classList.add('active');
+  document.documentElement.lang=l;
+}
+setLang(LANG);
+// Reveal on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
