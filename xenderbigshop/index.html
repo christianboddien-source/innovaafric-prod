@@ -1466,7 +1466,7 @@ function setLang(l) {
   const T = TR[l] || TR.en;
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const k = el.getAttribute('data-i18n');
-    if(T[k]!==undefined) { el.classList.remove('lang-fade'); void el.offsetWidth; el.classList.add('lang-fade'); el.innerHTML = T[k]; }
+    if(T[k]!==undefined) { el.innerHTML = T[k]; el.classList.remove('lang-fade'); void el.offsetWidth; el.classList.add('lang-fade'); }
   });
 }
 setLang(LANG);
@@ -1476,7 +1476,7 @@ const obs = new IntersectionObserver(entries => {
 }, {threshold: 0.07});
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
-<style>.lang-fade{animation:fadeSwitch .3s ease}@keyframes fadeSwitch{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}</style>
+<style>.lang-fade{animation:fadeSwitch .25s ease}@keyframes fadeSwitch{from{opacity:0.3}to{opacity:1}}</style>
 
 <!-- ═══ APP DOWNLOAD STRIP ═══ -->
 <section style="background:linear-gradient(135deg,#3D1C00,#6B3A00);padding:56px 6%;text-align:center;">

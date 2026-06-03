@@ -49,6 +49,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .lang-row{display:flex;gap:4px;}
 .lb{background:rgba(255,255,255,.2);border:none;border-radius:3px;padding:3px 7px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;transition:background .2s;}
 .lb:hover,.lb.active{background:#fff;color:var(--red);}
+.xs-fade{animation:xsFade .25s ease}@keyframes xsFade{from{opacity:.3}to{opacity:1}}
 
 /* ── CAT BAR ── */
 .cat-bar{background:var(--red2);border-top:1px solid rgba(255,255,255,.15);}
@@ -402,7 +403,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 
 <!-- ═══════════ FILTER BAR ═══════════ -->
 <div id="filter-bar" style="background:#fff;border-radius:8px;margin:8px 0;padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
-  <span style="font-size:12px;font-weight:700;color:#333;">🔽 Filtros:</span>
+  <span style="font-size:12px;font-weight:700;color:#333;" data-i18n="filter_lbl">🔽 Filtros:</span>
   <select id="f-sort" onchange="applyFilters()" style="border:1.5px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;font-weight:600;color:#333;background:#fff;cursor:pointer;">
     <option value="">Ordenar por</option>
     <option value="low">Precio: menor a mayor</option>
@@ -720,8 +721,8 @@ function applyPromo(){var v=document.getElementById('promo-input').value.trim().
 
 <!-- ═══════════ NEWSLETTER ═══════════ -->
 <div style="background:linear-gradient(135deg,#FF4010 0%,#FF7A00 100%);padding:48px 5%;margin:12px 0;border-radius:8px;text-align:center;">
-  <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px;">📬 Ofertas Exclusivas en tu Email</div>
-  <p style="font-size:14px;color:rgba(255,255,255,0.85);margin-bottom:20px;">Suscríbete y recibe descuentos de hasta 70% antes que nadie</p>
+  <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px;" data-i18n="nl_h">📬 Ofertas Exclusivas en tu Email</div>
+  <p style="font-size:14px;color:rgba(255,255,255,0.85);margin-bottom:20px;" data-i18n="nl_sub">Suscríbete y recibe descuentos de hasta 70% antes que nadie</p>
   <form onsubmit="nlSubmit(event)" style="display:flex;gap:8px;max-width:480px;margin:0 auto;">
     <input id="nl-email" type="email" placeholder="tu@email.com" required style="flex:1;padding:12px 16px;border-radius:8px;border:none;font-size:14px;outline:none;"/>
     <button type="submit" style="background:#fff;color:#FF4010;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">Suscribirme →</button>
@@ -804,7 +805,44 @@ function tick(){if(t<=0)return;t--;var h=Math.floor(t/3600),m=Math.floor((t%3600
 setInterval(tick,1000);
 
 // Language
-function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');}
+var XS_TR={
+  es:{
+    search_ph:'Buscar productos...',
+    filter_lbl:'Filtros', sort_lbl:'Ordenar por', sort_low:'Precio: menor a mayor', sort_high:'Precio: mayor a menor', sort_top:'Mejor valorados ★★★★+', sort_pop:'Más vendidos',
+    f_free:'Envío gratis', f_sale:'En oferta', f_count:'Mostrando todos los productos', f_clear:'Limpiar',
+    nl_h:'📬 Ofertas Exclusivas en tu Email', nl_sub:'Suscríbete y recibe descuentos de hasta 70% antes que nadie', nl_btn:'Suscribirme →', nl_foot:'Sin spam. Puedes cancelar en cualquier momento.',
+    allcat_h:'🗂 Todas las Categorías', see_more:'Ver todo →',
+    trust1:'Pago Seguro', trust2:'Envío Global', trust3:'Compra Protegida', trust4:'Devolución Fácil',
+    sellers_h:'⭐ Vendedores Destacados'
+  },
+  en:{
+    search_ph:'Search products...',
+    filter_lbl:'Filters', sort_lbl:'Sort by', sort_low:'Price: low to high', sort_high:'Price: high to low', sort_top:'Top rated ★★★★+', sort_pop:'Best sellers',
+    f_free:'Free shipping', f_sale:'On sale', f_count:'Showing all products', f_clear:'Clear',
+    nl_h:'📬 Exclusive Deals in Your Email', nl_sub:'Subscribe and get up to 70% discounts before everyone else', nl_btn:'Subscribe →', nl_foot:'No spam. Cancel anytime.',
+    allcat_h:'🗂 All Categories', see_more:'See all →',
+    trust1:'Secure Payment', trust2:'Global Shipping', trust3:'Buyer Protection', trust4:'Easy Returns',
+    sellers_h:'⭐ Featured Sellers'
+  },
+  fr:{
+    search_ph:'Rechercher des produits...',
+    filter_lbl:'Filtres', sort_lbl:'Trier par', sort_low:'Prix: croissant', sort_high:'Prix: décroissant', sort_top:'Mieux notés ★★★★+', sort_pop:'Meilleures ventes',
+    f_free:'Livraison gratuite', f_sale:'En promotion', f_count:'Affichage de tous les produits', f_clear:'Effacer',
+    nl_h:'📬 Offres Exclusives par Email', nl_sub:'Abonnez-vous et recevez jusqu\'à 70% de réductions en avant-première', nl_btn:'S\'abonner →', nl_foot:'Pas de spam. Annulez à tout moment.',
+    allcat_h:'🗂 Toutes les Catégories', see_more:'Tout voir →',
+    trust1:'Paiement Sécurisé', trust2:'Livraison Mondiale', trust3:'Achat Protégé', trust4:'Retour Facile',
+    sellers_h:'⭐ Vendeurs Vedettes'
+  }
+};
+var XS_LANG=localStorage.getItem('xs_lang')||'es';
+function setLang(l){
+  XS_LANG=l; localStorage.setItem('xs_lang',l);
+  ['es','en','fr'].forEach(function(id){var b=document.getElementById('lb-'+id);if(b)b.className='lb'+(id===l?' active':'');});
+  var T=XS_TR[l]||XS_TR.es;
+  var sp=document.querySelector('.search-input');if(sp)sp.placeholder=T.search_ph;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(T[k]!==undefined){el.innerHTML=T[k];el.classList.remove('xs-fade');void el.offsetWidth;el.classList.add('xs-fade');}});
+}
+setLang(XS_LANG);
 
 // Cat bar active
 document.querySelectorAll('.cat-link').forEach(function(a){a.addEventListener('click',function(){document.querySelectorAll('.cat-link').forEach(l=>l.classList.remove('active'));this.classList.add('active');});});
