@@ -113,6 +113,60 @@
   .rs-val{font-size:1.4rem;font-weight:900;color:var(--amber)}
   .rs-lbl{font-size:.73rem;color:var(--muted)}
 
+  /* CALCULATOR */
+  .calc-section{background:var(--bg3);padding:80px 5%}
+  .calc-box{background:rgba(255,255,255,.03);border:1px solid rgba(245,158,11,.15);border-radius:24px;padding:40px;max-width:800px;margin:40px auto 0}
+  .calc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+  .calc-label{font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .calc-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;font-family:inherit;transition:border-color .2s}
+  .calc-input:focus{border-color:var(--amber)}
+  .calc-result{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:20px;text-align:center;display:none}
+  .calc-price{font-size:2.4rem;font-weight:900;color:var(--amber)}
+  .calc-eta{font-size:14px;color:var(--muted);margin-top:4px}
+
+  /* FLEET */
+  .fleet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem}
+  .fleet-card{background:var(--bg2);border-radius:20px;padding:1.8rem 1.2rem;border:1px solid rgba(245,158,11,.1);text-align:center;transition:all .25s}
+  .fleet-card:hover{border-color:rgba(245,158,11,.3);transform:translateY(-4px)}
+  .fleet-icon{font-size:2.8rem;margin-bottom:.8rem}
+  .fleet-name{font-size:1rem;font-weight:800;color:var(--text);margin-bottom:.4rem}
+  .fleet-cap{font-size:.8rem;color:var(--amber);font-weight:600;margin-bottom:.5rem}
+  .fleet-desc{font-size:.82rem;color:var(--muted)}
+
+  /* APP MOCKUP */
+  .app-section{background:var(--bg);padding:80px 5%}
+  .app-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+  .phone-frame{width:240px;background:#050B18;border-radius:36px;border:2px solid rgba(245,158,11,.25);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(245,158,11,.1);margin:0 auto}
+  .phone-notch{background:#0A1628;height:28px;display:flex;align-items:center;justify-content:center}
+  .phone-notch span{width:60px;height:5px;background:#1a2a3a;border-radius:3px}
+  .phone-screen{padding:12px}
+  .ps-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .ps-logo{font-size:11px;font-weight:800;color:var(--amber)}
+  .ps-status{font-size:9px;font-weight:700;color:#00FFB2;background:rgba(0,255,178,.1);padding:2px 7px;border-radius:10px}
+  .ps-map{height:90px;background:linear-gradient(135deg,#0A1628,#162440);border-radius:10px;margin-bottom:8px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .map-dots{position:absolute;inset:0}
+  .map-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(245,158,11,.4)}
+  .map-rider{position:absolute;font-size:16px;animation:bounce 1s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .ps-track-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:8px;margin-bottom:6px}
+  .ps-track-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+  .ps-track-name{font-size:10px;font-weight:700;color:#E8EDF5}
+  .ps-track-st{font-size:9px;font-weight:700;color:var(--amber);background:rgba(245,158,11,.12);padding:2px 6px;border-radius:6px}
+  .ps-prog{height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+  .ps-prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--amber),#FBC02D)}
+  .ps-step-row{display:flex;gap:5px;margin-top:5px;align-items:center}
+  .ps-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .ps-dot.done{background:var(--amber)}
+  .ps-dot.active{background:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+  .ps-dot.pend{background:rgba(255,255,255,.1)}
+  .ps-step-lbl{font-size:8px;color:rgba(232,237,245,.5)}
+  .ps-rider-row{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border-radius:10px;padding:8px;margin-top:6px}
+  .ps-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),#FBC02D);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .ps-rider-info{flex:1}
+  .ps-rider-name{font-size:10px;font-weight:700;color:#E8EDF5}
+  .ps-rider-sub{font-size:9px;color:rgba(232,237,245,.5)}
+  .ps-call{background:rgba(0,255,178,.15);border:none;border-radius:6px;padding:4px 8px;font-size:9px;font-weight:700;color:#00FFB2;cursor:pointer}
+
   /* CTA */
   .cta{background:linear-gradient(135deg,var(--bg3) 0%,#0A1628 100%);padding:80px 5%;text-align:center;border-top:1px solid rgba(245,158,11,0.1);border-bottom:1px solid rgba(245,158,11,0.1)}
   .cta h2{font-size:clamp(1.3rem,2.6vw,2.1rem);font-weight:900;color:var(--white);margin-bottom:1rem}
@@ -360,6 +414,188 @@
   </div>
 </section>
 
+<!-- ═══ CALCULADORA DE ENVÍO ═══ -->
+<section class="calc-section" id="cotizar">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-tag">COTIZADOR</div>
+    <h2 class="section-title reveal">Calcula el precio de tu envío</h2>
+    <p class="section-sub reveal" style="margin:0 auto">Precio al instante. Sin sorpresas. Paga con Mobile Money, FCFA, EUR o USD.</p>
+    <div class="calc-box">
+      <div class="calc-grid">
+        <div>
+          <div class="calc-label">Ciudad Origen</div>
+          <select class="calc-input" id="calc-from">
+            <option>Yaoundé</option><option>Douala</option><option>Malabo</option><option>Dakar</option>
+            <option>Abidjan</option><option>Libreville</option><option>Brazzaville</option><option>Madrid</option><option>París</option>
+          </select>
+        </div>
+        <div>
+          <div class="calc-label">Ciudad Destino</div>
+          <select class="calc-input" id="calc-to">
+            <option>Douala</option><option>Yaoundé</option><option>Dakar</option><option>Abidjan</option>
+            <option>Malabo</option><option>Libreville</option><option>Madrid</option><option>París</option><option>Lomé</option>
+          </select>
+        </div>
+        <div>
+          <div class="calc-label">Peso (kg)</div>
+          <select class="calc-input" id="calc-weight">
+            <option value="0.5">Hasta 0.5 kg</option><option value="1">Hasta 1 kg</option>
+            <option value="3">Hasta 3 kg</option><option value="5">Hasta 5 kg</option>
+            <option value="10">Hasta 10 kg</option><option value="20">Hasta 20 kg</option>
+            <option value="50">Hasta 50 kg</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div>
+          <div class="calc-label">Tipo de envío</div>
+          <select class="calc-input" id="calc-type">
+            <option value="express">⚡ Express (mismo día)</option>
+            <option value="standard">📦 Standard (1–3 días)</option>
+            <option value="economy">🚌 Economy (3–7 días)</option>
+          </select>
+        </div>
+        <div>
+          <div class="calc-label">Moneda</div>
+          <select class="calc-input" id="calc-cur">
+            <option value="xaf">XAF (FCFA)</option>
+            <option value="eur">EUR (€)</option>
+            <option value="usd">USD ($)</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="calcPrice()" style="background:var(--amber);color:#000;border:none;border-radius:12px;padding:14px 40px;font-size:15px;font-weight:800;cursor:pointer;width:100%;transition:all .2s;font-family:inherit" onmouseover="this.style.background='#FBC02D'" onmouseout="this.style.background='#F59E0B'">
+        🔍 Calcular precio →
+      </button>
+      <div class="calc-result" id="calc-result" style="margin-top:16px">
+        <div class="calc-price" id="calc-price-val">—</div>
+        <div class="calc-eta" id="calc-eta-val">Calculando...</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--amber);background:rgba(245,158,11,.1);padding:5px 12px;border-radius:20px;">🛡️ Seguro incluido</span>
+          <span style="font-size:12px;color:var(--amber);background:rgba(245,158,11,.1);padding:5px 12px;border-radius:20px;">📍 GPS en tiempo real</span>
+          <span style="font-size:12px;color:var(--amber);background:rgba(245,158,11,.1);padding:5px 12px;border-radius:20px;">✅ Confirmación digital</span>
+        </div>
+        <button style="background:var(--amber);color:#000;border:none;border-radius:10px;padding:12px 32px;font-size:14px;font-weight:800;cursor:pointer;margin-top:14px;font-family:inherit">Reservar este envío →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FLOTA DE VEHÍCULOS ═══ -->
+<section style="background:var(--bg2);padding:80px 5%">
+  <div class="section-inner">
+    <div class="section-tag">NUESTRA FLOTA</div>
+    <h2 class="section-title reveal">Vehículo adecuado para cada envío</h2>
+    <p class="section-sub reveal">Desde un sobre hasta un palé — nuestra flota cubre todos los tamaños.</p>
+    <div class="fleet-grid">
+      <div class="fleet-card reveal">
+        <div class="fleet-icon">🛵</div>
+        <div class="fleet-name">Moto Express</div>
+        <div class="fleet-cap">Hasta 5 kg · 30×30×20 cm</div>
+        <div class="fleet-desc">Ideal para documentos, comida, medicamentos y paquetes pequeños. Más rápido en ciudad.</div>
+      </div>
+      <div class="fleet-card reveal">
+        <div class="fleet-icon">🚲</div>
+        <div class="fleet-name">Bicicleta Eco</div>
+        <div class="fleet-cap">Hasta 2 kg · Zona centro</div>
+        <div class="fleet-desc">Entrega ecológica en zonas céntricas. Tarifa reducida, rápida en tráfico denso.</div>
+      </div>
+      <div class="fleet-card reveal">
+        <div class="fleet-icon">🚐</div>
+        <div class="fleet-name">Furgoneta</div>
+        <div class="fleet-cap">Hasta 500 kg · 3m³</div>
+        <div class="fleet-desc">Para envíos medianos y grandes. Muebles, electrodomésticos, cajas múltiples. Asegurado.</div>
+      </div>
+      <div class="fleet-card reveal">
+        <div class="fleet-icon">🚛</div>
+        <div class="fleet-name">Camión Cargo</div>
+        <div class="fleet-cap">Hasta 5 T · Interprovincial</div>
+        <div class="fleet-desc">Logística B2B y envíos masivos entre ciudades y países. Ideal para comercios y empresas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ APP MOCKUP ═══ -->
+<section class="app-section">
+  <div class="app-inner">
+    <div>
+      <div class="section-tag">LA APP</div>
+      <h2 class="section-title reveal">Rastrea tu pedido en tiempo real</h2>
+      <p style="color:var(--muted);font-size:1.05rem;margin-bottom:2rem;line-height:1.7">Desde que el rider recoge hasta que llega a tu puerta, ves cada movimiento en el mapa. Notificaciones en cada etapa. Confirmación con PIN o firma digital.</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:14px;margin-bottom:2rem">
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--muted)"><span style="color:var(--amber);font-size:1.1rem;flex-shrink:0;margin-top:1px">🗺️</span><span><strong style="color:var(--text)">Mapa en vivo.</strong> Posición del rider actualizada cada 5 segundos.</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--muted)"><span style="color:var(--amber);font-size:1.1rem;flex-shrink:0;margin-top:1px">⏱️</span><span><strong style="color:var(--text)">ETA dinámico.</strong> Tiempo estimado recalculado con tráfico real.</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--muted)"><span style="color:var(--amber);font-size:1.1rem;flex-shrink:0;margin-top:1px">📞</span><span><strong style="color:var(--text)">Contacto directo.</strong> Chat o llamada con tu rider en un toque.</span></li>
+        <li style="display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--muted)"><span style="color:var(--amber);font-size:1.1rem;flex-shrink:0;margin-top:1px">✅</span><span><strong style="color:var(--text)">Confirmación segura.</strong> Código PIN de 6 dígitos o firma digital.</span></li>
+      </ul>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="#" style="background:var(--amber);color:#000;padding:.85rem 1.8rem;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .2s">📱 Descargar App</a>
+        <a href="../" style="background:transparent;color:var(--text);padding:.85rem 1.8rem;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;border:2px solid rgba(255,255,255,.15);transition:all .2s">Ver Ecosistema →</a>
+      </div>
+    </div>
+
+    <!-- PHONE MOCKUP -->
+    <div class="phone-frame">
+      <div class="phone-notch"><span></span></div>
+      <div class="phone-screen">
+        <div class="ps-bar">
+          <div class="ps-logo">XenderDelivery</div>
+          <div class="ps-status">● En vivo</div>
+        </div>
+        <!-- Mini map -->
+        <div class="ps-map">
+          <div class="map-dots">
+            <div class="map-dot" style="top:20%;left:15%;background:rgba(245,158,11,.6)"></div>
+            <div class="map-dot" style="top:60%;left:40%;background:rgba(245,158,11,.4)"></div>
+            <div class="map-dot" style="top:35%;left:70%;background:rgba(245,158,11,.5)"></div>
+            <div class="map-dot" style="top:75%;left:80%;background:rgba(245,158,11,.3)"></div>
+          </div>
+          <div class="map-rider" style="bottom:30%;right:40%">🏍️</div>
+          <div style="position:absolute;bottom:8px;right:8px;font-size:9px;font-weight:700;color:rgba(245,158,11,.9);background:rgba(5,11,24,.8);padding:2px 7px;border-radius:6px">ETA: 8 min</div>
+          <div style="position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;color:rgba(0,255,178,.9);background:rgba(5,11,24,.8);padding:2px 7px;border-radius:6px">● GPS activo</div>
+        </div>
+        <!-- Active order -->
+        <div class="ps-track-item">
+          <div class="ps-track-head">
+            <div class="ps-track-name">Chez Aminata · Pollo Yassa</div>
+            <div class="ps-track-st">En ruta</div>
+          </div>
+          <div class="ps-prog"><div class="ps-prog-fill" style="width:75%"></div></div>
+          <div class="ps-step-row" style="margin-top:8px;justify-content:space-between">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div class="ps-dot done"></div><div class="ps-step-lbl">Pedido</div></div>
+            <div style="flex:1;height:2px;background:var(--amber);margin:0 2px;margin-bottom:10px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div class="ps-dot done"></div><div class="ps-step-lbl">Confirmado</div></div>
+            <div style="flex:1;height:2px;background:var(--amber);margin:0 2px;margin-bottom:10px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div class="ps-dot done"></div><div class="ps-step-lbl">Recogido</div></div>
+            <div style="flex:1;height:2px;background:rgba(255,255,255,.1);margin:0 2px;margin-bottom:10px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div class="ps-dot active"></div><div class="ps-step-lbl" style="color:var(--amber)">En ruta</div></div>
+            <div style="flex:1;height:2px;background:rgba(255,255,255,.1);margin:0 2px;margin-bottom:10px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div class="ps-dot pend"></div><div class="ps-step-lbl">Entregado</div></div>
+          </div>
+        </div>
+        <!-- Rider card -->
+        <div class="ps-rider-row">
+          <div class="ps-avatar">🏍️</div>
+          <div class="ps-rider-info">
+            <div class="ps-rider-name">Carlos M. · ★ 4.9</div>
+            <div class="ps-rider-sub">Moto · 1.2 km · 8 min</div>
+          </div>
+          <button class="ps-call">📞</button>
+        </div>
+        <!-- Second order -->
+        <div class="ps-track-item" style="margin-top:6px">
+          <div class="ps-track-head">
+            <div class="ps-track-name">Auriculares BT Pro #XD-449</div>
+            <div class="ps-track-st" style="color:#00B4D8;background:rgba(0,180,216,.12)">En tránsito ✈️</div>
+          </div>
+          <div class="ps-prog"><div class="ps-prog-fill" style="width:45%;background:linear-gradient(90deg,#00B4D8,#7209B7)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="cta">
   <h2 class="reveal" data-i18n="cta_h">¿Listo para entregar más rápido?</h2>
   <p class="reveal" data-i18n="cta_p">Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.</p>
@@ -550,6 +786,32 @@ const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── CALCULADORA DE ENVÍO ──
+const RATES={
+  xaf:{base:500,express:1.8,standard:1,economy:0.6,perKg:200,intl:5000},
+  eur:{base:0.8,express:1.8,standard:1,economy:0.6,perKg:0.3,intl:8},
+  usd:{base:0.9,express:1.8,standard:1,economy:0.6,perKg:0.35,intl:9}
+};
+const INTL_CITIES=['Madrid','París'];
+const ETA={express:'Mismo día (2–6h)',standard:'1–3 días',economy:'3–7 días'};
+function calcPrice(){
+  var from=document.getElementById('calc-from').value;
+  var to=document.getElementById('calc-to').value;
+  var w=parseFloat(document.getElementById('calc-weight').value)||0.5;
+  var type=document.getElementById('calc-type').value;
+  var cur=document.getElementById('calc-cur').value;
+  var r=RATES[cur];
+  var isIntl=INTL_CITIES.includes(from)||INTL_CITIES.includes(to);
+  var price=r.base*r[type]+w*r.perKg+(isIntl?r.intl:0);
+  var sym=cur==='xaf'?'XAF':cur==='eur'?'€':'$';
+  var fmt=cur==='xaf'?Math.round(price).toLocaleString()+' XAF':sym+price.toFixed(2);
+  var el=document.getElementById('calc-result');
+  document.getElementById('calc-price-val').textContent=fmt;
+  document.getElementById('calc-eta-val').textContent='⏱ '+ETA[type]+(isIntl?' · Envío internacional':'· Entrega en '+to);
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 </script>
 </body>
 </html>
