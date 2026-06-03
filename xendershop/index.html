@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>XenderShop — Compra Global, Paga en Africa</title>
 <meta name="description" content="XenderShop: millones de productos entregados en Africa. Paga con Mobile Money, EUR, USD o FCFA."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.xendershop.com/"/>
+<meta property="og:title" content="XenderShop — Compra Global, Paga en Africa"/>
+<meta property="og:description" content="Millones de productos entregados en África. Electrónica, moda, hogar y más. Paga con MTN MoMo, Orange Money, Wave o tarjeta."/>
+<meta property="og:image" content="https://christianboddien-source.github.io/innovaafric-prod/xendershop/og.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="XenderShop — Compra Global, Paga en Africa"/>
+<meta name="twitter:description" content="Más de 2 millones de productos. Entrega en 35 países africanos. Paga con Mobile Money."/>
+<meta name="keywords" content="XenderShop, compras online Africa, e-commerce Cameroun, Mobile Money shopping, AliExpress Africa"/>
+<link rel="canonical" href="https://www.xendershop.com/"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -764,6 +774,58 @@ function setLang(l){document.querySelectorAll('.lb').forEach(b=>b.classList.remo
 
 // Cat bar active
 document.querySelectorAll('.cat-link').forEach(function(a){a.addEventListener('click',function(){document.querySelectorAll('.cat-link').forEach(l=>l.classList.remove('active'));this.classList.add('active');});});
+</script>
+
+<!-- ═══ COOKIE BANNER ═══ -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(26,26,26,0.97);backdrop-filter:blur(12px);padding:14px 5%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:2px solid #FF4010;">
+  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;">🍪 Usamos cookies para personalizar tu experiencia de compra. <a href="#" style="color:#FF7A00;text-decoration:underline;">Política de privacidad</a>.</p>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;">Rechazar</button>
+    <button onclick="cookieAccept()" style="background:#FF4010;border:none;color:#fff;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar ✓</button>
+  </div>
+</div>
+
+<!-- ═══ FLOATING SUPPORT ═══ -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9998;display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+  <div id="float-menu" style="display:none;background:#fff;border:1px solid #f0f0f0;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.12);padding:16px;width:230px;">
+    <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:10px;">¿Necesitas ayuda? 🛒</div>
+    <a href="https://wa.me/+34600000000" target="_blank" style="display:flex;align-items:center;gap:8px;padding:9px;border-radius:8px;text-decoration:none;margin-bottom:5px;background:#f0fef4;"><span style="font-size:18px;">💬</span><div><div style="font-size:11px;font-weight:700;color:#166534;">WhatsApp</div><div style="font-size:10px;color:#999;">En minutos</div></div></a>
+    <a href="mailto:shop@xendershop.com" style="display:flex;align-items:center;gap:8px;padding:9px;border-radius:8px;text-decoration:none;background:#fff7ed;"><span style="font-size:18px;">📧</span><div><div style="font-size:11px;font-weight:700;color:#c2410c;">Email</div><div style="font-size:10px;color:#999;">shop@xendershop.com</div></div></a>
+  </div>
+  <button onclick="toggleFloat()" id="float-btn" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FF4010,#FF7A00);border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 18px rgba(255,64,16,0.4);">💬</button>
+</div>
+
+<!-- ═══ RESPONSIVE ═══ -->
+<style>
+@media(max-width:900px){
+  .hero-3col{grid-template-columns:1fr!important;}
+  .banner-col,.promo-col{display:none!important;}
+  .cat-block-body{grid-template-columns:1fr!important;}
+  .cat-sidebar{display:none!important;}
+  .cat-products-area{width:100%;}
+  .products-row.cols4{grid-template-columns:1fr 1fr!important;}
+  .mega-grid{grid-template-columns:repeat(4,1fr)!important;}
+  nav .nav-actions span:not(.icon):not(.cart-badge){display:none;}
+  .announce-bar{font-size:10px;padding:6px;}
+  [style*="grid-template-columns:repeat(6,1fr)"]{grid-template-columns:repeat(3,1fr)!important;}
+  [style*="grid-template-columns:repeat(5,1fr)"]{grid-template-columns:1fr 1fr!important;}
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important;}
+}
+@media(max-width:600px){
+  .products-row.cols4{grid-template-columns:1fr!important;}
+  .mega-grid{grid-template-columns:repeat(3,1fr)!important;}
+  .jfy-grid{grid-template-columns:1fr 1fr!important;}
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important;}
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr!important;}
+  .flash-grid{grid-template-columns:1fr 1fr!important;}
+  #cart-sidebar{width:100vw!important;right:-100vw!important;}
+}
+</style>
+<script>
+if(!localStorage.getItem('cookie_xs')){document.getElementById('cookie-banner').style.display='flex';}
+function cookieAccept(){localStorage.setItem('cookie_xs','all');document.getElementById('cookie-banner').style.display='none';}
+function cookieDecline(){localStorage.setItem('cookie_xs','essential');document.getElementById('cookie-banner').style.display='none';}
+function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 </script>
 </body>
 </html>

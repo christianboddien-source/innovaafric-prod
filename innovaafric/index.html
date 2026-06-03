@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InnovaAFRIC — We Simplify Life</title>
   <meta name="description" content="InnovaAFRIC is a tricontinental tech ecosystem simplifying finance, commerce, and logistics across Africa, Europe, and Latin America." />
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://www.innovaafric.com/"/>
+  <meta property="og:title" content="InnovaAFRIC — We Simplify Life"/>
+  <meta property="og:description" content="Tricontinental tech ecosystem: XenderMoney, XenderShop, XenderBigShop & XenderDelivery — connecting Africa, Europe and Latin America."/>
+  <meta property="og:image" content="https://christianboddien-source.github.io/innovaafric-prod/innovaafric/og.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="InnovaAFRIC — We Simplify Life"/>
+  <meta name="twitter:description" content="Tricontinental tech ecosystem simplifying finance, commerce and logistics for 1.4B people."/>
+  <meta name="keywords" content="InnovaAFRIC, Africa fintech, mobile money, XenderMoney, XenderShop, Africa e-commerce, XenderDelivery"/>
+  <link rel="canonical" href="https://www.innovaafric.com/"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1564,6 +1574,65 @@
     });
   }
   setLang(LANG);
+</script>
+
+<!-- ═══ COOKIE BANNER ═══ -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(13,43,78,0.97);backdrop-filter:blur(12px);padding:16px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(66,168,225,0.2);">
+  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;">🍪 Usamos cookies esenciales y analíticas para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#" style="color:#42A8E1;text-decoration:underline;">Política de Privacidad</a>.</p>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;">Solo esenciales</button>
+    <button onclick="cookieAccept()" style="background:#2B8DC7;border:none;color:#fff;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar todo ✓</button>
+  </div>
+</div>
+
+<!-- ═══ FLOATING SUPPORT ═══ -->
+<div style="position:fixed;bottom:24px;right:24px;z-index:9998;display:flex;flex-direction:column;align-items:flex-end;gap:10px;" id="float-support">
+  <div id="float-menu" style="display:none;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.15);padding:16px;width:240px;border:1px solid rgba(0,0,0,0.07);">
+    <div style="font-size:13px;font-weight:700;color:#0D2B4E;margin-bottom:12px;">💬 ¿Cómo podemos ayudarte?</div>
+    <a href="https://wa.me/+34600000000" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;margin-bottom:6px;background:#f0fef4;"><span style="font-size:20px;">💬</span><div><div style="font-size:12px;font-weight:700;color:#166534;">WhatsApp</div><div style="font-size:11px;color:#999;">Respuesta en minutos</div></div></a>
+    <a href="mailto:support@innovaafric.com" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;background:#eff6ff;"><span style="font-size:20px;">📧</span><div><div style="font-size:12px;font-weight:700;color:#1e40af;">Email</div><div style="font-size:11px;color:#999;">support@innovaafric.com</div></div></a>
+  </div>
+  <button onclick="toggleFloat()" style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#2B8DC7,#1A6FA8);border:none;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(43,141,199,0.4);display:flex;align-items:center;justify-content:center;" id="float-btn">💬</button>
+</div>
+
+<!-- ═══ RESPONSIVE CSS ═══ -->
+<style>
+@media(max-width:900px){
+  nav{padding:0 4%;}
+  .nav-links{display:none;}
+  .hero{padding:100px 4% 60px;}
+  .hero-btns{flex-direction:column;}
+  .hero-stats{gap:24px;}
+  .products-grid{grid-template-columns:1fr;}
+  .how-grid{grid-template-columns:1fr 1fr;}
+  .tri-row{grid-template-columns:1fr;}
+  .tri-card.africa{grid-column:auto;}
+  .africa-inner{grid-template-columns:1fr;}
+  .screens-grid{grid-template-columns:1fr 1fr;}
+  .founder-inner{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr 1fr;}
+  [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important;}
+  [style*="grid-template-columns:repeat(6,1fr)"]{grid-template-columns:repeat(3,1fr)!important;}
+}
+@media(max-width:600px){
+  h1{font-size:28px!important;}
+  .hero-sub{font-size:15px!important;}
+  .how-grid{grid-template-columns:1fr;}
+  .screens-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  [style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  [style*="padding:90px 6%"],[style*="padding:100px 6%"]{padding-left:4%!important;padding-right:4%!important;}
+  .cta{padding:60px 4%!important;}
+}
+</style>
+<script>
+if(!localStorage.getItem('cookie_choice')){document.getElementById('cookie-banner').style.display='flex';}
+function cookieAccept(){localStorage.setItem('cookie_choice','all');document.getElementById('cookie-banner').style.display='none';}
+function cookieDecline(){localStorage.setItem('cookie_choice','essential');document.getElementById('cookie-banner').style.display='none';}
+function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 </script>
 </body>
 </html>
