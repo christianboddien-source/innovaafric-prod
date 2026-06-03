@@ -4,189 +4,174 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>XenderShop — Shop · Deliver · Enjoy</title>
-  <meta name="description" content="XenderShop connects African buyers to global products at local prices. Shop, pay with Mobile Money, and get delivered fast." />
+  <meta name="description" content="XenderShop connects African buyers to global products at local prices. Pay with Mobile Money and get delivered fast." />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --dark: #0F2E1A;
-      --dark-mid: #1A4A2A;
-      --dark-card: #122210;
+      --bg: #F0FEFA;
+      --bg2: #E4F9F4;
       --teal: #00C9A7;
       --teal-dark: #00A88B;
-      --teal-glow: rgba(0,201,167,0.12);
+      --teal-mid: #009E82;
       --orange: #F5A623;
       --orange-dark: #E0921A;
+      --dark: #0D2B22;
+      --grey: #5A7A6E;
+      --grey-light: #8AAAA0;
+      --border: rgba(0,0,0,0.07);
       --white: #FFFFFF;
-      --grey: #7A9A8A;
-      --grey-light: #B8D0C4;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: var(--dark); color: var(--white); overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
 
     /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 6%; height: 70px;
-      background: rgba(15,46,26,0.95); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,201,167,0.15);
+      padding: 0 6%; height: 68px;
+      background: rgba(255,255,255,0.93); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .logo-text { font-size: 18px; font-weight: 800; color: var(--white); }
+    .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 17px; }
+    .logo-text { font-size: 17px; font-weight: 800; color: var(--dark); }
     .logo-text span { color: var(--orange); }
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { color: var(--grey-light); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover { color: var(--teal); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--grey); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--dark); }
     .nav-right { display: flex; align-items: center; gap: 12px; }
-    .lang-switcher { display: flex; gap: 4px; }
-    .lb-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
-    .lb-btn.active { background: rgba(0,201,167,0.15); border-color: var(--teal); color: var(--teal); }
-    .lb-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
-    .btn-teal { background: var(--teal); color: var(--dark); border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
-    .btn-teal:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .lang-switcher { display: flex; gap: 3px; }
+    .lb-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
+    .lb-btn.active { background: var(--teal); border-color: var(--teal); color: white; }
+    .lb-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .btn-nav { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-nav:hover { background: var(--teal-dark); }
 
     /* HERO */
-    .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 6% 80px; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -150px; right: -100px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,201,167,0.08) 0%, transparent 70%); pointer-events: none; }
-    .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%); pointer-events: none; }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; width: 100%; max-width: 1200px; }
-
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,201,167,0.12); border: 1px solid rgba(0,201,167,0.3); border-radius: 100px; padding: 6px 16px; margin-bottom: 24px; font-size: 12px; font-weight: 600; color: var(--teal); letter-spacing: 1px; }
-    .hero-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
-
-    h1 { font-size: clamp(40px, 5.5vw, 70px); font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 22px; }
-    h1 em { font-style: normal; color: var(--teal); }
-    h1 strong { color: var(--orange); font-style: normal; }
-    .hero-sub { font-size: 17px; color: var(--grey); line-height: 1.75; max-width: 500px; margin-bottom: 40px; }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
-    .btn-lg { padding: 16px 36px; font-size: 16px; font-weight: 700; border-radius: 12px; text-decoration: none; transition: all .25s; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-lg.primary { background: var(--teal); color: var(--dark); }
-    .btn-lg.primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,201,167,0.25); }
-    .btn-lg.secondary { background: rgba(255,255,255,0.06); color: var(--white); border: 1.5px solid rgba(255,255,255,0.15); }
-    .btn-lg.secondary:hover { background: rgba(255,255,255,0.1); }
-
-    /* PRODUCT GRID MOCKUP */
-    .shop-mockup { position: relative; display: flex; justify-content: center; }
-    .mockup-screen {
-      background: var(--dark-card); border-radius: 20px;
-      border: 1px solid rgba(0,201,167,0.2);
-      padding: 20px; width: 320px;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 60px rgba(0,201,167,0.05);
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 100px 6% 80px;
+      background: linear-gradient(160deg, var(--white) 0%, var(--bg) 60%, var(--bg2) 100%);
     }
-    .mockup-search { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--grey); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .mockup-cats { display: flex; gap: 8px; margin-bottom: 16px; overflow: hidden; }
-    .cat-chip { background: rgba(0,201,167,0.12); border: 1px solid rgba(0,201,167,0.2); border-radius: 100px; padding: 5px 12px; font-size: 11px; font-weight: 600; color: var(--teal); white-space: nowrap; }
-    .cat-chip.inactive { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: var(--grey); }
-    .products-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .prod-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px; }
-    .prod-img { height: 72px; background: rgba(0,201,167,0.08); border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
-    .prod-name { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
-    .prod-price { font-size: 12px; font-weight: 800; color: var(--teal); }
-    .prod-orig { font-size: 10px; color: var(--grey); text-decoration: line-through; }
-    .prod-btn { width: 100%; background: var(--teal); color: var(--dark); border: none; border-radius: 7px; padding: 7px; font-size: 11px; font-weight: 700; cursor: pointer; margin-top: 8px; }
-    .float-badge { position: absolute; top: -15px; right: -20px; background: var(--orange); color: var(--dark); border-radius: 12px; padding: 10px 14px; font-size: 12px; font-weight: 700; box-shadow: 0 8px 24px rgba(245,166,35,0.3); }
-    .float-delivery { position: absolute; bottom: -15px; left: -25px; background: var(--dark-card); border: 1px solid rgba(0,201,167,0.25); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-    .float-delivery span:first-child { font-size: 20px; }
-    .float-delivery .dl-text { display: flex; flex-direction: column; }
-    .float-delivery .dl-text span:first-child { font-size: 10px; color: var(--grey); }
-    .float-delivery .dl-text span:last-child { font-size: 13px; font-weight: 700; color: var(--teal); }
+    .hero-inner { max-width: 820px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,201,167,0.1); border: 1px solid rgba(0,201,167,0.25);
+      border-radius: 100px; padding: 6px 14px; margin-bottom: 32px;
+      font-size: 12px; font-weight: 600; color: var(--teal-dark); letter-spacing: .5px;
+    }
+    .hero-tag::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--teal); animation:blink 2s infinite; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-    /* STATS */
-    .stats-bar { background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 40px 6%; display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
-    .stat { text-align: center; }
-    .stat-num { font-size: 36px; font-weight: 900; color: var(--teal); }
-    .stat-lbl { font-size: 13px; color: var(--grey); margin-top: 4px; }
+    h1 { font-size: clamp(48px, 7vw, 86px); font-weight: 900; line-height: 1.02; letter-spacing: -3px; margin-bottom: 28px; color: var(--dark); }
+    h1 .accent-teal { color: var(--teal); }
+    h1 .accent-orange { color: var(--orange); }
+    .hero-sub { font-size: 19px; color: var(--grey); line-height: 1.7; max-width: 580px; margin-bottom: 48px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+    .btn-primary { background: var(--teal); color: white; border-radius: 12px; padding: 16px 32px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,201,167,0.25); }
+    .btn-outline { background: transparent; color: var(--dark); border: 2px solid rgba(13,43,34,0.2); border-radius: 12px; padding: 14px 32px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
 
-    /* SECTIONS */
-    section { padding: 100px 6%; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 14px; }
-    .section-title { font-size: clamp(30px, 4vw, 50px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 18px; }
-    .section-sub { font-size: 16px; color: var(--grey); line-height: 1.75; max-width: 520px; }
+    .hero-stats { display: flex; gap: 48px; padding-top: 48px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num { font-size: 32px; font-weight: 900; color: var(--teal); }
+    .stat-lbl { font-size: 13px; color: var(--grey); font-weight: 500; }
 
-    /* HOW IT WORKS */
-    .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 64px; }
-    .how-card { text-align: center; padding: 36px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; }
-    .how-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: var(--dark); margin: 0 auto 18px; }
-    .how-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
-    .how-desc { font-size: 13px; color: var(--grey); line-height: 1.6; }
+    /* SECTION COMMON */
+    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 14px; }
+    .sec-title { font-size: clamp(30px, 4vw, 50px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; color: var(--dark); }
+    .sec-sub { font-size: 16px; color: var(--grey); line-height: 1.75; max-width: 500px; }
+
+    /* HOW */
+    #how { padding: 100px 6%; background: var(--bg); }
+    .how-header { margin-bottom: 64px; }
+    .how-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+    .how-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; text-align: center; transition: all .3s; }
+    .how-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,201,167,0.1); border-color: rgba(0,201,167,0.3); }
+    .how-num { width: 48px; height: 48px; border-radius: 50%; background: var(--teal); color: white; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .how-ttl { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
+    .how-dsc { font-size: 13px; color: var(--grey); line-height: 1.65; }
 
     /* CATEGORIES */
-    #categories { background: rgba(255,255,255,0.02); }
+    #categories { padding: 100px 6%; background: white; }
     .cats-header { text-align: center; margin-bottom: 64px; }
-    .cats-header .section-sub { margin: 0 auto; }
-    .cats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
-    .cat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 28px 20px; text-align: center; transition: all .3s; cursor: pointer; }
-    .cat-card:hover { border-color: var(--teal); transform: translateY(-4px); background: rgba(0,201,167,0.05); }
+    .cats-header .sec-sub { margin: 0 auto; }
+    .cats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .cat-card { background: var(--bg); border: 1.5px solid transparent; border-radius: 16px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all .25s; }
+    .cat-card:hover { border-color: var(--teal); background: white; box-shadow: 0 8px 32px rgba(0,201,167,0.12); transform: translateY(-3px); }
     .cat-emoji { font-size: 36px; margin-bottom: 12px; display: block; }
-    .cat-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-    .cat-count { font-size: 12px; color: var(--grey); }
+    .cat-name { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+    .cat-count { font-size: 11px; color: var(--grey-light); }
 
     /* FEATURES */
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 64px; }
-    .feat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 32px 28px; transition: all .3s; }
+    #features { padding: 100px 6%; background: var(--bg); }
+    .feat-header { text-align: center; margin-bottom: 64px; }
+    .feat-header .sec-sub { margin: 0 auto; }
+    .feat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .feat-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 32px 28px; transition: all .3s; }
     .feat-card:hover { border-color: rgba(0,201,167,0.3); transform: translateY(-4px); }
-    .feat-icon { font-size: 36px; margin-bottom: 16px; display: block; }
-    .feat-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .feat-desc { font-size: 14px; color: var(--grey); line-height: 1.7; }
+    .feat-icon { width: 52px; height: 52px; border-radius: 14px; background: rgba(0,201,167,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; }
+    .feat-ttl { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
+    .feat-dsc { font-size: 14px; color: var(--grey); line-height: 1.7; }
 
     /* PAYMENT */
-    .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 64px; }
-    .pay-text .section-sub { margin-bottom: 32px; }
-    .pay-methods { display: flex; flex-wrap: wrap; gap: 12px; }
-    .pay-chip { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-    .pay-visual { background: var(--dark-card); border: 1px solid rgba(0,201,167,0.15); border-radius: 20px; padding: 28px; }
-    .pay-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .pay-row:last-child { border-bottom: none; }
-    .pay-method { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
-    .pay-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
-    .pay-badge.instant { background: rgba(0,201,167,0.15); color: var(--teal); }
-    .pay-badge.free { background: rgba(245,166,35,0.15); color: var(--orange); }
+    #payment { padding: 100px 6%; background: white; }
+    .pay-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 64px; }
+    .pay-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .pay-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 7px; transition: all .2s; }
+    .pay-chip:hover { border-color: var(--teal); background: rgba(0,201,167,0.05); }
+    .pay-visual { background: var(--bg); border: 1px solid rgba(0,201,167,0.2); border-radius: 20px; padding: 8px; overflow: hidden; }
+    .pay-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-radius: 12px; transition: background .2s; }
+    .pay-row:hover { background: white; }
+    .pay-method { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--dark); }
+    .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+    .badge-teal { background: rgba(0,201,167,0.12); color: var(--teal-dark); }
+    .badge-orange { background: rgba(245,166,35,0.12); color: var(--orange-dark); }
 
     /* CTA */
-    .cta-section { text-align: center; padding: 100px 6%; background: linear-gradient(135deg, rgba(0,201,167,0.08) 0%, rgba(0,201,167,0.02) 100%); border-top: 1px solid rgba(0,201,167,0.15); }
-    .cta-section h2 { font-size: clamp(28px,4vw,50px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; }
-    .cta-section p { font-size: 17px; color: var(--grey); margin-bottom: 40px; }
+    .cta { padding: 120px 6%; text-align: center; background: var(--dark); }
+    .cta h2 { font-size: clamp(32px,5vw,62px); font-weight: 900; letter-spacing:-2px; color: white; margin-bottom: 16px; }
+    .cta h2 span { color: var(--teal); }
+    .cta p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
+    .btn-cta { background: var(--teal); color: white; border: none; border-radius: 12px; padding: 16px 36px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-block; }
+    .btn-cta:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,201,167,0.3); }
 
     /* FOOTER */
-    footer { background: #060E08; padding: 70px 6% 36px; }
-    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
-    .footer-brand { font-size: 22px; font-weight: 900; margin-bottom: 14px; }
-    .footer-brand span { color: var(--orange); }
-    .footer-tagline { font-size: 14px; color: var(--grey); line-height: 1.7; max-width: 260px; }
-    .footer-col-title { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--white); margin-bottom: 18px; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
-    .footer-links a { font-size: 14px; color: var(--grey); text-decoration: none; transition: color .2s; }
-    .footer-links a:hover { color: var(--teal); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .footer-bottom p { font-size: 13px; color: var(--grey); }
-    .footer-slogan { font-size: 12px; font-weight: 700; color: var(--teal); letter-spacing: 2px; }
+    footer { background: #081810; padding: 64px 6% 32px; }
+    .foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .foot-brand { font-size: 20px; font-weight: 900; color: white; margin-bottom: 12px; }
+    .foot-brand span { color: var(--orange); }
+    .foot-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; max-width: 240px; }
+    .foot-col-ttl { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 16px; }
+    .foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .foot-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color .2s; }
+    .foot-links a:hover { color: var(--teal); }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .foot-copy { font-size: 12px; color: rgba(255,255,255,0.3); }
+    .foot-slogan { font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: 2px; }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .shop-mockup { display: none; }
       .how-grid { grid-template-columns: 1fr 1fr; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .pay-grid { grid-template-columns: 1fr; }
-      .stats-bar { grid-template-columns: repeat(2,1fr); }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .footer-top > :first-child { grid-column: 1/-1; }
+      .cats-grid { grid-template-columns: repeat(2,1fr); }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
+      .pay-inner { grid-template-columns: 1fr; gap: 40px; }
+      .foot-top { grid-template-columns: 1fr 1fr; }
+      .foot-top > :first-child { grid-column: 1/-1; }
     }
     @media (max-width: 600px) {
       .nav-links { display: none; }
-      .how-grid, .features-grid { grid-template-columns: 1fr; }
+      .how-grid, .feat-grid { grid-template-columns: 1fr; }
+      .cats-grid { grid-template-columns: repeat(2,1fr); }
+      .hero-stats { gap: 24px; }
     }
-
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="logo">
     <div class="logo-icon">🛍️</div>
@@ -200,124 +185,54 @@
   </ul>
   <div class="nav-right">
     <div class="lang-switcher">
-      <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸 ES</button>
-      <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧 EN</button>
-      <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷 FR</button>
+      <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
+      <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
+      <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
     </div>
-    <a href="#" class="btn-teal" data-i18n="nav_cta">Start Shopping</a>
+    <a href="#" class="btn-nav" data-i18n="nav_cta">Start Shopping</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div>
-      <div class="hero-badge" data-i18n="hero_badge">Global Products · Local Prices</div>
-      <h1 data-i18n="hero_h1">Shop Global,<br /><em>Pay Local</em>,<br /><strong>Delivered Fast</strong></h1>
-      <p class="hero-sub" data-i18n="hero_sub">XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered by XenderDelivery.</p>
-      <div class="hero-btns">
-        <a href="#" class="btn-lg primary" data-i18n="hero_btn1">Browse Products →</a>
-        <a href="#how" class="btn-lg secondary" data-i18n="hero_btn2">How it works</a>
-      </div>
+    <div class="hero-tag" data-i18n="hero_badge">Global Products · Local Prices</div>
+    <h1 data-i18n="hero_h1">Shop Global,<br/><span class="accent-teal">Pay Local</span>,<br/><span class="accent-orange">Delivered Fast</span></h1>
+    <p class="hero-sub" data-i18n="hero_sub">XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered to your door.</p>
+    <div class="hero-btns">
+      <a href="#categories" class="btn-primary" data-i18n="hero_btn1">Browse Products →</a>
+      <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
     </div>
-
-    <!-- Shop mockup -->
-    <div class="shop-mockup">
-      <div class="float-badge">🔥 -40% OFF</div>
-      <div class="mockup-screen">
-        <div class="mockup-search">🔍 Search products…</div>
-        <div class="mockup-cats">
-          <div class="cat-chip">📱 Electronics</div>
-          <div class="cat-chip inactive">👗 Fashion</div>
-          <div class="cat-chip inactive">🏠 Home</div>
-        </div>
-        <div class="products-mini">
-          <div class="prod-card">
-            <div class="prod-img">📱</div>
-            <div class="prod-name">Smartphone Pro</div>
-            <div class="prod-price">85,000 XAF</div>
-            <div class="prod-orig">142,000 XAF</div>
-            <button class="prod-btn">Add to cart</button>
-          </div>
-          <div class="prod-card">
-            <div class="prod-img">🎧</div>
-            <div class="prod-name">Headphones BT</div>
-            <div class="prod-price">12,500 XAF</div>
-            <div class="prod-orig">21,000 XAF</div>
-            <button class="prod-btn">Add to cart</button>
-          </div>
-          <div class="prod-card">
-            <div class="prod-img">⌚</div>
-            <div class="prod-name">Smart Watch</div>
-            <div class="prod-price">28,000 XAF</div>
-            <div class="prod-orig">45,000 XAF</div>
-            <button class="prod-btn">Add to cart</button>
-          </div>
-          <div class="prod-card">
-            <div class="prod-img">💡</div>
-            <div class="prod-name">Solar Panel Kit</div>
-            <div class="prod-price">95,000 XAF</div>
-            <div class="prod-orig">160,000 XAF</div>
-            <button class="prod-btn">Add to cart</button>
-          </div>
-        </div>
-      </div>
-      <div class="float-delivery">
-        <span>🛵</span>
-        <div class="dl-text">
-          <span>Your order</span>
-          <span>On the way · 12 min</span>
-        </div>
-      </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">1M+</span><span class="stat-lbl" data-i18n="s1l">Products available</span></div>
+      <div class="stat-item"><span class="stat-num">8</span><span class="stat-lbl" data-i18n="s2l">African countries</span></div>
+      <div class="stat-item"><span class="stat-num">-40%</span><span class="stat-lbl" data-i18n="s3l">vs retail prices</span></div>
+      <div class="stat-item"><span class="stat-num">24h</span><span class="stat-lbl" data-i18n="s4l">Express delivery</span></div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat reveal"><div class="stat-num">1M+</div><div class="stat-lbl" data-i18n="stat1">Products available</div></div>
-  <div class="stat reveal"><div class="stat-num">8</div><div class="stat-lbl" data-i18n="stat2">African countries</div></div>
-  <div class="stat reveal"><div class="stat-num">-40%</div><div class="stat-lbl" data-i18n="stat3">Avg. savings vs retail</div></div>
-  <div class="stat reveal"><div class="stat-num">24h</div><div class="stat-lbl" data-i18n="stat4">Express delivery</div></div>
-</div>
-
-<!-- HOW IT WORKS -->
+<!-- HOW -->
 <section id="how">
-  <div class="reveal">
-    <span class="section-label" data-i18n="sec_how">How it works</span>
-    <h2 class="section-title" data-i18n="sec_how_h">Shop in 4 simple steps</h2>
-    <p class="section-sub" data-i18n="sec_how_sub">From discovery to doorstep — XenderShop makes international shopping as easy as buying locally.</p>
+  <div class="how-header reveal">
+    <span class="sec-label" data-i18n="sec_how">How it works</span>
+    <h2 class="sec-title" data-i18n="sec_how_h">Shop in 4 simple steps</h2>
+    <p class="sec-sub" data-i18n="sec_how_sub">From discovery to your doorstep — as easy as buying locally.</p>
   </div>
   <div class="how-grid">
-    <div class="how-card reveal">
-      <div class="how-num">1</div>
-      <h3 class="how-title" data-i18n="h1t">Browse & Discover</h3>
-      <p class="how-desc" data-i18n="h1d">Search millions of products from global suppliers. Filter by category, price, and delivery time.</p>
-    </div>
-    <div class="how-card reveal">
-      <div class="how-num">2</div>
-      <h3 class="how-title" data-i18n="h2t">Add to Cart</h3>
-      <p class="how-desc" data-i18n="h2d">Select your items, choose size or variant. Prices shown in your local currency.</p>
-    </div>
-    <div class="how-card reveal">
-      <div class="how-num">3</div>
-      <h3 class="how-title" data-i18n="h3t">Pay Your Way</h3>
-      <p class="how-desc" data-i18n="h3d">Pay with Mobile Money, XenderMoney wallet, bank transfer or card. All methods accepted.</p>
-    </div>
-    <div class="how-card reveal">
-      <div class="how-num">4</div>
-      <h3 class="how-title" data-i18n="h4t">Fast Delivery</h3>
-      <p class="how-desc" data-i18n="h4d">Your order is picked up by a XenderDelivery rider. Track it live from your phone.</p>
-    </div>
+    <div class="how-card reveal"><div class="how-num">1</div><h3 class="how-ttl" data-i18n="h1t">Browse</h3><p class="how-dsc" data-i18n="h1d">Search millions of products filtered by category, price, and delivery time.</p></div>
+    <div class="how-card reveal"><div class="how-num">2</div><h3 class="how-ttl" data-i18n="h2t">Add to Cart</h3><p class="how-dsc" data-i18n="h2d">Choose your items. Prices are automatically shown in your local currency.</p></div>
+    <div class="how-card reveal"><div class="how-num">3</div><h3 class="how-ttl" data-i18n="h3t">Pay Your Way</h3><p class="how-dsc" data-i18n="h3d">Mobile Money, XenderMoney wallet, bank transfer or card — all accepted.</p></div>
+    <div class="how-card reveal"><div class="how-num">4</div><h3 class="how-ttl" data-i18n="h4t">Delivered</h3><p class="how-dsc" data-i18n="h4d">A XenderDelivery rider picks up your order. Track it live on your phone.</p></div>
   </div>
 </section>
 
 <!-- CATEGORIES -->
 <section id="categories">
   <div class="cats-header reveal">
-    <span class="section-label" data-i18n="sec_cat">Categories</span>
-    <h2 class="section-title" data-i18n="sec_cat_h">Everything You Need</h2>
-    <p class="section-sub" data-i18n="sec_cat_sub">From electronics to fashion, home appliances to solar energy — we source it all globally.</p>
+    <span class="sec-label" data-i18n="sec_cat">Categories</span>
+    <h2 class="sec-title" data-i18n="sec_cat_h">Everything You Need</h2>
+    <p class="sec-sub" data-i18n="sec_cat_sub">From electronics to solar energy — sourced globally, priced locally.</p>
   </div>
   <div class="cats-grid">
     <div class="cat-card reveal"><span class="cat-emoji">📱</span><div class="cat-name" data-i18n="c1">Electronics</div><div class="cat-count">120,000+ items</div></div>
@@ -333,55 +248,31 @@
 
 <!-- FEATURES -->
 <section id="features">
-  <div class="reveal">
-    <span class="section-label" data-i18n="sec_feat">Why XenderShop</span>
-    <h2 class="section-title" data-i18n="sec_feat_h">Built for African Shoppers</h2>
-    <p class="section-sub" data-i18n="sec_feat_sub">We know the challenges of online shopping in Africa. XenderShop solves them all.</p>
+  <div class="feat-header reveal">
+    <span class="sec-label" data-i18n="sec_feat">Why XenderShop</span>
+    <h2 class="sec-title" data-i18n="sec_feat_h">Built for African Shoppers</h2>
+    <p class="sec-sub" data-i18n="sec_feat_sub">We solve the real challenges of online shopping in Africa.</p>
   </div>
-  <div class="features-grid">
-    <div class="feat-card reveal">
-      <span class="feat-icon">💰</span>
-      <h3 class="feat-title" data-i18n="f1t">Up to 40% Cheaper</h3>
-      <p class="feat-desc" data-i18n="f1d">Direct from global suppliers via AliExpress API. No middlemen, no markup. Prices in your local currency.</p>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">📱</span>
-      <h3 class="feat-title" data-i18n="f2t">Mobile Money First</h3>
-      <p class="feat-desc" data-i18n="f2d">Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required to shop.</p>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">🛵</span>
-      <h3 class="feat-title" data-i18n="f3t">Same-Day Delivery</h3>
-      <p class="feat-desc" data-i18n="f3d">XenderDelivery riders pick up and deliver in hours. Live GPS tracking from order to doorstep.</p>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">🔒</span>
-      <h3 class="feat-title" data-i18n="f4t">Buyer Protection</h3>
-      <p class="feat-desc" data-i18n="f4d">Full refund guarantee if your item doesn't arrive or isn't as described. Shop with confidence.</p>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">🌍</span>
-      <h3 class="feat-title" data-i18n="f5t">Local Currencies</h3>
-      <p class="feat-desc" data-i18n="f5d">All prices shown in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.</p>
-    </div>
-    <div class="feat-card reveal">
-      <span class="feat-icon">⚡</span>
-      <h3 class="feat-title" data-i18n="f6t">Instant Order Tracking</h3>
-      <p class="feat-desc" data-i18n="f6d">Know exactly where your order is at every step. SMS + push notifications in your language.</p>
-    </div>
+  <div class="feat-grid">
+    <div class="feat-card reveal"><div class="feat-icon">💰</div><h3 class="feat-ttl" data-i18n="f1t">Up to 40% Cheaper</h3><p class="feat-dsc" data-i18n="f1d">Direct from global suppliers via AliExpress API. No middlemen, no markup. Prices in your local currency.</p></div>
+    <div class="feat-card reveal"><div class="feat-icon">📱</div><h3 class="feat-ttl" data-i18n="f2t">Mobile Money First</h3><p class="feat-dsc" data-i18n="f2d">Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required.</p></div>
+    <div class="feat-card reveal"><div class="feat-icon">🛵</div><h3 class="feat-ttl" data-i18n="f3t">Same-Day Delivery</h3><p class="feat-dsc" data-i18n="f3d">XenderDelivery riders pick up and deliver in hours. Live GPS tracking included.</p></div>
+    <div class="feat-card reveal"><div class="feat-icon">🔒</div><h3 class="feat-ttl" data-i18n="f4t">Buyer Protection</h3><p class="feat-dsc" data-i18n="f4d">Full refund guarantee if your item doesn't arrive or isn't as described.</p></div>
+    <div class="feat-card reveal"><div class="feat-icon">🌍</div><h3 class="feat-ttl" data-i18n="f5t">Local Currencies</h3><p class="feat-dsc" data-i18n="f5d">All prices in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.</p></div>
+    <div class="feat-card reveal"><div class="feat-icon">⚡</div><h3 class="feat-ttl" data-i18n="f6t">Live Order Tracking</h3><p class="feat-dsc" data-i18n="f6d">Know where your order is at every step. SMS and push notifications in your language.</p></div>
   </div>
 </section>
 
 <!-- PAYMENT -->
 <section id="payment">
   <div class="reveal">
-    <span class="section-label" data-i18n="sec_pay">Payment Methods</span>
-    <h2 class="section-title" data-i18n="sec_pay_h">Pay the Way You Want</h2>
+    <span class="sec-label" data-i18n="sec_pay">Payment</span>
+    <h2 class="sec-title" data-i18n="sec_pay_h">Pay the Way You Want</h2>
   </div>
-  <div class="pay-grid">
-    <div class="pay-text reveal">
-      <p class="section-sub" data-i18n="sec_pay_sub">Every major payment method across Africa and Europe. No bank account needed — Mobile Money is all you need to start shopping.</p>
-      <div class="pay-methods" style="margin-top:32px;">
+  <div class="pay-inner">
+    <div class="reveal">
+      <p class="sec-sub" data-i18n="sec_pay_sub">Every major payment method across Africa and Europe. No bank account needed — Mobile Money is enough to start shopping.</p>
+      <div class="pay-chips">
         <div class="pay-chip">🟡 MTN MoMo</div>
         <div class="pay-chip">🟠 Orange Money</div>
         <div class="pay-chip">🔵 Wave</div>
@@ -389,53 +280,38 @@
         <div class="pay-chip">🔴 Airtel Money</div>
         <div class="pay-chip">💳 Visa / Mastercard</div>
         <div class="pay-chip">🏦 Bank Transfer</div>
-        <div class="pay-chip">💰 XenderMoney Wallet</div>
+        <div class="pay-chip">💰 XenderMoney</div>
       </div>
     </div>
     <div class="pay-visual reveal">
-      <div class="pay-row">
-        <div class="pay-method"><span>🟡</span> MTN MoMo</div>
-        <span class="pay-badge instant" data-i18n="instant">Instant</span>
-      </div>
-      <div class="pay-row">
-        <div class="pay-method"><span>🟠</span> Orange Money</div>
-        <span class="pay-badge instant" data-i18n="instant">Instant</span>
-      </div>
-      <div class="pay-row">
-        <div class="pay-method"><span>🔵</span> Wave</div>
-        <span class="pay-badge free" data-i18n="free_fee">0% fees</span>
-      </div>
-      <div class="pay-row">
-        <div class="pay-method"><span>💰</span> XenderMoney</div>
-        <span class="pay-badge free" data-i18n="free_fee">0% fees</span>
-      </div>
-      <div class="pay-row">
-        <div class="pay-method"><span>💳</span> Card (Stripe)</div>
-        <span class="pay-badge instant" data-i18n="instant">Instant</span>
-      </div>
+      <div class="pay-row"><div class="pay-method"><span>🟡</span> MTN MoMo</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
+      <div class="pay-row"><div class="pay-method"><span>🟠</span> Orange Money</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
+      <div class="pay-row"><div class="pay-method"><span>🔵</span> Wave</div><span class="badge badge-orange" data-i18n="free_fee">0% fees</span></div>
+      <div class="pay-row"><div class="pay-method"><span>💰</span> XenderMoney</div><span class="badge badge-orange" data-i18n="free_fee">0% fees</span></div>
+      <div class="pay-row"><div class="pay-method"><span>💳</span> Card (Stripe)</div><span class="badge badge-teal" data-i18n="instant">Instant</span></div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta-section">
+<section class="cta">
   <div class="reveal">
-    <h2 data-i18n="cta_h">Start Shopping Globally Today</h2>
-    <p data-i18n="cta_p">Millions of products, African prices, delivered to your door.</p>
-    <a href="#" class="btn-lg primary" data-i18n="cta_btn">Browse Products →</a>
+    <h2 data-i18n="cta_h">Start Shopping <span>Globally</span> Today</h2>
+    <p data-i18n="cta_p">Millions of products. African prices. Delivered to your door.</p>
+    <a href="#" class="btn-cta" data-i18n="cta_btn">Browse Products →</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-top">
+  <div class="foot-top">
     <div>
-      <div class="footer-brand">Xender<span>Shop</span></div>
-      <p class="footer-tagline" data-i18n="foot_desc">Global shopping for Africa. Pay local, shop global, delivered fast by XenderDelivery. We Simplify Life.</p>
+      <div class="foot-brand">Xender<span>Shop</span></div>
+      <p class="foot-desc" data-i18n="foot_desc">Global shopping for Africa. Pay local, shop global, delivered fast. We Simplify Life.</p>
     </div>
     <div>
-      <p class="footer-col-title" data-i18n="foot_shop">Shop</p>
-      <ul class="footer-links">
+      <p class="foot-col-ttl" data-i18n="foot_shop">Shop</p>
+      <ul class="foot-links">
         <li><a href="#" data-i18n="c1">Electronics</a></li>
         <li><a href="#" data-i18n="c2">Fashion</a></li>
         <li><a href="#" data-i18n="c3">Home & Living</a></li>
@@ -443,138 +319,126 @@
       </ul>
     </div>
     <div>
-      <p class="footer-col-title" data-i18n="foot_company">Company</p>
-      <ul class="footer-links">
-        <li><a href="https://christianboddien-source.github.io/innovaafric-prod/innovaafric/">InnovaAFRIC</a></li>
-        <li><a href="https://christianboddien-source.github.io/innovaafric-prod/xendermoney/">XenderMoney</a></li>
-        <li><a href="#" data-i18n="foot_delivery">XenderDelivery</a></li>
-        <li><a href="#" data-i18n="foot_big">XenderBigShop</a></li>
+      <p class="foot-col-ttl" data-i18n="foot_ecosystem">Ecosystem</p>
+      <ul class="foot-links">
+        <li><a href="../innovaafric/">InnovaAFRIC</a></li>
+        <li><a href="../xendermoney/">XenderMoney</a></li>
+        <li><a href="#">XenderBigShop</a></li>
+        <li><a href="#">XenderDelivery</a></li>
       </ul>
     </div>
     <div>
-      <p class="footer-col-title" data-i18n="foot_legal">Legal</p>
-      <ul class="footer-links">
+      <p class="foot-col-ttl" data-i18n="foot_legal">Legal</p>
+      <ul class="foot-links">
         <li><a href="#" data-i18n="foot_privacy">Privacy Policy</a></li>
         <li><a href="#" data-i18n="foot_terms">Terms of Service</a></li>
         <li><a href="#" data-i18n="foot_buyer">Buyer Protection</a></li>
-        <li><a href="#" data-i18n="foot_cookies">Cookies</a></li>
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">
-    <p data-i18n="foot_copy">© 2026 XenderShop · An InnovaAFRIC product</p>
-    <span class="footer-slogan">SHOP · DELIVER · ENJOY</span>
+  <div class="foot-bottom">
+    <span class="foot-copy" data-i18n="foot_copy">© 2026 XenderShop · An InnovaAFRIC product</span>
+    <span class="foot-slogan">SHOP · DELIVER · ENJOY</span>
   </div>
 </footer>
 
 <script>
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08 });
+  const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.08});
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
   const TR = {
     es:{
-      nav_how:'Cómo funciona', nav_cat:'Categorías', nav_feat:'Características', nav_pay:'Pagos', nav_cta:'Empezar a Comprar',
+      nav_how:'Cómo funciona', nav_cat:'Categorías', nav_feat:'Características', nav_pay:'Pagos', nav_cta:'Comprar',
       hero_badge:'Productos Globales · Precios Locales',
-      hero_h1:'Compra Global,<br /><em>Paga Local</em>,<br /><strong>Entrega Rápida</strong>',
-      hero_sub:'XenderShop conecta a compradores africanos con millones de productos internacionales. Paga con Mobile Money, transferencia o tarjeta. Entregado por XenderDelivery.',
+      hero_h1:'Compra Global,<br/><span class="accent-teal">Paga Local</span>,<br/><span class="accent-orange">Entrega Rápida</span>',
+      hero_sub:'XenderShop conecta a compradores africanos con millones de productos internacionales. Paga con Mobile Money, transferencia o tarjeta. Entregado a tu puerta.',
       hero_btn1:'Ver Productos →', hero_btn2:'Cómo funciona',
-      stat1:'Productos disponibles', stat2:'Países africanos', stat3:'Ahorro vs retail', stat4:'Entrega express',
-      sec_how:'Cómo funciona', sec_how_h:'Compra en 4 pasos simples',
-      sec_how_sub:'Del descubrimiento a tu puerta — XenderShop hace que comprar internacionalmente sea tan fácil como comprar localmente.',
-      h1t:'Busca y Descubre', h1d:'Busca millones de productos de proveedores globales. Filtra por categoría, precio y tiempo de entrega.',
-      h2t:'Añade al Carrito', h2d:'Selecciona tus artículos, elige talla o variante. Precios mostrados en tu moneda local.',
-      h3t:'Paga a tu Manera', h3d:'Paga con Mobile Money, wallet XenderMoney, transferencia bancaria o tarjeta. Todos los métodos aceptados.',
-      h4t:'Entrega Rápida', h4d:'Tu pedido es recogido por un rider de XenderDelivery. Síguelo en vivo desde tu teléfono.',
-      sec_cat:'Categorías', sec_cat_h:'Todo lo que Necesitas',
-      sec_cat_sub:'Desde electrónica hasta moda, electrodomésticos hasta energía solar — lo buscamos todo a nivel global.',
-      c1:'Electrónica', c2:'Moda', c3:'Hogar y Decoración', c4:'Energía Solar', c5:'Belleza', c6:'Niños y Bebés', c7:'Deportes', c8:'Herramientas y Auto',
-      sec_feat:'Por qué XenderShop', sec_feat_h:'Diseñado para Compradores Africanos',
-      sec_feat_sub:'Conocemos los desafíos de las compras online en África. XenderShop los resuelve todos.',
-      f1t:'Hasta 40% más Barato', f1d:'Directo de proveedores globales vía API de AliExpress. Sin intermediarios, sin recargo. Precios en tu moneda local.',
-      f2t:'Mobile Money Primero', f2d:'Paga con MTN, Orange, Wave, Moov o Airtel Money. No necesitas tarjeta ni cuenta bancaria para comprar.',
-      f3t:'Entrega el Mismo Día', f3d:'Los riders de XenderDelivery recogen y entregan en horas. Seguimiento GPS en vivo desde el pedido hasta tu puerta.',
-      f4t:'Protección al Comprador', f4d:'Garantía de reembolso completo si tu artículo no llega o no es como se describe. Compra con confianza.',
-      f5t:'Monedas Locales', f5d:'Todos los precios en XAF, GHS, RWF, EUR y más. Tasas de cambio en tiempo real aplicadas automáticamente.',
-      f6t:'Seguimiento al Instante', f6d:'Sabe exactamente dónde está tu pedido en cada paso. SMS + notificaciones push en tu idioma.',
-      sec_pay:'Métodos de Pago', sec_pay_h:'Paga como Quieras',
-      sec_pay_sub:'Todos los principales métodos de pago en África y Europa. Sin cuenta bancaria — con Mobile Money puedes empezar a comprar.',
+      s1l:'Productos disponibles', s2l:'Países africanos', s3l:'vs precios retail', s4l:'Entrega express',
+      sec_how:'Cómo funciona', sec_how_h:'Compra en 4 pasos simples', sec_how_sub:'Del descubrimiento a tu puerta — tan fácil como comprar localmente.',
+      h1t:'Buscar', h1d:'Busca millones de productos filtrados por categoría, precio y tiempo de entrega.',
+      h2t:'Añadir al Carrito', h2d:'Elige tus artículos. Los precios se muestran automáticamente en tu moneda local.',
+      h3t:'Paga a tu Manera', h3d:'Mobile Money, wallet XenderMoney, transferencia bancaria o tarjeta — todos aceptados.',
+      h4t:'Entregado', h4d:'Un rider de XenderDelivery recoge tu pedido. Síguelo en vivo desde tu teléfono.',
+      sec_cat:'Categorías', sec_cat_h:'Todo lo que Necesitas', sec_cat_sub:'Desde electrónica hasta energía solar — de fuentes globales, precios locales.',
+      c1:'Electrónica', c2:'Moda', c3:'Hogar y Deco', c4:'Energía Solar', c5:'Belleza', c6:'Niños y Bebés', c7:'Deportes', c8:'Herramientas y Auto',
+      sec_feat:'Por qué XenderShop', sec_feat_h:'Diseñado para Compradores Africanos', sec_feat_sub:'Resolvemos los verdaderos retos de las compras online en África.',
+      f1t:'Hasta 40% más Barato', f1d:'Directo de proveedores globales vía AliExpress. Sin intermediarios, sin recargo. Precios en tu moneda local.',
+      f2t:'Mobile Money Primero', f2d:'Paga con MTN, Orange, Wave, Moov o Airtel Money. No necesitas tarjeta ni cuenta bancaria.',
+      f3t:'Entrega el Mismo Día', f3d:'Los riders de XenderDelivery entregan en horas. Seguimiento GPS en vivo incluido.',
+      f4t:'Protección al Comprador', f4d:'Garantía de reembolso completo si tu artículo no llega o no es como se describe.',
+      f5t:'Monedas Locales', f5d:'Todos los precios en XAF, GHS, RWF, EUR y más. Tasas de cambio en tiempo real.',
+      f6t:'Seguimiento en Vivo', f6d:'Sabe dónde está tu pedido en cada paso. SMS y notificaciones push en tu idioma.',
+      sec_pay:'Pago', sec_pay_h:'Paga como Quieras',
+      sec_pay_sub:'Todos los métodos de pago en África y Europa. Sin cuenta bancaria — con Mobile Money puedes empezar.',
       instant:'Instantáneo', free_fee:'0% comisión',
-      cta_h:'Empieza a Comprar Globalmente Hoy', cta_p:'Millones de productos, precios africanos, entregados a tu puerta.',
+      cta_h:'Empieza a Comprar <span>Globalmente</span> Hoy', cta_p:'Millones de productos. Precios africanos. Entregados a tu puerta.',
       cta_btn:'Ver Productos →',
-      foot_desc:'Compras globales para África. Paga local, compra global, entregado rápido por XenderDelivery. We Simplify Life.',
-      foot_shop:'Comprar', foot_company:'Empresa', foot_legal:'Legal', foot_delivery:'XenderDelivery', foot_big:'XenderBigShop',
-      foot_privacy:'Política de Privacidad', foot_terms:'Términos de Uso', foot_buyer:'Protección al Comprador', foot_cookies:'Cookies',
+      foot_desc:'Compras globales para África. Paga local, compra global, entregado rápido. We Simplify Life.',
+      foot_shop:'Comprar', foot_ecosystem:'Ecosistema', foot_legal:'Legal',
+      foot_privacy:'Privacidad', foot_terms:'Términos', foot_buyer:'Protección Comprador',
       foot_copy:'© 2026 XenderShop · Un producto de InnovaAFRIC'
     },
     en:{
       nav_how:'How it works', nav_cat:'Categories', nav_feat:'Features', nav_pay:'Payment', nav_cta:'Start Shopping',
       hero_badge:'Global Products · Local Prices',
-      hero_h1:'Shop Global,<br /><em>Pay Local</em>,<br /><strong>Delivered Fast</strong>',
-      hero_sub:'XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered by XenderDelivery.',
+      hero_h1:'Shop Global,<br/><span class="accent-teal">Pay Local</span>,<br/><span class="accent-orange">Delivered Fast</span>',
+      hero_sub:'XenderShop connects African buyers to millions of international products. Pay with Mobile Money, bank transfer or card. Delivered to your door.',
       hero_btn1:'Browse Products →', hero_btn2:'How it works',
-      stat1:'Products available', stat2:'African countries', stat3:'Avg. savings vs retail', stat4:'Express delivery',
-      sec_how:'How it works', sec_how_h:'Shop in 4 simple steps',
-      sec_how_sub:'From discovery to doorstep — XenderShop makes international shopping as easy as buying locally.',
-      h1t:'Browse & Discover', h1d:'Search millions of products from global suppliers. Filter by category, price, and delivery time.',
-      h2t:'Add to Cart', h2d:'Select your items, choose size or variant. Prices shown in your local currency.',
-      h3t:'Pay Your Way', h3d:'Pay with Mobile Money, XenderMoney wallet, bank transfer or card. All methods accepted.',
-      h4t:'Fast Delivery', h4d:'Your order is picked up by a XenderDelivery rider. Track it live from your phone.',
-      sec_cat:'Categories', sec_cat_h:'Everything You Need',
-      sec_cat_sub:'From electronics to fashion, home appliances to solar energy — we source it all globally.',
+      s1l:'Products available', s2l:'African countries', s3l:'vs retail prices', s4l:'Express delivery',
+      sec_how:'How it works', sec_how_h:'Shop in 4 simple steps', sec_how_sub:'From discovery to your doorstep — as easy as buying locally.',
+      h1t:'Browse', h1d:'Search millions of products filtered by category, price, and delivery time.',
+      h2t:'Add to Cart', h2d:'Choose your items. Prices are automatically shown in your local currency.',
+      h3t:'Pay Your Way', h3d:'Mobile Money, XenderMoney wallet, bank transfer or card — all accepted.',
+      h4t:'Delivered', h4d:'A XenderDelivery rider picks up your order. Track it live on your phone.',
+      sec_cat:'Categories', sec_cat_h:'Everything You Need', sec_cat_sub:'From electronics to solar energy — sourced globally, priced locally.',
       c1:'Electronics', c2:'Fashion', c3:'Home & Living', c4:'Solar Energy', c5:'Beauty', c6:'Kids & Baby', c7:'Sports', c8:'Tools & Auto',
-      sec_feat:'Why XenderShop', sec_feat_h:'Built for African Shoppers',
-      sec_feat_sub:'We know the challenges of online shopping in Africa. XenderShop solves them all.',
+      sec_feat:'Why XenderShop', sec_feat_h:'Built for African Shoppers', sec_feat_sub:'We solve the real challenges of online shopping in Africa.',
       f1t:'Up to 40% Cheaper', f1d:'Direct from global suppliers via AliExpress API. No middlemen, no markup. Prices in your local currency.',
-      f2t:'Mobile Money First', f2d:'Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required to shop.',
-      f3t:'Same-Day Delivery', f3d:'XenderDelivery riders pick up and deliver in hours. Live GPS tracking from order to doorstep.',
-      f4t:'Buyer Protection', f4d:"Full refund guarantee if your item doesn't arrive or isn't as described. Shop with confidence.",
-      f5t:'Local Currencies', f5d:'All prices shown in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.',
-      f6t:'Instant Order Tracking', f6d:'Know exactly where your order is at every step. SMS + push notifications in your language.',
-      sec_pay:'Payment Methods', sec_pay_h:'Pay the Way You Want',
-      sec_pay_sub:'Every major payment method across Africa and Europe. No bank account needed — Mobile Money is all you need to start shopping.',
+      f2t:'Mobile Money First', f2d:'Pay with MTN, Orange, Wave, Moov or Airtel Money. No card or bank account required.',
+      f3t:'Same-Day Delivery', f3d:'XenderDelivery riders pick up and deliver in hours. Live GPS tracking included.',
+      f4t:'Buyer Protection', f4d:"Full refund guarantee if your item doesn't arrive or isn't as described.",
+      f5t:'Local Currencies', f5d:'All prices in XAF, GHS, RWF, EUR and more. Real-time exchange rates applied automatically.',
+      f6t:'Live Order Tracking', f6d:'Know where your order is at every step. SMS and push notifications in your language.',
+      sec_pay:'Payment', sec_pay_h:'Pay the Way You Want',
+      sec_pay_sub:'Every major payment method across Africa and Europe. No bank account needed — Mobile Money is enough.',
       instant:'Instant', free_fee:'0% fees',
-      cta_h:'Start Shopping Globally Today', cta_p:'Millions of products, African prices, delivered to your door.',
+      cta_h:'Start Shopping <span>Globally</span> Today', cta_p:'Millions of products. African prices. Delivered to your door.',
       cta_btn:'Browse Products →',
-      foot_desc:'Global shopping for Africa. Pay local, shop global, delivered fast by XenderDelivery. We Simplify Life.',
-      foot_shop:'Shop', foot_company:'Company', foot_legal:'Legal', foot_delivery:'XenderDelivery', foot_big:'XenderBigShop',
-      foot_privacy:'Privacy Policy', foot_terms:'Terms of Service', foot_buyer:'Buyer Protection', foot_cookies:'Cookies',
+      foot_desc:'Global shopping for Africa. Pay local, shop global, delivered fast. We Simplify Life.',
+      foot_shop:'Shop', foot_ecosystem:'Ecosystem', foot_legal:'Legal',
+      foot_privacy:'Privacy Policy', foot_terms:'Terms of Service', foot_buyer:'Buyer Protection',
       foot_copy:'© 2026 XenderShop · An InnovaAFRIC product'
     },
     fr:{
       nav_how:'Comment ça marche', nav_cat:'Catégories', nav_feat:'Fonctionnalités', nav_pay:'Paiement', nav_cta:'Commencer',
       hero_badge:'Produits Mondiaux · Prix Locaux',
-      hero_h1:'Achetez Mondial,<br /><em>Payez Local</em>,<br /><strong>Livré Vite</strong>',
-      hero_sub:'XenderShop connecte les acheteurs africains à des millions de produits internationaux. Payez avec Mobile Money, virement ou carte. Livré par XenderDelivery.',
+      hero_h1:'Achetez Mondial,<br/><span class="accent-teal">Payez Local</span>,<br/><span class="accent-orange">Livré Vite</span>',
+      hero_sub:"XenderShop connecte les acheteurs africains à des millions de produits internationaux. Payez avec Mobile Money, virement ou carte. Livré à votre porte.",
       hero_btn1:'Voir les Produits →', hero_btn2:'Comment ça marche',
-      stat1:'Produits disponibles', stat2:'Pays africains', stat3:'Économies vs retail', stat4:'Livraison express',
-      sec_how:'Comment ça marche', sec_how_h:'Achetez en 4 étapes simples',
-      sec_how_sub:'De la découverte à votre porte — XenderShop rend le shopping international aussi simple qu\'acheter localement.',
-      h1t:'Parcourir & Découvrir', h1d:'Recherchez des millions de produits chez des fournisseurs mondiaux. Filtrez par catégorie, prix et délai.',
-      h2t:'Ajouter au Panier', h2d:'Sélectionnez vos articles, choisissez la taille ou la variante. Prix affichés dans votre devise locale.',
-      h3t:'Payez à votre Façon', h3d:'Payez avec Mobile Money, wallet XenderMoney, virement bancaire ou carte. Toutes les méthodes acceptées.',
-      h4t:'Livraison Rapide', h4d:'Votre commande est récupérée par un livreur XenderDelivery. Suivez-la en direct depuis votre téléphone.',
-      sec_cat:'Catégories', sec_cat_h:'Tout ce dont Vous Avez Besoin',
-      sec_cat_sub:'De l\'électronique à la mode, électroménager à l\'énergie solaire — nous sourceons tout mondialement.',
+      s1l:'Produits disponibles', s2l:'Pays africains', s3l:'vs prix retail', s4l:'Livraison express',
+      sec_how:'Comment ça marche', sec_how_h:'Achetez en 4 étapes simples', sec_how_sub:"De la découverte à votre porte — aussi simple qu'acheter localement.",
+      h1t:'Parcourir', h1d:'Recherchez des millions de produits filtrés par catégorie, prix et délai de livraison.',
+      h2t:'Ajouter au Panier', h2d:'Choisissez vos articles. Les prix sont automatiquement affichés dans votre devise locale.',
+      h3t:'Payez à votre Façon', h3d:'Mobile Money, wallet XenderMoney, virement bancaire ou carte — tout est accepté.',
+      h4t:'Livré', h4d:'Un livreur XenderDelivery récupère votre commande. Suivez-la en direct sur votre téléphone.',
+      sec_cat:'Catégories', sec_cat_h:'Tout ce dont Vous Avez Besoin', sec_cat_sub:"De l'électronique à l'énergie solaire — sourcé mondialement, au prix local.",
       c1:'Électronique', c2:'Mode', c3:'Maison & Déco', c4:'Énergie Solaire', c5:'Beauté', c6:'Enfants & Bébé', c7:'Sports', c8:'Outils & Auto',
-      sec_feat:'Pourquoi XenderShop', sec_feat_h:'Conçu pour les Acheteurs Africains',
-      sec_feat_sub:'Nous connaissons les défis du shopping en ligne en Afrique. XenderShop les résout tous.',
-      f1t:'Jusqu\'à 40% Moins Cher', f1d:'Directement des fournisseurs mondiaux via l\'API AliExpress. Sans intermédiaires. Prix dans votre devise locale.',
-      f2t:'Mobile Money en Premier', f2d:'Payez avec MTN, Orange, Wave, Moov ou Airtel Money. Pas de carte ni de compte bancaire nécessaire.',
+      sec_feat:'Pourquoi XenderShop', sec_feat_h:'Conçu pour les Acheteurs Africains', sec_feat_sub:"Nous résolvons les vrais défis du shopping en ligne en Afrique.",
+      f1t:"Jusqu'à 40% Moins Cher", f1d:"Directement des fournisseurs mondiaux via l'API AliExpress. Sans intermédiaires. Prix dans votre devise.",
+      f2t:'Mobile Money en Premier', f2d:'Payez avec MTN, Orange, Wave, Moov ou Airtel Money. Pas de carte nécessaire.',
       f3t:'Livraison le Jour Même', f3d:'Les livreurs XenderDelivery récupèrent et livrent en quelques heures. Suivi GPS en direct.',
-      f4t:'Protection Acheteur', f4d:'Garantie de remboursement complet si votre article n\'arrive pas ou n\'est pas conforme. Achetez en confiance.',
-      f5t:'Devises Locales', f5d:'Tous les prix affichés en XAF, GHS, RWF, EUR et plus. Taux de change en temps réel appliqués automatiquement.',
-      f6t:'Suivi de Commande Instantané', f6d:'Sachez exactement où est votre commande à chaque étape. SMS + notifications push dans votre langue.',
-      sec_pay:'Méthodes de Paiement', sec_pay_h:'Payez Comme Vous Voulez',
-      sec_pay_sub:'Toutes les principales méthodes de paiement en Afrique et en Europe. Pas de compte bancaire nécessaire — Mobile Money suffit pour commencer.',
+      f4t:'Protection Acheteur', f4d:"Garantie de remboursement complet si votre article n'arrive pas ou n'est pas conforme.",
+      f5t:'Devises Locales', f5d:'Tous les prix en XAF, GHS, RWF, EUR et plus. Taux de change en temps réel.',
+      f6t:'Suivi en Direct', f6d:'Sachez où est votre commande à chaque étape. SMS et notifications push dans votre langue.',
+      sec_pay:'Paiement', sec_pay_h:'Payez Comme Vous Voulez',
+      sec_pay_sub:"Toutes les méthodes de paiement en Afrique et en Europe. Pas de compte bancaire nécessaire — Mobile Money suffit.",
       instant:'Instantané', free_fee:'0% frais',
-      cta_h:'Commencez à Acheter Mondialement Aujourd\'hui', cta_p:'Des millions de produits, des prix africains, livrés à votre porte.',
+      cta_h:'Commencez à Acheter <span>Mondialement</span> Aujourd\'hui', cta_p:'Des millions de produits. Des prix africains. Livrés à votre porte.',
       cta_btn:'Voir les Produits →',
-      foot_desc:'Shopping mondial pour l\'Afrique. Payez local, achetez mondial, livré rapidement par XenderDelivery. We Simplify Life.',
-      foot_shop:'Boutique', foot_company:'Entreprise', foot_legal:'Légal', foot_delivery:'XenderDelivery', foot_big:'XenderBigShop',
-      foot_privacy:'Politique de Confidentialité', foot_terms:'Conditions d\'Utilisation', foot_buyer:'Protection Acheteur', foot_cookies:'Cookies',
-      foot_copy:'© 2026 XenderShop · Un produit InnovaAFRIC'
+      foot_desc:"Shopping mondial pour l'Afrique. Payez local, achetez mondial, livré vite. We Simplify Life.",
+      foot_shop:'Boutique', foot_ecosystem:'Écosystème', foot_legal:'Légal',
+      foot_privacy:'Confidentialité', foot_terms:'Conditions', foot_buyer:'Protection Acheteur',
+      foot_copy:"© 2026 XenderShop · Un produit InnovaAFRIC"
     }
   };
 
@@ -584,12 +448,12 @@
     document.documentElement.lang = l;
     ['es','en','fr'].forEach(id => {
       const b = document.getElementById('lb-'+id);
-      if (b) b.className = 'lb-btn' + (id === l ? ' active' : '');
+      if(b) b.className = 'lb-btn'+(id===l?' active':'');
     });
-    const T = TR[l] || TR.en;
+    const T = TR[l]||TR.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const k = el.getAttribute('data-i18n');
-      if (T[k] !== undefined) el.innerHTML = T[k];
+      if(T[k]!==undefined) el.innerHTML = T[k];
     });
   }
   setLang(LANG);

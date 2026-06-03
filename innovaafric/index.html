@@ -5,442 +5,198 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InnovaAFRIC — We Simplify Life</title>
   <meta name="description" content="InnovaAFRIC is a tricontinental tech ecosystem simplifying finance, commerce, and logistics across Africa, Europe, and Latin America." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --navy: #0F1A2E;
-      --navy-mid: #1E3050;
-      --navy-light: #2A4570;
+      --bg: #F4F8FF;
+      --bg2: #EAF2FF;
+      --blue: #2B8DC7;
+      --blue-light: #42A8E1;
+      --blue-dark: #1A6FA8;
+      --navy: #0D2B4E;
       --orange: #F5A623;
       --orange-dark: #E0921A;
-      /* Product brand colors (from real logos) */
-      --money-color: #F5A623;
-      --shop-color: #00C9A7;
-      --bigshop-color: #F5A623;
-      --bigshop-bg: #FFF8EE;
-      --delivery-color: #F5A623;
-      --innova-blue: #42A8E1;
+      --grey: #6B7A8D;
+      --grey-light: #9AAAB8;
+      --border: rgba(0,0,0,0.07);
       --white: #FFFFFF;
-      --grey: #8A9AB8;
-      --grey-light: #C8D0DC;
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--navy); overflow-x: hidden; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--navy);
-      color: var(--white);
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
+    /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5%;
-      height: 72px;
-      background: rgba(15, 26, 46, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(245, 166, 35, 0.15);
+      padding: 0 6%; height: 68px;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--blue-light), var(--blue-dark)); display: flex; align-items: center; justify-content: center; }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .logo-text { font-size: 17px; font-weight: 800; color: var(--navy); }
+    .logo-text span { color: var(--blue-light); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--grey); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--navy); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .lang-switcher { display: flex; gap: 3px; }
+    .lb-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
+    .lb-btn.active { background: var(--blue-light); border-color: var(--blue-light); color: white; }
+    .lb-btn:hover { border-color: var(--blue-light); color: var(--blue-light); }
+    .btn-nav { background: var(--navy); color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
+    .btn-nav:hover { background: var(--blue-dark); }
 
-    .nav-logo {
-      display: flex; align-items: center; gap: 12px;
-      text-decoration: none;
-    }
-
-    .nav-logo-icon {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(135deg, #42A8E1, #2B8DC7);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 900; color: white;
-    }
-
-    .nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
-    .nav-logo-text span:first-child { font-size: 16px; font-weight: 800; color: white; }
-    .nav-logo-text span:last-child { font-size: 9px; font-weight: 400; color: var(--grey); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
-
-    .nav-links {
-      display: flex; gap: 32px; list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--grey-light); text-decoration: none; font-size: 14px; font-weight: 500;
-      transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--orange); }
-
-    .nav-cta {
-      background: var(--orange); color: var(--navy);
-      border: none; border-radius: 8px;
-      padding: 10px 22px; font-size: 14px; font-weight: 700;
-      cursor: pointer; text-decoration: none;
-      transition: background .2s, transform .15s;
-    }
-    .nav-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
-    .lang-switcher { display: flex; gap: 4px; align-items: center; }
-    .lb-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
-    .lb-btn.active { background: rgba(245,166,35,0.15); border-color: var(--orange); color: var(--orange); }
-    .lb-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
-
-    /* ── HERO ── */
+    /* HERO */
     .hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 120px 5% 80px;
-      position: relative; overflow: hidden;
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 100px 6% 80px;
+      background: linear-gradient(160deg, var(--white) 0%, var(--bg) 60%, var(--bg2) 100%);
     }
-
-    .hero::before {
-      content: '';
-      position: absolute; top: -200px; right: -200px;
-      width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute; bottom: -100px; left: -100px;
-      width: 500px; height: 500px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content { max-width: 700px; position: relative; z-index: 1; }
-
-    .hero-badge {
+    .hero-inner { max-width: 800px; }
+    .hero-tag {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.3);
-      border-radius: 100px; padding: 6px 16px;
-      font-size: 12px; font-weight: 600; color: var(--orange);
-      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px;
+      background: rgba(43,141,199,0.1); border: 1px solid rgba(43,141,199,0.25);
+      border-radius: 100px; padding: 6px 14px; margin-bottom: 32px;
+      font-size: 12px; font-weight: 600; color: var(--blue); letter-spacing: .5px;
     }
+    .hero-tag::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--blue-light); animation:blink 2s infinite; }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-    .hero-badge::before {
-      content: '';
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--orange); animation: pulse 1.8s infinite;
-    }
+    h1 { font-size: clamp(48px, 7vw, 88px); font-weight: 900; line-height: 1.02; letter-spacing: -3px; margin-bottom: 28px; color: var(--navy); }
+    h1 .accent-blue { color: var(--blue-light); }
+    h1 .accent-orange { color: var(--orange); }
+    .hero-sub { font-size: 19px; color: var(--grey); line-height: 1.7; max-width: 580px; margin-bottom: 48px; font-weight: 400; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 64px; }
+    .btn-primary { background: var(--navy); color: white; border-radius: 12px; padding: 16px 32px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(13,43,78,0.2); }
+    .btn-outline { background: transparent; color: var(--navy); border: 2px solid rgba(13,43,78,0.2); border-radius: 12px; padding: 14px 32px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-outline:hover { border-color: var(--navy); background: rgba(13,43,78,0.04); }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .5; transform: scale(1.3); }
-    }
-
-    h1 {
-      font-size: clamp(42px, 6vw, 78px);
-      font-weight: 900; line-height: 1.05;
-      letter-spacing: -2px; margin-bottom: 24px;
-    }
-
-    h1 .accent { color: var(--orange); }
-
-    .hero-sub {
-      font-size: 18px; line-height: 1.7; color: var(--grey);
-      max-width: 560px; margin-bottom: 48px;
-    }
-
-    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
-
-    .btn-primary {
-      background: var(--orange); color: var(--navy);
-      border-radius: 12px; padding: 16px 32px;
-      font-size: 16px; font-weight: 700; text-decoration: none;
-      transition: all .2s; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(245,166,35,0.3); }
-
-    .btn-outline {
-      background: transparent; color: var(--white);
-      border: 2px solid rgba(255,255,255,0.2);
-      border-radius: 12px; padding: 14px 32px;
-      font-size: 16px; font-weight: 600; text-decoration: none;
-      transition: all .2s; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
-
-    .hero-stats {
-      display: flex; gap: 48px; margin-top: 64px; padding-top: 48px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      flex-wrap: wrap;
-    }
-
+    .hero-stats { display: flex; gap: 48px; padding-top: 48px; border-top: 1px solid var(--border); flex-wrap: wrap; }
     .stat-item { display: flex; flex-direction: column; gap: 4px; }
-    .stat-number { font-size: 32px; font-weight: 900; color: var(--orange); }
-    .stat-label { font-size: 13px; color: var(--grey); font-weight: 500; }
+    .stat-num { font-size: 32px; font-weight: 900; color: var(--navy); }
+    .stat-lbl { font-size: 13px; color: var(--grey); font-weight: 500; }
 
-    /* ── SECTION SHARED ── */
-    section { padding: 100px 5%; }
-
-    .section-label {
-      display: inline-block;
-      font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--orange);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-size: clamp(32px, 4vw, 52px);
-      font-weight: 900; line-height: 1.1; letter-spacing: -1.5px;
-      margin-bottom: 20px;
-    }
-
-    .section-sub {
-      font-size: 17px; color: var(--grey); line-height: 1.7;
-      max-width: 560px;
-    }
-
-    /* ── PRODUCTS ── */
-    #products { background: rgba(255,255,255,0.02); }
-
+    /* PRODUCTS */
+    #products { padding: 100px 6%; background: var(--white); }
+    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--blue-light); display: block; margin-bottom: 14px; }
+    .sec-title { font-size: clamp(32px, 4vw, 52px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.08; margin-bottom: 18px; color: var(--navy); }
+    .sec-sub { font-size: 16px; color: var(--grey); line-height: 1.75; max-width: 500px; }
     .products-header { text-align: center; margin-bottom: 72px; }
-    .products-header .section-sub { margin: 0 auto; }
+    .products-header .sec-sub { margin: 0 auto; }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .prod-card {
+      border: 1.5px solid var(--border); border-radius: 20px; padding: 36px 32px;
+      text-decoration: none; color: inherit; display: block; transition: all .3s;
+      background: var(--white); position: relative; overflow: hidden;
     }
+    .prod-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); border-color: var(--card-color); }
+    .prod-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--card-color); }
+    .prod-icon { width: 56px; height: 56px; border-radius: 14px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .prod-name { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+    .prod-name span { color: var(--card-color); }
+    .prod-tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--grey-light); display: block; margin-bottom: 14px; }
+    .prod-desc { font-size: 14px; color: var(--grey); line-height: 1.7; margin-bottom: 20px; }
+    .prod-link { font-size: 13px; font-weight: 700; color: var(--card-color); display: flex; align-items: center; gap: 4px; }
 
-    .product-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 36px 32px;
-      transition: all .3s;
-      position: relative; overflow: hidden;
-      text-decoration: none; color: inherit;
-      display: block;
+    /* HOW */
+    #how { padding: 100px 6%; background: var(--bg); }
+    .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 64px; }
+    .how-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 32px 24px; text-align: center; }
+    .how-num { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); color: white; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .how-ttl { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--navy); }
+    .how-dsc { font-size: 13px; color: var(--grey); line-height: 1.65; }
+
+    /* CONTINENTS */
+    #continents { padding: 100px 6%; background: var(--white); }
+    .cont-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 64px; }
+    .cont-card { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 36px 28px; text-align: center; }
+    .cont-flag { font-size: 44px; margin-bottom: 14px; display: block; }
+    .cont-name { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
+    .cont-desc { font-size: 14px; color: var(--grey); margin-bottom: 18px; line-height: 1.6; }
+    .cont-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .chip { font-size: 11px; font-weight: 600; background: white; border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; color: var(--grey); }
+
+    /* CTA */
+    .cta { padding: 100px 6%; background: var(--navy); text-align: center; }
+    .cta h2 { font-size: clamp(32px,5vw,60px); font-weight: 900; letter-spacing:-2px; color: white; margin-bottom: 16px; }
+    .cta p { font-size: 17px; color: rgba(255,255,255,0.6); margin-bottom: 40px; }
+    .btn-orange { background: var(--orange); color: var(--navy); border: none; border-radius: 12px; padding: 16px 36px; font-size: 16px; font-weight: 700; text-decoration: none; transition: all .2s; display: inline-block; }
+    .btn-orange:hover { background: var(--orange-dark); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: #0A1E36; padding: 64px 6% 32px; }
+    .foot-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .foot-brand { font-size: 20px; font-weight: 900; color: white; margin-bottom: 12px; }
+    .foot-brand span { color: var(--blue-light); }
+    .foot-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 240px; }
+    .foot-col-ttl { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+    .foot-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .foot-links a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; transition: color .2s; }
+    .foot-links a:hover { color: white; }
+    .foot-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .foot-copy { font-size: 12px; color: rgba(255,255,255,0.35); }
+    .foot-slogan { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 2px; }
+
+    @media (max-width: 900px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .how-grid { grid-template-columns: 1fr 1fr; }
+      .cont-grid { grid-template-columns: 1fr; }
+      .foot-top { grid-template-columns: 1fr 1fr; }
+      .foot-top > :first-child { grid-column: 1/-1; }
     }
-
-    .product-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--card-accent);
-      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-    }
-
-    .product-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: var(--card-accent);
-      border-radius: 20px 20px 0 0;
-    }
-
-    .product-icon {
-      width: 64px; height: 64px; border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; margin-bottom: 24px;
-    }
-
-    .product-name { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-    .product-name span { color: var(--card-accent); }
-
-    .product-tag {
-      display: inline-block;
-      font-size: 11px; font-weight: 600; letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(255,255,255,0.06);
-      border-radius: 6px; padding: 3px 10px; margin-bottom: 16px;
-      color: var(--grey);
-    }
-
-    .product-desc { font-size: 14px; line-height: 1.7; color: var(--grey); margin-bottom: 24px; }
-
-    .product-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .product-features li {
-      font-size: 13px; color: var(--grey-light);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .product-features li::before {
-      content: '';
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--card-accent); flex-shrink: 0;
-    }
-
-    /* ── HOW IT WORKS ── */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 32px; margin-top: 64px;
-    }
-
-    .step-card {
-      text-align: center; padding: 40px 24px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-    }
-
-    .step-number {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 900; color: var(--navy);
-      margin: 0 auto 20px;
-    }
-
-    .step-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .step-desc { font-size: 14px; color: var(--grey); line-height: 1.6; }
-
-    /* ── CONTINENTS ── */
-    #continents {
-      background: linear-gradient(135deg, var(--navy) 0%, rgba(59,130,246,0.08) 50%, var(--navy) 100%);
-    }
-
-    .continents-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 24px; margin-top: 64px;
-    }
-
-    .continent-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px; padding: 40px 32px;
-      text-align: center;
-    }
-
-    .continent-flag { font-size: 48px; margin-bottom: 16px; }
-    .continent-name { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-    .continent-desc { font-size: 14px; color: var(--grey); margin-bottom: 20px; line-height: 1.6; }
-
-    .continent-countries {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-    }
-
-    .country-chip {
-      font-size: 12px; font-weight: 500;
-      background: rgba(245,166,35,0.12); color: var(--orange);
-      border-radius: 6px; padding: 4px 10px;
-    }
-
-    /* ── CTA BANNER ── */
-    .cta-section {
-      background: linear-gradient(135deg, rgba(245,166,35,0.15) 0%, rgba(59,130,246,0.1) 100%);
-      border-top: 1px solid rgba(245,166,35,0.2);
-      border-bottom: 1px solid rgba(245,166,35,0.2);
-      text-align: center;
-    }
-
-    .cta-section h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 900; margin-bottom: 16px; letter-spacing: -1px; }
-    .cta-section p { font-size: 17px; color: var(--grey); margin-bottom: 40px; }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #080E1A;
-      padding: 80px 5% 40px;
-    }
-
-    .footer-grid {
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px; margin-bottom: 64px;
-    }
-
-    .footer-brand-text {
-      font-size: 14px; color: var(--grey); line-height: 1.7; margin-top: 16px; max-width: 280px;
-    }
-
-    .footer-col-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--white); margin-bottom: 20px; }
-
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-    .footer-links a { font-size: 14px; color: var(--grey); text-decoration: none; transition: color .2s; }
-    .footer-links a:hover { color: var(--orange); }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 32px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-
-    .footer-bottom p { font-size: 13px; color: var(--grey); }
-    .footer-bottom .slogan { font-size: 13px; font-weight: 700; color: var(--orange); letter-spacing: 1px; }
-
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      nav { padding: 0 4%; }
+    @media (max-width: 600px) {
       .nav-links { display: none; }
-      .hero { padding: 100px 4% 60px; }
+      .how-grid { grid-template-columns: 1fr; }
       .hero-stats { gap: 24px; }
-      .continents-grid { grid-template-columns: 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid > :first-child { grid-column: 1 / -1; }
     }
-
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── SCROLL REVEAL ── */
-    .reveal {
-      opacity: 0; transform: translateY(30px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
-    <div class="nav-logo-icon">IA</div>
-    <div class="nav-logo-text">
-      <span>Innova<span style="color:var(--orange)">AFRIC</span></span>
-      <span>WE SIMPLIFY LIFE</span>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="white" stroke-width="1.5"/><ellipse cx="10" cy="10" rx="4" ry="8" stroke="white" stroke-width="1.5"/><line x1="2" y1="10" x2="18" y2="10" stroke="white" stroke-width="1.5"/></svg>
     </div>
+    <div class="logo-text">Innova<span>AFRIC</span></div>
   </a>
   <ul class="nav-links">
-    <li><a href="#products">Products</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#continents">Our Presence</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#products" data-i18n="nav_p">Products</a></li>
+    <li><a href="#how" data-i18n="nav_h">How it works</a></li>
+    <li><a href="#continents" data-i18n="nav_c">Our Presence</a></li>
   </ul>
-  <div class="lang-switcher">
-    <button onclick="setLang('es')" id="lb-es" class="lb-btn active">🇪🇸 ES</button>
-    <button onclick="setLang('en')" id="lb-en" class="lb-btn">🇬🇧 EN</button>
-    <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷 FR</button>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
+      <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
+      <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
+    </div>
+    <a href="#products" class="btn-nav" data-i18n="nav_cta">Get Started</a>
   </div>
-  <a href="#products" class="nav-cta" data-i18n="cta_start">Get Started</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge" data-i18n="hero_badge">Tricontinental Tech Ecosystem</div>
-    <h1 data-i18n="hero_h1">
-      Simplifying Life<br />
-      Across <span class="accent">3 Continents</span>
-    </h1>
-    <p class="hero-sub" data-i18n="hero_sub">
-      InnovaAFRIC builds the digital infrastructure connecting Africa, Europe, and Latin America — payments, commerce, and logistics in one unified ecosystem.
-    </p>
-    <div class="hero-buttons">
-      <a href="#products" class="btn-primary" data-i18n="hero_btn1">Explore Products ↓</a>
+  <div class="hero-inner">
+    <div class="hero-tag" data-i18n="hero_badge">Tricontinental Tech Ecosystem</div>
+    <h1 data-i18n="hero_h1">Simplifying Life<br/>Across <span class="accent-blue">3</span> <span class="accent-orange">Continents</span></h1>
+    <p class="hero-sub" data-i18n="hero_sub">InnovaAFRIC builds the digital infrastructure connecting Africa, Europe, and Latin America — payments, commerce, and logistics in one unified ecosystem.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary" data-i18n="hero_btn1">Explore Products →</a>
       <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
     </div>
     <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-number">8+</span>
-        <span class="stat-label">African Countries</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">4</span>
-        <span class="stat-label">Core Products</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">3</span>
-        <span class="stat-label">Continents</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">1</span>
-        <span class="stat-label">Unified Platform</span>
-      </div>
+      <div class="stat-item"><span class="stat-num">8+</span><span class="stat-lbl" data-i18n="s1l">African countries</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-lbl" data-i18n="s2l">Core products</span></div>
+      <div class="stat-item"><span class="stat-num">3</span><span class="stat-lbl" data-i18n="s3l">Continents</span></div>
+      <div class="stat-item"><span class="stat-num">1</span><span class="stat-lbl" data-i18n="s4l">Unified platform</span></div>
     </div>
   </div>
 </section>
@@ -448,312 +204,258 @@
 <!-- PRODUCTS -->
 <section id="products">
   <div class="products-header reveal">
-    <span class="section-label" data-i18n="sec_eco">Our Ecosystem</span>
-    <h2 class="section-title" data-i18n="sec_prod_h">Four Products.<br />One Mission.</h2>
-    <p class="section-sub" data-i18n="sec_prod_sub">Every service in the InnovaAFRIC family is built to remove friction from your daily life.</p>
+    <span class="sec-label" data-i18n="sec_eco">Our Ecosystem</span>
+    <h2 class="sec-title" data-i18n="sec_prod_h">Four Products. One Mission.</h2>
+    <p class="sec-sub" data-i18n="sec_prod_sub">Every service in the InnovaAFRIC family is built to remove friction from your daily life.</p>
   </div>
-
   <div class="products-grid">
-    <!-- XenderMoney -->
-    <a href="https://xendermoney.com" class="product-card reveal" style="--card-accent: #F5A623;">
-      <div class="product-icon">💰</div>
-      <div class="product-name">Xender<span>Money</span></div>
-      <div class="product-tag">Digital Wallet · Fintech</div>
-      <p class="product-desc">
-        Send and receive money instantly across Africa, Europe, and Latin America. Mobile Money, bank transfers, and card payments in one wallet.
-      </p>
-      <ul class="product-features">
-        <li>MTN, Orange, Wave, Airtel Mobile Money</li>
-        <li>International transfers (SEPA, SWIFT)</li>
-        <li>Multi-currency wallet</li>
-        <li>KYC Level 1–3 compliance</li>
-        <li>Real-time transaction tracking</li>
-      </ul>
+    <a href="../xendermoney/" class="prod-card reveal" style="--card-color:#F5A623;">
+      <div class="prod-icon" style="background:rgba(245,166,35,0.12);">💰</div>
+      <div class="prod-name">Xender<span>Money</span></div>
+      <span class="prod-tag">Wallet · Fintech</span>
+      <p class="prod-desc" data-i18n="pm_desc">Send and receive money instantly across Africa, Europe, and Latin America. Mobile Money, bank transfers, and card payments in one wallet.</p>
+      <div class="prod-link" data-i18n="learn_more">Learn more →</div>
     </a>
-
-    <!-- XenderShop -->
-    <a href="https://xendershop.com" class="product-card reveal" style="--card-accent: #00C9A7;">
-      <div class="product-icon">🛍️</div>
-      <div class="product-name">Xender<span style="color:#00C9A7">Shop</span></div>
-      <div class="product-tag">E-Commerce · Retail</div>
-      <p class="product-desc">
-        Shop global products at local prices. XenderShop connects African buyers to quality goods from AliExpress and international suppliers.
-      </p>
-      <ul class="product-features">
-        <li>AliExpress API integration</li>
-        <li>Local payment methods accepted</li>
-        <li>Delivery via XenderDelivery</li>
-        <li>Product catalog in local currencies</li>
-        <li>Buyer protection guarantee</li>
-      </ul>
+    <a href="../xendershop/" class="prod-card reveal" style="--card-color:#00C9A7;">
+      <div class="prod-icon" style="background:rgba(0,201,167,0.12);">🛍️</div>
+      <div class="prod-name">Xender<span style="color:#00C9A7">Shop</span></div>
+      <span class="prod-tag">E-Commerce · Retail</span>
+      <p class="prod-desc" data-i18n="ps_desc">Shop global products at local prices. Connected to AliExpress. Pay with Mobile Money and delivered by XenderDelivery.</p>
+      <div class="prod-link" style="color:#00C9A7" data-i18n="learn_more">Learn more →</div>
     </a>
-
-    <!-- XenderBigShop -->
-    <a href="https://xenderbigshop.com" class="product-card reveal" style="--card-accent: #E0921A;">
-      <div class="product-icon">🏪</div>
-      <div class="product-name">Xender<span style="color:#E0921A">BigShop</span></div>
-      <div class="product-tag">Marketplace · Multivendor</div>
-      <p class="product-desc">
-        Launch your own online store in minutes. XenderBigShop gives entrepreneurs a full vendor panel with subscription-based access.
-      </p>
-      <ul class="product-features">
-        <li>Vendor dashboard & analytics</li>
-        <li>Monthly / yearly subscription plans</li>
-        <li>Integrated checkout & payments</li>
-        <li>Stock management system</li>
-        <li>Custom vendor storefronts</li>
-      </ul>
+    <a href="#" class="prod-card reveal" style="--card-color:#E0921A;">
+      <div class="prod-icon" style="background:rgba(224,146,26,0.12);">🏪</div>
+      <div class="prod-name">Xender<span style="color:#E0921A">BigShop</span></div>
+      <span class="prod-tag">Marketplace · Multivendor</span>
+      <p class="prod-desc" data-i18n="pb_desc">Launch your own online store in minutes. Full vendor panel, subscription plans, integrated checkout and analytics.</p>
+      <div class="prod-link" style="color:#E0921A" data-i18n="learn_more">Learn more →</div>
     </a>
-
-    <!-- XenderDelivery -->
-    <a href="https://xenderdelivery.com" class="product-card reveal" style="--card-accent: #F59E0B;">
-      <div class="product-icon">🛵</div>
-      <div class="product-name">Xender<span style="color:#F59E0B">Delivery</span></div>
-      <div class="product-tag">Logistics · Last-Mile</div>
-      <p class="product-desc">
-        Fast, reliable last-mile delivery powered by a network of registered riders. Register as a driver, manage deliveries, earn more.
-      </p>
-      <ul class="product-features">
-        <li>Rider registration & onboarding</li>
-        <li>Real-time delivery tracking</li>
-        <li>Subscription plans for drivers</li>
-        <li>Route optimization</li>
-        <li>Integrated with XenderShop orders</li>
-      </ul>
+    <a href="#" class="prod-card reveal" style="--card-color:#F59E0B;">
+      <div class="prod-icon" style="background:rgba(245,158,11,0.12);">🛵</div>
+      <div class="prod-name">Xender<span style="color:#F59E0B">Delivery</span></div>
+      <span class="prod-tag">Logistics · Last-Mile</span>
+      <p class="prod-desc" data-i18n="pd_desc">Fast, reliable last-mile delivery. Register as a driver, manage deliveries, track orders live, and earn more.</p>
+      <div class="prod-link" style="color:#F59E0B" data-i18n="learn_more">Learn more →</div>
     </a>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- HOW -->
 <section id="how">
   <div class="reveal">
-    <span class="section-label" data-i18n="sec_proc">Process</span>
-    <h2 class="section-title" data-i18n="sec_how_h">How InnovaAFRIC Works</h2>
-    <p class="section-sub" data-i18n="sec_how_sub">One account unlocks the entire ecosystem — payments, shopping, delivery, and business tools.</p>
+    <span class="sec-label" data-i18n="sec_proc">Process</span>
+    <h2 class="sec-title" data-i18n="sec_how_h">How InnovaAFRIC Works</h2>
+    <p class="sec-sub" data-i18n="sec_how_sub">One account unlocks the entire ecosystem.</p>
   </div>
-
-  <div class="steps-grid">
-    <div class="step-card reveal">
-      <div class="step-number">1</div>
-      <h3 class="step-title" data-i18n="s1t">Create Your Account</h3>
-      <p class="step-desc" data-i18n="s1d">Sign up in under 2 minutes. One profile gives you access to all InnovaAFRIC products with a single login.</p>
-    </div>
-    <div class="step-card reveal">
-      <div class="step-number">2</div>
-      <h3 class="step-title" data-i18n="s2t">Verify Your Identity</h3>
-      <p class="step-desc" data-i18n="s2d">Complete KYC to unlock higher limits. Supported: national ID, passport, and utility bill verification.</p>
-    </div>
-    <div class="step-card reveal">
-      <div class="step-number">3</div>
-      <h3 class="step-title" data-i18n="s3t">Fund Your Wallet</h3>
-      <p class="step-desc" data-i18n="s3d">Add money via Mobile Money (MTN, Orange, Wave), bank transfer, or Stripe card payment from Europe.</p>
-    </div>
-    <div class="step-card reveal">
-      <div class="step-number">4</div>
-      <h3 class="step-title" data-i18n="s4t">Shop, Send &amp; Deliver</h3>
-      <p class="step-desc" data-i18n="s4d">Send money to family, shop international products, or run your business — all in one connected platform.</p>
-    </div>
+  <div class="how-grid">
+    <div class="how-card reveal"><div class="how-num">1</div><h3 class="how-ttl" data-i18n="s1t">Create Account</h3><p class="how-dsc" data-i18n="s1d">Sign up in 2 minutes. One profile for all InnovaAFRIC products.</p></div>
+    <div class="how-card reveal"><div class="how-num">2</div><h3 class="how-ttl" data-i18n="s2t">Verify Identity</h3><p class="how-dsc" data-i18n="s2d">Complete KYC with your ID or passport to unlock higher limits.</p></div>
+    <div class="how-card reveal"><div class="how-num">3</div><h3 class="how-ttl" data-i18n="s3t">Fund Wallet</h3><p class="how-dsc" data-i18n="s3d">Add money via Mobile Money, bank transfer, or Stripe card.</p></div>
+    <div class="how-card reveal"><div class="how-num">4</div><h3 class="how-ttl" data-i18n="s4t">Shop, Send & Deliver</h3><p class="how-dsc" data-i18n="s4d">Use any service — all connected, all in one ecosystem.</p></div>
   </div>
 </section>
 
 <!-- CONTINENTS -->
 <section id="continents">
-  <div class="reveal" style="text-align:center; margin-bottom:0;">
-    <span class="section-label" data-i18n="sec_reach">Global Reach</span>
-    <h2 class="section-title" data-i18n="sec_cont_h">Where We Operate</h2>
-    <p class="section-sub" style="margin:0 auto;" data-i18n="sec_cont_sub">Built for the diaspora and local communities across three continents.</p>
+  <div class="reveal" style="text-align:center;margin-bottom:0;">
+    <span class="sec-label" data-i18n="sec_reach">Global Reach</span>
+    <h2 class="sec-title" data-i18n="sec_cont_h">Where We Operate</h2>
+    <p class="sec-sub" style="margin:0 auto;" data-i18n="sec_cont_sub">Built for the diaspora and local communities across three continents.</p>
   </div>
-
-  <div class="continents-grid">
-    <div class="continent-card reveal">
-      <div class="continent-flag">🌍</div>
-      <h3 class="continent-name">Africa</h3>
-      <p class="continent-desc">Our home continent. Deep Mobile Money integration and logistics coverage across West and Central Africa.</p>
-      <div class="continent-countries">
-        <span class="country-chip">Cameroon</span>
-        <span class="country-chip">Senegal</span>
-        <span class="country-chip">Côte d'Ivoire</span>
-        <span class="country-chip">Guinea</span>
-        <span class="country-chip">Mali</span>
-        <span class="country-chip">Burkina Faso</span>
-        <span class="country-chip">Rwanda</span>
-        <span class="country-chip">Ghana</span>
+  <div class="cont-grid">
+    <div class="cont-card reveal">
+      <span class="cont-flag">🌍</span>
+      <h3 class="cont-name" data-i18n="cont1">Africa</h3>
+      <p class="cont-desc" data-i18n="cont1d">Mobile Money integration and logistics across West and Central Africa.</p>
+      <div class="cont-chips">
+        <span class="chip">🇨🇲 Cameroon</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Côte d'Ivoire</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span>
       </div>
     </div>
-    <div class="continent-card reveal">
-      <div class="continent-flag">🌍</div>
-      <h3 class="continent-name">Europe</h3>
-      <p class="continent-desc">Serving the African diaspora in Europe with SEPA transfers, Stripe payments, and cross-border wallet top-ups.</p>
-      <div class="continent-countries">
-        <span class="country-chip">Spain</span>
-        <span class="country-chip">France</span>
-        <span class="country-chip">Portugal</span>
-        <span class="country-chip">Belgium</span>
-        <span class="country-chip">Italy</span>
-        <span class="country-chip">Germany</span>
+    <div class="cont-card reveal">
+      <span class="cont-flag">🌍</span>
+      <h3 class="cont-name" data-i18n="cont2">Europe</h3>
+      <p class="cont-desc" data-i18n="cont2d">Serving the African diaspora with SEPA transfers and Stripe card payments.</p>
+      <div class="cont-chips">
+        <span class="chip">🇪🇸 Spain</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgium</span><span class="chip">🇮🇹 Italy</span><span class="chip">🇩🇪 Germany</span>
       </div>
     </div>
-    <div class="continent-card reveal">
-      <div class="continent-flag">🌎</div>
-      <h3 class="continent-name">Latin America</h3>
-      <p class="continent-desc">Expanding into the Caribbean and Latin American markets, connecting communities with the African continent.</p>
-      <div class="continent-countries">
-        <span class="country-chip">Colombia</span>
-        <span class="country-chip">Brazil</span>
-        <span class="country-chip">Mexico</span>
-        <span class="country-chip">Dominican Rep.</span>
+    <div class="cont-card reveal">
+      <span class="cont-flag">🌎</span>
+      <h3 class="cont-name" data-i18n="cont3">Latin America</h3>
+      <p class="cont-desc" data-i18n="cont3d">Expanding into Caribbean and Latin American markets.</p>
+      <div class="cont-chips">
+        <span class="chip">🇨🇴 Colombia</span><span class="chip">🇧🇷 Brazil</span><span class="chip">🇲🇽 Mexico</span><span class="chip">🇩🇴 Dominican Rep.</span>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta-section" id="contact">
+<section class="cta">
   <div class="reveal">
     <h2 data-i18n="cta_h">Ready to Simplify Your Life?</h2>
     <p data-i18n="cta_p">Join thousands of users already using the InnovaAFRIC ecosystem.</p>
-    <div class="hero-buttons" style="justify-content:center;">
-      <a href="https://app.xendermoney.com" class="btn-primary">Open XenderMoney →</a>
-      <a href="mailto:hello@innovaafric.com" class="btn-outline">Contact Us</a>
-    </div>
+    <a href="../xendermoney/" class="btn-orange" data-i18n="cta_btn">Open XenderMoney →</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
+  <div class="foot-top">
     <div>
-      <div class="nav-logo-text">
-        <span style="font-size:22px;font-weight:900;color:white;">Innova<span style="color:var(--orange)">AFRIC</span></span>
-      </div>
-      <p class="footer-brand-text">
-        Building the digital infrastructure for Africa, Europe, and Latin America. We simplify finance, commerce, and logistics for millions of people.
-      </p>
+      <div class="foot-brand">Innova<span>AFRIC</span></div>
+      <p class="foot-desc" data-i18n="foot_desc">Building the digital infrastructure for Africa, Europe, and Latin America. We Simplify Life.</p>
     </div>
     <div>
-      <p class="footer-col-title">Products</p>
-      <ul class="footer-links">
-        <li><a href="https://xendermoney.com">XenderMoney</a></li>
-        <li><a href="https://xendershop.com">XenderShop</a></li>
-        <li><a href="https://xenderbigshop.com">XenderBigShop</a></li>
-        <li><a href="https://xenderdelivery.com">XenderDelivery</a></li>
+      <p class="foot-col-ttl" data-i18n="foot_products">Products</p>
+      <ul class="foot-links">
+        <li><a href="../xendermoney/">XenderMoney</a></li>
+        <li><a href="../xendershop/">XenderShop</a></li>
+        <li><a href="#">XenderBigShop</a></li>
+        <li><a href="#">XenderDelivery</a></li>
       </ul>
     </div>
     <div>
-      <p class="footer-col-title">Company</p>
-      <ul class="footer-links">
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Press</a></li>
-        <li><a href="#">Blog</a></li>
+      <p class="foot-col-ttl" data-i18n="foot_company">Company</p>
+      <ul class="foot-links">
+        <li><a href="#" data-i18n="foot_about">About Us</a></li>
+        <li><a href="#" data-i18n="foot_careers">Careers</a></li>
+        <li><a href="#" data-i18n="foot_blog">Blog</a></li>
       </ul>
     </div>
     <div>
-      <p class="footer-col-title">Legal</p>
-      <ul class="footer-links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Cookies</a></li>
-        <li><a href="#">Compliance</a></li>
+      <p class="foot-col-ttl" data-i18n="foot_legal">Legal</p>
+      <ul class="foot-links">
+        <li><a href="#" data-i18n="foot_privacy">Privacy Policy</a></li>
+        <li><a href="#" data-i18n="foot_terms">Terms of Service</a></li>
+        <li><a href="#" data-i18n="foot_cookies">Cookies</a></li>
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">
-    <p data-i18n="foot_copy">© 2026 InnovaAFRIC. All rights reserved.</p>
-    <span class="slogan">WE SIMPLIFY LIFE</span>
+  <div class="foot-bottom">
+    <span class="foot-copy" data-i18n="foot_copy">© 2026 InnovaAFRIC. All rights reserved.</span>
+    <span class="foot-slogan">WE SIMPLIFY LIFE</span>
   </div>
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
   const TR = {
     es:{
+      nav_p:'Productos', nav_h:'Cómo funciona', nav_c:'Presencia', nav_cta:'Comenzar',
       hero_badge:'Ecosistema Tecnológico Tricontinental',
-      hero_h1:'Simplificando la Vida<br/>en <span class="accent">3 Continentes</span>',
+      hero_h1:'Simplificando la Vida<br/>en <span class="accent-blue">3</span> <span class="accent-orange">Continentes</span>',
       hero_sub:'InnovaAFRIC construye la infraestructura digital que conecta África, Europa y América Latina — pagos, comercio y logística en un ecosistema unificado.',
-      hero_btn1:'Explorar Productos ↓', hero_btn2:'Cómo funciona',
-      stat1_l:'Países africanos', stat2_l:'Productos principales', stat3_l:'Continentes', stat4_l:'Plataforma unificada',
-      sec_eco:'Nuestro Ecosistema', sec_prod_h:'Cuatro Productos.<br/>Una Misión.',
+      hero_btn1:'Explorar Productos →', hero_btn2:'Cómo funciona',
+      s1l:'Países africanos', s2l:'Productos principales', s3l:'Continentes', s4l:'Plataforma unificada',
+      sec_eco:'Nuestro Ecosistema', sec_prod_h:'Cuatro Productos. Una Misión.',
       sec_prod_sub:'Cada servicio de la familia InnovaAFRIC está diseñado para eliminar fricciones de tu vida diaria.',
-      sec_proc:'Proceso', sec_how_h:'Cómo Funciona InnovaAFRIC',
-      sec_how_sub:'Una cuenta desbloquea todo el ecosistema — pagos, compras, entregas y herramientas de negocio.',
-      s1t:'Crea tu Cuenta', s1d:'Regístrate en menos de 2 minutos. Un perfil te da acceso a todos los productos con un solo inicio de sesión.',
-      s2t:'Verifica tu Identidad', s2d:'Completa el KYC para desbloquear límites más altos. Documentos aceptados: DNI, pasaporte y factura.',
-      s3t:'Recarga tu Wallet', s3d:'Añade dinero via Mobile Money (MTN, Orange, Wave), transferencia bancaria o tarjeta Stripe.',
-      s4t:'Compra, Envía y Entrega', s4d:'Envía dinero a tu familia, compra productos o gestiona tu negocio — todo en una plataforma conectada.',
+      pm_desc:'Envía y recibe dinero al instante en África, Europa y América Latina. Mobile Money, transferencias bancarias y pagos con tarjeta en una wallet.',
+      ps_desc:'Compra productos globales a precios locales. Conectado a AliExpress. Paga con Mobile Money y entregado por XenderDelivery.',
+      pb_desc:'Abre tu tienda online en minutos. Panel de vendedor completo, planes de suscripción, checkout integrado y analíticas.',
+      pd_desc:'Entrega de última milla rápida y fiable. Regístrate como conductor, gestiona entregas, sigue pedidos en vivo y gana más.',
+      learn_more:'Saber más →',
+      sec_proc:'Proceso', sec_how_h:'Cómo Funciona InnovaAFRIC', sec_how_sub:'Una cuenta desbloquea todo el ecosistema.',
+      s1t:'Crear Cuenta', s1d:'Regístrate en 2 minutos. Un perfil para todos los productos InnovaAFRIC.',
+      s2t:'Verificar Identidad', s2d:'Completa el KYC con tu DNI o pasaporte para desbloquear límites más altos.',
+      s3t:'Recargar Wallet', s3d:'Añade dinero via Mobile Money, transferencia bancaria o tarjeta Stripe.',
+      s4t:'Compra, Envía y Entrega', s4d:'Usa cualquier servicio — todos conectados, todos en un ecosistema.',
       sec_reach:'Alcance Global', sec_cont_h:'Dónde Operamos',
       sec_cont_sub:'Construido para la diáspora y comunidades locales en tres continentes.',
+      cont1:'África', cont1d:'Integración de Mobile Money y logística en África Occidental y Central.',
+      cont2:'Europa', cont2d:'Sirviendo a la diáspora africana con transferencias SEPA y pagos con tarjeta Stripe.',
+      cont3:'América Latina', cont3d:'Expandiéndonos en los mercados del Caribe y América Latina.',
       cta_h:'¿Listo para Simplificar tu Vida?', cta_p:'Únete a miles de usuarios que ya usan el ecosistema InnovaAFRIC.',
-      cta_btn1:'Abrir XenderMoney →', cta_btn2:'Contáctanos',
-      nav_p:'Productos', nav_h:'Cómo funciona', nav_c:'Presencia', nav_k:'Contacto', nav_cta:'Comenzar',
+      cta_btn:'Abrir XenderMoney →',
+      foot_desc:'Construyendo la infraestructura digital para África, Europa y América Latina. We Simplify Life.',
+      foot_products:'Productos', foot_company:'Empresa', foot_legal:'Legal',
+      foot_about:'Sobre Nosotros', foot_careers:'Empleo', foot_blog:'Blog',
+      foot_privacy:'Privacidad', foot_terms:'Términos', foot_cookies:'Cookies',
       foot_copy:'© 2026 InnovaAFRIC. Todos los derechos reservados.'
     },
     en:{
+      nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_cta:'Get Started',
       hero_badge:'Tricontinental Tech Ecosystem',
-      hero_h1:'Simplifying Life<br/>Across <span class="accent">3 Continents</span>',
+      hero_h1:'Simplifying Life<br/>Across <span class="accent-blue">3</span> <span class="accent-orange">Continents</span>',
       hero_sub:'InnovaAFRIC builds the digital infrastructure connecting Africa, Europe, and Latin America — payments, commerce, and logistics in one unified ecosystem.',
-      hero_btn1:'Explore Products ↓', hero_btn2:'How it works',
-      stat1_l:'African countries', stat2_l:'Core products', stat3_l:'Continents', stat4_l:'Unified platform',
-      sec_eco:'Our Ecosystem', sec_prod_h:'Four Products.<br/>One Mission.',
+      hero_btn1:'Explore Products →', hero_btn2:'How it works',
+      s1l:'African countries', s2l:'Core products', s3l:'Continents', s4l:'Unified platform',
+      sec_eco:'Our Ecosystem', sec_prod_h:'Four Products. One Mission.',
       sec_prod_sub:'Every service in the InnovaAFRIC family is built to remove friction from your daily life.',
-      sec_proc:'Process', sec_how_h:'How InnovaAFRIC Works',
-      sec_how_sub:'One account unlocks the entire ecosystem — payments, shopping, delivery, and business tools.',
-      s1t:'Create Your Account', s1d:'Sign up in under 2 minutes. One profile gives you access to all InnovaAFRIC products with a single login.',
-      s2t:'Verify Your Identity', s2d:'Complete KYC to unlock higher limits. Supported: national ID, passport, and utility bill.',
-      s3t:'Fund Your Wallet', s3d:'Add money via Mobile Money (MTN, Orange, Wave), bank transfer, or Stripe card from Europe.',
-      s4t:'Shop, Send & Deliver', s4d:'Send money to family, shop international products, or run your business — all in one platform.',
+      pm_desc:'Send and receive money instantly across Africa, Europe, and Latin America. Mobile Money, bank transfers, and card payments in one wallet.',
+      ps_desc:'Shop global products at local prices. Connected to AliExpress. Pay with Mobile Money and delivered by XenderDelivery.',
+      pb_desc:'Launch your own online store in minutes. Full vendor panel, subscription plans, integrated checkout and analytics.',
+      pd_desc:'Fast, reliable last-mile delivery. Register as a driver, manage deliveries, track orders live, and earn more.',
+      learn_more:'Learn more →',
+      sec_proc:'Process', sec_how_h:'How InnovaAFRIC Works', sec_how_sub:'One account unlocks the entire ecosystem.',
+      s1t:'Create Account', s1d:'Sign up in 2 minutes. One profile for all InnovaAFRIC products.',
+      s2t:'Verify Identity', s2d:'Complete KYC with your ID or passport to unlock higher limits.',
+      s3t:'Fund Wallet', s3d:'Add money via Mobile Money, bank transfer, or Stripe card.',
+      s4t:'Shop, Send & Deliver', s4d:'Use any service — all connected, all in one ecosystem.',
       sec_reach:'Global Reach', sec_cont_h:'Where We Operate',
       sec_cont_sub:'Built for the diaspora and local communities across three continents.',
+      cont1:'Africa', cont1d:'Mobile Money integration and logistics across West and Central Africa.',
+      cont2:'Europe', cont2d:'Serving the African diaspora with SEPA transfers and Stripe card payments.',
+      cont3:'Latin America', cont3d:'Expanding into Caribbean and Latin American markets.',
       cta_h:'Ready to Simplify Your Life?', cta_p:'Join thousands of users already using the InnovaAFRIC ecosystem.',
-      cta_btn1:'Open XenderMoney →', cta_btn2:'Contact Us',
-      nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_k:'Contact', nav_cta:'Get Started',
+      cta_btn:'Open XenderMoney →',
+      foot_desc:'Building the digital infrastructure for Africa, Europe, and Latin America. We Simplify Life.',
+      foot_products:'Products', foot_company:'Company', foot_legal:'Legal',
+      foot_about:'About Us', foot_careers:'Careers', foot_blog:'Blog',
+      foot_privacy:'Privacy', foot_terms:'Terms', foot_cookies:'Cookies',
       foot_copy:'© 2026 InnovaAFRIC. All rights reserved.'
     },
     fr:{
+      nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_cta:'Commencer',
       hero_badge:'Écosystème Tech Tricontinental',
-      hero_h1:'Simplifier la Vie<br/>Sur <span class="accent">3 Continents</span>',
-      hero_sub:'InnovaAFRIC construit l\'infrastructure numérique reliant l\'Afrique, l\'Europe et l\'Amérique Latine — paiements, commerce et logistique dans un écosystème unifié.',
-      hero_btn1:'Explorer les Produits ↓', hero_btn2:'Comment ça marche',
-      stat1_l:'Pays africains', stat2_l:'Produits principaux', stat3_l:'Continents', stat4_l:'Plateforme unifiée',
-      sec_eco:'Notre Écosystème', sec_prod_h:'Quatre Produits.<br/>Une Mission.',
-      sec_prod_sub:'Chaque service de la famille InnovaAFRIC est conçu pour éliminer les frictions de votre vie quotidienne.',
-      sec_proc:'Processus', sec_how_h:'Comment InnovaAFRIC Fonctionne',
-      sec_how_sub:'Un compte débloque tout l\'écosystème — paiements, achats, livraisons et outils professionnels.',
-      s1t:'Créez votre Compte', s1d:'Inscrivez-vous en moins de 2 minutes. Un profil vous donne accès à tous les produits avec une seule connexion.',
-      s2t:'Vérifiez votre Identité', s2d:'Complétez le KYC pour débloquer des limites plus élevées. Acceptés : carte d\'identité, passeport et facture.',
-      s3t:'Rechargez votre Wallet', s3d:'Ajoutez de l\'argent via Mobile Money (MTN, Orange, Wave), virement bancaire ou carte Stripe depuis l\'Europe.',
-      s4t:'Achetez, Envoyez & Livrez', s4d:'Envoyez de l\'argent à votre famille, achetez des produits ou gérez votre entreprise — tout sur une plateforme connectée.',
+      hero_h1:'Simplifier la Vie<br/>Sur <span class="accent-blue">3</span> <span class="accent-orange">Continents</span>',
+      hero_sub:"InnovaAFRIC construit l'infrastructure numérique reliant l'Afrique, l'Europe et l'Amérique Latine — paiements, commerce et logistique dans un écosystème unifié.",
+      hero_btn1:'Explorer les Produits →', hero_btn2:'Comment ça marche',
+      s1l:'Pays africains', s2l:'Produits principaux', s3l:'Continents', s4l:'Plateforme unifiée',
+      sec_eco:'Notre Écosystème', sec_prod_h:'Quatre Produits. Une Mission.',
+      sec_prod_sub:"Chaque service de la famille InnovaAFRIC est conçu pour éliminer les frictions de votre vie quotidienne.",
+      pm_desc:"Envoyez et recevez de l'argent instantanément en Afrique, Europe et Amérique Latine. Mobile Money, virements bancaires et paiements par carte dans un wallet.",
+      ps_desc:'Achetez des produits mondiaux à des prix locaux. Connecté à AliExpress. Payez avec Mobile Money et livré par XenderDelivery.',
+      pb_desc:"Lancez votre boutique en ligne en quelques minutes. Panel vendeur complet, plans d'abonnement, checkout intégré et analyses.",
+      pd_desc:'Livraison du dernier kilomètre rapide et fiable. Inscrivez-vous comme livreur, gérez les livraisons, suivez les commandes en direct.',
+      learn_more:'En savoir plus →',
+      sec_proc:'Processus', sec_how_h:'Comment InnovaAFRIC Fonctionne', sec_how_sub:"Un compte débloque tout l'écosystème.",
+      s1t:'Créer un Compte', s1d:"Inscrivez-vous en 2 minutes. Un profil pour tous les produits InnovaAFRIC.",
+      s2t:'Vérifier l\'Identité', s2d:'Complétez le KYC avec votre carte d\'identité ou passeport.',
+      s3t:'Recharger le Wallet', s3d:"Ajoutez de l'argent via Mobile Money, virement bancaire ou carte Stripe.",
+      s4t:'Achetez, Envoyez & Livrez', s4d:'Utilisez n\'importe quel service — tout connecté, tout en un écosystème.',
       sec_reach:'Portée Mondiale', sec_cont_h:'Où Nous Opérons',
       sec_cont_sub:'Construit pour la diaspora et les communautés locales sur trois continents.',
-      cta_h:'Prêt à Simplifier votre Vie ?', cta_p:'Rejoignez des milliers d\'utilisateurs qui utilisent déjà l\'écosystème InnovaAFRIC.',
-      cta_btn1:'Ouvrir XenderMoney →', cta_btn2:'Nous Contacter',
-      nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_k:'Contact', nav_cta:'Commencer',
+      cont1:'Afrique', cont1d:"Intégration Mobile Money et logistique en Afrique de l'Ouest et Centrale.",
+      cont2:'Europe', cont2d:'Servant la diaspora africaine avec des virements SEPA et paiements Stripe.',
+      cont3:'Amérique Latine', cont3d:'Expansion dans les marchés des Caraïbes et d\'Amérique Latine.',
+      cta_h:'Prêt à Simplifier votre Vie ?', cta_p:"Rejoignez des milliers d'utilisateurs qui utilisent déjà l'écosystème InnovaAFRIC.",
+      cta_btn:'Ouvrir XenderMoney →',
+      foot_desc:"Construction de l'infrastructure numérique pour l'Afrique, l'Europe et l'Amérique Latine. We Simplify Life.",
+      foot_products:'Produits', foot_company:'Entreprise', foot_legal:'Légal',
+      foot_about:'À Propos', foot_careers:'Emplois', foot_blog:'Blog',
+      foot_privacy:'Confidentialité', foot_terms:'Conditions', foot_cookies:'Cookies',
       foot_copy:'© 2026 InnovaAFRIC. Tous droits réservés.'
     }
   };
 
   let LANG = localStorage.getItem('ia_lang') || 'en';
-
   function setLang(l) {
     LANG = l; localStorage.setItem('ia_lang', l);
     document.documentElement.lang = l;
     ['es','en','fr'].forEach(id => {
       const b = document.getElementById('lb-'+id);
-      if (b) b.className = 'lb-btn' + (id === l ? ' active' : '');
+      if(b) b.className = 'lb-btn'+(id===l?' active':'');
     });
-    const T = TR[l] || TR.en;
+    const T = TR[l]||TR.en;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const k = el.getAttribute('data-i18n');
-      if (T[k] !== undefined) el.innerHTML = T[k];
+      if(T[k]!==undefined) el.innerHTML = T[k];
     });
   }
-
   setLang(LANG);
 </script>
-
 </body>
 </html>
