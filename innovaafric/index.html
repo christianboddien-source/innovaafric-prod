@@ -82,6 +82,10 @@
       transition: background .2s, transform .15s;
     }
     .nav-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .lang-switcher { display: flex; gap: 4px; align-items: center; }
+    .lb-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
+    .lb-btn.active { background: rgba(245,166,35,0.15); border-color: var(--orange); color: var(--orange); }
+    .lb-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
 
     /* ── HERO ── */
     .hero {
@@ -397,23 +401,28 @@
     <li><a href="#continents">Our Presence</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#products" class="nav-cta">Get Started</a>
+  <div class="lang-switcher">
+    <button onclick="setLang('es')" id="lb-es" class="lb-btn active">🇪🇸 ES</button>
+    <button onclick="setLang('en')" id="lb-en" class="lb-btn">🇬🇧 EN</button>
+    <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷 FR</button>
+  </div>
+  <a href="#products" class="nav-cta" data-i18n="cta_start">Get Started</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">Tricontinental Tech Ecosystem</div>
-    <h1>
+    <div class="hero-badge" data-i18n="hero_badge">Tricontinental Tech Ecosystem</div>
+    <h1 data-i18n="hero_h1">
       Simplifying Life<br />
       Across <span class="accent">3 Continents</span>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" data-i18n="hero_sub">
       InnovaAFRIC builds the digital infrastructure connecting Africa, Europe, and Latin America — payments, commerce, and logistics in one unified ecosystem.
     </p>
     <div class="hero-buttons">
-      <a href="#products" class="btn-primary">Explore Products ↓</a>
-      <a href="#how" class="btn-outline">How it works</a>
+      <a href="#products" class="btn-primary" data-i18n="hero_btn1">Explore Products ↓</a>
+      <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
     </div>
     <div class="hero-stats">
       <div class="stat-item">
@@ -439,9 +448,9 @@
 <!-- PRODUCTS -->
 <section id="products">
   <div class="products-header reveal">
-    <span class="section-label">Our Ecosystem</span>
-    <h2 class="section-title">Four Products.<br />One Mission.</h2>
-    <p class="section-sub">Every service in the InnovaAFRIC family is built to remove friction from your daily life.</p>
+    <span class="section-label" data-i18n="sec_eco">Our Ecosystem</span>
+    <h2 class="section-title" data-i18n="sec_prod_h">Four Products.<br />One Mission.</h2>
+    <p class="section-sub" data-i18n="sec_prod_sub">Every service in the InnovaAFRIC family is built to remove friction from your daily life.</p>
   </div>
 
   <div class="products-grid">
@@ -518,31 +527,31 @@
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="reveal">
-    <span class="section-label">Process</span>
-    <h2 class="section-title">How InnovaAFRIC Works</h2>
-    <p class="section-sub">One account unlocks the entire ecosystem — payments, shopping, delivery, and business tools.</p>
+    <span class="section-label" data-i18n="sec_proc">Process</span>
+    <h2 class="section-title" data-i18n="sec_how_h">How InnovaAFRIC Works</h2>
+    <p class="section-sub" data-i18n="sec_how_sub">One account unlocks the entire ecosystem — payments, shopping, delivery, and business tools.</p>
   </div>
 
   <div class="steps-grid">
     <div class="step-card reveal">
       <div class="step-number">1</div>
-      <h3 class="step-title">Create Your Account</h3>
-      <p class="step-desc">Sign up in under 2 minutes. One profile gives you access to all InnovaAFRIC products with a single login.</p>
+      <h3 class="step-title" data-i18n="s1t">Create Your Account</h3>
+      <p class="step-desc" data-i18n="s1d">Sign up in under 2 minutes. One profile gives you access to all InnovaAFRIC products with a single login.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-number">2</div>
-      <h3 class="step-title">Verify Your Identity</h3>
-      <p class="step-desc">Complete KYC to unlock higher limits. Supported: national ID, passport, and utility bill verification.</p>
+      <h3 class="step-title" data-i18n="s2t">Verify Your Identity</h3>
+      <p class="step-desc" data-i18n="s2d">Complete KYC to unlock higher limits. Supported: national ID, passport, and utility bill verification.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-number">3</div>
-      <h3 class="step-title">Fund Your Wallet</h3>
-      <p class="step-desc">Add money via Mobile Money (MTN, Orange, Wave), bank transfer, or Stripe card payment from Europe.</p>
+      <h3 class="step-title" data-i18n="s3t">Fund Your Wallet</h3>
+      <p class="step-desc" data-i18n="s3d">Add money via Mobile Money (MTN, Orange, Wave), bank transfer, or Stripe card payment from Europe.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-number">4</div>
-      <h3 class="step-title">Shop, Send &amp; Deliver</h3>
-      <p class="step-desc">Send money to family, shop international products, or run your business — all in one connected platform.</p>
+      <h3 class="step-title" data-i18n="s4t">Shop, Send &amp; Deliver</h3>
+      <p class="step-desc" data-i18n="s4d">Send money to family, shop international products, or run your business — all in one connected platform.</p>
     </div>
   </div>
 </section>
@@ -550,9 +559,9 @@
 <!-- CONTINENTS -->
 <section id="continents">
   <div class="reveal" style="text-align:center; margin-bottom:0;">
-    <span class="section-label">Global Reach</span>
-    <h2 class="section-title">Where We Operate</h2>
-    <p class="section-sub" style="margin:0 auto;">Built for the diaspora and local communities across three continents.</p>
+    <span class="section-label" data-i18n="sec_reach">Global Reach</span>
+    <h2 class="section-title" data-i18n="sec_cont_h">Where We Operate</h2>
+    <p class="section-sub" style="margin:0 auto;" data-i18n="sec_cont_sub">Built for the diaspora and local communities across three continents.</p>
   </div>
 
   <div class="continents-grid">
@@ -601,8 +610,8 @@
 <!-- CTA -->
 <section class="cta-section" id="contact">
   <div class="reveal">
-    <h2>Ready to Simplify Your Life?</h2>
-    <p>Join thousands of users already using the InnovaAFRIC ecosystem.</p>
+    <h2 data-i18n="cta_h">Ready to Simplify Your Life?</h2>
+    <p data-i18n="cta_p">Join thousands of users already using the InnovaAFRIC ecosystem.</p>
     <div class="hero-buttons" style="justify-content:center;">
       <a href="https://app.xendermoney.com" class="btn-primary">Open XenderMoney →</a>
       <a href="mailto:hello@innovaafric.com" class="btn-outline">Contact Us</a>
@@ -650,20 +659,100 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 InnovaAFRIC. All rights reserved.</p>
+    <p data-i18n="foot_copy">© 2026 InnovaAFRIC. All rights reserved.</p>
     <span class="slogan">WE SIMPLIFY LIFE</span>
   </div>
 </footer>
 
 <script>
-  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); }
-    });
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
-
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  const TR = {
+    es:{
+      hero_badge:'Ecosistema Tecnológico Tricontinental',
+      hero_h1:'Simplificando la Vida<br/>en <span class="accent">3 Continentes</span>',
+      hero_sub:'InnovaAFRIC construye la infraestructura digital que conecta África, Europa y América Latina — pagos, comercio y logística en un ecosistema unificado.',
+      hero_btn1:'Explorar Productos ↓', hero_btn2:'Cómo funciona',
+      stat1_l:'Países africanos', stat2_l:'Productos principales', stat3_l:'Continentes', stat4_l:'Plataforma unificada',
+      sec_eco:'Nuestro Ecosistema', sec_prod_h:'Cuatro Productos.<br/>Una Misión.',
+      sec_prod_sub:'Cada servicio de la familia InnovaAFRIC está diseñado para eliminar fricciones de tu vida diaria.',
+      sec_proc:'Proceso', sec_how_h:'Cómo Funciona InnovaAFRIC',
+      sec_how_sub:'Una cuenta desbloquea todo el ecosistema — pagos, compras, entregas y herramientas de negocio.',
+      s1t:'Crea tu Cuenta', s1d:'Regístrate en menos de 2 minutos. Un perfil te da acceso a todos los productos con un solo inicio de sesión.',
+      s2t:'Verifica tu Identidad', s2d:'Completa el KYC para desbloquear límites más altos. Documentos aceptados: DNI, pasaporte y factura.',
+      s3t:'Recarga tu Wallet', s3d:'Añade dinero via Mobile Money (MTN, Orange, Wave), transferencia bancaria o tarjeta Stripe.',
+      s4t:'Compra, Envía y Entrega', s4d:'Envía dinero a tu familia, compra productos o gestiona tu negocio — todo en una plataforma conectada.',
+      sec_reach:'Alcance Global', sec_cont_h:'Dónde Operamos',
+      sec_cont_sub:'Construido para la diáspora y comunidades locales en tres continentes.',
+      cta_h:'¿Listo para Simplificar tu Vida?', cta_p:'Únete a miles de usuarios que ya usan el ecosistema InnovaAFRIC.',
+      cta_btn1:'Abrir XenderMoney →', cta_btn2:'Contáctanos',
+      nav_p:'Productos', nav_h:'Cómo funciona', nav_c:'Presencia', nav_k:'Contacto', nav_cta:'Comenzar',
+      foot_copy:'© 2026 InnovaAFRIC. Todos los derechos reservados.'
+    },
+    en:{
+      hero_badge:'Tricontinental Tech Ecosystem',
+      hero_h1:'Simplifying Life<br/>Across <span class="accent">3 Continents</span>',
+      hero_sub:'InnovaAFRIC builds the digital infrastructure connecting Africa, Europe, and Latin America — payments, commerce, and logistics in one unified ecosystem.',
+      hero_btn1:'Explore Products ↓', hero_btn2:'How it works',
+      stat1_l:'African countries', stat2_l:'Core products', stat3_l:'Continents', stat4_l:'Unified platform',
+      sec_eco:'Our Ecosystem', sec_prod_h:'Four Products.<br/>One Mission.',
+      sec_prod_sub:'Every service in the InnovaAFRIC family is built to remove friction from your daily life.',
+      sec_proc:'Process', sec_how_h:'How InnovaAFRIC Works',
+      sec_how_sub:'One account unlocks the entire ecosystem — payments, shopping, delivery, and business tools.',
+      s1t:'Create Your Account', s1d:'Sign up in under 2 minutes. One profile gives you access to all InnovaAFRIC products with a single login.',
+      s2t:'Verify Your Identity', s2d:'Complete KYC to unlock higher limits. Supported: national ID, passport, and utility bill.',
+      s3t:'Fund Your Wallet', s3d:'Add money via Mobile Money (MTN, Orange, Wave), bank transfer, or Stripe card from Europe.',
+      s4t:'Shop, Send & Deliver', s4d:'Send money to family, shop international products, or run your business — all in one platform.',
+      sec_reach:'Global Reach', sec_cont_h:'Where We Operate',
+      sec_cont_sub:'Built for the diaspora and local communities across three continents.',
+      cta_h:'Ready to Simplify Your Life?', cta_p:'Join thousands of users already using the InnovaAFRIC ecosystem.',
+      cta_btn1:'Open XenderMoney →', cta_btn2:'Contact Us',
+      nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_k:'Contact', nav_cta:'Get Started',
+      foot_copy:'© 2026 InnovaAFRIC. All rights reserved.'
+    },
+    fr:{
+      hero_badge:'Écosystème Tech Tricontinental',
+      hero_h1:'Simplifier la Vie<br/>Sur <span class="accent">3 Continents</span>',
+      hero_sub:'InnovaAFRIC construit l\'infrastructure numérique reliant l\'Afrique, l\'Europe et l\'Amérique Latine — paiements, commerce et logistique dans un écosystème unifié.',
+      hero_btn1:'Explorer les Produits ↓', hero_btn2:'Comment ça marche',
+      stat1_l:'Pays africains', stat2_l:'Produits principaux', stat3_l:'Continents', stat4_l:'Plateforme unifiée',
+      sec_eco:'Notre Écosystème', sec_prod_h:'Quatre Produits.<br/>Une Mission.',
+      sec_prod_sub:'Chaque service de la famille InnovaAFRIC est conçu pour éliminer les frictions de votre vie quotidienne.',
+      sec_proc:'Processus', sec_how_h:'Comment InnovaAFRIC Fonctionne',
+      sec_how_sub:'Un compte débloque tout l\'écosystème — paiements, achats, livraisons et outils professionnels.',
+      s1t:'Créez votre Compte', s1d:'Inscrivez-vous en moins de 2 minutes. Un profil vous donne accès à tous les produits avec une seule connexion.',
+      s2t:'Vérifiez votre Identité', s2d:'Complétez le KYC pour débloquer des limites plus élevées. Acceptés : carte d\'identité, passeport et facture.',
+      s3t:'Rechargez votre Wallet', s3d:'Ajoutez de l\'argent via Mobile Money (MTN, Orange, Wave), virement bancaire ou carte Stripe depuis l\'Europe.',
+      s4t:'Achetez, Envoyez & Livrez', s4d:'Envoyez de l\'argent à votre famille, achetez des produits ou gérez votre entreprise — tout sur une plateforme connectée.',
+      sec_reach:'Portée Mondiale', sec_cont_h:'Où Nous Opérons',
+      sec_cont_sub:'Construit pour la diaspora et les communautés locales sur trois continents.',
+      cta_h:'Prêt à Simplifier votre Vie ?', cta_p:'Rejoignez des milliers d\'utilisateurs qui utilisent déjà l\'écosystème InnovaAFRIC.',
+      cta_btn1:'Ouvrir XenderMoney →', cta_btn2:'Nous Contacter',
+      nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_k:'Contact', nav_cta:'Commencer',
+      foot_copy:'© 2026 InnovaAFRIC. Tous droits réservés.'
+    }
+  };
+
+  let LANG = localStorage.getItem('ia_lang') || 'en';
+
+  function setLang(l) {
+    LANG = l; localStorage.setItem('ia_lang', l);
+    document.documentElement.lang = l;
+    ['es','en','fr'].forEach(id => {
+      const b = document.getElementById('lb-'+id);
+      if (b) b.className = 'lb-btn' + (id === l ? ' active' : '');
+    });
+    const T = TR[l] || TR.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (T[k] !== undefined) el.innerHTML = T[k];
+    });
+  }
+
+  setLang(LANG);
 </script>
 
 </body>

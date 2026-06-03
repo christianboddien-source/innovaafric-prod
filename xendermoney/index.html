@@ -53,6 +53,10 @@
     .btn-ghost:hover { border-color: rgba(255,255,255,0.5); }
     .btn-orange { background: var(--orange); color: var(--navy); border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
     .btn-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .lang-switcher { display: flex; gap: 4px; align-items: center; }
+    .lb-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--grey); cursor: pointer; transition: all .2s; }
+    .lb-btn.active { background: rgba(245,166,35,0.15); border-color: var(--orange); color: var(--orange); }
+    .lb-btn:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
 
     /* ── HERO ── */
     .hero {
@@ -328,9 +332,14 @@
     <li><a href="#how">How it works</a></li>
     <li><a href="#pricing">Pricing</a></li>
   </ul>
+  <div class="lang-switcher">
+    <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸 ES</button>
+    <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧 EN</button>
+    <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷 FR</button>
+  </div>
   <div class="nav-actions">
-    <a href="#" class="btn-ghost">Log in</a>
-    <a href="#" class="btn-orange">Open account</a>
+    <a href="#" class="btn-ghost" data-i18n="nav_login">Log in</a>
+    <a href="#" class="btn-orange" data-i18n="nav_open">Open account</a>
   </div>
 </nav>
 
@@ -339,14 +348,14 @@
   <div class="hero-bg-glow"></div>
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="hero-badge">Available in 8+ African Countries</div>
-      <h1>Send Money<br />Across <em>Africa</em><br />Instantly</h1>
-      <p class="hero-sub">
+      <div class="hero-badge" data-i18n="hero_badge">Available in 8+ African Countries</div>
+      <h1 data-i18n="hero_h1">Send Money<br />Across <em>Africa</em><br />Instantly</h1>
+      <p class="hero-sub" data-i18n="hero_sub">
         XenderMoney is the fastest, most affordable way to send and receive money across Africa, Europe, and Latin America. One wallet, every payment method.
       </p>
       <div class="hero-btns">
-        <a href="#" class="btn-lg primary">Open Free Account →</a>
-        <a href="#how" class="btn-lg secondary">See how it works</a>
+        <a href="#" class="btn-lg primary" data-i18n="hero_btn1">Open Free Account →</a>
+        <a href="#how" class="btn-lg secondary" data-i18n="hero_btn2">See how it works</a>
       </div>
       <div class="trust-row">
         <span>Trusted by thousands of users</span>
@@ -445,9 +454,9 @@
 <!-- FEATURES -->
 <section id="features">
   <div class="reveal">
-    <span class="section-label">Why XenderMoney</span>
-    <h2 class="section-title">Everything you need<br />in one wallet</h2>
-    <p class="section-sub">Built for the African diaspora and local users — every payment method, every currency, one app.</p>
+    <span class="section-label" data-i18n="sec_why">Why XenderMoney</span>
+    <h2 class="section-title" data-i18n="sec_feat_h">Everything you need<br />in one wallet</h2>
+    <p class="section-sub" data-i18n="sec_feat_sub">Built for the African diaspora and local users — every payment method, every currency, one app.</p>
   </div>
 
   <div class="features-grid">
@@ -487,9 +496,9 @@
 <!-- MOBILE MONEY -->
 <section id="mobilemoney">
   <div class="mm-header reveal">
-    <span class="section-label">Mobile Money</span>
-    <h2 class="section-title">5 Operators.<br />8 Countries.</h2>
-    <p class="section-sub">We've integrated the most trusted Mobile Money networks across West and Central Africa.</p>
+    <span class="section-label" data-i18n="sec_mm">Mobile Money</span>
+    <h2 class="section-title" data-i18n="sec_mm_h">5 Operators.<br />8 Countries.</h2>
+    <p class="section-sub" data-i18n="sec_mm_sub">We've integrated the most trusted Mobile Money networks across West and Central Africa.</p>
   </div>
 
   <div class="operators-grid">
@@ -535,8 +544,8 @@
 <!-- HOW IT WORKS -->
 <section id="how">
   <div class="reveal">
-    <span class="section-label">How it works</span>
-    <h2 class="section-title">Send money in<br />4 simple steps</h2>
+    <span class="section-label" data-i18n="sec_how">How it works</span>
+    <h2 class="section-title" data-i18n="sec_how_h">Send money in<br />4 simple steps</h2>
   </div>
   <div class="send-steps">
     <div class="send-step reveal">
@@ -566,8 +575,8 @@
 <section id="pricing">
   <div class="pricing-header reveal">
     <span class="section-label">Pricing</span>
-    <h2 class="section-title">Simple, transparent fees</h2>
-    <p class="section-sub" style="margin:0 auto;">No hidden charges. You always know what you pay before you send.</p>
+    <h2 class="section-title" data-i18n="sec_price_h">Simple, transparent fees</h2>
+    <p class="section-sub" style="margin:0 auto;" data-i18n="sec_price_sub">No hidden charges. You always know what you pay before you send.</p>
   </div>
   <div class="pricing-grid">
     <div class="plan-card reveal">
@@ -618,9 +627,9 @@
 <!-- CTA -->
 <section class="cta-section">
   <div class="reveal">
-    <h2>Start Sending Money Today</h2>
-    <p>Open your free XenderMoney account in under 2 minutes.</p>
-    <a href="#" class="btn-lg primary" style="display:inline-flex;">Create Free Account →</a>
+    <h2 data-i18n="cta_h">Start Sending Money Today</h2>
+    <p data-i18n="cta_p">Open your free XenderMoney account in under 2 minutes.</p>
+    <a href="#" class="btn-lg primary" style="display:inline-flex;" data-i18n="cta_btn">Create Free Account →</a>
   </div>
 </section>
 
@@ -670,6 +679,81 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  const TR = {
+    es:{
+      nav_login:'Iniciar sesión', nav_open:'Abrir cuenta',
+      hero_badge:'Disponible en 8+ Países Africanos',
+      hero_h1:'Envía Dinero<br />a través de <em>África</em><br />al Instante',
+      hero_sub:'XenderMoney es la forma más rápida y asequible de enviar y recibir dinero en África, Europa y América Latina. Una wallet, todos los métodos de pago.',
+      hero_btn1:'Abrir Cuenta Gratis →', hero_btn2:'Ver cómo funciona',
+      sec_why:'Por qué XenderMoney',
+      sec_feat_h:'Todo lo que necesitas<br />en una wallet',
+      sec_feat_sub:'Diseñado para la diáspora africana y usuarios locales — cada método de pago, cada moneda, una sola app.',
+      sec_mm:'Mobile Money', sec_mm_h:'5 Operadores.<br />8 Países.',
+      sec_mm_sub:'Hemos integrado las redes de Mobile Money más confiables de África Occidental y Central.',
+      sec_how:'Cómo funciona', sec_how_h:'Envía dinero en<br />4 pasos simples',
+      sec_price_h:'Tarifas simples y transparentes',
+      sec_price_sub:'Sin cargos ocultos. Siempre sabes lo que pagas antes de enviar.',
+      cta_h:'Empieza a Enviar Dinero Hoy',
+      cta_p:'Abre tu cuenta gratuita de XenderMoney en menos de 2 minutos.',
+      cta_btn:'Crear Cuenta Gratis →'
+    },
+    en:{
+      nav_login:'Log in', nav_open:'Open account',
+      hero_badge:'Available in 8+ African Countries',
+      hero_h1:'Send Money<br />Across <em>Africa</em><br />Instantly',
+      hero_sub:'XenderMoney is the fastest, most affordable way to send and receive money across Africa, Europe, and Latin America. One wallet, every payment method.',
+      hero_btn1:'Open Free Account →', hero_btn2:'See how it works',
+      sec_why:'Why XenderMoney',
+      sec_feat_h:'Everything you need<br />in one wallet',
+      sec_feat_sub:'Built for the African diaspora and local users — every payment method, every currency, one app.',
+      sec_mm:'Mobile Money', sec_mm_h:'5 Operators.<br />8 Countries.',
+      sec_mm_sub:"We've integrated the most trusted Mobile Money networks across West and Central Africa.",
+      sec_how:'How it works', sec_how_h:'Send money in<br />4 simple steps',
+      sec_price_h:'Simple, transparent fees',
+      sec_price_sub:'No hidden charges. You always know what you pay before you send.',
+      cta_h:'Start Sending Money Today',
+      cta_p:'Open your free XenderMoney account in under 2 minutes.',
+      cta_btn:'Create Free Account →'
+    },
+    fr:{
+      nav_login:'Se connecter', nav_open:'Ouvrir un compte',
+      hero_badge:'Disponible dans 8+ Pays Africains',
+      hero_h1:'Envoyez de l\'Argent<br />à travers <em>l\'Afrique</em><br />Instantanément',
+      hero_sub:'XenderMoney est le moyen le plus rapide et abordable d\'envoyer et recevoir de l\'argent en Afrique, Europe et Amérique Latine. Un wallet, toutes les méthodes de paiement.',
+      hero_btn1:'Ouvrir un Compte Gratuit →', hero_btn2:'Voir comment ça marche',
+      sec_why:'Pourquoi XenderMoney',
+      sec_feat_h:'Tout ce dont vous avez besoin<br />dans un wallet',
+      sec_feat_sub:'Conçu pour la diaspora africaine et les utilisateurs locaux — chaque méthode de paiement, chaque devise, une seule app.',
+      sec_mm:'Mobile Money', sec_mm_h:'5 Opérateurs.<br />8 Pays.',
+      sec_mm_sub:'Nous avons intégré les réseaux Mobile Money les plus fiables d\'Afrique de l\'Ouest et Centrale.',
+      sec_how:'Comment ça marche', sec_how_h:'Envoyez de l\'argent en<br />4 étapes simples',
+      sec_price_h:'Frais simples et transparents',
+      sec_price_sub:'Pas de frais cachés. Vous savez toujours ce que vous payez avant d\'envoyer.',
+      cta_h:'Commencez à Envoyer de l\'Argent Aujourd\'hui',
+      cta_p:'Ouvrez votre compte XenderMoney gratuit en moins de 2 minutes.',
+      cta_btn:'Créer un Compte Gratuit →'
+    }
+  };
+
+  let LANG = localStorage.getItem('ia_lang') || 'en';
+
+  function setLang(l) {
+    LANG = l; localStorage.setItem('ia_lang', l);
+    document.documentElement.lang = l;
+    ['es','en','fr'].forEach(id => {
+      const b = document.getElementById('lb-'+id);
+      if (b) b.className = 'lb-btn' + (id === l ? ' active' : '');
+    });
+    const T = TR[l] || TR.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (T[k] !== undefined) el.innerHTML = T[k];
+    });
+  }
+
+  setLang(LANG);
 </script>
 </body>
 </html>
