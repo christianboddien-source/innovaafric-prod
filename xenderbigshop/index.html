@@ -117,6 +117,17 @@
   .btn-cta-o{background:var(--orange);color:#fff;box-shadow:0 4px 16px rgba(224,146,26,.4)}
   .btn-cta-o:hover{background:var(--orange-light);transform:translateY(-2px)}
 
+  /* CONTACT */
+  .contact-section{padding:80px 5%;background:#fff8f0;text-align:center}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;max-width:860px;margin:32px auto 0}
+  .contact-card{background:white;border-radius:14px;padding:24px 18px;box-shadow:0 3px 16px rgba(0,0,0,.07);border:1px solid rgba(0,0,0,.07);transition:transform .2s}
+  .contact-card:hover{transform:translateY(-3px)}
+  .contact-icon{font-size:26px;margin-bottom:8px}
+  .contact-label{font-size:11px;font-weight:700;color:#c96a10;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .contact-email{display:block;font-size:12.5px;font-weight:700;color:#7c3800;text-decoration:none;margin-bottom:6px;word-break:break-all}
+  .contact-email:hover{text-decoration:underline}
+  .contact-desc{font-size:12px;color:#6b7a8d;line-height:1.5}
+
   /* FOOTER */
   footer{background:#2A0E00;color:rgba(255,255,255,.6);padding:40px 5%;text-align:center}
   .footer-logo{font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:.5rem}
@@ -346,6 +357,38 @@
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <h2 style="font-size:clamp(1.3rem,2.4vw,2rem);font-weight:900;letter-spacing:-1px;color:#2A0E00;margin-bottom:10px" data-i18n="contact_h">Contact & Vendor Support</h2>
+  <p style="font-size:15px;color:#6b7a8d;max-width:520px;margin:0 auto" data-i18n="contact_p">Open your store, partner with us, or get help with your account. We are here.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">🏪</div>
+      <div class="contact-label" data-i18n="contact_vend">Vendor Onboarding</div>
+      <a href="mailto:vendors@xenderbigshop.com" class="contact-email">vendors@xenderbigshop.com</a>
+      <p class="contact-desc" data-i18n="contact_vend_d">Open your store and start selling to Africa in 48 hours.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">📦</div>
+      <div class="contact-label" data-i18n="contact_log">Logistics & B2B</div>
+      <a href="mailto:logistics@innovaafric.com" class="contact-email">logistics@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_log_d">Wholesale, bulk shipping, and B2B import from Asia.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
+      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_par_d">Become a Circular or regional distribution partner.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">💼</div>
+      <div class="contact-label" data-i18n="contact_inv">Investors</div>
+      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_inv_d">Seed round open. Deck on request.</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-logo">Xender<span>BigShop</span></div>
   <p style="margin-bottom:.5rem;font-size:.8rem;letter-spacing:1px" data-i18n="footer_slogan">WE SIMPLIFY LIFE</p>
@@ -392,6 +435,11 @@ const TR={
     p1f1:"Hasta 50 productos",p1f2:"Panel básico",p1f3:"Comisión 5%",p1f4:"Soporte email",
     p2f1:"Productos ilimitados",p2f2:"Analytics avanzado",p2f3:"Comisión 2.5%",p2f4:"Soporte prioritario",p2f5:"Logística integrada",
     p3f1:"Multi-tienda",p3f2:"API personalizada",p3f3:"Comisión 1%",p3f4:"Gestor dedicado",p3f5:"SLA garantizado",
+    contact_h:"Contacto & Soporte Vendedores",contact_p:"Abre tu tienda, asóciate con nosotros u obtén ayuda con tu cuenta. Estamos aquí.",
+    contact_vend:"Alta de Vendedor",contact_vend_d:"Abre tu tienda y empieza a vender en África en 48 horas.",
+    contact_log:"Logística & B2B",contact_log_d:"Mayorista, envíos masivos e importación B2B desde Asia.",
+    contact_par:"Asociaciones",contact_par_d:"Conviértete en Circular o socio de distribución regional.",
+    contact_inv:"Inversores",contact_inv_d:"Ronda Seed abierta. Deck bajo solicitud.",
     cta_h:"¿Listo para vender en África?",cta_p:"Únete a 50,000 vendedores que ya confían en XenderBigShop.",
     cta_btn1:"Abrir mi tienda",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
   },
@@ -427,6 +475,11 @@ const TR={
     p1f1:"Up to 50 products",p1f2:"Basic dashboard",p1f3:"5% commission",p1f4:"Email support",
     p2f1:"Unlimited products",p2f2:"Advanced analytics",p2f3:"2.5% commission",p2f4:"Priority support",p2f5:"Integrated logistics",
     p3f1:"Multi-store",p3f2:"Custom API",p3f3:"1% commission",p3f4:"Dedicated manager",p3f5:"Guaranteed SLA",
+    contact_h:"Contact & Vendor Support",contact_p:"Open your store, partner with us, or get help with your account. We are here.",
+    contact_vend:"Vendor Onboarding",contact_vend_d:"Open your store and start selling to Africa in 48 hours.",
+    contact_log:"Logistics & B2B",contact_log_d:"Wholesale, bulk shipping, and B2B import from Asia.",
+    contact_par:"Partnerships",contact_par_d:"Become a Circular or regional distribution partner.",
+    contact_inv:"Investors",contact_inv_d:"Seed round open. Deck on request.",
     cta_h:"Ready to sell in Africa?",cta_p:"Join 50,000 vendors who already trust XenderBigShop.",
     cta_btn1:"Open my store",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
   },
@@ -462,6 +515,11 @@ const TR={
     p1f1:"Jusqu'à 50 produits",p1f2:"Tableau de bord basique",p1f3:"Commission 5%",p1f4:"Support email",
     p2f1:"Produits illimités",p2f2:"Analytiques avancées",p2f3:"Commission 2.5%",p2f4:"Support prioritaire",p2f5:"Logistique intégrée",
     p3f1:"Multi-boutique",p3f2:"API personnalisée",p3f3:"Commission 1%",p3f4:"Gestionnaire dédié",p3f5:"SLA garanti",
+    contact_h:"Contact & Support Vendeurs",contact_p:"Ouvrez votre boutique, partenariez avec nous ou obtenez de l'aide. Nous sommes là.",
+    contact_vend:"Inscription Vendeur",contact_vend_d:"Ouvrez votre boutique et commencez à vendre en Afrique en 48 heures.",
+    contact_log:"Logistique & B2B",contact_log_d:"Grossiste, envois en masse et import B2B depuis l'Asie.",
+    contact_par:"Partenariats",contact_par_d:"Devenez Circulaire ou partenaire de distribution régionale.",
+    contact_inv:"Investisseurs",contact_inv_d:"Levée Seed ouverte. Deck sur demande.",
     cta_h:"Prêt à vendre en Afrique ?",cta_p:"Rejoignez 50 000 vendeurs qui font déjà confiance à XenderBigShop.",
     cta_btn1:"Ouvrir ma boutique",cta_btn2:"Voir l'Écosystème",footer_slogan:"WE SIMPLIFY LIFE"
   }

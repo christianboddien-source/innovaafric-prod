@@ -173,6 +173,17 @@
       .africa-inner { grid-template-columns: 1fr; }
     }
 
+    /* CONTACT */
+    .contact-section { padding: 90px 6%; background: var(--bg2); text-align: center; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; max-width: 960px; margin: 40px auto 0; }
+    .contact-card { background: var(--white); border-radius: 18px; padding: 32px 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); border: 1px solid var(--border); transition: transform .25s, box-shadow .25s; }
+    .contact-card:hover { transform: translateY(-4px); box-shadow: 0 8px 36px rgba(43,141,199,0.13); }
+    .contact-icon { font-size: 32px; margin-bottom: 12px; }
+    .contact-label { font-size: 13px; font-weight: 700; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .contact-email { display: block; font-size: 14px; font-weight: 700; color: var(--blue); text-decoration: none; margin-bottom: 10px; word-break: break-all; }
+    .contact-email:hover { color: var(--blue-dark); text-decoration: underline; }
+    .contact-desc { font-size: 13px; color: var(--grey); line-height: 1.5; }
+
     /* CTA */
     .cta { padding: 100px 6%; background: var(--navy); text-align: center; }
     .cta h2 { font-size: clamp(22px,3vw,38px); font-weight: 900; letter-spacing:-2px; color: white; margin-bottom: 16px; }
@@ -563,6 +574,38 @@
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <h2 class="sec-title" data-i18n="contact_h">Contact Us</h2>
+  <p class="sec-sub" data-i18n="contact_p">We are here for investors, partners, press, and anyone who wants to grow with Africa.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">💼</div>
+      <div class="contact-label" data-i18n="contact_inv">Investors</div>
+      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_inv_d">Seed round open — €580K target. Deck available on request.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <div class="contact-label" data-i18n="contact_par">Partners & Circulares</div>
+      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_par_d">Become an authorized representative (Circular) in your country or region.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">📰</div>
+      <div class="contact-label" data-i18n="contact_press">Press & Media</div>
+      <a href="mailto:press@innovaafric.com" class="contact-email">press@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_press_d">Press kit, brand assets, and interview requests welcome.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-label" data-i18n="contact_gen">General Inquiries</div>
+      <a href="mailto:info@innovaafric.com" class="contact-email">info@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_gen_d">Questions, ideas, or just want to say hello? We love to hear from you.</p>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-top">
@@ -643,6 +686,11 @@
       af_c1_h:'Inclusión Financiera', af_c1_p:'Mobile Money (MTN, Orange, Wave) llega donde los bancos nunca pudieron. XenderMoney lleva servicios fintech a cada teléfono.',
       af_c2_h:'Comercio y Marketplace', af_c2_p:'XenderShop y XenderBigShop permiten a los consumidores comprar globalmente y a los emprendedores vender localmente y transfronterizo — sin tienda física.',
       af_c3_h:'Logística de Última Milla', af_c3_p:'XenderDelivery crea empleo para riders mientras resuelve la brecha de entrega de África. Seguimiento GPS, paquetes asegurados, entrega el mismo día.',
+      contact_h:'Contáctanos', contact_p:'Estamos aquí para inversores, socios, prensa y cualquiera que quiera crecer con África.',
+      contact_inv:'Inversores', contact_inv_d:'Ronda Seed abierta — objetivo €580K. Deck disponible bajo solicitud.',
+      contact_par:'Socios & Circulares', contact_par_d:'Conviértete en representante autorizado (Circular) en tu país o región.',
+      contact_press:'Prensa & Medios', contact_press_d:'Kit de prensa, activos de marca y solicitudes de entrevista bienvenidas.',
+      contact_gen:'Consultas Generales', contact_gen_d:'¿Preguntas, ideas o simplemente quieres saludar? Nos encanta saber de ti.',
       cta_h:'¿Listo para Simplificar tu Vida?', cta_p:'Únete a miles de usuarios que ya usan el ecosistema InnovaAFRIC.',
       cta_btn:'Abrir XenderMoney →',
       foot_desc:'Construyendo la infraestructura digital para África, Europa y América Latina. We Simplify Life.',
@@ -697,6 +745,11 @@
       af_c1_h:'Financial Inclusion', af_c1_p:'Mobile Money (MTN, Orange, Wave) reaches populations banks never could. XenderMoney brings fintech-grade services to every phone.',
       af_c2_h:'Commerce & Marketplace', af_c2_p:'XenderShop & XenderBigShop enable consumers to buy globally and entrepreneurs to sell locally and across borders — no physical store needed.',
       af_c3_h:'Last-Mile Logistics', af_c3_p:"XenderDelivery creates jobs for riders while solving Africa's delivery gap. Real-time GPS tracking, insured packages, same-day delivery in major cities.",
+      contact_h:'Contact Us', contact_p:'We are here for investors, partners, press, and anyone who wants to grow with Africa.',
+      contact_inv:'Investors', contact_inv_d:'Seed round open — €580K target. Deck available on request.',
+      contact_par:'Partners & Circulares', contact_par_d:'Become an authorized representative (Circular) in your country or region.',
+      contact_press:'Press & Media', contact_press_d:'Press kit, brand assets, and interview requests welcome.',
+      contact_gen:'General Inquiries', contact_gen_d:'Questions, ideas, or just want to say hello? We love to hear from you.',
       cta_h:'Ready to Simplify Your Life?', cta_p:'Join thousands of users already using the InnovaAFRIC ecosystem.',
       cta_btn:'Open XenderMoney →',
       foot_desc:'Building the digital infrastructure for Africa, Europe, and Latin America. We Simplify Life.',
@@ -751,6 +804,11 @@
       af_c1_h:'Inclusion Financière', af_c1_p:"Mobile Money (MTN, Orange, Wave) atteint les populations que les banques n'ont jamais pu toucher. XenderMoney apporte des services fintech à chaque téléphone.",
       af_c2_h:'Commerce & Marketplace', af_c2_p:"XenderShop & XenderBigShop permettent aux consommateurs d'acheter mondialement et aux entrepreneurs de vendre localement et transfrontalièrement — sans boutique physique.",
       af_c3_h:'Logistique du Dernier Kilomètre', af_c3_p:"XenderDelivery crée des emplois pour les riders tout en comblant le manque de livraison en Afrique. Suivi GPS en temps réel, colis assurés, livraison le jour même dans les grandes villes.",
+      contact_h:'Contactez-nous', contact_p:"Nous sommes là pour les investisseurs, partenaires, presse et tous ceux qui veulent grandir avec l'Afrique.",
+      contact_inv:'Investisseurs', contact_inv_d:"Levée Seed ouverte — objectif €580K. Deck disponible sur demande.",
+      contact_par:'Partenaires & Circulaires', contact_par_d:'Devenez représentant autorisé (Circulaire) dans votre pays ou région.',
+      contact_press:'Presse & Médias', contact_press_d:'Kit presse, assets de marque et demandes d\'interview les bienvenus.',
+      contact_gen:'Renseignements Généraux', contact_gen_d:'Questions, idées ou juste envie de dire bonjour ? Nous adorons avoir de vos nouvelles.',
       cta_h:'Prêt à Simplifier votre Vie ?', cta_p:"Rejoignez des milliers d'utilisateurs qui utilisent déjà l'écosystème InnovaAFRIC.",
       cta_btn:'Ouvrir XenderMoney →',
       foot_desc:"Construction de l'infrastructure numérique pour l'Afrique, l'Europe et l'Amérique Latine. We Simplify Life.",

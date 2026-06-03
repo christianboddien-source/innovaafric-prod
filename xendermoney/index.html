@@ -277,6 +277,17 @@
     .plan-features li { font-size: 14px; color: var(--grey-light); display: flex; align-items: center; gap: 10px; }
     .plan-features li::before { content: '✓'; color: var(--orange); font-weight: 700; }
 
+    /* ── CONTACT ── */
+    .contact-section { padding: 90px 6%; background: var(--navy-mid); text-align: center; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 20px; max-width: 900px; margin: 40px auto 0; }
+    .contact-card { background: var(--navy-card); border-radius: 16px; padding: 28px 20px; border: 1px solid rgba(245,166,35,0.15); transition: transform .25s, box-shadow .25s; }
+    .contact-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(245,166,35,0.12); }
+    .contact-icon { font-size: 30px; margin-bottom: 10px; }
+    .contact-label { font-size: 12px; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .contact-email { display: block; font-size: 13px; font-weight: 700; color: var(--white); text-decoration: none; margin-bottom: 8px; word-break: break-all; }
+    .contact-email:hover { color: var(--orange); }
+    .contact-desc { font-size: 12px; color: var(--grey); line-height: 1.5; }
+
     /* ── CTA ── */
     .cta-section {
       text-align: center; padding: 100px 6%;
@@ -746,6 +757,38 @@
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <h2 class="section-title" data-i18n="contact_h">Contact & Support</h2>
+  <p style="color:var(--grey);font-size:16px;max-width:560px;margin:0 auto;" data-i18n="contact_p">Our team is available to help you with your transfers, technical issues, and partnership inquiries.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">🛟</div>
+      <div class="contact-label" data-i18n="contact_sup">User Support</div>
+      <a href="mailto:support@xendermoney.com" class="contact-email">support@xendermoney.com</a>
+      <p class="contact-desc" data-i18n="contact_sup_d">Transfer issues, account access, mobile money — we reply within 24h.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🏦</div>
+      <div class="contact-label" data-i18n="contact_biz">Business & API</div>
+      <a href="mailto:biz@xendermoney.com" class="contact-email">biz@xendermoney.com</a>
+      <p class="contact-desc" data-i18n="contact_biz_d">API integrations, bulk transfers, and business account setup.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
+      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_par_d">Circulares Autorizadas, agent networks, and fintech integrations.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">💼</div>
+      <div class="contact-label" data-i18n="contact_inv">Investors</div>
+      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_inv_d">Join our Seed round. Deck and financials available on request.</p>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-top">
@@ -808,6 +851,11 @@
       sec_how:'Cómo funciona', sec_how_h:'Envía dinero en<br />4 pasos simples',
       sec_price_h:'Tarifas simples y transparentes',
       sec_price_sub:'Sin cargos ocultos. Siempre sabes lo que pagas antes de enviar.',
+      contact_h:'Contacto & Soporte', contact_p:'Nuestro equipo está disponible para ayudarte con transferencias, problemas técnicos y consultas de asociación.',
+      contact_sup:'Soporte al Usuario', contact_sup_d:'Problemas de transferencia, acceso a cuenta, dinero móvil — respondemos en 24h.',
+      contact_biz:'Negocios & API', contact_biz_d:'Integraciones API, transferencias masivas y configuración de cuenta empresarial.',
+      contact_par:'Asociaciones', contact_par_d:'Circulares Autorizadas, redes de agentes e integraciones fintech.',
+      contact_inv:'Inversores', contact_inv_d:'Únete a nuestra ronda Seed. Deck y financieros disponibles bajo solicitud.',
       cta_h:'Empieza a Enviar Dinero Hoy',
       cta_p:'Abre tu cuenta gratuita de XenderMoney en menos de 2 minutos.',
       cta_btn:'Crear Cuenta Gratis →',
@@ -832,6 +880,11 @@
       sec_how:'How it works', sec_how_h:'Send money in<br />4 simple steps',
       sec_price_h:'Simple, transparent fees',
       sec_price_sub:'No hidden charges. You always know what you pay before you send.',
+      contact_h:'Contact & Support', contact_p:'Our team is available to help you with transfers, technical issues, and partnership inquiries.',
+      contact_sup:'User Support', contact_sup_d:'Transfer issues, account access, mobile money — we reply within 24h.',
+      contact_biz:'Business & API', contact_biz_d:'API integrations, bulk transfers, and business account setup.',
+      contact_par:'Partnerships', contact_par_d:'Circulares Autorizadas, agent networks, and fintech integrations.',
+      contact_inv:'Investors', contact_inv_d:'Join our Seed round. Deck and financials available on request.',
       cta_h:'Start Sending Money Today',
       cta_p:'Open your free XenderMoney account in under 2 minutes.',
       cta_btn:'Create Free Account →',
@@ -856,6 +909,11 @@
       sec_how:'Comment ça marche', sec_how_h:'Envoyez de l\'argent en<br />4 étapes simples',
       sec_price_h:'Frais simples et transparents',
       sec_price_sub:'Pas de frais cachés. Vous savez toujours ce que vous payez avant d\'envoyer.',
+      contact_h:'Contact & Support', contact_p:'Notre équipe est disponible pour vous aider avec vos transferts, problèmes techniques et demandes de partenariat.',
+      contact_sup:'Support Utilisateur', contact_sup_d:'Problèmes de transfert, accès au compte, mobile money — nous répondons sous 24h.',
+      contact_biz:'Business & API', contact_biz_d:"Intégrations API, transferts en masse et ouverture de compte professionnel.",
+      contact_par:'Partenariats', contact_par_d:"Circulaires Autorisées, réseaux d'agents et intégrations fintech.",
+      contact_inv:'Investisseurs', contact_inv_d:"Rejoignez notre tour Seed. Deck et financiers disponibles sur demande.",
       cta_h:'Commencez à Envoyer de l\'Argent Aujourd\'hui',
       cta_p:'Ouvrez votre compte XenderMoney gratuit en moins de 2 minutes.',
       cta_btn:'Créer un Compte Gratuit →',

@@ -130,6 +130,17 @@
     .badge-teal { background: rgba(0,201,167,0.12); color: var(--teal-dark); }
     .badge-orange { background: rgba(245,166,35,0.12); color: var(--orange-dark); }
 
+    /* CONTACT */
+    .contact-section { padding: 90px 6%; background: #f0faf5; text-align: center; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 880px; margin: 36px auto 0; }
+    .contact-card { background: white; border-radius: 16px; padding: 28px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.07); transition: transform .25s; }
+    .contact-card:hover { transform: translateY(-4px); }
+    .contact-icon { font-size: 28px; margin-bottom: 10px; }
+    .contact-label { font-size: 12px; font-weight: 700; color: #2a7a4f; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .contact-email { display: block; font-size: 13px; font-weight: 700; color: #1a5c3a; text-decoration: none; margin-bottom: 8px; word-break: break-all; }
+    .contact-email:hover { text-decoration: underline; }
+    .contact-desc { font-size: 12px; color: #6b7a8d; line-height: 1.5; }
+
     /* CTA */
     .cta { padding: 120px 6%; text-align: center; background: var(--dark); }
     .cta h2 { font-size: clamp(22px,3vw,38px); font-weight: 900; letter-spacing:-2px; color: white; margin-bottom: 16px; }
@@ -302,6 +313,38 @@
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact-section reveal" id="contact">
+  <h2 class="sec-title" data-i18n="contact_h">Contact & Help</h2>
+  <p style="font-size:16px;color:#6b7a8d;max-width:540px;margin:0 auto;" data-i18n="contact_p">Need help with an order, want to become a vendor, or have a press inquiry? We are here.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">🛍️</div>
+      <div class="contact-label" data-i18n="contact_cust">Customer Support</div>
+      <a href="mailto:shop@innovaafric.com" class="contact-email">shop@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_cust_d">Order tracking, returns, payment issues — reply within 24h.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🏪</div>
+      <div class="contact-label" data-i18n="contact_vend">Become a Vendor</div>
+      <a href="mailto:vendors@innovaafric.com" class="contact-email">vendors@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_vend_d">List your products and reach millions of customers across Africa.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
+      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_par_d">Logistics, payment, and brand partnership opportunities.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-label" data-i18n="contact_gen">General</div>
+      <a href="mailto:info@innovaafric.com" class="contact-email">info@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_gen_d">Any other question or feedback? Drop us a message.</p>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-top">
@@ -371,6 +414,11 @@
       sec_pay:'Pago', sec_pay_h:'Paga como Quieras',
       sec_pay_sub:'Todos los métodos de pago en África y Europa. Sin cuenta bancaria — con Mobile Money puedes empezar.',
       instant:'Instantáneo', free_fee:'0% comisión',
+      contact_h:'Contacto & Ayuda', contact_p:'¿Necesitas ayuda con un pedido, quieres ser vendedor o tienes una consulta de prensa? Estamos aquí.',
+      contact_cust:'Soporte al Cliente', contact_cust_d:'Seguimiento de pedidos, devoluciones, pagos — respuesta en 24h.',
+      contact_vend:'Sé Vendedor', contact_vend_d:'Lista tus productos y llega a millones de clientes en toda África.',
+      contact_par:'Asociaciones', contact_par_d:'Oportunidades de asociación en logística, pagos y marcas.',
+      contact_gen:'General', contact_gen_d:'¿Otra pregunta o sugerencia? Escríbenos.',
       cta_h:'Empieza a Comprar <span>Globalmente</span> Hoy', cta_p:'Millones de productos. Precios africanos. Entregados a tu puerta.',
       cta_btn:'Ver Productos →',
       foot_desc:'Compras globales para África. Paga local, compra global, entregado rápido. We Simplify Life.',
@@ -402,6 +450,11 @@
       sec_pay:'Payment', sec_pay_h:'Pay the Way You Want',
       sec_pay_sub:'Every major payment method across Africa and Europe. No bank account needed — Mobile Money is enough.',
       instant:'Instant', free_fee:'0% fees',
+      contact_h:'Contact & Help', contact_p:'Need help with an order, want to become a vendor, or have a press inquiry? We are here.',
+      contact_cust:'Customer Support', contact_cust_d:'Order tracking, returns, payment issues — reply within 24h.',
+      contact_vend:'Become a Vendor', contact_vend_d:'List your products and reach millions of customers across Africa.',
+      contact_par:'Partnerships', contact_par_d:'Logistics, payment, and brand partnership opportunities.',
+      contact_gen:'General', contact_gen_d:'Any other question or feedback? Drop us a message.',
       cta_h:'Start Shopping <span>Globally</span> Today', cta_p:'Millions of products. African prices. Delivered to your door.',
       cta_btn:'Browse Products →',
       foot_desc:'Global shopping for Africa. Pay local, shop global, delivered fast. We Simplify Life.',
@@ -433,6 +486,11 @@
       sec_pay:'Paiement', sec_pay_h:'Payez Comme Vous Voulez',
       sec_pay_sub:"Toutes les méthodes de paiement en Afrique et en Europe. Pas de compte bancaire nécessaire — Mobile Money suffit.",
       instant:'Instantané', free_fee:'0% frais',
+      contact_h:'Contact & Aide', contact_p:"Besoin d'aide pour une commande, envie de devenir vendeur ou demande presse ? Nous sommes là.",
+      contact_cust:'Support Client', contact_cust_d:'Suivi de commande, retours, paiements — réponse sous 24h.',
+      contact_vend:'Devenez Vendeur', contact_vend_d:"Listez vos produits et atteignez des millions de clients en Afrique.",
+      contact_par:'Partenariats', contact_par_d:'Opportunités de partenariat logistique, paiement et marques.',
+      contact_gen:'Général', contact_gen_d:"Une autre question ou suggestion ? Envoyez-nous un message.",
       cta_h:'Commencez à Acheter <span>Mondialement</span> Aujourd\'hui', cta_p:'Des millions de produits. Des prix africains. Livrés à votre porte.',
       cta_btn:'Voir les Produits →',
       foot_desc:"Shopping mondial pour l'Afrique. Payez local, achetez mondial, livré vite. We Simplify Life.",

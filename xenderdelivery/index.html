@@ -124,6 +124,17 @@
   .btn-cta-o{background:transparent;color:var(--text);border:2px solid rgba(255,255,255,.15)}
   .btn-cta-o:hover{border-color:var(--amber);color:var(--amber)}
 
+  /* CONTACT */
+  .contact-section{padding:80px 5%;background:#0A1628;text-align:center}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;max-width:860px;margin:32px auto 0}
+  .contact-card{background:#0F1E35;border-radius:14px;padding:24px 18px;border:1px solid rgba(245,158,11,.12);transition:transform .2s,box-shadow .2s}
+  .contact-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(245,158,11,.1)}
+  .contact-icon{font-size:26px;margin-bottom:8px}
+  .contact-label{font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .contact-email{display:block;font-size:12.5px;font-weight:700;color:var(--white);text-decoration:none;margin-bottom:6px;word-break:break-all}
+  .contact-email:hover{color:var(--amber)}
+  .contact-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
   /* FOOTER */
   footer{background:#060D18;color:var(--muted);padding:40px 5%;text-align:center}
   .footer-logo{font-size:1.3rem;font-weight:900;color:var(--white);margin-bottom:.5rem}
@@ -358,6 +369,38 @@
   </div>
 </section>
 
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <h2 style="font-size:clamp(1.3rem,2.4vw,2rem);font-weight:900;color:var(--white);letter-spacing:-1px;margin-bottom:10px" data-i18n="contact_h">Contact & Join the Fleet</h2>
+  <p style="font-size:15px;color:var(--muted);max-width:520px;margin:0 auto" data-i18n="contact_p">Become a rider, integrate our API, or partner with us to grow delivery across Africa.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon">🏍️</div>
+      <div class="contact-label" data-i18n="contact_rider">Become a Rider</div>
+      <a href="mailto:riders@xenderdelivery.com" class="contact-email">riders@xenderdelivery.com</a>
+      <p class="contact-desc" data-i18n="contact_rider_d">Join our fleet, earn daily, work flexible hours. Apply now.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🏢</div>
+      <div class="contact-label" data-i18n="contact_biz">Business & Merchants</div>
+      <a href="mailto:delivery@innovaafric.com" class="contact-email">delivery@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_biz_d">Same-day delivery, API integration, and corporate accounts.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🤝</div>
+      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
+      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_par_d">Circulares Autorizadas and last-mile logistics partnerships.</p>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">💼</div>
+      <div class="contact-label" data-i18n="contact_inv">Investors</div>
+      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
+      <p class="contact-desc" data-i18n="contact_inv_d">Seed round open. Deck and financials on request.</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-logo">Xender<span>Delivery</span></div>
   <p style="margin-bottom:.5rem;font-size:.8rem;letter-spacing:1px" data-i18n="footer_slogan">WE SIMPLIFY LIFE</p>
@@ -403,6 +446,11 @@ const TR={
     rl3:"Pagos diarios directo a tu Mobile Money",rl4:"Seguro de accidente incluido",
     rl5:"Bonificaciones por rendimiento y zonas peak",rider_btn:"Registrarme como Rider",
     rc_title:"Ingresos Rider Mensual",rs1:"Promedio mensual",rs2:"Rating medio",rs3:"Jornada típica",rs4:"Frecuencia de pago",
+    contact_h:"Contacto & Únete a la Flota",contact_p:"Sé rider, integra nuestra API o asóciate con nosotros para hacer crecer la entrega en África.",
+    contact_rider:"Sé Rider",contact_rider_d:"Únete a nuestra flota, gana diariamente, trabaja con horarios flexibles. Aplica ahora.",
+    contact_biz:"Empresas & Comercios",contact_biz_d:"Entrega el mismo día, integración API y cuentas corporativas.",
+    contact_par:"Asociaciones",contact_par_d:"Circulares Autorizadas y asociaciones de logística de última milla.",
+    contact_inv:"Inversores",contact_inv_d:"Ronda Seed abierta. Deck y financieros bajo solicitud.",
     cta_h:"¿Listo para entregar más rápido?",cta_p:"Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.",
     cta_btn1:"Empezar a Enviar",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
   },
@@ -437,6 +485,11 @@ const TR={
     rl3:"Daily payments directly to your Mobile Money",rl4:"Accident insurance included",
     rl5:"Bonuses for performance and peak zones",rider_btn:"Register as a Rider",
     rc_title:"Monthly Rider Earnings",rs1:"Monthly average",rs2:"Average rating",rs3:"Typical shift",rs4:"Payment frequency",
+    contact_h:"Contact & Join the Fleet",contact_p:"Become a rider, integrate our API, or partner with us to grow delivery across Africa.",
+    contact_rider:"Become a Rider",contact_rider_d:"Join our fleet, earn daily, work flexible hours. Apply now.",
+    contact_biz:"Business & Merchants",contact_biz_d:"Same-day delivery, API integration, and corporate accounts.",
+    contact_par:"Partnerships",contact_par_d:"Circulares Autorizadas and last-mile logistics partnerships.",
+    contact_inv:"Investors",contact_inv_d:"Seed round open. Deck and financials on request.",
     cta_h:"Ready to deliver faster?",cta_p:"Join over 5,000 riders and thousands of merchants who trust XenderDelivery.",
     cta_btn1:"Start Shipping",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
   },
@@ -471,6 +524,11 @@ const TR={
     rl3:"Paiements quotidiens directement sur votre Mobile Money",rl4:"Assurance accident incluse",
     rl5:"Bonus de performance et zones de pointe",rider_btn:"M'inscrire comme Rider",
     rc_title:"Revenus Mensuels Rider",rs1:"Moyenne mensuelle",rs2:"Note moyenne",rs3:"Journée typique",rs4:"Fréquence de paiement",
+    contact_h:"Contact & Rejoignez la Flotte",contact_p:"Devenez rider, intégrez notre API ou partenariez avec nous pour développer la livraison en Afrique.",
+    contact_rider:"Devenez Rider",contact_rider_d:"Rejoignez notre flotte, gagnez quotidiennement, horaires flexibles. Postulez maintenant.",
+    contact_biz:"Entreprises & Commerçants",contact_biz_d:"Livraison le jour même, intégration API et comptes entreprise.",
+    contact_par:"Partenariats",contact_par_d:"Circulaires Autorisées et partenariats logistique dernier kilomètre.",
+    contact_inv:"Investisseurs",contact_inv_d:"Levée Seed ouverte. Deck et financiers sur demande.",
     cta_h:"Prêt à livrer plus vite ?",cta_p:"Rejoignez plus de 5 000 riders et des milliers de commerçants qui font confiance à XenderDelivery.",
     cta_btn1:"Commencer à Envoyer",cta_btn2:"Voir l'Écosystème",footer_slogan:"WE SIMPLIFY LIFE"
   }
