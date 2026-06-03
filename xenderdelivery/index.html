@@ -762,6 +762,17 @@ function rdCalc(v){
   </div>
 </section>
 
+<!-- NEWSLETTER -->
+<section style="background:linear-gradient(135deg,#F59E0B 0%,#0B1525 100%);padding:52px 5%;text-align:center;">
+  <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px;">📬 Novedades para Repartidores</div>
+  <p style="font-size:14px;color:rgba(255,255,255,0.8);margin-bottom:22px;">Nuevas ciudades, mejores tarifas y consejos para maximizar tus ganancias</p>
+  <form onsubmit="nlXd(event)" style="display:flex;gap:8px;max-width:440px;margin:0 auto 10px;">
+    <input id="nl-xd" type="email" placeholder="tu@email.com" required style="flex:1;padding:12px 16px;border-radius:8px;border:none;font-size:14px;outline:none;"/>
+    <button type="submit" style="background:#0B1525;color:#F59E0B;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">Suscribirme →</button>
+  </form>
+  <p style="font-size:11px;color:rgba(255,255,255,0.5);">Sin spam · Cancela cuando quieras</p>
+</section>
+
 <footer>
   <div class="footer-logo">Xender<span>Delivery</span></div>
   <p style="margin-bottom:.5rem;font-size:.8rem;letter-spacing:1px" data-i18n="footer_slogan">WE SIMPLIFY LIFE</p>
@@ -991,6 +1002,7 @@ if(!localStorage.getItem('cookie_xd')){document.getElementById('cookie-banner').
 function cookieAccept(){localStorage.setItem('cookie_xd','all');document.getElementById('cookie-banner').style.display='none';}
 function cookieDecline(){localStorage.setItem('cookie_xd','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
+function nlXd(e){e.preventDefault();alert('✅ ¡Suscrito en XenderDelivery! Novedades en '+document.getElementById('nl-xd').value);document.getElementById('nl-xd').value='';}
 </script>
 </body>
 </html>

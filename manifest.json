@@ -1,0 +1,43 @@
+{
+  "name": "InnovaAFRIC",
+  "short_name": "InnovaAFRIC",
+  "description": "The super-app for Africa, Europe and Latin America — money transfers, shopping, delivery and more.",
+  "start_url": "/innovaafric-prod/",
+  "display": "standalone",
+  "background_color": "#050B18",
+  "theme_color": "#050B18",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "shopping", "productivity"],
+  "lang": "es",
+  "dir": "ltr",
+  "scope": "/innovaafric-prod/",
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Enviar Dinero",
+      "short_name": "Enviar",
+      "url": "/innovaafric-prod/#sc-send",
+      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mis Tarjetas",
+      "short_name": "Tarjetas",
+      "url": "/innovaafric-prod/#sc-cards",
+      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

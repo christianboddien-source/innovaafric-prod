@@ -278,6 +278,7 @@
       <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
       <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
     </div>
+    <button onclick="toggleDarkInnova()" id="dark-ia" title="Modo oscuro" style="background:none;border:1.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:#fff;font-weight:700;margin-right:4px;">🌙</button>
     <a href="#products" class="btn-nav" data-i18n="nav_cta">Get Started</a>
   </div>
 </nav>
@@ -1220,6 +1221,17 @@
   </div>
 </section>
 
+<!-- NEWSLETTER -->
+<section style="background:linear-gradient(135deg,#2B8DC7 0%,#0D2B4E 100%);padding:60px 5%;text-align:center;">
+  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;">📬 Mantente al día con INNOVAAFRIC</div>
+  <p style="font-size:15px;color:rgba(255,255,255,0.8);margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto;">Recibe actualizaciones sobre nuevas funcionalidades, expansiones de país y noticias del ecosistema</p>
+  <form onsubmit="nlInnova(event)" style="display:flex;gap:8px;max-width:460px;margin:0 auto 12px;">
+    <input id="nl-innova" type="email" placeholder="tu@email.com" required style="flex:1;padding:13px 18px;border-radius:8px;border:none;font-size:14px;outline:none;"/>
+    <button type="submit" style="background:#F5A623;color:#fff;border:none;border-radius:8px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">Suscribirse →</button>
+  </form>
+  <p style="font-size:11px;color:rgba(255,255,255,0.5);">Cero spam · Política de privacidad · Cancela cuando quieras</p>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-top">
@@ -1574,6 +1586,22 @@
     });
   }
   setLang(LANG);
+
+  // Dark mode
+  var darkIA=false;
+  function toggleDarkInnova(){
+    darkIA=!darkIA;
+    document.body.style.background=darkIA?'#0a0f1a':'#F4F8FF';
+    document.body.style.color=darkIA?'#e0e8f0':'';
+    document.getElementById('dark-ia').textContent=darkIA?'☀️':'🌙';
+    document.querySelectorAll('section,.card,.foot-top').forEach(function(el){
+      if(darkIA){el.dataset.origBg=el.style.background||'';if(!el.classList.contains('hero')&&!el.classList.contains('stats-band'))el.style.background='#111827';}
+      else{el.style.background=el.dataset.origBg||'';}
+    });
+  }
+
+  // Newsletter
+  function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value;alert('✅ ¡Suscrito! Actualizaciones en '+em);document.getElementById('nl-innova').value='';}
 </script>
 
 <!-- ═══ COOKIE BANNER ═══ -->
