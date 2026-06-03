@@ -455,54 +455,436 @@
   <div class="promo-item"><div class="promo-icon">🌍</div><div class="promo-text"><strong data-i18n="promo4_h">11 Countries</strong><span data-i18n="promo4_p">Delivered across Africa</span></div></div>
 </div>
 
-<!-- CATEGORIES -->
-<section id="categories" class="section">
+<!-- CATEGORIES — FULL ALIEXPRESS-STYLE -->
+<section id="categories" class="section" style="padding-bottom:0;">
   <div class="sec-header reveal">
     <div>
-      <span class="sec-label" data-i18n="sec_cat_label">Categories</span>
-      <h2 class="sec-title" data-i18n="sec_cat_h">Everything You Need</h2>
+      <span class="sec-label">Shop by Category</span>
+      <h2 class="sec-title">All Categories</h2>
     </div>
-    <a href="#" class="see-all" data-i18n="see_all">See all →</a>
+    <a href="#" class="see-all">Browse all →</a>
   </div>
-  <div class="cats-mega reveal">
-    <a href="#" class="cat-item"><span class="cat-emoji">📱</span><div class="cat-name" data-i18n="c1">Electronics</div><div class="cat-sub">120K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">👗</span><div class="cat-name" data-i18n="c2">Fashion</div><div class="cat-sub">85K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🏠</span><div class="cat-name" data-i18n="c3">Home & Living</div><div class="cat-sub">60K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">☀️</span><div class="cat-name" data-i18n="c4">Solar Energy</div><div class="cat-sub">8K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">💄</span><div class="cat-name" data-i18n="c5">Beauty</div><div class="cat-sub">45K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🧸</span><div class="cat-name" data-i18n="c6">Kids & Baby</div><div class="cat-sub">30K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">⚽</span><div class="cat-name" data-i18n="c7">Sports</div><div class="cat-sub">25K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🔧</span><div class="cat-name" data-i18n="c8">Tools & Auto</div><div class="cat-sub">40K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🌽</span><div class="cat-name" data-i18n="c9">Food & Grocery</div><div class="cat-sub">18K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">💊</span><div class="cat-name" data-i18n="c10">Health</div><div class="cat-sub">22K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🚗</span><div class="cat-name" data-i18n="c11">Auto Parts</div><div class="cat-sub">35K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">📚</span><div class="cat-name" data-i18n="c12">Books & School</div><div class="cat-sub">12K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🌿</span><div class="cat-name" data-i18n="c13">Garden</div><div class="cat-sub">9K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🏗️</span><div class="cat-name" data-i18n="c14">Construction</div><div class="cat-sub">15K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">🎮</span><div class="cat-name" data-i18n="c15">Gaming</div><div class="cat-sub">11K+ items</div></a>
-    <a href="#" class="cat-item"><span class="cat-emoji">📷</span><div class="cat-name" data-i18n="c16">Photo & Video</div><div class="cat-sub">7K+ items</div></a>
+
+  <!-- ALL 16 MAIN CATEGORIES -->
+  <div class="cats-mega reveal" style="grid-template-columns:repeat(8,1fr);gap:10px;">
+    <a href="#" class="cat-item" onclick="showSubs('elec');return false;"><span class="cat-emoji">📱</span><div class="cat-name">Electronics</div><div class="cat-sub">220K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('wfash');return false;"><span class="cat-emoji">👗</span><div class="cat-name">Women's Fashion</div><div class="cat-sub">185K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('mfash');return false;"><span class="cat-emoji">👔</span><div class="cat-name">Men's Fashion</div><div class="cat-sub">140K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('home');return false;"><span class="cat-emoji">🏠</span><div class="cat-name">Home & Garden</div><div class="cat-sub">160K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('beauty');return false;"><span class="cat-emoji">💄</span><div class="cat-name">Beauty & Health</div><div class="cat-sub">95K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('sports');return false;"><span class="cat-emoji">⚽</span><div class="cat-name">Sports & Outdoors</div><div class="cat-sub">75K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('baby');return false;"><span class="cat-emoji">🧸</span><div class="cat-name">Mother & Baby</div><div class="cat-sub">55K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('auto');return false;"><span class="cat-emoji">🚗</span><div class="cat-name">Automotive</div><div class="cat-sub">90K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('toys');return false;"><span class="cat-emoji">🎮</span><div class="cat-name">Toys & Hobbies</div><div class="cat-sub">65K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('jewel');return false;"><span class="cat-emoji">💎</span><div class="cat-name">Jewelry & Watches</div><div class="cat-sub">80K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('bags');return false;"><span class="cat-emoji">👜</span><div class="cat-name">Luggage & Bags</div><div class="cat-sub">45K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('comp');return false;"><span class="cat-emoji">💻</span><div class="cat-name">Computer & Office</div><div class="cat-sub">110K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('shoes');return false;"><span class="cat-emoji">👟</span><div class="cat-name">Shoes</div><div class="cat-sub">70K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('security');return false;"><span class="cat-emoji">🔒</span><div class="cat-name">Security</div><div class="cat-sub">28K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('lights');return false;"><span class="cat-emoji">💡</span><div class="cat-name">Lighting</div><div class="cat-sub">35K+ items</div></a>
+    <a href="#" class="cat-item" onclick="showSubs('food');return false;"><span class="cat-emoji">🍵</span><div class="cat-name">Food & Beverages</div><div class="cat-sub">22K+ items</div></a>
   </div>
-  <!-- Subcategories -->
-  <div class="subcats reveal" style="margin-top:24px;">
-    <span style="font-size:12px;font-weight:700;color:var(--grey);margin-right:8px;" data-i18n="subcat_label">Popular subcategories:</span>
-    <a href="#" class="subcat-chip" data-i18n="sub1">Smartphones</a>
-    <a href="#" class="subcat-chip" data-i18n="sub2">Laptops</a>
-    <a href="#" class="subcat-chip" data-i18n="sub3">Earbuds & Headphones</a>
-    <a href="#" class="subcat-chip" data-i18n="sub4">Smart Watches</a>
-    <a href="#" class="subcat-chip" data-i18n="sub5">Women's Dresses</a>
-    <a href="#" class="subcat-chip" data-i18n="sub6">Men's Shoes</a>
-    <a href="#" class="subcat-chip" data-i18n="sub7">Skincare & Serums</a>
-    <a href="#" class="subcat-chip" data-i18n="sub8">Hair Extensions</a>
-    <a href="#" class="subcat-chip" data-i18n="sub9">Solar Panels</a>
-    <a href="#" class="subcat-chip" data-i18n="sub10">LED Lights</a>
-    <a href="#" class="subcat-chip" data-i18n="sub11">Baby Clothes</a>
-    <a href="#" class="subcat-chip" data-i18n="sub12">Kitchen Appliances</a>
-    <a href="#" class="subcat-chip" data-i18n="sub13">Yoga & Fitness</a>
-    <a href="#" class="subcat-chip" data-i18n="sub14">Car Accessories</a>
-    <a href="#" class="subcat-chip" data-i18n="sub15">Vitamins & Supplements</a>
-    <a href="#" class="subcat-chip" data-i18n="sub16">Gaming Controllers</a>
-  </div>
+
+  <!-- SUBCATEGORY PANELS — one per main category -->
+  <div id="subpanel" style="margin-top:0;overflow:hidden;max-height:0;transition:max-height .4s ease;">
+
+    <!-- Electronics -->
+    <div id="subs-elec" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">📱 Electronics</span>
+        <a href="#" class="subcat-chip">Smartphones</a>
+        <a href="#" class="subcat-chip">Tablets</a>
+        <a href="#" class="subcat-chip">Laptops</a>
+        <a href="#" class="subcat-chip">Smart TVs</a>
+        <a href="#" class="subcat-chip">Cameras & Photo</a>
+        <a href="#" class="subcat-chip">Earbuds & Headphones</a>
+        <a href="#" class="subcat-chip">Smart Watches</a>
+        <a href="#" class="subcat-chip">Bluetooth Speakers</a>
+        <a href="#" class="subcat-chip">Power Banks</a>
+        <a href="#" class="subcat-chip">Cables & Chargers</a>
+        <a href="#" class="subcat-chip">Drones</a>
+        <a href="#" class="subcat-chip">E-Readers</a>
+        <a href="#" class="subcat-chip">Projectors</a>
+        <a href="#" class="subcat-chip">3D Printers</a>
+        <a href="#" class="subcat-chip">Home Theater</a>
+        <a href="#" class="subcat-chip">Gaming Consoles</a>
+        <a href="#" class="subcat-chip">VR Headsets</a>
+        <a href="#" class="subcat-chip">Electronic Accessories</a>
+      </div>
+    </div>
+
+    <!-- Women's Fashion -->
+    <div id="subs-wfash" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">👗 Women's Fashion</span>
+        <a href="#" class="subcat-chip">Dresses</a>
+        <a href="#" class="subcat-chip">Blouses & Shirts</a>
+        <a href="#" class="subcat-chip">T-Shirts & Tops</a>
+        <a href="#" class="subcat-chip">Pants & Leggings</a>
+        <a href="#" class="subcat-chip">Skirts</a>
+        <a href="#" class="subcat-chip">Jackets & Coats</a>
+        <a href="#" class="subcat-chip">Swimwear</a>
+        <a href="#" class="subcat-chip">Lingerie & Sleepwear</a>
+        <a href="#" class="subcat-chip">Activewear</a>
+        <a href="#" class="subcat-chip">Jumpsuits & Rompers</a>
+        <a href="#" class="subcat-chip">Ethnic & Cultural Wear</a>
+        <a href="#" class="subcat-chip">Wedding Dresses</a>
+        <a href="#" class="subcat-chip">Plus Size</a>
+        <a href="#" class="subcat-chip">Maternity Clothes</a>
+        <a href="#" class="subcat-chip">Hoodies & Sweatshirts</a>
+        <a href="#" class="subcat-chip">Socks & Stockings</a>
+        <a href="#" class="subcat-chip">Hats & Caps</a>
+        <a href="#" class="subcat-chip">Scarves & Wraps</a>
+        <a href="#" class="subcat-chip">Gloves & Mittens</a>
+      </div>
+    </div>
+
+    <!-- Men's Fashion -->
+    <div id="subs-mfash" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">👔 Men's Fashion</span>
+        <a href="#" class="subcat-chip">T-Shirts</a>
+        <a href="#" class="subcat-chip">Shirts & Formal</a>
+        <a href="#" class="subcat-chip">Pants & Chinos</a>
+        <a href="#" class="subcat-chip">Jeans</a>
+        <a href="#" class="subcat-chip">Shorts</a>
+        <a href="#" class="subcat-chip">Suits & Blazers</a>
+        <a href="#" class="subcat-chip">Jackets & Coats</a>
+        <a href="#" class="subcat-chip">Hoodies & Sweatshirts</a>
+        <a href="#" class="subcat-chip">Activewear</a>
+        <a href="#" class="subcat-chip">Underwear & Socks</a>
+        <a href="#" class="subcat-chip">Traditional & Ethnic</a>
+        <a href="#" class="subcat-chip">Ties & Accessories</a>
+        <a href="#" class="subcat-chip">Hats & Caps</a>
+        <a href="#" class="subcat-chip">Belts</a>
+        <a href="#" class="subcat-chip">Sunglasses</a>
+        <a href="#" class="subcat-chip">Watches</a>
+        <a href="#" class="subcat-chip">Plus Size</a>
+      </div>
+    </div>
+
+    <!-- Home & Garden -->
+    <div id="subs-home" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🏠 Home & Garden</span>
+        <a href="#" class="subcat-chip">Furniture</a>
+        <a href="#" class="subcat-chip">Bedding & Pillows</a>
+        <a href="#" class="subcat-chip">Kitchen Appliances</a>
+        <a href="#" class="subcat-chip">Cookware & Pots</a>
+        <a href="#" class="subcat-chip">Tableware & Cutlery</a>
+        <a href="#" class="subcat-chip">Storage & Organization</a>
+        <a href="#" class="subcat-chip">Home Décor</a>
+        <a href="#" class="subcat-chip">Curtains & Blinds</a>
+        <a href="#" class="subcat-chip">Rugs & Carpets</a>
+        <a href="#" class="subcat-chip">Bathroom Accessories</a>
+        <a href="#" class="subcat-chip">Garden Tools</a>
+        <a href="#" class="subcat-chip">Planters & Pots</a>
+        <a href="#" class="subcat-chip">Outdoor Furniture</a>
+        <a href="#" class="subcat-chip">BBQ & Grills</a>
+        <a href="#" class="subcat-chip">Cleaning Supplies</a>
+        <a href="#" class="subcat-chip">Air Purifiers</a>
+        <a href="#" class="subcat-chip">Fans & Air Conditioners</a>
+        <a href="#" class="subcat-chip">Solar Panels</a>
+        <a href="#" class="subcat-chip">Power Tools</a>
+        <a href="#" class="subcat-chip">Wall Art & Paintings</a>
+      </div>
+    </div>
+
+    <!-- Beauty & Health -->
+    <div id="subs-beauty" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">💄 Beauty & Health</span>
+        <a href="#" class="subcat-chip">Face Skincare</a>
+        <a href="#" class="subcat-chip">Serums & Essences</a>
+        <a href="#" class="subcat-chip">Moisturizers & Creams</a>
+        <a href="#" class="subcat-chip">Sunscreen & UV Care</a>
+        <a href="#" class="subcat-chip">Makeup & Cosmetics</a>
+        <a href="#" class="subcat-chip">Lipsticks & Lip Care</a>
+        <a href="#" class="subcat-chip">Foundation & Concealer</a>
+        <a href="#" class="subcat-chip">Eyeshadow & Mascara</a>
+        <a href="#" class="subcat-chip">Hair Care</a>
+        <a href="#" class="subcat-chip">Hair Extensions & Wigs</a>
+        <a href="#" class="subcat-chip">Hair Styling Tools</a>
+        <a href="#" class="subcat-chip">Nail Art & Polish</a>
+        <a href="#" class="subcat-chip">Fragrances & Perfumes</a>
+        <a href="#" class="subcat-chip">Body Wash & Soap</a>
+        <a href="#" class="subcat-chip">Vitamins & Supplements</a>
+        <a href="#" class="subcat-chip">Massage & Relaxation</a>
+        <a href="#" class="subcat-chip">Electric Shavers</a>
+        <a href="#" class="subcat-chip">Oral Care</a>
+        <a href="#" class="subcat-chip">Medical Equipment</a>
+      </div>
+    </div>
+
+    <!-- Sports & Outdoors -->
+    <div id="subs-sports" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">⚽ Sports & Outdoors</span>
+        <a href="#" class="subcat-chip">Fitness & Gym Equipment</a>
+        <a href="#" class="subcat-chip">Running & Jogging</a>
+        <a href="#" class="subcat-chip">Cycling</a>
+        <a href="#" class="subcat-chip">Swimming & Water Sports</a>
+        <a href="#" class="subcat-chip">Yoga & Pilates</a>
+        <a href="#" class="subcat-chip">Football & Soccer</a>
+        <a href="#" class="subcat-chip">Basketball</a>
+        <a href="#" class="subcat-chip">Tennis & Badminton</a>
+        <a href="#" class="subcat-chip">Martial Arts</a>
+        <a href="#" class="subcat-chip">Camping & Hiking</a>
+        <a href="#" class="subcat-chip">Fishing</a>
+        <a href="#" class="subcat-chip">Hunting</a>
+        <a href="#" class="subcat-chip">Skiing & Snowboarding</a>
+        <a href="#" class="subcat-chip">Climbing & Trekking</a>
+        <a href="#" class="subcat-chip">Sportswear</a>
+        <a href="#" class="subcat-chip">Sports Nutrition</a>
+        <a href="#" class="subcat-chip">Protective Gear</a>
+      </div>
+    </div>
+
+    <!-- Mother & Baby -->
+    <div id="subs-baby" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🧸 Mother & Baby</span>
+        <a href="#" class="subcat-chip">Baby Clothes</a>
+        <a href="#" class="subcat-chip">Baby Shoes</a>
+        <a href="#" class="subcat-chip">Strollers & Prams</a>
+        <a href="#" class="subcat-chip">Baby Carriers</a>
+        <a href="#" class="subcat-chip">Baby Feeding</a>
+        <a href="#" class="subcat-chip">Diapers & Nappies</a>
+        <a href="#" class="subcat-chip">Baby Monitors</a>
+        <a href="#" class="subcat-chip">Baby Bathing</a>
+        <a href="#" class="subcat-chip">Baby Safety</a>
+        <a href="#" class="subcat-chip">Nursing & Breastfeeding</a>
+        <a href="#" class="subcat-chip">Cribs & Furniture</a>
+        <a href="#" class="subcat-chip">Maternity Products</a>
+        <a href="#" class="subcat-chip">Educational Toys</a>
+        <a href="#" class="subcat-chip">Baby Health & Care</a>
+      </div>
+    </div>
+
+    <!-- Automotive -->
+    <div id="subs-auto" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🚗 Automotive</span>
+        <a href="#" class="subcat-chip">Car Accessories</a>
+        <a href="#" class="subcat-chip">Car Electronics & GPS</a>
+        <a href="#" class="subcat-chip">Car Seat Covers</a>
+        <a href="#" class="subcat-chip">Tires & Wheels</a>
+        <a href="#" class="subcat-chip">Engine Parts</a>
+        <a href="#" class="subcat-chip">Car Care & Cleaning</a>
+        <a href="#" class="subcat-chip">Dash Cameras</a>
+        <a href="#" class="subcat-chip">Car Lighting</a>
+        <a href="#" class="subcat-chip">Jump Starters</a>
+        <a href="#" class="subcat-chip">Motorcycle Parts</a>
+        <a href="#" class="subcat-chip">Motorcycle Helmets</a>
+        <a href="#" class="subcat-chip">Motorcycle Accessories</a>
+        <a href="#" class="subcat-chip">Boat & Marine</a>
+        <a href="#" class="subcat-chip">Car Interior Décor</a>
+        <a href="#" class="subcat-chip">Oils & Fluids</a>
+        <a href="#" class="subcat-chip">Vehicle Repair Tools</a>
+      </div>
+    </div>
+
+    <!-- Toys & Hobbies -->
+    <div id="subs-toys" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🎮 Toys & Hobbies</span>
+        <a href="#" class="subcat-chip">Action Figures</a>
+        <a href="#" class="subcat-chip">Dolls & Stuffed Toys</a>
+        <a href="#" class="subcat-chip">Building Blocks (LEGO-style)</a>
+        <a href="#" class="subcat-chip">RC Cars & Drones</a>
+        <a href="#" class="subcat-chip">Board Games</a>
+        <a href="#" class="subcat-chip">Puzzles</a>
+        <a href="#" class="subcat-chip">Outdoor Play</a>
+        <a href="#" class="subcat-chip">Science & Education Kits</a>
+        <a href="#" class="subcat-chip">Arts & Crafts</a>
+        <a href="#" class="subcat-chip">Musical Instruments</a>
+        <a href="#" class="subcat-chip">Model Kits</a>
+        <a href="#" class="subcat-chip">Collectibles & Figurines</a>
+        <a href="#" class="subcat-chip">Gaming Accessories</a>
+        <a href="#" class="subcat-chip">Kites & Outdoor Fun</a>
+        <a href="#" class="subcat-chip">Magic & Novelty Toys</a>
+      </div>
+    </div>
+
+    <!-- Jewelry & Watches -->
+    <div id="subs-jewel" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">💎 Jewelry & Watches</span>
+        <a href="#" class="subcat-chip">Necklaces & Pendants</a>
+        <a href="#" class="subcat-chip">Rings</a>
+        <a href="#" class="subcat-chip">Earrings</a>
+        <a href="#" class="subcat-chip">Bracelets & Bangles</a>
+        <a href="#" class="subcat-chip">Anklets</a>
+        <a href="#" class="subcat-chip">Men's Jewelry</a>
+        <a href="#" class="subcat-chip">Body Jewelry</a>
+        <a href="#" class="subcat-chip">Luxury Watches</a>
+        <a href="#" class="subcat-chip">Fashion Watches</a>
+        <a href="#" class="subcat-chip">Smart Watches</a>
+        <a href="#" class="subcat-chip">Watch Accessories</a>
+        <a href="#" class="subcat-chip">Gemstones</a>
+        <a href="#" class="subcat-chip">Jewelry Sets</a>
+        <a href="#" class="subcat-chip">Wedding Jewelry</a>
+        <a href="#" class="subcat-chip">Hair Accessories</a>
+      </div>
+    </div>
+
+    <!-- Luggage & Bags -->
+    <div id="subs-bags" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">👜 Luggage & Bags</span>
+        <a href="#" class="subcat-chip">Backpacks</a>
+        <a href="#" class="subcat-chip">Handbags & Purses</a>
+        <a href="#" class="subcat-chip">Shoulder Bags</a>
+        <a href="#" class="subcat-chip">Tote Bags</a>
+        <a href="#" class="subcat-chip">Crossbody Bags</a>
+        <a href="#" class="subcat-chip">Travel Suitcases</a>
+        <a href="#" class="subcat-chip">Carry-On Luggage</a>
+        <a href="#" class="subcat-chip">Laptop Bags & Cases</a>
+        <a href="#" class="subcat-chip">Clutch Bags</a>
+        <a href="#" class="subcat-chip">Wallets & Card Holders</a>
+        <a href="#" class="subcat-chip">Waist Packs & Belt Bags</a>
+        <a href="#" class="subcat-chip">Drawstring Bags</a>
+        <a href="#" class="subcat-chip">Duffle Bags</a>
+        <a href="#" class="subcat-chip">School Bags</a>
+      </div>
+    </div>
+
+    <!-- Computer & Office -->
+    <div id="subs-comp" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">💻 Computer & Office</span>
+        <a href="#" class="subcat-chip">Laptops & Notebooks</a>
+        <a href="#" class="subcat-chip">Desktop Computers</a>
+        <a href="#" class="subcat-chip">Monitors</a>
+        <a href="#" class="subcat-chip">Keyboards & Mice</a>
+        <a href="#" class="subcat-chip">RAM & Storage</a>
+        <a href="#" class="subcat-chip">Graphics Cards (GPU)</a>
+        <a href="#" class="subcat-chip">Processors (CPU)</a>
+        <a href="#" class="subcat-chip">Motherboards</a>
+        <a href="#" class="subcat-chip">Cooling Systems</a>
+        <a href="#" class="subcat-chip">PC Cases & Towers</a>
+        <a href="#" class="subcat-chip">Printers & Scanners</a>
+        <a href="#" class="subcat-chip">Projectors</a>
+        <a href="#" class="subcat-chip">Network & Router</a>
+        <a href="#" class="subcat-chip">UPS & Power Supplies</a>
+        <a href="#" class="subcat-chip">Office Chairs & Desks</a>
+        <a href="#" class="subcat-chip">Office Stationery</a>
+        <a href="#" class="subcat-chip">Webcams & Microphones</a>
+      </div>
+    </div>
+
+    <!-- Shoes -->
+    <div id="subs-shoes" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">👟 Shoes</span>
+        <a href="#" class="subcat-chip">Women's Heels</a>
+        <a href="#" class="subcat-chip">Women's Flats</a>
+        <a href="#" class="subcat-chip">Women's Boots</a>
+        <a href="#" class="subcat-chip">Women's Sandals</a>
+        <a href="#" class="subcat-chip">Men's Sneakers</a>
+        <a href="#" class="subcat-chip">Men's Dress Shoes</a>
+        <a href="#" class="subcat-chip">Men's Boots</a>
+        <a href="#" class="subcat-chip">Men's Sandals & Slippers</a>
+        <a href="#" class="subcat-chip">Sports Running Shoes</a>
+        <a href="#" class="subcat-chip">Football Boots</a>
+        <a href="#" class="subcat-chip">Basketball Shoes</a>
+        <a href="#" class="subcat-chip">Kids' Shoes</a>
+        <a href="#" class="subcat-chip">Unisex Sneakers</a>
+        <a href="#" class="subcat-chip">Casual Slip-Ons</a>
+        <a href="#" class="subcat-chip">Waterproof Shoes</a>
+        <a href="#" class="subcat-chip">Orthopaedic Footwear</a>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div id="subs-security" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🔒 Security</span>
+        <a href="#" class="subcat-chip">CCTV Cameras</a>
+        <a href="#" class="subcat-chip">Smart Doorbells</a>
+        <a href="#" class="subcat-chip">Alarm Systems</a>
+        <a href="#" class="subcat-chip">Smart Door Locks</a>
+        <a href="#" class="subcat-chip">GPS Trackers</a>
+        <a href="#" class="subcat-chip">Safes & Vaults</a>
+        <a href="#" class="subcat-chip">Access Control</a>
+        <a href="#" class="subcat-chip">NVR & DVR Systems</a>
+        <a href="#" class="subcat-chip">Motion Sensors</a>
+        <a href="#" class="subcat-chip">Intercoms</a>
+      </div>
+    </div>
+
+    <!-- Lighting -->
+    <div id="subs-lights" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">💡 Lighting</span>
+        <a href="#" class="subcat-chip">LED Bulbs</a>
+        <a href="#" class="subcat-chip">LED Strip Lights</a>
+        <a href="#" class="subcat-chip">Smart Lighting</a>
+        <a href="#" class="subcat-chip">Chandeliers & Pendant</a>
+        <a href="#" class="subcat-chip">Floor Lamps</a>
+        <a href="#" class="subcat-chip">Desk Lamps</a>
+        <a href="#" class="subcat-chip">Solar Lights</a>
+        <a href="#" class="subcat-chip">Outdoor & Garden Lights</a>
+        <a href="#" class="subcat-chip">Night Lights</a>
+        <a href="#" class="subcat-chip">Spotlights</a>
+        <a href="#" class="subcat-chip">Neon Signs</a>
+        <a href="#" class="subcat-chip">Stage & Party Lights</a>
+      </div>
+    </div>
+
+    <!-- Food & Beverages -->
+    <div id="subs-food" class="subpanel-inner" style="display:none;padding:28px 0 12px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;">
+        <span style="font-size:12px;font-weight:800;color:var(--teal);margin-right:4px;">🍵 Food & Beverages</span>
+        <a href="#" class="subcat-chip">Tea & Herbal Tea</a>
+        <a href="#" class="subcat-chip">Coffee & Accessories</a>
+        <a href="#" class="subcat-chip">Snacks & Chips</a>
+        <a href="#" class="subcat-chip">Dried Fruits & Nuts</a>
+        <a href="#" class="subcat-chip">Spices & Seasonings</a>
+        <a href="#" class="subcat-chip">Honey & Jams</a>
+        <a href="#" class="subcat-chip">Protein Powders</a>
+        <a href="#" class="subcat-chip">Energy Drinks</a>
+        <a href="#" class="subcat-chip">Cooking Oils</a>
+        <a href="#" class="subcat-chip">Sauces & Condiments</a>
+        <a href="#" class="subcat-chip">Chocolate & Candy</a>
+        <a href="#" class="subcat-chip">Baby Food</a>
+        <a href="#" class="subcat-chip">Cereals & Grains</a>
+        <a href="#" class="subcat-chip">Food Supplements</a>
+      </div>
+    </div>
+
+  </div><!-- /subpanel -->
 </section>
+
+<script>
+(function(){
+  var current = null;
+  window.showSubs = function(key) {
+    var panel = document.getElementById('subpanel');
+    var el = document.getElementById('subs-'+key);
+    if (!el) return;
+    // Hide previous
+    document.querySelectorAll('.subpanel-inner').forEach(function(d){ d.style.display='none'; });
+    if (current === key) {
+      panel.style.maxHeight = '0';
+      current = null;
+      return;
+    }
+    el.style.display = 'block';
+    panel.style.maxHeight = '400px';
+    current = key;
+    // Highlight active cat-item
+    document.querySelectorAll('.cat-item').forEach(function(a){ a.style.borderColor=''; a.style.background=''; });
+    var allCats = document.querySelectorAll('.cat-item');
+    allCats.forEach(function(a){
+      if (a.getAttribute('onclick') && a.getAttribute('onclick').includes("'"+key+"'")) {
+        a.style.borderColor = 'var(--teal)';
+        a.style.background = 'var(--bg)';
+      }
+    });
+  };
+})();
+</script>
 
 <!-- PROMO BANNERS -->
 <div class="banner-row">
