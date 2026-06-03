@@ -565,6 +565,316 @@
   </div>
 </section>
 
+<!-- CURRENCIES -->
+<section style="padding:90px 6%;background:linear-gradient(135deg,#0D2B4E 0%,#1A4A7A 50%,#0D2B4E 100%);">
+  <div class="sec-head reveal" style="text-align:center;margin-bottom:56px;">
+    <span class="sec-label" style="background:rgba(245,166,35,0.15);color:#F5A623;" data-i18n="cur_label">Multi-Currency</span>
+    <h2 class="sec-title" style="color:#fff;" data-i18n="cur_h">4 Currencies. Real-Time Rates.<br/>Every Transaction.</h2>
+    <p class="sec-sub" style="color:rgba(255,255,255,0.7);max-width:640px;margin:0 auto;" data-i18n="cur_sub">InnovaAFRIC operates natively in USD, EUR, FCFA and XOF — for recharges, transfers, payments and purchases across the entire ecosystem.</p>
+  </div>
+  <!-- Currency cards -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;max-width:960px;margin:0 auto 56px;" class="reveal">
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px 24px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:10px;">🇺🇸</div>
+      <div style="font-size:22px;font-weight:800;color:#fff;">USD</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;" data-i18n="cur_usd_name">US Dollar</div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="cur_usd_use">Base reference currency · International payments · AliExpress orders</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(66,168,225,0.4);border-radius:20px;padding:28px 24px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:10px;">🇪🇺</div>
+      <div style="font-size:22px;font-weight:800;color:#fff;">EUR</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;" data-i18n="cur_eur_name">Euro</div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="cur_eur_use">Diaspora transfers · SEPA payments · European users</div>
+    </div>
+    <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.4);border-radius:20px;padding:28px 24px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:10px;">🇨🇲</div>
+      <div style="font-size:22px;font-weight:800;color:#F5A623;">FCFA</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;" data-i18n="cur_fcfa_name">CFA Franc BEAC</div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="cur_fcfa_use">Central Africa · Cameroon, Gabon, Eq. Guinea, Chad, Congo, CAR</div>
+    </div>
+    <div style="background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.3);border-radius:20px;padding:28px 24px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:10px;">🇸🇳</div>
+      <div style="font-size:22px;font-weight:800;color:#F5A623;">XOF</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px;" data-i18n="cur_xof_name">CFA Franc BCEAO</div>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="cur_xof_use">West Africa · Senegal, Côte d'Ivoire, Mali, Burkina Faso, Togo, Benin</div>
+    </div>
+  </div>
+  <!-- Live converter widget -->
+  <div style="max-width:700px;margin:0 auto;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:36px 32px;" class="reveal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;">
+      <span style="font-size:22px;">🔄</span>
+      <h3 style="color:#fff;font-size:18px;font-weight:700;" data-i18n="conv_title">Real-Time Currency Converter</h3>
+      <span style="margin-left:auto;background:#F5A623;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;" data-i18n="conv_live">LIVE</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:16px;margin-bottom:24px;">
+      <div>
+        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:8px;" data-i18n="conv_from">Amount & Currency</label>
+        <div style="display:flex;gap:8px;">
+          <input id="ia-conv-amount" type="number" value="100" min="0" oninput="iaConvert()" style="flex:1;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:12px 14px;color:#fff;font-size:16px;font-weight:700;outline:none;width:0;" />
+          <select id="ia-conv-from" onchange="iaConvert()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;font-weight:700;outline:none;cursor:pointer;">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="FCFA">FCFA</option>
+            <option value="XOF">XOF</option>
+          </select>
+        </div>
+      </div>
+      <div style="font-size:28px;color:#F5A623;padding-bottom:8px;">⇄</div>
+      <div>
+        <label style="font-size:12px;color:rgba(255,255,255,0.5);display:block;margin-bottom:8px;" data-i18n="conv_to">Convert to</label>
+        <div style="display:flex;gap:8px;">
+          <div id="ia-conv-result" style="flex:1;background:rgba(245,166,35,0.15);border:1px solid rgba(245,166,35,0.4);border-radius:10px;padding:12px 14px;color:#F5A623;font-size:16px;font-weight:800;">65 500</div>
+          <select id="ia-conv-to" onchange="iaConvert()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;font-weight:700;outline:none;cursor:pointer;">
+            <option value="FCFA" selected>FCFA</option>
+            <option value="XOF">XOF</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-size:12px;">
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px;text-align:center;"><div style="color:rgba(255,255,255,0.4);" data-i18n="conv_rate">Rate</div><div style="color:#fff;font-weight:700;margin-top:4px;">1 USD</div></div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px;text-align:center;"><div style="color:rgba(255,255,255,0.4);">EUR</div><div style="color:#42A8E1;font-weight:700;margin-top:4px;">0.922</div></div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px;text-align:center;"><div style="color:rgba(255,255,255,0.4);">FCFA</div><div style="color:#F5A623;font-weight:700;margin-top:4px;">655</div></div>
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:10px;text-align:center;"><div style="color:rgba(255,255,255,0.4);">XOF</div><div style="color:#F5A623;font-weight:700;margin-top:4px;">655</div></div>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:16px;" data-i18n="conv_note">Indicative rates · Updated daily · Applies to recharges, transfers & payments</p>
+  </div>
+  <!-- Use cases strip -->
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:960px;margin:40px auto 0;" class="reveal">
+    <div style="background:rgba(255,255,255,0.08);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;"><span>💸</span><span data-i18n="cur_uc1">Send money home · FCFA & XOF</span></div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;"><span>🛒</span><span data-i18n="cur_uc2">Shop on XenderShop · Any currency</span></div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;"><span>🏪</span><span data-i18n="cur_uc3">Pay at stores · FCFA contactless</span></div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;"><span>🔋</span><span data-i18n="cur_uc4">Recharge airtime · EUR → FCFA</span></div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:40px;padding:10px 20px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;"><span>🚚</span><span data-i18n="cur_uc5">Pay delivery · XOF instant</span></div>
+  </div>
+</section>
+
+<!-- APP IN ACTION -->
+<section style="padding:90px 6%;background:#F4F8FF;">
+  <div class="sec-head reveal" style="text-align:center;margin-bottom:56px;">
+    <span class="sec-label" data-i18n="ops_label">App Operations</span>
+    <h2 class="sec-title" data-i18n="ops_h">The App in Action</h2>
+    <p class="sec-sub" data-i18n="ops_sub">From your phone, manage money, shop, pay, track deliveries and run your business — all in one ecosystem.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;max-width:1100px;margin:0 auto;">
+    <!-- Op 1: Send Money -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#2B8DC7,#0D2B4E);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERMONEY</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><span style="color:#fff;font-size:13px;font-weight:600;">💳 Balance</span><span style="color:#F5A623;font-weight:800;font-size:16px;">328,500 FCFA</span></div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;margin-bottom:10px;">
+            <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-bottom:6px;" data-i18n="ops_recipient">Recipient</div>
+            <div style="color:#fff;font-weight:600;font-size:13px;">👤 Marie D. · +237 6XX XXX</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_send_btn">Send 50,000 FCFA</div>
+          </div>
+        </div>
+        <div style="position:absolute;top:16px;right:16px;background:#F5A623;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">INSTANT</div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops1_h">Instant Money Transfers</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops1_p">Send money to family across Africa in seconds. USD, EUR, FCFA or XOF — the recipient sees the local currency automatically.</p>
+      </div>
+    </div>
+    <!-- Op 2: Recharge -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#16A34A,#0E7A32);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">RECHARGE — AIRTIME & BILLS</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">📱</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">MTN</div></div>
+            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">🟠</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">Orange</div></div>
+            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">💙</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;">Wave</div></div>
+            <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;">⚡</div><div style="color:#fff;font-size:11px;font-weight:600;margin-top:4px;" data-i18n="ops_elec">Electricity</div></div>
+          </div>
+          <div style="background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_rch_btn">Recharge Now</div>
+        </div>
+        <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">24/7</div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops2_h">Airtime & Bill Payments</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops2_p">Recharge mobile credit, pay electricity, water and internet bills for you or a family member — any operator, any country, instantly.</p>
+      </div>
+    </div>
+    <!-- Op 3: Shop -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#7C3AED,#4C1D95);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERSHOP × ALIEXPRESS</div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:24px;">📱</span><div><div style="color:#fff;font-size:12px;font-weight:600;">Smartphone Pro Max</div><div style="color:#F5A623;font-weight:700;font-size:13px;">32,750 FCFA</div></div></div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-size:24px;">👟</span><div><div style="color:#fff;font-size:12px;font-weight:600;">Sneakers Urban</div><div style="color:#F5A623;font-weight:700;font-size:13px;">8,200 FCFA</div></div></div>
+          <div style="background:#F5A623;border-radius:8px;padding:10px;text-align:center;color:#fff;font-weight:700;font-size:12px;" data-i18n="ops_cart_btn">Add to Cart · Pay with Wallet</div>
+        </div>
+        <div style="position:absolute;top:16px;right:16px;background:#F5A623;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">-40%</div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops3_h">Global Shopping, Local Prices</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops3_p">Browse millions of AliExpress products directly from your phone. Pay in FCFA or XOF. Delivered to your door by XenderDelivery.</p>
+      </div>
+    </div>
+    <!-- Op 4: Pay at store -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#DC2626,#7F1D1D);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:16px;" data-i18n="ops_tap">TAP TO PAY — NFC / QR CODE</div>
+          <div style="text-align:center;margin-bottom:14px;">
+            <div style="width:80px;height:80px;background:rgba(255,255,255,0.15);border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:36px;border:2px solid rgba(255,255,255,0.3);">📲</div>
+          </div>
+          <div style="text-align:center;color:#fff;font-size:13px;margin-bottom:8px;font-weight:600;" data-i18n="ops_store">Restaurant Le Baobab</div>
+          <div style="text-align:center;color:#F5A623;font-size:20px;font-weight:800;">12,500 FCFA</div>
+        </div>
+        <div style="position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700;color:#fff;">QR / NFC</div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops4_h">Pay at Public Establishments</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops4_p">Pay at restaurants, pharmacies, supermarkets and any affiliated merchant with a simple QR code or NFC — zero cash, instant confirmation.</p>
+      </div>
+    </div>
+    <!-- Op 5: Delivery tracking -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#0891B2,#164E63);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.1);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.6);font-size:11px;margin-bottom:12px;">XENDERDELIVERY — LIVE TRACKING</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:#F5A623;border-radius:50%;flex-shrink:0;"></div><div style="color:#fff;font-size:11px;">📦 <span data-i18n="ops_picked">Order picked up</span> — 14:32</div></div>
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:#22C55E;border-radius:50%;flex-shrink:0;"></div><div style="color:#fff;font-size:11px;">🏍️ <span data-i18n="ops_otw">Rider on the way</span> — 14:41</div></div>
+            <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:8px;background:rgba(255,255,255,0.2);border-radius:50%;flex-shrink:0;"></div><div style="color:rgba(255,255,255,0.4);font-size:11px;">✅ <span data-i18n="ops_eta">ETA 15:10</span></div></div>
+          </div>
+          <div style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);border-radius:8px;padding:8px;text-align:center;color:#22C55E;font-size:11px;font-weight:700;" data-i18n="ops_eta_label">≈ 29 min remaining</div>
+        </div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops5_h">Live Delivery Tracking</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops5_p">Follow every order in real time on the map. GPS updates every 30 seconds. Get notified when your rider is nearby.</p>
+      </div>
+    </div>
+    <!-- Op 6: Wallet statement -->
+    <div class="reveal" style="background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.07);">
+      <div style="background:linear-gradient(135deg,#F5A623,#E0921A);padding:28px 24px;position:relative;">
+        <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:18px;font-family:monospace;">
+          <div style="color:rgba(255,255,255,0.7);font-size:11px;margin-bottom:12px;" data-i18n="ops_stmt">WALLET STATEMENT · JUNE 2026</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">➕ <span data-i18n="ops_dep">Deposit EUR</span></span><span style="color:#fff;font-weight:700;font-size:11px;">+65,500 FCFA</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">🛒 XenderShop</span><span style="color:rgba(255,255,255,0.7);font-size:11px;">-32,750 FCFA</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:rgba(255,255,255,0.7);font-size:11px;">💸 <span data-i18n="ops_transf">Transfer</span></span><span style="color:rgba(255,255,255,0.7);font-size:11px;">-15,000 FCFA</span></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:8px;display:flex;justify-content:space-between;"><span style="color:#fff;font-size:12px;font-weight:700;" data-i18n="ops_bal">Balance</span><span style="color:#fff;font-size:14px;font-weight:800;">328,500 FCFA</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:20px 24px;">
+        <h4 style="font-size:15px;font-weight:700;color:#0D2B4E;margin-bottom:6px;" data-i18n="ops6_h">Complete Wallet History</h4>
+        <p style="font-size:13px;color:#6B7A8D;line-height:1.6;" data-i18n="ops6_p">Every deposit, transfer, purchase and payment — logged, categorized and exportable. Full financial transparency in your pocket.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ERP + DASHBOARD -->
+<section style="padding:90px 6%;background:#fff;">
+  <div class="sec-head reveal" style="text-align:center;margin-bottom:60px;">
+    <span class="sec-label" style="background:rgba(124,58,237,0.08);color:#7C3AED;" data-i18n="erp_label">ERP Intelligence</span>
+    <h2 class="sec-title" data-i18n="erp_h">30+ Modules. One Smart Platform.</h2>
+    <p class="sec-sub" data-i18n="erp_sub">InnovaAFRIC is powered by an enterprise-grade ERP that processes thousands of transactions simultaneously — in real time, across 35 countries.</p>
+  </div>
+  <!-- Dashboard preview -->
+  <div class="reveal" style="max-width:1060px;margin:0 auto 64px;background:#0D2B4E;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(13,43,78,0.25);">
+    <!-- Dashboard top bar -->
+    <div style="background:#1A3A5C;padding:14px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.07);">
+      <div style="display:flex;gap:6px;"><div style="width:12px;height:12px;border-radius:50%;background:#FF5F57;"></div><div style="width:12px;height:12px;border-radius:50%;background:#FFBD2E;"></div><div style="width:12px;height:12px;border-radius:50%;background:#28CA41;"></div></div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:6px;padding:6px 16px;color:rgba(255,255,255,0.5);font-size:12px;font-family:monospace;">InnovaAFRIC ERP Dashboard · v4.7</div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center;"><div style="width:8px;height:8px;background:#22C55E;border-radius:50%;"></div><span style="color:#22C55E;font-size:11px;font-weight:700;" data-i18n="dash_live">LIVE</span></div>
+    </div>
+    <!-- KPI row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.05);">
+      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi1">Total Volume (24h)</div><div style="color:#F5A623;font-size:22px;font-weight:800;">$2.4M</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +18.3%</div></div>
+      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi2">Active Users</div><div style="color:#42A8E1;font-size:22px;font-weight:800;">142,508</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +4.7%</div></div>
+      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi3">Transactions Today</div><div style="color:#fff;font-size:22px;font-weight:800;">38,921</div><div style="color:#22C55E;font-size:11px;margin-top:4px;">↑ +9.1%</div></div>
+      <div style="background:#0D2B4E;padding:20px 22px;"><div style="color:rgba(255,255,255,0.45);font-size:11px;margin-bottom:6px;" data-i18n="dash_kpi4">Countries Active</div><div style="color:#fff;font-size:22px;font-weight:800;">35</div><div style="color:rgba(255,255,255,0.4);font-size:11px;margin-top:4px;">3 continents</div></div>
+    </div>
+    <!-- Module grid -->
+    <div style="padding:24px;display:grid;grid-template-columns:200px 1fr;gap:16px;">
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="background:rgba(66,168,225,0.15);border-left:3px solid #42A8E1;border-radius:6px;padding:8px 12px;color:#42A8E1;font-size:12px;font-weight:600;" data-i18n="dash_mod1">💳 Wallets & KYC</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod2">💸 Transfers</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod3">🛒 Orders</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod4">🚚 Deliveries</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod5">📊 Analytics</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod6">👥 Users & Roles</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;" data-i18n="dash_mod7">🎁 Loyalty</div>
+        <div style="background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 12px;color:rgba(255,255,255,0.5);font-size:12px;opacity:0.5;">⋯ +23 more</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:18px;">
+        <div style="color:rgba(255,255,255,0.5);font-size:11px;margin-bottom:14px;" data-i18n="dash_chart">TRANSFER VOLUME · LAST 7 DAYS</div>
+        <div style="display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:12px;">
+          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:55%;"></div>
+          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:70%;"></div>
+          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:45%;"></div>
+          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:80%;"></div>
+          <div style="flex:1;background:rgba(66,168,225,0.25);border-radius:4px 4px 0 0;height:65%;"></div>
+          <div style="flex:1;background:rgba(66,168,225,0.4);border-radius:4px 4px 0 0;height:90%;"></div>
+          <div style="flex:1;background:#42A8E1;border-radius:4px 4px 0 0;height:100%;position:relative;"><div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);color:#F5A623;font-size:10px;font-weight:700;white-space:nowrap;">$2.4M</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;">
+          <div style="background:rgba(34,197,94,0.15);border-radius:6px;padding:8px 14px;"><span style="color:#22C55E;font-size:12px;font-weight:700;" data-i18n="dash_avg">Avg. response: 1.2s</span></div>
+          <div style="background:rgba(245,166,35,0.15);border-radius:6px;padding:8px 14px;"><span style="color:#F5A623;font-size:12px;font-weight:700;" data-i18n="dash_uptime">Uptime: 99.98%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ERP modules grid -->
+  <div class="reveal" style="max-width:1060px;margin:0 auto;">
+    <h3 style="text-align:center;font-size:20px;font-weight:700;color:#0D2B4E;margin-bottom:32px;" data-i18n="erp_mods_h">What Our 30+ Modules Can Do</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🪪</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m1_h">KYC & Identity</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m1_p">Batch verification, document OCR, fraud scoring, biometric checks</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">💳</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m2_h">Multi-Wallet Engine</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m2_p">USD, EUR, FCFA, XOF — real-time balance, instant FX conversion, transaction history</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🏦</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m3_h">Loans & Microfinance</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m3_p">Automated credit scoring, instant micro-loans, repayment scheduling</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🏪</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m4_h">Vendor Management</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m4_p">Onboarding, inventory, subscriptions, escrow, settlement</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">📦</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m5_h">Order & Logistics</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m5_p">Real-time order flow, rider dispatch, live GPS tracking, proof of delivery</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🎯</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m6_h">Loyalty & Rewards</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m6_p">Points, tiers, referral chains, cashback, coupons, tontines</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">📊</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m7_h">Analytics & BI</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m7_p">Country-level dashboards, revenue funnels, user segmentation, CSV export</div></div>
+      </div>
+      <div style="background:#F4F8FF;border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🔔</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m8_h">Smart Alerts</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m8_p">Fraud detection, threshold alerts, push notifications, SMS & email automation</div></div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(43,141,199,0.08),rgba(245,166,35,0.08));border:1px solid rgba(43,141,199,0.2);border-radius:16px;padding:20px;display:flex;gap:14px;align-items:flex-start;">
+        <span style="font-size:28px;flex-shrink:0;">🌍</span>
+        <div><div style="font-weight:700;font-size:14px;color:#0D2B4E;margin-bottom:4px;" data-i18n="erp_m9_h">Multi-Country Roles</div><div style="font-size:12px;color:#6B7A8D;" data-i18n="erp_m9_p">18 roles across 3 continents: SuperAdmin, Country Manager, Circular Agent, Compliance Officer…</div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#F4F8FF;border:1px solid #2B8DC7;border-radius:40px;padding:12px 28px;">
+        <span style="font-size:20px;">⚡</span>
+        <span style="font-size:14px;font-weight:700;color:#0D2B4E;" data-i18n="erp_speed">Processes thousands of transactions simultaneously — avg. response time: 1.2 seconds</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section class="cta">
   <div class="reveal">
@@ -707,7 +1017,40 @@
       founder_story:'Su gran sueño: un ecosistema digital completo, accesible para cada africano, donde enviar dinero sea tan fácil como un mensaje de texto, donde comprar online no sea un privilegio, donde cada emprendedor pueda vender al mundo desde su teléfono.<br/><br/><strong style="color:var(--navy);">Hoy InnovaAFRIC ya es una realidad. Mañana, será el estándar de África.</strong>',
       fc_name:'Cristiano Ivendengani Boddien', fc_origin:'Guinea Ecuatorial · África',
       fc_bio:'Joven emprendedor ecuatoguineano, experto en nuevas tecnologías y telecomunicaciones, con una visión que va más allá de las fronteras: simplificar la vida cotidiana en África tal y como la viven hoy otros continentes.',
-      tag1:'Emprendedor', tag2:'Experto en Telecom', tag3:'Innovador Tech', tag4:'África Primero'
+      tag1:'Emprendedor', tag2:'Experto en Telecom', tag3:'Innovador Tech', tag4:'África Primero',
+      cur_label:'Multi-Divisa', cur_h:'4 Monedas. Tasas en Tiempo Real.<br/>Cada Transacción.', cur_sub:'InnovaAFRIC opera nativamente en USD, EUR, FCFA y XOF — para recargas, transferencias, pagos y compras en todo el ecosistema.',
+      cur_usd_name:'Dólar Estadounidense', cur_usd_use:'Moneda de referencia base · Pagos internacionales · Pedidos AliExpress',
+      cur_eur_name:'Euro', cur_eur_use:'Transferencias diáspora · Pagos SEPA · Usuarios europeos',
+      cur_fcfa_name:'Franco CFA BEAC', cur_fcfa_use:'África Central · Camerún, Gabón, Guinea Ecuatorial, Chad, Congo, RCA',
+      cur_xof_name:'Franco CFA BCEAO', cur_xof_use:"África Occidental · Senegal, Costa de Marfil, Mali, Burkina Faso, Togo, Benín",
+      conv_title:'Conversor de Divisas en Tiempo Real', conv_live:'EN VIVO', conv_from:'Importe y Divisa', conv_to:'Convertir a', conv_rate:'Tasa', conv_note:'Tasas indicativas · Actualizadas a diario · Aplica a recargas, transferencias y pagos',
+      cur_uc1:'Enviar dinero a casa · FCFA y XOF', cur_uc2:'Comprar en XenderShop · Cualquier divisa', cur_uc3:'Pagar en establecimientos · FCFA sin contacto', cur_uc4:'Recargar saldo · EUR → FCFA', cur_uc5:'Pagar entregas · XOF al instante',
+      ops_label:'Operaciones en la App', ops_h:'La App en Acción', ops_sub:'Desde tu teléfono, gestiona dinero, compra, paga, sigue entregas y gestiona tu negocio — en un solo ecosistema.',
+      ops_recipient:'Destinatario', ops_send_btn:'Enviar 50.000 FCFA', ops_elec:'Electricidad', ops_rch_btn:'Recargar Ahora', ops_cart_btn:'Añadir al carrito · Pagar con Wallet',
+      ops_tap:'PAGO POR TOQUE — NFC / CÓDIGO QR', ops_store:'Restaurante Le Baobab',
+      ops_picked:'Pedido recogido', ops_otw:'Rider en camino', ops_eta:'ETA 15:10', ops_eta_label:'≈ 29 min restantes',
+      ops_stmt:'EXTRACTO WALLET · JUNIO 2026', ops_dep:'Depósito EUR', ops_transf:'Transferencia', ops_bal:'Saldo',
+      ops1_h:'Transferencias Instantáneas', ops1_p:'Envía dinero a familiares por toda África en segundos. USD, EUR, FCFA o XOF — el destinatario ve la moneda local automáticamente.',
+      ops2_h:'Recargas y Pago de Facturas', ops2_p:'Recarga crédito móvil, paga electricidad, agua e internet para ti o un familiar — cualquier operador, cualquier país, al instante.',
+      ops3_h:'Compras Globales, Precios Locales', ops3_p:'Explora millones de productos de AliExpress directamente desde tu teléfono. Paga en FCFA o XOF. Entregado a tu puerta por XenderDelivery.',
+      ops4_h:'Pago en Establecimientos Públicos', ops4_p:'Paga en restaurantes, farmacias, supermercados y cualquier comercio afiliado con un simple código QR o NFC — sin efectivo, confirmación instantánea.',
+      ops5_h:'Seguimiento de Entrega en Directo', ops5_p:'Sigue cada pedido en tiempo real en el mapa. Actualizaciones GPS cada 30 segundos. Notificación cuando tu rider está cerca.',
+      ops6_h:'Historial Completo del Wallet', ops6_p:'Cada depósito, transferencia, compra y pago — registrado, categorizado y exportable. Transparencia financiera total en tu bolsillo.',
+      erp_label:'Inteligencia ERP', erp_h:'30+ Módulos. Una Plataforma Inteligente.', erp_sub:'InnovaAFRIC está impulsado por un ERP de nivel empresarial que procesa miles de transacciones simultáneamente — en tiempo real, en 35 países.',
+      dash_live:'EN VIVO', dash_kpi1:'Volumen Total (24h)', dash_kpi2:'Usuarios Activos', dash_kpi3:'Transacciones Hoy', dash_kpi4:'Países Activos',
+      dash_mod1:'💳 Wallets y KYC', dash_mod2:'💸 Transferencias', dash_mod3:'🛒 Pedidos', dash_mod4:'🚚 Entregas', dash_mod5:'📊 Analíticas', dash_mod6:'👥 Usuarios y Roles', dash_mod7:'🎁 Fidelización',
+      dash_chart:'VOLUMEN DE TRANSFERENCIAS · ÚLTIMOS 7 DÍAS', dash_avg:'Respuesta media: 1.2s', dash_uptime:'Disponibilidad: 99,98%',
+      erp_mods_h:'Lo que nuestros 30+ Módulos pueden hacer',
+      erp_m1_h:'KYC e Identidad', erp_m1_p:'Verificación en lote, OCR de documentos, puntuación de fraude, controles biométricos',
+      erp_m2_h:'Motor Multi-Wallet', erp_m2_p:'USD, EUR, FCFA, XOF — saldo en tiempo real, conversión FX instantánea, historial de transacciones',
+      erp_m3_h:'Préstamos y Microfinanzas', erp_m3_p:'Scoring crediticio automático, micropréstamos instantáneos, planificación de pagos',
+      erp_m4_h:'Gestión de Vendedores', erp_m4_p:'Alta, inventario, suscripciones, depósito en garantía, liquidación',
+      erp_m5_h:'Pedidos y Logística', erp_m5_p:'Flujo de pedidos en tiempo real, asignación de riders, GPS en vivo, prueba de entrega',
+      erp_m6_h:'Fidelización y Recompensas', erp_m6_p:'Puntos, niveles, cadenas de referidos, cashback, cupones, tontinas',
+      erp_m7_h:'Analíticas e Inteligencia', erp_m7_p:'Dashboards por país, embudos de ingresos, segmentación de usuarios, exportación CSV',
+      erp_m8_h:'Alertas Inteligentes', erp_m8_p:'Detección de fraude, alertas por umbral, notificaciones push, SMS y email automáticos',
+      erp_m9_h:'Roles Multi-País', erp_m9_p:'18 roles en 3 continentes: SuperAdmin, Country Manager, Agente Circular, Compliance Officer…',
+      erp_speed:'Procesa miles de transacciones simultáneamente — tiempo de respuesta medio: 1,2 segundos'
     },
     en:{
       nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_cta:'Get Started',
@@ -766,7 +1109,40 @@
       founder_story:'His grand dream: a complete digital ecosystem, accessible to every African, where sending money is as easy as a text message, where shopping online is not a privilege, where every entrepreneur can sell to the world from their phone.<br/><br/><strong style="color:var(--navy);">Today, InnovaAFRIC is already a reality. Tomorrow, it will be Africa\'s standard.</strong>',
       fc_name:'Cristiano Ivendengani Boddien', fc_origin:'Equatorial Guinea · Africa',
       fc_bio:'Young Equatoguinean entrepreneur, expert in new technologies and telecommunications, with a vision that goes beyond borders: to simplify everyday life in Africa the way other continents already live it today.',
-      tag1:'Entrepreneur', tag2:'Telecom Expert', tag3:'Tech Innovator', tag4:'Africa First'
+      tag1:'Entrepreneur', tag2:'Telecom Expert', tag3:'Tech Innovator', tag4:'Africa First',
+      cur_label:'Multi-Currency', cur_h:'4 Currencies. Real-Time Rates.<br/>Every Transaction.', cur_sub:'InnovaAFRIC operates natively in USD, EUR, FCFA and XOF — for recharges, transfers, payments and purchases across the entire ecosystem.',
+      cur_usd_name:'US Dollar', cur_usd_use:'Base reference currency · International payments · AliExpress orders',
+      cur_eur_name:'Euro', cur_eur_use:'Diaspora transfers · SEPA payments · European users',
+      cur_fcfa_name:'CFA Franc BEAC', cur_fcfa_use:'Central Africa · Cameroon, Gabon, Eq. Guinea, Chad, Congo, CAR',
+      cur_xof_name:'CFA Franc BCEAO', cur_xof_use:"West Africa · Senegal, Côte d'Ivoire, Mali, Burkina Faso, Togo, Benin",
+      conv_title:'Real-Time Currency Converter', conv_live:'LIVE', conv_from:'Amount & Currency', conv_to:'Convert to', conv_rate:'Rate', conv_note:'Indicative rates · Updated daily · Applies to recharges, transfers & payments',
+      cur_uc1:'Send money home · FCFA & XOF', cur_uc2:'Shop on XenderShop · Any currency', cur_uc3:'Pay at stores · FCFA contactless', cur_uc4:'Recharge airtime · EUR → FCFA', cur_uc5:'Pay delivery · XOF instant',
+      ops_label:'App Operations', ops_h:'The App in Action', ops_sub:'From your phone, manage money, shop, pay, track deliveries and run your business — all in one ecosystem.',
+      ops_recipient:'Recipient', ops_send_btn:'Send 50,000 FCFA', ops_elec:'Electricity', ops_rch_btn:'Recharge Now', ops_cart_btn:'Add to Cart · Pay with Wallet',
+      ops_tap:'TAP TO PAY — NFC / QR CODE', ops_store:'Restaurant Le Baobab',
+      ops_picked:'Order picked up', ops_otw:'Rider on the way', ops_eta:'ETA 15:10', ops_eta_label:'≈ 29 min remaining',
+      ops_stmt:'WALLET STATEMENT · JUNE 2026', ops_dep:'Deposit EUR', ops_transf:'Transfer', ops_bal:'Balance',
+      ops1_h:'Instant Money Transfers', ops1_p:'Send money to family across Africa in seconds. USD, EUR, FCFA or XOF — the recipient sees the local currency automatically.',
+      ops2_h:'Airtime & Bill Payments', ops2_p:'Recharge mobile credit, pay electricity, water and internet bills for you or a family member — any operator, any country, instantly.',
+      ops3_h:'Global Shopping, Local Prices', ops3_p:'Browse millions of AliExpress products directly from your phone. Pay in FCFA or XOF. Delivered to your door by XenderDelivery.',
+      ops4_h:'Pay at Public Establishments', ops4_p:'Pay at restaurants, pharmacies, supermarkets and any affiliated merchant with a simple QR code or NFC — zero cash, instant confirmation.',
+      ops5_h:'Live Delivery Tracking', ops5_p:'Follow every order in real time on the map. GPS updates every 30 seconds. Get notified when your rider is nearby.',
+      ops6_h:'Complete Wallet History', ops6_p:'Every deposit, transfer, purchase and payment — logged, categorized and exportable. Full financial transparency in your pocket.',
+      erp_label:'ERP Intelligence', erp_h:'30+ Modules. One Smart Platform.', erp_sub:'InnovaAFRIC is powered by an enterprise-grade ERP that processes thousands of transactions simultaneously — in real time, across 35 countries.',
+      dash_live:'LIVE', dash_kpi1:'Total Volume (24h)', dash_kpi2:'Active Users', dash_kpi3:'Transactions Today', dash_kpi4:'Countries Active',
+      dash_mod1:'💳 Wallets & KYC', dash_mod2:'💸 Transfers', dash_mod3:'🛒 Orders', dash_mod4:'🚚 Deliveries', dash_mod5:'📊 Analytics', dash_mod6:'👥 Users & Roles', dash_mod7:'🎁 Loyalty',
+      dash_chart:'TRANSFER VOLUME · LAST 7 DAYS', dash_avg:'Avg. response: 1.2s', dash_uptime:'Uptime: 99.98%',
+      erp_mods_h:'What Our 30+ Modules Can Do',
+      erp_m1_h:'KYC & Identity', erp_m1_p:'Batch verification, document OCR, fraud scoring, biometric checks',
+      erp_m2_h:'Multi-Wallet Engine', erp_m2_p:'USD, EUR, FCFA, XOF — real-time balance, instant FX conversion, transaction history',
+      erp_m3_h:'Loans & Microfinance', erp_m3_p:'Automated credit scoring, instant micro-loans, repayment scheduling',
+      erp_m4_h:'Vendor Management', erp_m4_p:'Onboarding, inventory, subscriptions, escrow, settlement',
+      erp_m5_h:'Order & Logistics', erp_m5_p:'Real-time order flow, rider dispatch, live GPS tracking, proof of delivery',
+      erp_m6_h:'Loyalty & Rewards', erp_m6_p:'Points, tiers, referral chains, cashback, coupons, tontines',
+      erp_m7_h:'Analytics & BI', erp_m7_p:'Country-level dashboards, revenue funnels, user segmentation, CSV export',
+      erp_m8_h:'Smart Alerts', erp_m8_p:'Fraud detection, threshold alerts, push notifications, SMS & email automation',
+      erp_m9_h:'Multi-Country Roles', erp_m9_p:'18 roles across 3 continents: SuperAdmin, Country Manager, Circular Agent, Compliance Officer…',
+      erp_speed:'Processes thousands of transactions simultaneously — avg. response time: 1.2 seconds'
     },
     fr:{
       nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_cta:'Commencer',
@@ -825,9 +1201,54 @@
       founder_story:"Son grand rêve : un écosystème numérique complet, accessible à chaque Africain, où envoyer de l'argent est aussi simple qu'un SMS, où faire du shopping en ligne n'est pas un privilège, où chaque entrepreneur peut vendre au monde depuis son téléphone.<br/><br/><strong style=\"color:var(--navy);\">Aujourd'hui, InnovaAFRIC est déjà une réalité. Demain, ce sera le standard de l'Afrique.</strong>",
       fc_name:'Cristiano Ivendengani Boddien', fc_origin:'Guinée Équatoriale · Afrique',
       fc_bio:"Jeune entrepreneur équato-guinéen, expert en nouvelles technologies et télécommunications, avec une vision qui dépasse les frontières : simplifier la vie quotidienne en Afrique comme les autres continents la vivent déjà aujourd'hui.",
-      tag1:'Entrepreneur', tag2:'Expert Télécom', tag3:'Innovateur Tech', tag4:"L'Afrique d'abord"
+      tag1:'Entrepreneur', tag2:'Expert Télécom', tag3:'Innovateur Tech', tag4:"L'Afrique d'abord",
+      cur_label:'Multi-Devises', cur_h:'4 Devises. Taux en Temps Réel.<br/>Chaque Transaction.', cur_sub:"InnovaAFRIC opère nativement en USD, EUR, FCFA et XOF — pour les recharges, transferts, paiements et achats dans tout l'écosystème.",
+      cur_usd_name:'Dollar Américain', cur_usd_use:'Devise de référence · Paiements internationaux · Commandes AliExpress',
+      cur_eur_name:'Euro', cur_eur_use:'Transferts diaspora · Paiements SEPA · Utilisateurs européens',
+      cur_fcfa_name:'Franc CFA BEAC', cur_fcfa_use:"Afrique Centrale · Cameroun, Gabon, Guinée Équatoriale, Tchad, Congo, RCA",
+      cur_xof_name:'Franc CFA BCEAO', cur_xof_use:"Afrique de l'Ouest · Sénégal, Côte d'Ivoire, Mali, Burkina Faso, Togo, Bénin",
+      conv_title:'Convertisseur de Devises en Temps Réel', conv_live:'EN DIRECT', conv_from:'Montant & Devise', conv_to:'Convertir en', conv_rate:'Taux', conv_note:'Taux indicatifs · Mis à jour quotidiennement · Applicable aux recharges, transferts et paiements',
+      cur_uc1:'Envoyer de l\'argent · FCFA & XOF', cur_uc2:'Acheter sur XenderShop · Toute devise', cur_uc3:'Payer en boutique · FCFA sans contact', cur_uc4:'Recharger crédit · EUR → FCFA', cur_uc5:'Payer la livraison · XOF instantané',
+      ops_label:"Opérations sur l'App", ops_h:"L'App en Action", ops_sub:"Depuis votre téléphone, gérez l'argent, faites vos courses, payez, suivez les livraisons et gérez votre entreprise — dans un seul écosystème.",
+      ops_recipient:'Destinataire', ops_send_btn:'Envoyer 50 000 FCFA', ops_elec:'Électricité', ops_rch_btn:'Recharger maintenant', ops_cart_btn:'Ajouter au panier · Payer avec le Wallet',
+      ops_tap:'PAIEMENT PAR TOUCHER — NFC / QR CODE', ops_store:'Restaurant Le Baobab',
+      ops_picked:'Commande récupérée', ops_otw:'Rider en route', ops_eta:'ETA 15h10', ops_eta_label:'≈ 29 min restantes',
+      ops_stmt:'RELEVÉ WALLET · JUIN 2026', ops_dep:'Dépôt EUR', ops_transf:'Transfert', ops_bal:'Solde',
+      ops1_h:'Transferts Instantanés', ops1_p:"Envoyez de l'argent à votre famille en Afrique en quelques secondes. USD, EUR, FCFA ou XOF — le destinataire voit automatiquement la devise locale.",
+      ops2_h:'Recharges & Paiement de Factures', ops2_p:"Rechargez du crédit mobile, payez l'électricité, l'eau et internet pour vous ou un proche — n'importe quel opérateur, n'importe quel pays, instantanément.",
+      ops3_h:'Achats Mondiaux, Prix Locaux', ops3_p:"Parcourez des millions de produits AliExpress directement depuis votre téléphone. Payez en FCFA ou XOF. Livré à votre porte par XenderDelivery.",
+      ops4_h:'Paiement en Établissements Publics', ops4_p:"Payez dans les restaurants, pharmacies, supermarchés et tout commerçant affilié avec un simple QR code ou NFC — zéro espèces, confirmation instantanée.",
+      ops5_h:'Suivi de Livraison en Direct', ops5_p:"Suivez chaque commande en temps réel sur la carte. Mises à jour GPS toutes les 30 secondes. Notification quand votre livreur est proche.",
+      ops6_h:'Historique Complet du Wallet', ops6_p:"Chaque dépôt, transfert, achat et paiement — enregistré, catégorisé et exportable. Transparence financière totale dans votre poche.",
+      erp_label:'Intelligence ERP', erp_h:'30+ Modules. Une Plateforme Intelligente.', erp_sub:"InnovaAFRIC est propulsé par un ERP de niveau enterprise qui traite des milliers de transactions simultanément — en temps réel, dans 35 pays.",
+      dash_live:'EN DIRECT', dash_kpi1:'Volume Total (24h)', dash_kpi2:'Utilisateurs Actifs', dash_kpi3:"Transactions Aujourd'hui", dash_kpi4:'Pays Actifs',
+      dash_mod1:'💳 Wallets & KYC', dash_mod2:'💸 Transferts', dash_mod3:'🛒 Commandes', dash_mod4:'🚚 Livraisons', dash_mod5:'📊 Analytiques', dash_mod6:'👥 Utilisateurs & Rôles', dash_mod7:'🎁 Fidélité',
+      dash_chart:'VOLUME DE TRANSFERTS · 7 DERNIERS JOURS', dash_avg:'Réponse moy. : 1.2s', dash_uptime:'Disponibilité : 99,98%',
+      erp_mods_h:'Ce que nos 30+ Modules peuvent faire',
+      erp_m1_h:'KYC & Identité', erp_m1_p:'Vérification en lot, OCR de documents, score de fraude, contrôles biométriques',
+      erp_m2_h:'Moteur Multi-Wallet', erp_m2_p:'USD, EUR, FCFA, XOF — solde temps réel, conversion FX instantanée, historique des transactions',
+      erp_m3_h:'Prêts & Microfinance', erp_m3_p:'Scoring crédit automatisé, microprêts instantanés, planification des remboursements',
+      erp_m4_h:'Gestion des Vendeurs', erp_m4_p:'Intégration, inventaire, abonnements, séquestre, règlement',
+      erp_m5_h:'Commandes & Logistique', erp_m5_p:'Flux de commandes temps réel, dispatch livreurs, GPS en direct, preuve de livraison',
+      erp_m6_h:'Fidélité & Récompenses', erp_m6_p:'Points, niveaux, chaînes de parrainage, cashback, coupons, tontines',
+      erp_m7_h:'Analytiques & BI', erp_m7_p:'Tableaux de bord par pays, entonnoirs de revenus, segmentation utilisateurs, export CSV',
+      erp_m8_h:'Alertes Intelligentes', erp_m8_p:"Détection de fraude, alertes de seuil, notifications push, SMS & e-mail automatiques",
+      erp_m9_h:'Rôles Multi-Pays', erp_m9_p:'18 rôles sur 3 continents : SuperAdmin, Country Manager, Agent Circulaire, Compliance Officer…',
+      erp_speed:'Traite des milliers de transactions simultanément — temps de réponse moyen : 1,2 seconde'
     }
   };
+
+  const IA_RATES = { USD:1, EUR:0.922, FCFA:655, XOF:655 };
+  function iaConvert() {
+    const amount = parseFloat(document.getElementById('ia-conv-amount').value) || 0;
+    const from = document.getElementById('ia-conv-from').value;
+    const to = document.getElementById('ia-conv-to').value;
+    const inUSD = amount / IA_RATES[from];
+    const result = inUSD * IA_RATES[to];
+    const fmt = (to === 'FCFA' || to === 'XOF') ? Math.round(result).toLocaleString() : result.toFixed(2);
+    document.getElementById('ia-conv-result').textContent = fmt;
+  }
+  document.addEventListener('DOMContentLoaded', iaConvert);
 
   let LANG = localStorage.getItem('ia_lang') || 'en';
   function setLang(l) {
