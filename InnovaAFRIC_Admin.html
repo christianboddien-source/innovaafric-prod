@@ -9221,16 +9221,336 @@ function updateRepCity(){populateCitySelect('rep-city-new',document.getElementBy
 
 // ── IDIOMA ADMIN ────────────────────────────────────
 var ADMIN_LANG=localStorage.getItem('ia_admin_lang')||'es';
+
+// ══════════════════════════════════════════════════════
+//  SISTEMA i18n COMPLETO — ES / EN / FR
+// ══════════════════════════════════════════════════════
+var ADMIN_TR={
+  es:{
+    /* ── Sidebar grupos ── */
+    'grp:Principal':'Principal','grp:Operaciones':'Operaciones','grp:Config':'Config',
+    'grp:Avanzado':'Avanzado','grp:Railway — Finanzas':'Railway — Finanzas',
+    'grp:Railway — Sistema':'Railway — Sistema','grp:Ecosistema Xender':'Ecosistema Xender',
+    'grp:Gestión por Rol':'Gestión por Rol','grp:Fiscal':'Fiscal',
+    'grp:Comunicación':'Comunicación','grp:Seguridad & Acceso':'Seguridad & Acceso',
+    'grp:Inteligencia de usuarios':'Inteligencia de usuarios','grp:Integraciones':'Integraciones',
+    'grp:Legal & Interno':'Legal & Interno','grp:Infraestructura':'Infraestructura',
+    'grp:Partners B2B':'Partners B2B','grp:Comercio Avanzado':'Comercio Avanzado',
+    'grp:Productos Financieros':'Productos Financieros','grp:Compliance & AML':'Compliance & AML',
+    'grp:Business Intelligence':'Business Intelligence','grp:Expansión':'Expansión',
+    /* ── Sidebar nav items ── */
+    'nav:dashboard':'Dashboard','nav:users':'Usuarios','nav:wallets':'Wallets',
+    'nav:transactions':'Transacciones','nav:riders':'Riders','nav:circulares':'Circulares',
+    'nav:proveedores':'Proveedores','nav:orders':'Pedidos','nav:kyc':'KYC',
+    'nav:crear':'Nuevo usuario','nav:fraud':'Anti-fraude','nav:rates':'Tasas',
+    'nav:support':'Soporte','nav:campaigns':'Campañas','nav:simulator':'Simulador',
+    'nav:operators':'Operadoras','nav:mapa':'Mapa usuarios','nav:cargos':'Cargos manuales',
+    'nav:loans':'Préstamos','nav:tontinas':'Tontinas','nav:vcards':'Tarjetas virtuales',
+    'nav:accounting':'Contabilidad','nav:payroll':'Nómina Riders','nav:productos':'Productos',
+    'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alertas',
+    'nav:auditlog':'Auditoría','nav:sync':'Sincronización','nav:aichat':'Admin AI Chat',
+    'nav:worldmap':'Mapa mundial','nav:shop-cats':'Categorías Shop',
+    'nav:bills-providers':'Proveedores Bills','nav:bigshop-admin':'XenderBigShop',
+    'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicidad',
+    'nav:representantes':'Representantes','nav:comercios':'Comercios',
+    'nav:logistica-admin':'Logística','nav:marketing-admin':'Marketing',
+    'nav:taxes-admin':'Impuestos','nav:pos-admin':'POS Ventas','nav:banco':'Banco / IBAN',
+    'nav:contable':'Panel Contable','nav:contactos':'Contactos','nav:calendario':'Calendario',
+    'nav:email':'Email interno','nav:mensajeria':'Mensajería','nav:settings':'Ajustes',
+    'nav:admin-users':'Usuarios admin','nav:login-logs':'Logs de acceso',
+    'nav:ip-whitelist':'IP Whitelist','nav:two-factor':'Configurar 2FA',
+    'nav:user-timeline':'Timeline usuario','nav:duplicates':'Cuentas duplicadas',
+    'nav:trust-scores':'Scores de confianza','nav:vip-limits':'Límites VIP',
+    'nav:integrations-hub':'Hub de integraciones','nav:stripe-connect':'Stripe Connect',
+    'nav:quickbooks':'QuickBooks','nav:kyc-providers':'Proveedores KYC',
+    'nav:mobile-money':'MTN / Orange API','nav:swift-sepa':'SWIFT / SEPA',
+    'nav:policies':'Políticas','nav:consents':'Consentimientos',
+    'nav:knowledge-base':'Base de conocimiento','nav:support-shifts':'Turnos de soporte',
+    'nav:internal-chat':'Chat interno','nav:audit-legal':'Auditoría legal',
+    'nav:msg-templates':'Plantillas','nav:ab-testing':'A/B Testing',
+    'nav:inbox':'Inbox in-app','nav:sms-gateway':'Gateway SMS',
+    'nav:comm-analytics':'Analytics comms','nav:infra-monitor':'Monitor servicios',
+    'nav:deploys':'Deploys','nav:infra-costs':'Costes infra','nav:env-manager':'ENV Manager',
+    'nav:backups':'Backups','nav:logs-explorer':'Explorador de logs',
+    'nav:partners':'Portal de socios','nav:b2b-billing':'Facturación B2B',
+    'nav:revenue-share':'Revenue share','nav:white-label':'White-label',
+    'nav:api-keys':'API keys socios','nav:sla-monitor':'Monitor SLA',
+    'nav:merchant-onboarding':'Onboarding comercios','nav:refunds':'Devoluciones',
+    'nav:marketplace':'Marketplace','nav:reviews':'Valoraciones',
+    'nav:promo-codes':'Códigos promo','nav:pos-analytics':'Analytics TPV',
+    'nav:microseguros':'Microseguros','nav:ahorro':'Ahorro programado',
+    'nav:credit-score':'Scoring crediticio','nav:physical-cards':'Tarjetas físicas',
+    'nav:installments':'Planes a plazos','nav:collective-invest':'Inversiones colectivas',
+    'nav:aml-rules':'Motor de reglas AML','nav:sanctions':'Listas sanciones',
+    'nav:ctr-reports':'Informes CTR','nav:sar-workflow':'Workflow SAR',
+    'nav:compliance-dashboard':'Dashboard cumplimiento','nav:cases':'Gestión de casos',
+    'nav:frozen-accounts':'Cuentas congeladas','nav:heatmap':'Heatmap actividad',
+    'nav:cohorts':'Análisis cohortes','nav:churn':'Predicción churn','nav:ltv':'LTV usuarios',
+    'nav:nps':'NPS satisfacción','nav:forecast':'Forecast ingresos',
+    'nav:funnel':'Embudo conversión','nav:country-ranking':'Ranking países',
+    'nav:country-expansion':'Panel de expansión','nav:licenses':'Licencias & regulación',
+    'nav:corridors':'Corredores top',
+    /* ── UI general ── */
+    'search:ph':'Buscar usuarios...','notif:title':'Notificaciones','notif:clear':'Limpiar',
+    'notif:empty':'Sin notificaciones',
+    'cal:months':['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    'cal:days':['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+    'cal:no_events':'Sin eventos próximos','cal:ev_ph':'Sin eventos el ',
+    'contacts:tab_all':'👥 Todos','contacts:tab_cliente':'👤 Clientes',
+    'contacts:tab_rider':'🛵 Riders','contacts:tab_comercio':'🏪 Comercios',
+    'contacts:tab_circular':'🏢 Circulares','contacts:tab_representante':'🏅 Representantes',
+    'contacts:tab_admin':'📊 Admins',
+    'email:inbox':'📥 Bandeja','email:sent':'📤 Enviados','email:starred':'⭐ Destacados',
+    'email:no_email':'Sin emails','email:empty_ph':'Selecciona un email para leerlo',
+    'email:search_ph':'Buscar email...',
+    'msg:no_contacts':'Sin contactos','msg:no_msgs':'Sin mensajes — ¡Di hola! 👋',
+    'msg:search_ph':'Buscar contactos...','msg:input_ph':'Escribe un mensaje...',
+    'msg:send':'Enviar ➤',
+    'btn:back':'← Volver','btn:save':'Guardar','btn:cancel':'Cancelar',
+    'btn:create':'Crear','btn:delete':'Eliminar','btn:edit':'Editar',
+    'btn:send':'Enviar','btn:apply':'Aplicar','btn:export':'Exportar'
+  },
+  en:{
+    'grp:Principal':'Main','grp:Operaciones':'Operations','grp:Config':'Config',
+    'grp:Avanzado':'Advanced','grp:Railway — Finanzas':'Railway — Finance',
+    'grp:Railway — Sistema':'Railway — System','grp:Ecosistema Xender':'Xender Ecosystem',
+    'grp:Gestión por Rol':'Role Management','grp:Fiscal':'Fiscal',
+    'grp:Comunicación':'Communication','grp:Seguridad & Acceso':'Security & Access',
+    'grp:Inteligencia de usuarios':'User Intelligence','grp:Integraciones':'Integrations',
+    'grp:Legal & Interno':'Legal & Internal','grp:Infraestructura':'Infrastructure',
+    'grp:Partners B2B':'B2B Partners','grp:Comercio Avanzado':'Advanced Commerce',
+    'grp:Productos Financieros':'Financial Products','grp:Compliance & AML':'Compliance & AML',
+    'grp:Business Intelligence':'Business Intelligence','grp:Expansión':'Expansion',
+    'nav:dashboard':'Dashboard','nav:users':'Users','nav:wallets':'Wallets',
+    'nav:transactions':'Transactions','nav:riders':'Riders','nav:circulares':'Circulares',
+    'nav:proveedores':'Suppliers','nav:orders':'Orders','nav:kyc':'KYC',
+    'nav:crear':'New user','nav:fraud':'Anti-fraud','nav:rates':'Rates',
+    'nav:support':'Support','nav:campaigns':'Campaigns','nav:simulator':'Simulator',
+    'nav:operators':'Operators','nav:mapa':'User Map','nav:cargos':'Manual Charges',
+    'nav:loans':'Loans','nav:tontinas':'Tontines','nav:vcards':'Virtual Cards',
+    'nav:accounting':'Accounting','nav:payroll':'Rider Payroll','nav:productos':'Products',
+    'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alerts',
+    'nav:auditlog':'Audit Log','nav:sync':'Sync','nav:aichat':'Admin AI Chat',
+    'nav:worldmap':'World Map','nav:shop-cats':'Shop Categories',
+    'nav:bills-providers':'Bills Providers','nav:bigshop-admin':'XenderBigShop',
+    'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Advertising',
+    'nav:representantes':'Representatives','nav:comercios':'Merchants',
+    'nav:logistica-admin':'Logistics','nav:marketing-admin':'Marketing',
+    'nav:taxes-admin':'Taxes','nav:pos-admin':'POS Sales','nav:banco':'Bank / IBAN',
+    'nav:contable':'Accounting Panel','nav:contactos':'Contacts','nav:calendario':'Calendar',
+    'nav:email':'Internal Email','nav:mensajeria':'Messaging','nav:settings':'Settings',
+    'nav:admin-users':'Admin Users','nav:login-logs':'Access Logs',
+    'nav:ip-whitelist':'IP Whitelist','nav:two-factor':'Configure 2FA',
+    'nav:user-timeline':'User Timeline','nav:duplicates':'Duplicate Accounts',
+    'nav:trust-scores':'Trust Scores','nav:vip-limits':'VIP Limits',
+    'nav:integrations-hub':'Integration Hub','nav:stripe-connect':'Stripe Connect',
+    'nav:quickbooks':'QuickBooks','nav:kyc-providers':'KYC Providers',
+    'nav:mobile-money':'MTN / Orange API','nav:swift-sepa':'SWIFT / SEPA',
+    'nav:policies':'Policies','nav:consents':'Consents',
+    'nav:knowledge-base':'Knowledge Base','nav:support-shifts':'Support Shifts',
+    'nav:internal-chat':'Internal Chat','nav:audit-legal':'Legal Audit',
+    'nav:msg-templates':'Templates','nav:ab-testing':'A/B Testing',
+    'nav:inbox':'In-app Inbox','nav:sms-gateway':'SMS Gateway',
+    'nav:comm-analytics':'Comms Analytics','nav:infra-monitor':'Service Monitor',
+    'nav:deploys':'Deploys','nav:infra-costs':'Infra Costs','nav:env-manager':'ENV Manager',
+    'nav:backups':'Backups','nav:logs-explorer':'Log Explorer',
+    'nav:partners':'Partner Portal','nav:b2b-billing':'B2B Billing',
+    'nav:revenue-share':'Revenue Share','nav:white-label':'White-label',
+    'nav:api-keys':'Partner API Keys','nav:sla-monitor':'SLA Monitor',
+    'nav:merchant-onboarding':'Merchant Onboarding','nav:refunds':'Refunds',
+    'nav:marketplace':'Marketplace','nav:reviews':'Reviews',
+    'nav:promo-codes':'Promo Codes','nav:pos-analytics':'POS Analytics',
+    'nav:microseguros':'Micro-insurance','nav:ahorro':'Scheduled Savings',
+    'nav:credit-score':'Credit Scoring','nav:physical-cards':'Physical Cards',
+    'nav:installments':'Installment Plans','nav:collective-invest':'Collective Investments',
+    'nav:aml-rules':'AML Rules Engine','nav:sanctions':'Sanctions Lists',
+    'nav:ctr-reports':'CTR Reports','nav:sar-workflow':'SAR Workflow',
+    'nav:compliance-dashboard':'Compliance Dashboard','nav:cases':'Case Management',
+    'nav:frozen-accounts':'Frozen Accounts','nav:heatmap':'Activity Heatmap',
+    'nav:cohorts':'Cohort Analysis','nav:churn':'Churn Prediction','nav:ltv':'User LTV',
+    'nav:nps':'NPS Satisfaction','nav:forecast':'Revenue Forecast',
+    'nav:funnel':'Conversion Funnel','nav:country-ranking':'Country Ranking',
+    'nav:country-expansion':'Expansion Panel','nav:licenses':'Licenses & Regulation',
+    'nav:corridors':'Top Corridors',
+    'search:ph':'Search users...','notif:title':'Notifications','notif:clear':'Clear',
+    'notif:empty':'No notifications',
+    'cal:months':['January','February','March','April','May','June','July','August','September','October','November','December'],
+    'cal:days':['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    'cal:no_events':'No upcoming events','cal:ev_ph':'No events on ',
+    'contacts:tab_all':'👥 All','contacts:tab_cliente':'👤 Clients',
+    'contacts:tab_rider':'🛵 Riders','contacts:tab_comercio':'🏪 Merchants',
+    'contacts:tab_circular':'🏢 Circulars','contacts:tab_representante':'🏅 Representatives',
+    'contacts:tab_admin':'📊 Admins',
+    'email:inbox':'📥 Inbox','email:sent':'📤 Sent','email:starred':'⭐ Starred',
+    'email:no_email':'No emails','email:empty_ph':'Select an email to read',
+    'email:search_ph':'Search email...',
+    'msg:no_contacts':'No contacts','msg:no_msgs':'No messages — Say hello! 👋',
+    'msg:search_ph':'Search contacts...','msg:input_ph':'Type a message...',
+    'msg:send':'Send ➤',
+    'btn:back':'← Back','btn:save':'Save','btn:cancel':'Cancel',
+    'btn:create':'Create','btn:delete':'Delete','btn:edit':'Edit',
+    'btn:send':'Send','btn:apply':'Apply','btn:export':'Export'
+  },
+  fr:{
+    'grp:Principal':'Principal','grp:Operaciones':'Opérations','grp:Config':'Config',
+    'grp:Avanzado':'Avancé','grp:Railway — Finanzas':'Railway — Finance',
+    'grp:Railway — Sistema':'Railway — Système','grp:Ecosistema Xender':'Écosystème Xender',
+    'grp:Gestión por Rol':'Gestion par Rôle','grp:Fiscal':'Fiscal',
+    'grp:Comunicación':'Communication','grp:Seguridad & Acceso':'Sécurité & Accès',
+    'grp:Inteligencia de usuarios':'Intelligence utilisateurs','grp:Integraciones':'Intégrations',
+    'grp:Legal & Interno':'Légal & Interne','grp:Infraestructura':'Infrastructure',
+    'grp:Partners B2B':'Partenaires B2B','grp:Comercio Avanzado':'Commerce Avancé',
+    'grp:Productos Financieros':'Produits Financiers','grp:Compliance & AML':'Conformité & AML',
+    'grp:Business Intelligence':'Business Intelligence','grp:Expansión':'Expansion',
+    'nav:dashboard':'Tableau de bord','nav:users':'Utilisateurs','nav:wallets':'Portefeuilles',
+    'nav:transactions':'Transactions','nav:riders':'Riders','nav:circulares':'Circulaires',
+    'nav:proveedores':'Fournisseurs','nav:orders':'Commandes','nav:kyc':'KYC',
+    'nav:crear':'Nouvel utilisateur','nav:fraud':'Anti-fraude','nav:rates':'Taux',
+    'nav:support':'Support','nav:campaigns':'Campagnes','nav:simulator':'Simulateur',
+    'nav:operators':'Opérateurs','nav:mapa':'Carte utilisateurs','nav:cargos':'Charges manuelles',
+    'nav:loans':'Prêts','nav:tontinas':'Tontines','nav:vcards':'Cartes virtuelles',
+    'nav:accounting':'Comptabilité','nav:payroll':'Paie Riders','nav:productos':'Produits',
+    'nav:chat':'Chat','nav:roles':'Rôles','nav:apikeys':'Clés API','nav:alerts':'Alertes',
+    'nav:auditlog':"Journal d'audit",'nav:sync':'Synchronisation','nav:aichat':'Admin AI Chat',
+    'nav:worldmap':'Carte mondiale','nav:shop-cats':'Catégories Shop',
+    'nav:bills-providers':'Fournisseurs Bills','nav:bigshop-admin':'XenderBigShop',
+    'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicité',
+    'nav:representantes':'Représentants','nav:comercios':'Commerces',
+    'nav:logistica-admin':'Logistique','nav:marketing-admin':'Marketing',
+    'nav:taxes-admin':'Impôts','nav:pos-admin':'POS Ventes','nav:banco':'Banque / IBAN',
+    'nav:contable':'Tableau Comptable','nav:contactos':'Contacts','nav:calendario':'Calendrier',
+    'nav:email':'Email interne','nav:mensajeria':'Messagerie','nav:settings':'Paramètres',
+    'nav:admin-users':'Utilisateurs admin','nav:login-logs':"Journaux d'accès",
+    'nav:ip-whitelist':'IP Whitelist','nav:two-factor':'Configurer 2FA',
+    'nav:user-timeline':'Historique utilisateur','nav:duplicates':'Comptes dupliqués',
+    'nav:trust-scores':'Scores de confiance','nav:vip-limits':'Limites VIP',
+    "nav:integrations-hub":"Hub d'intégrations",'nav:stripe-connect':'Stripe Connect',
+    'nav:quickbooks':'QuickBooks','nav:kyc-providers':'Fournisseurs KYC',
+    'nav:mobile-money':'MTN / Orange API','nav:swift-sepa':'SWIFT / SEPA',
+    'nav:policies':'Politiques','nav:consents':'Consentements',
+    'nav:knowledge-base':'Base de connaissances','nav:support-shifts':'Quarts de support',
+    'nav:internal-chat':'Chat interne','nav:audit-legal':'Audit légal',
+    'nav:msg-templates':'Modèles','nav:ab-testing':'Test A/B',
+    'nav:inbox':'Boîte de réception','nav:sms-gateway':'Passerelle SMS',
+    'nav:comm-analytics':'Analytique comms','nav:infra-monitor':'Moniteur services',
+    'nav:deploys':'Déploiements','nav:infra-costs':'Coûts infra','nav:env-manager':'Gestionnaire ENV',
+    'nav:backups':'Sauvegardes','nav:logs-explorer':'Explorateur de logs',
+    'nav:partners':'Portail partenaires','nav:b2b-billing':'Facturation B2B',
+    'nav:revenue-share':'Partage de revenus','nav:white-label':'Marque blanche',
+    'nav:api-keys':'Clés API partenaires','nav:sla-monitor':'Moniteur SLA',
+    'nav:merchant-onboarding':'Intégration commerces','nav:refunds':'Remboursements',
+    'nav:marketplace':'Marketplace','nav:reviews':'Avis',
+    'nav:promo-codes':'Codes promo','nav:pos-analytics':'Analytique TPV',
+    'nav:microseguros':'Micro-assurances','nav:ahorro':'Épargne programmée',
+    'nav:credit-score':'Score de crédit','nav:physical-cards':'Cartes physiques',
+    'nav:installments':'Plans de paiement','nav:collective-invest':'Investissements collectifs',
+    'nav:aml-rules':'Moteur de règles AML','nav:sanctions':'Listes de sanctions',
+    'nav:ctr-reports':'Rapports CTR','nav:sar-workflow':'Workflow SAR',
+    'nav:compliance-dashboard':'Tableau de conformité','nav:cases':'Gestion des cas',
+    'nav:frozen-accounts':'Comptes gelés','nav:heatmap':"Heatmap d'activité",
+    'nav:cohorts':'Analyse de cohortes','nav:churn':'Prédiction churn','nav:ltv':'LTV utilisateurs',
+    'nav:nps':'NPS satisfaction','nav:forecast':'Prévision de revenus',
+    'nav:funnel':'Entonnoir de conversion','nav:country-ranking':'Classement pays',
+    'nav:country-expansion':"Panneau d'expansion",'nav:licenses':'Licences & Régulation',
+    'nav:corridors':'Corridors principaux',
+    'search:ph':'Rechercher utilisateurs...','notif:title':'Notifications','notif:clear':'Effacer',
+    'notif:empty':'Aucune notification',
+    'cal:months':['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+    'cal:days':['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],
+    'cal:no_events':'Aucun événement à venir','cal:ev_ph':'Aucun événement le ',
+    'contacts:tab_all':'👥 Tous','contacts:tab_cliente':'👤 Clients',
+    'contacts:tab_rider':'🛵 Riders','contacts:tab_comercio':'🏪 Commerces',
+    'contacts:tab_circular':'🏢 Circulaires','contacts:tab_representante':'🏅 Représentants',
+    'contacts:tab_admin':'📊 Admins',
+    'email:inbox':'📥 Boîte de réception','email:sent':'📤 Envoyés','email:starred':'⭐ Favoris',
+    'email:no_email':'Aucun email','email:empty_ph':'Sélectionnez un email pour le lire',
+    'email:search_ph':'Rechercher email...',
+    'msg:no_contacts':'Aucun contact','msg:no_msgs':'Aucun message — Dites bonjour! 👋',
+    'msg:search_ph':'Rechercher contacts...','msg:input_ph':'Écrivez un message...',
+    'msg:send':'Envoyer ➤',
+    'btn:back':'← Retour','btn:save':'Enregistrer','btn:cancel':'Annuler',
+    'btn:create':'Créer','btn:delete':'Supprimer','btn:edit':'Modifier',
+    'btn:send':'Envoyer','btn:apply':'Appliquer','btn:export':'Exporter'
+  }
+};
+
+function _i18n(key){var T=ADMIN_TR[ADMIN_LANG]||ADMIN_TR.es;return T[key]||key;}
+
+function applyAdminLang(){
+  var T=ADMIN_TR[ADMIN_LANG]||ADMIN_TR.es;
+  // ── Sidebar groups ──
+  document.querySelectorAll('.sb-group').forEach(function(el){
+    if(!el.getAttribute('data-orig'))el.setAttribute('data-orig',el.textContent.trim());
+    var k='grp:'+el.getAttribute('data-orig');
+    if(T[k])el.textContent=T[k];
+  });
+  // ── Sidebar nav links ──
+  document.querySelectorAll('.sb-link').forEach(function(el){
+    var oc=el.getAttribute('onclick')||'';
+    var m=oc.match(/nav\('([^']+)'/);
+    if(!m)return;
+    var spans=el.querySelectorAll('span');
+    var textSpan=spans[1];// second span = label (first = icon)
+    if(!textSpan)return;
+    if(!textSpan.getAttribute('data-orig'))textSpan.setAttribute('data-orig',textSpan.textContent.trim());
+    var k='nav:'+m[1];
+    if(T[k])textSpan.textContent=T[k];
+  });
+  // ── data-i18n elements ──
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n');
+    if(T[k]!==undefined&&typeof T[k]==='string'){el.innerHTML=T[k];}
+  });
+  // ── Search placeholder ──
+  var gs=document.getElementById('global-search');if(gs)gs.placeholder=T['search:ph']||gs.placeholder;
+  // ── Notif panel ──
+  var nh=document.querySelector('.notif-head span');if(nh)nh.textContent=T['notif:title']||nh.textContent;
+  var nc=document.querySelector('.notif-head button');if(nc)nc.textContent=T['notif:clear']||nc.textContent;
+  // ── Mensajería placeholders ──
+  var mi=document.getElementById('msg-input');if(mi)mi.placeholder=T['msg:input_ph']||mi.placeholder;
+  var ms=document.querySelector('#pg-mensajeria .filter-input');if(ms)ms.placeholder=T['msg:search_ph']||ms.placeholder;
+  var msb=document.querySelector('#msg-input-area button');if(msb)msb.textContent=T['msg:send']||msb.textContent;
+  // ── Email placeholders ──
+  var es=document.querySelector('#pg-email .filter-input');if(es)es.placeholder=T['email:search_ph']||es.placeholder;
+  // ── Contactos tabs ──
+  var ctabs=document.getElementById('contact-tabs');
+  if(ctabs){
+    var roles=['Todos','cliente','rider','comercio','circular','representante','admin'];
+    var keys=['contacts:tab_all','contacts:tab_cliente','contacts:tab_rider','contacts:tab_comercio','contacts:tab_circular','contacts:tab_representante','contacts:tab_admin'];
+    ctabs.querySelectorAll('button').forEach(function(btn,i){if(keys[i]&&T[keys[i]])btn.textContent=T[keys[i]];});
+  }
+  // ── Email folder tabs ──
+  var emailTabMap={'inbox':'email:inbox','sent':'email:sent','starred':'email:starred'};
+  document.querySelectorAll('#pg-email [onclick*="loadEmailFolder"]').forEach(function(el){
+    var m=(el.getAttribute('onclick')||'').match(/loadEmailFolder\('([^']+)'/);
+    if(!m)return;
+    var key=emailTabMap[m[1]];
+    if(!key||!T[key])return;
+    // preserve child badge span if present
+    var badge=el.querySelector('span[id]');
+    el.textContent=T[key]+' ';
+    if(badge)el.appendChild(badge);
+  });
+  // ── Botones Volver ──
+  document.querySelectorAll('.back-btn').forEach(function(b){if(T['btn:back'])b.textContent=T['btn:back'];});
+}
+
 function setAdminLang(lang,btn){
   ADMIN_LANG=lang;
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
   localStorage.setItem('ia_admin_lang',lang);
-  toast('Idioma: '+lang.toUpperCase(),'info');
+  applyAdminLang();
+  // Re-render calendar si está abierto para actualizar nombres de meses
+  var calGrid=document.getElementById('cal-grid');
+  if(calGrid&&calGrid.innerHTML.trim()!=='')renderCalendar();
+  toast('🌍 '+lang.toUpperCase(),'info');
 }
 (function(){
   var btn=document.getElementById('admin-lb-'+ADMIN_LANG);
   if(btn){document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
+  // Aplicar idioma guardado al arrancar
+  setTimeout(applyAdminLang,200);
 })();
 
 // ── NAV v20 (nuevas páginas) ─────────────────────────
@@ -9505,7 +9825,7 @@ function loadContactos(){
   var q=document.getElementById('contact-search')&&document.getElementById('contact-search').value.toLowerCase();
   if(rf)filtered=filtered.filter(function(u){return u.role===rf;});
   if(q)filtered=filtered.filter(function(u){return(u.full_name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
-  if(!filtered.length){list.innerHTML='<div class="td-empty">Sin contactos</div>';return;}
+  if(!filtered.length){list.innerHTML='<div class="td-empty">'+_i18n('msg:no_contacts')+'</div>';return;}
   list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">'+filtered.map(function(u){
     var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
     var nm=(u.full_name||u.email||'').replace(/'/g,'');
@@ -9529,7 +9849,8 @@ var CAL_EVENTS=JSON.parse(localStorage.getItem('ia_cal_events')||'[]');
 var CAL_CURRENT=new Date();
 function renderCalendar(){
   var year=CAL_CURRENT.getFullYear(),month=CAL_CURRENT.getMonth();
-  var mn=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var T=ADMIN_TR[ADMIN_LANG]||ADMIN_TR.es;
+  var mn=T['cal:months']||['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   var lbl=document.getElementById('cal-month-label');if(lbl)lbl.textContent=mn[month]+' '+year;
   var firstDay=new Date(year,month,1);
   var lastDay=new Date(year,month+1,0);
@@ -9555,7 +9876,7 @@ function renderUpcomingEvents(){
   var now=new Date().toISOString().split('T')[0];
   var upcoming=CAL_EVENTS.filter(function(e){return(e.date||'')>=now;}).sort(function(a,b){return a.date.localeCompare(b.date);}).slice(0,10);
   var ti={reunion:'📅',pago:'💰',vencimiento:'⏰',kyc:'🪪',nomina:'💼',otro:'📌'};
-  if(!upcoming.length){el.innerHTML='<div class="td-empty">Sin eventos próximos</div>';return;}
+  if(!upcoming.length){el.innerHTML='<div class="td-empty">'+_i18n('cal:no_events')+'</div>';return;}
   el.innerHTML=upcoming.map(function(e){
     return'<div class="cal-event" onclick="deleteCalEventConfirm(\''+e.id+'\')" title="Click para eliminar">'
       +'<div style="font-size:10px;color:var(--muted);margin-bottom:2px">'+(ti[e.type]||'📌')+' '+e.date+(e.time?' '+e.time:'')+'</div>'
@@ -9566,7 +9887,7 @@ function renderUpcomingEvents(){
 }
 function showDayEvents(ds){
   var ev=CAL_EVENTS.filter(function(e){return(e.date||'').startsWith(ds);});
-  if(!ev.length){toast('Sin eventos el '+ds,'info');return;}
+  if(!ev.length){toast(_i18n('cal:ev_ph')+ds,'info');return;}
   toast(ev.length+' evento(s): '+ev.map(function(e){return e.title;}).join(', '),'info');
 }
 function saveCalEvent(){
@@ -9614,7 +9935,7 @@ function renderEmailList(){
     if(EMAIL_FOLDER==='starred')return e.starred;
     return false;
   });
-  if(!emails.length){el.innerHTML='<div class="td-empty" style="padding:16px">Sin emails</div>';return;}
+  if(!emails.length){el.innerHTML='<div class="td-empty" style="padding:16px">'+_i18n('email:no_email')+'</div>';return;}
   el.innerHTML=emails.map(function(e){
     return'<div class="email-item '+(e.read?'':'unread')+'" onclick="viewEmail(\''+e.id+'\')">'
       +'<div style="flex:1"><div class="email-subject">'+(e.subject||'Sin asunto')+'</div>'
@@ -9688,7 +10009,7 @@ var MSG_ACTIVE_USER=null;
 function loadMsgContacts(){
   var el=document.getElementById('msg-contacts-list');if(!el)return;
   var contacts=(ALL_USERS||[]).slice(0,40);
-  if(!contacts.length){el.innerHTML='<div class="td-empty">Sin contactos</div>';return;}
+  if(!contacts.length){el.innerHTML='<div class="td-empty">'+_i18n('msg:no_contacts')+'</div>';return;}
   el.innerHTML=contacts.map(function(u){
     var lastMsg=(MSG_DATA[u.id]||[]).slice(-1)[0];
     var unread=(MSG_DATA[u.id]||[]).filter(function(m){return!m.read&&m.from!=='admin';}).length;
@@ -9717,7 +10038,7 @@ function openMsgWith(userId,name){
 function renderMessages(userId){
   var el=document.getElementById('msg-messages');if(!el)return;
   var msgs=MSG_DATA[userId]||[];
-  if(!msgs.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted)">Sin mensajes — ¡Di hola! 👋</div>';return;}
+  if(!msgs.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted)">'+_i18n('msg:no_msgs')+'</div>';return;}
   el.innerHTML=msgs.map(function(m){
     return'<div>'
       +'<div style="font-size:10px;color:var(--muted);text-align:'+(m.from==='admin'?'right':'left')+';margin-bottom:3px">'+(m.from==='admin'?'Tú':m.fromName||'—')+' · '+new Date(m.time).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})+'</div>'
@@ -10591,7 +10912,8 @@ loadContactos=function(){
   ['Todos','cliente','rider','comercio','circular','representante','admin'].forEach(function(role){
     var btn=document.createElement('button');
     btn.style.cssText='padding:5px 12px;border-radius:20px;border:1px solid var(--b1);background:var(--s2);color:var(--muted);font-size:12px;cursor:pointer;font-family:var(--font)';
-    btn.textContent={Todos:'👥 Todos',cliente:'👤 Clientes',rider:'🛵 Riders',comercio:'🏪 Comercios',circular:'🏢 Circulares',representante:'🏅 Representantes',admin:'📊 Admins'}[role]||role;
+    var _lblMap={Todos:'contacts:tab_all',cliente:'contacts:tab_cliente',rider:'contacts:tab_rider',comercio:'contacts:tab_comercio',circular:'contacts:tab_circular',representante:'contacts:tab_representante',admin:'contacts:tab_admin'};
+    btn.textContent=_i18n(_lblMap[role]||role);
     btn.onclick=function(){
       document.querySelectorAll('#contact-tabs button').forEach(function(b){b.style.background='var(--s2)';b.style.color='var(--muted)';});
       btn.style.background='var(--cyan-d)';btn.style.color='var(--cyan)';
