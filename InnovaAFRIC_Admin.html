@@ -708,6 +708,13 @@ select.form-input option{background:var(--s2)}
           <div style="padding:16px 20px;height:200px;display:flex;align-items:center;justify-content:center"><canvas id="chart-countries"></canvas></div>
         </div>
       </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head">
+          <div><div class="card-title">💹 Revenue diario — últimos 30 días</div><div class="card-sub">Comisiones generadas (€) por día</div></div>
+          <button class="topbar-btn btn-ghost" onclick="_invalidateCache('dashboard');loadDashboard()">↻ Actualizar</button>
+        </div>
+        <div style="padding:16px 20px;height:180px"><canvas id="chart-revenue-trend"></canvas></div>
+      </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div class="card">
@@ -802,10 +809,20 @@ select.form-input option{background:var(--s2)}
           </select>
           <button class="topbar-btn btn-ghost" onclick="quickSearchByIA()" title="Buscar por código IA">🔍 Buscar IA</button>
         </div>
+        <div id="users-bulk-bar" style="display:none;padding:10px 20px;background:rgba(139,92,246,.08);border-bottom:1px solid rgba(139,92,246,.2);align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:13px;color:#94a3b8"><span id="users-sel-count">0</span> seleccionados</span>
+          <button class="topbar-btn btn-danger-sm" style="font-size:12px" onclick="bulkBanUsers()">🔒 Banear seleccionados</button>
+          <button class="topbar-btn btn-ghost" style="font-size:12px;color:var(--green)" onclick="bulkUnbanUsers()">🔓 Desbloquear</button>
+          <button class="topbar-btn btn-ghost" style="font-size:12px" onclick="bulkExportSelectedUsers()">📥 Exportar selección</button>
+          <button class="topbar-btn btn-ghost" style="font-size:12px" onclick="clearUsersSelection()">Limpiar</button>
+        </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Usuario</th><th>Código IA</th><th>Teléfono</th><th>Rol</th><th>País / Ciudad</th><th>Dirección</th><th>Saldo</th><th>PIN</th><th>Acciones</th></tr></thead>
-            <tbody id="tb-users"><tr><td colspan="9" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+            <thead><tr>
+              <th style="width:36px"><input type="checkbox" id="users-select-all" onchange="toggleAllUsers(this.checked)" title="Seleccionar todos" style="cursor:pointer"></th>
+              <th>Usuario</th><th>Código IA</th><th>Teléfono</th><th>Rol</th><th>País / Ciudad</th><th>Dirección</th><th>Saldo</th><th>PIN</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="tb-users"><tr><td colspan="10" class="loading-cell"><div class="spin"></div></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -899,12 +916,23 @@ select.form-input option{background:var(--s2)}
       <div class="card">
         <div class="card-head">
           <div><div class="card-title">🪪 Verificación KYC</div><div class="card-sub">Solicitudes pendientes</div></div>
-          <span class="pill pill-amber" id="kyc-count">0 pendientes</span>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="pill pill-amber" id="kyc-count">0 pendientes</span>
+          </div>
+        </div>
+        <div id="kyc-bulk-bar" style="display:none;padding:10px 20px;background:rgba(6,182,212,.08);border-bottom:1px solid rgba(6,182,212,.2);display:none;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:13px;color:#94a3b8"><span id="kyc-sel-count">0</span> seleccionados</span>
+          <button class="topbar-btn btn-primary" style="font-size:12px" onclick="bulkApproveKYC()">✅ Aprobar seleccionados</button>
+          <button class="topbar-btn btn-danger-sm" style="font-size:12px" onclick="bulkRejectKYC()">✕ Rechazar seleccionados</button>
+          <button class="topbar-btn btn-ghost" style="font-size:12px" onclick="clearKYCSelection()">Limpiar</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Usuario</th><th>Código IA</th><th>Nivel solicitado</th><th>Documento</th><th>Fecha</th><th>Acciones</th></tr></thead>
-            <tbody id="tb-kyc"><tr><td colspan="6" class="td-empty">Sin solicitudes pendientes</td></tr></tbody>
+            <thead><tr>
+              <th style="width:36px"><input type="checkbox" id="kyc-select-all" onchange="toggleAllKYC(this.checked)" title="Seleccionar todos" style="cursor:pointer"></th>
+              <th>Usuario</th><th>Código IA</th><th>Nivel</th><th>Documento</th><th>Fecha</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="tb-kyc"><tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1171,30 +1199,41 @@ select.form-input option{background:var(--s2)}
 
     <!-- AUDIT LOG -->
     <div id="pg-auditlog" style="display:none">
+      <div id="audit-stats-strip" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px"></div>
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">📋 Log de auditoría</div><div class="card-sub">Todas las acciones del admin · guardado en Supabase</div></div>
+          <div><div class="card-title">📋 Log de auditoría</div><div class="card-sub" id="audit-log-sub">Todas las acciones del admin · guardado en Supabase</div></div>
           <div style="display:flex;gap:8px">
             <button class="topbar-btn btn-ghost" onclick="exportAuditLog()">📥 CSV</button>
             <button class="topbar-btn btn-ghost" onclick="exportAuditPDF()">📄 PDF</button>
-            <button class="topbar-btn btn-ghost" onclick="loadAuditLog()">↻</button>
+            <button class="topbar-btn btn-ghost" onclick="loadAuditLog()">↻ Actualizar</button>
           </div>
         </div>
-        <div class="filter-bar">
+        <div class="filter-bar" style="flex-wrap:wrap;gap:8px">
           <input class="filter-input" id="log-q" placeholder="Filtrar por acción o detalle..." oninput="filterLog()">
           <select class="filter-select" id="log-action-f" onchange="filterLog()">
             <option value="">Todas las acciones</option>
+            <option value="kyc_approve">KYC aprobado</option>
+            <option value="kyc_reject">KYC rechazado</option>
+            <option value="bulk_kyc_approve">KYC bulk aprobado</option>
+            <option value="bulk_kyc_reject">KYC bulk rechazado</option>
             <option value="edit_user">Editar usuario</option>
-            <option value="create_user">Crear usuario</option>
-            <option value="delete_user">Eliminar usuario</option>
-            <option value="reset_pin">Resetear PIN</option>
+            <option value="block_user">Bloquear usuario</option>
+            <option value="bulk_ban">Ban masivo</option>
+            <option value="bulk_unban">Desbloqueo masivo</option>
             <option value="recharge">Recargar wallet</option>
-            <option value="save_rates">Guardar tasas</option>
             <option value="fraud_scan">Anti-fraude</option>
             <option value="export">Exportación</option>
+            <option value="create_partner">Crear socio</option>
+            <option value="create_merchant">Crear comercio</option>
+            <option value="save_settings">Configuración</option>
           </select>
+          <input class="filter-input" id="log-date-from" type="date" onchange="filterLog()" title="Desde" style="width:140px">
+          <input class="filter-input" id="log-date-to" type="date" onchange="filterLog()" title="Hasta" style="width:140px">
+          <button class="topbar-btn btn-ghost" style="font-size:12px" onclick="document.getElementById('log-date-from').value='';document.getElementById('log-date-to').value='';filterLog()">✕ Fechas</button>
         </div>
-        <div style="padding:16px 20px;max-height:500px;overflow-y:auto" id="audit-log-list"><div class="loading-cell"><div class="spin"></div></div></div>
+        <div style="padding:16px 20px;max-height:560px;overflow-y:auto" id="audit-log-list"><div class="loading-cell"><div class="spin"></div></div></div>
+        <div id="audit-load-more-wrap" style="text-align:center;padding:12px 0;border-top:1px solid var(--border)"></div>
       </div>
     </div>
 
@@ -6611,8 +6650,62 @@ async function loadDashboard(){
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11}}}}}
       });
     }
+    // ── Monthly KPIs ───────────────────────────────────────────
+    var now=new Date();
+    var monthStart=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+    var lastMonthStart=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
+    var lastMonthEnd=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+    var[newUsersRes,lastMonthUsersRes,monthTxRes]=await Promise.all([
+      SB.from('users').select('id',{count:'exact',head:true}).gte('created_at',monthStart).catch(function(){return{count:0};}),
+      SB.from('users').select('id',{count:'exact',head:true}).gte('created_at',lastMonthStart).lt('created_at',lastMonthEnd).catch(function(){return{count:0};}),
+      SB.from('transactions').select('amount,fee,created_at').gte('created_at',monthStart).catch(function(){return{data:[]};})
+    ]);
+    var newUsersMonth=newUsersRes.count||0;
+    var lastMonthUsers=lastMonthUsersRes.count||1;
+    var growthPct=Math.round(((newUsersMonth-lastMonthUsers)/Math.max(lastMonthUsers,1))*100);
+    var monthTxns=monthTxRes.data||[];
+    var revenueMonth=monthTxns.reduce(function(s,t){return s+(Number(t.fee)||Number(t.amount)*0.02);},0);
+    var avgTicket=monthTxns.length?monthTxns.reduce(function(s,t){return s+Number(t.amount||0);},0)/monthTxns.length:0;
+    // Render monthly KPI strip
+    var mstrip=document.getElementById('dash-monthly-strip');
+    if(!mstrip){
+      mstrip=document.createElement('div');
+      mstrip.id='dash-monthly-strip';
+      mstrip.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px';
+      var dashFirst=document.querySelector('#pg-dashboard .card');
+      if(dashFirst&&dashFirst.parentElement)dashFirst.parentElement.insertBefore(mstrip,dashFirst);
+    }
+    mstrip.innerHTML=[
+      {label:'Nuevos este mes',val:newUsersMonth,sub:(growthPct>=0?'+':'')+growthPct+'% vs mes anterior',color:growthPct>=0?'var(--green)':'var(--red)'},
+      {label:'Revenue este mes',val:'€'+revenueMonth.toFixed(0),sub:monthTxns.length+' transacciones',color:'var(--cyan)'},
+      {label:'Ticket medio',val:'€'+avgTicket.toFixed(2),sub:'en '+now.toLocaleString('es',{month:'long'}),color:'var(--amber)'}
+    ].map(function(k){
+      return'<div class="kpi-card" style="margin:0"><div class="kpi-lbl">'+k.label+'</div>'
+        +'<div class="kpi-val" style="color:'+k.color+';font-size:22px;margin:6px 0">'+k.val+'</div>'
+        +'<div style="font-size:11px;color:#64748b">'+k.sub+'</div></div>';
+    }).join('');
+    // ── Revenue trend chart (last 30 days) ────────────────────
+    var allTxRes=await SB.from('transactions').select('fee,amount,created_at').gte('created_at',new Date(Date.now()-30*86400000).toISOString()).catch(function(){return{data:[]};});
+    var last30=Array.from({length:30},function(_,i){var d=new Date();d.setDate(d.getDate()-29+i);return d.toISOString().split('T')[0];});
+    var feeByDay={};last30.forEach(function(d){feeByDay[d]=0;});
+    (allTxRes.data||[]).forEach(function(t){
+      var d=(t.created_at||'').split('T')[0];
+      if(feeByDay[d]!==undefined)feeByDay[d]+=(Number(t.fee)||Number(t.amount||0)*0.02);
+    });
+    var ctxTrend=document.getElementById('chart-revenue-trend');
+    if(ctxTrend){
+      if(window._chartRevTrend)window._chartRevTrend.destroy();
+      window._chartRevTrend=new Chart(ctxTrend,{
+        type:'line',
+        data:{labels:last30.map(function(d){return d.slice(5);}),
+          datasets:[{label:'Revenue diario (€)',data:Object.values(feeByDay),borderColor:'rgba(16,185,129,1)',backgroundColor:'rgba(16,185,129,0.08)',fill:true,tension:0.4,pointRadius:0,borderWidth:2}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:'#64748b',callback:function(v){return'€'+v.toFixed(0);}},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#64748b',maxTicksLimit:10},grid:{display:false}}}}
+      });
+    }
     showLastUpdate();
-  }catch(e){toast('Error dashboard: '+e.message,'error');}
+  }catch(e){
+    showRetryBanner(document.getElementById('pg-dashboard')||document.body,'Error al cargar el dashboard: '+e.message,loadDashboard);
+  }
 }
 
 // ── USERS ─────────────────────────────────────────────────
@@ -6664,7 +6757,6 @@ function _renderUsersPage(append){
 }
 function _removeUsersLoadMore(){var w=document.getElementById('users-load-more-wrap');if(w)w.innerHTML='';}
 function _renderUserRow(u){
-  const tb=document.getElementById('tb-users');
   if(!u.id){return'';}
   const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
   const nm=(u.full_name||u.email||'').replace(/'/g,'&apos;');
@@ -6677,6 +6769,7 @@ function _renderUserRow(u){
     ?'<span class="addr-complete">✓ Completa</span>'
     :'<span class="addr-incomplete">⚠ Incompleta</span>';
   return'<tr>'
+    +'<td><input type="checkbox" class="user-chk" data-uid="'+u.id+'" onchange="_updateUsersBulkBar()" style="cursor:pointer"></td>'
     +'<td><div class="user-cell">'
     +'<div class="uc-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
     +'<div><div class="uc-name">'+(u.full_name||'—')+'</div>'
@@ -7149,10 +7242,11 @@ async function loadKYC(){
     const pending=(data||[]).length;
     if(countEl)countEl.textContent=pending+' pendientes';
     if(sbCount){sbCount.textContent=pending;sbCount.style.display=pending>0?'inline':'none';}
-    if(!pending){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin solicitudes pendientes</td></tr>';return;}
+    if(!pending){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr>';return;}
     tb.innerHTML=(data||[]).map(u=>{
       const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
       return`<tr>
+        <td><input type="checkbox" class="kyc-chk" data-uid="${u.id}" data-level="${u.kyc_requested_level||1}" onchange="_updateKYCBulkBar()" style="cursor:pointer"></td>
         <td><div class="user-cell"><div class="uc-av" style="background:${avColor(u.email)};color:#000">${initials(u.full_name||u.email)}</div><div><div class="uc-name">${u.full_name||'—'}</div><div class="uc-email">${u.email}</div></div></div></td>
         <td><span style="font-family:var(--mono);font-size:12px;color:var(--cyan)">${ia}</span></td>
         <td>${u.kyc_requested_level||1}</td>
@@ -7164,7 +7258,7 @@ async function loadKYC(){
         </td>
       </tr>`;
     }).join('');
-  }catch(e){if(tb)tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin solicitudes pendientes</td></tr>';}
+  }catch(e){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr>';}
 }
 async function approveKYC(uid,level){
   const{error}=await SB.from('users').update({kyc_level:level,kyc_pending:false}).eq('id',uid);
@@ -7682,18 +7776,9 @@ function logAdminAction(action,detail){
   }
 }
 let ALL_LOG=[...ADMIN_LOG];
-async function loadAuditLog(){
-  const list=document.getElementById('audit-log-list');if(!list)return;
-  list.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
-  try{
-    const{data}=await SB.from('admin_log').select('*').order('created_at',{ascending:false}).limit(200);
-    ALL_LOG=data||ADMIN_LOG;
-  }catch(e){ALL_LOG=ADMIN_LOG;}
-  renderAuditLog(ALL_LOG);
-}
 function renderAuditLog(entries){
   const list=document.getElementById('audit-log-list');if(!list)return;
-  const ACTION_COLORS={edit_user:'cyan',create_user:'green',delete_user:'red',reset_pin:'amber',recharge:'green',save_rates:'purple',fraud_scan:'red',export:'cyan',support_reply:'green',kyc_approve:'green',kyc_reject:'red',block_user:'amber'};
+  const ACTION_COLORS={edit_user:'cyan',create_user:'green',delete_user:'red',reset_pin:'amber',recharge:'green',save_rates:'purple',fraud_scan:'red',export:'cyan',support_reply:'green',kyc_approve:'green',kyc_reject:'red',block_user:'amber',bulk_kyc_approve:'green',bulk_kyc_reject:'red',bulk_ban:'red',bulk_unban:'green',create_partner:'cyan',create_merchant:'cyan',create_wl_instance:'purple',create_promo_code:'amber',create_invest_fund:'green',suspend_partner:'amber',suspend_merchant:'amber',issue_physical_card:'cyan',create_installment:'cyan',bulk_notification:'purple',save_settings:'purple',clear_cache:'amber',assign_shift:'cyan',create_kb_article:'green',create_template:'cyan',create_campaign:'purple',deploy:'amber',manual_deploy:'amber'};
   if(!entries.length){list.innerHTML='<div class="td-empty">Sin entradas en el log</div>';return;}
   list.innerHTML=entries.map(e=>`
     <div class="log-entry">
@@ -7704,14 +7789,6 @@ function renderAuditLog(entries){
       </div>
       <div class="log-time">${fmt_datetime(e.created_at||e.time)}</div>
     </div>`).join('');
-}
-function filterLog(){
-  const q=(document.getElementById('log-q')?.value||'').toLowerCase();
-  const a=document.getElementById('log-action-f')?.value||'';
-  const filtered=ALL_LOG.filter(e=>{
-    return(!a||e.action===a)&&(!q||(e.detail||'').toLowerCase().includes(q)||(e.action||'').toLowerCase().includes(q));
-  });
-  renderAuditLog(filtered);
 }
 function exportAuditLog(){
   const rows=['Acción,Detalle,Admin,Fecha',...(ALL_LOG||[]).map(e=>[e.action||'',e.detail||'',e.admin_email||e.admin||'',e.created_at||e.time||''].join(','))];
@@ -19816,6 +19893,203 @@ function exportCorridorsCSV(){
     }
   },800);
 })();
+
+// ── BULK KYC ─────────────────────────────────────────────────
+function _getCheckedKYC(){
+  return Array.from(document.querySelectorAll('.kyc-chk:checked'));
+}
+function _updateKYCBulkBar(){
+  var checked=_getCheckedKYC();
+  var bar=document.getElementById('kyc-bulk-bar');
+  var cnt=document.getElementById('kyc-sel-count');
+  if(bar){bar.style.display=checked.length?'flex':'none';}
+  if(cnt)cnt.textContent=checked.length;
+  var all=document.getElementById('kyc-select-all');
+  var total=document.querySelectorAll('.kyc-chk').length;
+  if(all)all.indeterminate=checked.length>0&&checked.length<total;
+}
+function toggleAllKYC(val){
+  document.querySelectorAll('.kyc-chk').forEach(function(c){c.checked=val;});
+  _updateKYCBulkBar();
+}
+function clearKYCSelection(){
+  document.querySelectorAll('.kyc-chk').forEach(function(c){c.checked=false;});
+  var all=document.getElementById('kyc-select-all');if(all)all.checked=false;
+  _updateKYCBulkBar();
+}
+async function bulkApproveKYC(){
+  var checked=_getCheckedKYC();
+  if(!checked.length){toast('Selecciona al menos una solicitud','warning');return;}
+  toast('Aprobando '+checked.length+' solicitudes...','info');
+  var ok=0;
+  for(var i=0;i<checked.length;i++){
+    var uid=checked[i].dataset.uid;
+    var level=Number(checked[i].dataset.level)||1;
+    var res=await SB.from('users').update({kyc_level:level,kyc_pending:false}).eq('id',uid).catch(function(){return{error:true};});
+    if(!res.error)ok++;
+  }
+  logAdminAction('bulk_kyc_approve',ok+' de '+checked.length+' KYC aprobados en lote');
+  toast('✅ '+ok+' KYC aprobados','success');
+  clearKYCSelection();
+  loadKYC();
+}
+async function bulkRejectKYC(){
+  var checked=_getCheckedKYC();
+  if(!checked.length){toast('Selecciona al menos una solicitud','warning');return;}
+  if(!confirm('¿Rechazar '+checked.length+' solicitud(es) KYC?'))return;
+  var ok=0;
+  for(var i=0;i<checked.length;i++){
+    var uid=checked[i].dataset.uid;
+    var res=await SB.from('users').update({kyc_pending:false}).eq('id',uid).catch(function(){return{error:true};});
+    if(!res.error)ok++;
+  }
+  logAdminAction('bulk_kyc_reject',ok+' KYC rechazados en lote');
+  toast(ok+' KYC rechazados','warning');
+  clearKYCSelection();
+  loadKYC();
+}
+
+// ── BULK USERS ────────────────────────────────────────────────
+function _getCheckedUsers(){
+  return Array.from(document.querySelectorAll('.user-chk:checked'));
+}
+function _updateUsersBulkBar(){
+  var checked=_getCheckedUsers();
+  var bar=document.getElementById('users-bulk-bar');
+  var cnt=document.getElementById('users-sel-count');
+  if(bar){bar.style.display=checked.length?'flex':'none';}
+  if(cnt)cnt.textContent=checked.length;
+  var all=document.getElementById('users-select-all');
+  var total=document.querySelectorAll('.user-chk').length;
+  if(all)all.indeterminate=checked.length>0&&checked.length<total;
+}
+function toggleAllUsers(val){
+  document.querySelectorAll('.user-chk').forEach(function(c){c.checked=val;});
+  _updateUsersBulkBar();
+}
+function clearUsersSelection(){
+  document.querySelectorAll('.user-chk').forEach(function(c){c.checked=false;});
+  var all=document.getElementById('users-select-all');if(all)all.checked=false;
+  _updateUsersBulkBar();
+}
+async function bulkBanUsers(){
+  var checked=_getCheckedUsers();
+  if(!checked.length){toast('Selecciona al menos un usuario','warning');return;}
+  if(!confirm('¿Bloquear '+checked.length+' usuario(s)?'))return;
+  var uids=checked.map(function(c){return c.dataset.uid;});
+  var res=await SB.from('users').update({is_blocked:true}).in('id',uids).catch(function(e){return{error:e};});
+  if(res.error){toast('Error: '+res.error.message,'error');return;}
+  uids.forEach(function(uid){var u=ALL_USERS.find(function(x){return x.id===uid;});if(u)u.is_blocked=true;});
+  logAdminAction('bulk_ban',uids.length+' usuarios bloqueados en lote');
+  toast('🔒 '+uids.length+' usuarios bloqueados','warning');
+  clearUsersSelection();
+  renderUsers(ALL_USERS);
+}
+async function bulkUnbanUsers(){
+  var checked=_getCheckedUsers();
+  if(!checked.length){toast('Selecciona al menos un usuario','warning');return;}
+  var uids=checked.map(function(c){return c.dataset.uid;});
+  var res=await SB.from('users').update({is_blocked:false}).in('id',uids).catch(function(e){return{error:e};});
+  if(res.error){toast('Error: '+res.error.message,'error');return;}
+  uids.forEach(function(uid){var u=ALL_USERS.find(function(x){return x.id===uid;});if(u)u.is_blocked=false;});
+  logAdminAction('bulk_unban',uids.length+' usuarios desbloqueados en lote');
+  toast('🔓 '+uids.length+' usuarios desbloqueados','success');
+  clearUsersSelection();
+  renderUsers(ALL_USERS);
+}
+function bulkExportSelectedUsers(){
+  var checked=_getCheckedUsers();
+  if(!checked.length){toast('Selecciona al menos un usuario','warning');return;}
+  var uids=new Set(checked.map(function(c){return c.dataset.uid;}));
+  var selected=ALL_USERS.filter(function(u){return uids.has(u.id);});
+  var header='Nombre,Email,Codigo IA,Telefono,Rol,Pais,Saldo EUR,Bloqueado';
+  var lines=[header].concat(selected.map(function(u){
+    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    return[u.full_name||'',u.email||'',ia,u.phone||'',u.role||'',u.country||'',Number(u.eur||0).toFixed(2),u.is_blocked?'SI':'NO'].join(',');
+  }));
+  var blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='usuarios_seleccionados.csv';a.click();URL.revokeObjectURL(url);
+  logAdminAction('export','Exportados '+selected.length+' usuarios seleccionados');
+  toast('📥 '+selected.length+' usuarios exportados','success');
+}
+
+// ── AUDIT LOG MEJORADO ────────────────────────────────────────
+var _auditPage=100;
+var _auditTotal=0;
+async function loadAuditLog(){
+  _auditPage=100;
+  var list=document.getElementById('audit-log-list');
+  if(list)list.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
+  try{
+    var res=await SB.from('admin_log').select('*',{count:'exact'}).order('created_at',{ascending:false}).limit(100);
+    _auditTotal=res.count||0;
+    ALL_LOG=res.data||ADMIN_LOG;
+  }catch(e){ALL_LOG=ADMIN_LOG;}
+  _renderAuditStats(ALL_LOG);
+  renderAuditLog(ALL_LOG);
+  var sub=document.getElementById('audit-log-sub');
+  if(sub)sub.textContent=_auditTotal+' acciones registradas · últimas 100 cargadas';
+  var wrap=document.getElementById('audit-load-more-wrap');
+  if(wrap){
+    wrap.innerHTML=_auditTotal>100
+      ?'<button class="topbar-btn btn-ghost" onclick="_auditLoadMore()" style="font-size:13px;padding:8px 20px">Cargar más ('+(_auditTotal-100)+' restantes)</button>'
+      :'';
+  }
+}
+async function _auditLoadMore(){
+  try{
+    var res=await SB.from('admin_log').select('*').order('created_at',{ascending:false}).range(_auditPage,_auditPage+99);
+    _auditPage+=100;
+    ALL_LOG=ALL_LOG.concat(res.data||[]);
+    renderAuditLog(ALL_LOG);
+    var wrap=document.getElementById('audit-load-more-wrap');
+    if(wrap)wrap.innerHTML=_auditTotal>_auditPage
+      ?'<button class="topbar-btn btn-ghost" onclick="_auditLoadMore()" style="font-size:13px;padding:8px 20px">Cargar más ('+(_auditTotal-_auditPage)+' restantes)</button>'
+      :'<span style="font-size:12px;color:#64748b">Mostrando todas las '+ALL_LOG.length+' entradas</span>';
+  }catch(e){toast('Error cargando más entradas','error');}
+}
+function _renderAuditStats(entries){
+  var strip=document.getElementById('audit-stats-strip');if(!strip)return;
+  var actionCounts={};
+  var adminCounts={};
+  entries.forEach(function(e){
+    actionCounts[e.action]=(actionCounts[e.action]||0)+1;
+    var adm=e.admin_email||e.admin||'admin';
+    adminCounts[adm]=(adminCounts[adm]||0)+1;
+  });
+  var topAction=Object.entries(actionCounts).sort(function(a,b){return b[1]-a[1];})[0];
+  var topAdmin=Object.entries(adminCounts).sort(function(a,b){return b[1]-a[1];})[0];
+  var today=new Date().toISOString().split('T')[0];
+  var todayCount=entries.filter(function(e){return(e.created_at||'').startsWith(today);}).length;
+  strip.innerHTML=[
+    {label:'Acciones totales',val:_auditTotal||entries.length,color:'var(--cyan)'},
+    {label:'Hoy',val:todayCount,color:'var(--green)'},
+    {label:'Acción más frecuente',val:topAction?topAction[0].replace(/_/g,' '):'—',color:'var(--amber)'},
+    {label:'Admin más activo',val:topAdmin?(topAdmin[0].split('@')[0]):'—',color:'var(--purple)'}
+  ].map(function(k){
+    return'<div class="kpi-card" style="margin:0"><div class="kpi-lbl">'+k.label+'</div>'
+      +'<div style="font-size:18px;font-weight:700;color:'+k.color+';margin:6px 0;font-family:var(--mono)">'+k.val+'</div></div>';
+  }).join('');
+}
+function filterLog(){
+  var q=(document.getElementById('log-q')||{}).value||'';
+  q=q.toLowerCase();
+  var a=(document.getElementById('log-action-f')||{}).value||'';
+  var from=(document.getElementById('log-date-from')||{}).value||'';
+  var to=(document.getElementById('log-date-to')||{}).value||'';
+  var filtered=ALL_LOG.filter(function(e){
+    if(a&&e.action!==a)return false;
+    if(q&&!(e.detail||'').toLowerCase().includes(q)&&!(e.action||'').toLowerCase().includes(q))return false;
+    var d=(e.created_at||'').split('T')[0];
+    if(from&&d<from)return false;
+    if(to&&d>to)return false;
+    return true;
+  });
+  renderAuditLog(filtered);
+  var sub=document.getElementById('audit-log-sub');
+  if(sub)sub.textContent=filtered.length+' de '+ALL_LOG.length+' entradas';
+}
 
 // ── AUTO-ALERT EVALUATOR ──────────────────────────────────────
 var _AUTO_ALERTS=[];
