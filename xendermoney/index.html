@@ -16,6 +16,141 @@
   <meta name="keywords" content="XenderMoney, send money Africa, mobile money, MTN MoMo, Orange Money, Wave, transfert argent Afrique"/>
   <link rel="canonical" href="https://www.xendermoney.com/"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SB_URL = 'https://spnfvmvrlexyiljwyola.supabase.co';
+    const SB_KEY = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
+    const SB = supabase.createClient(SB_URL, SB_KEY);
+
+    // ── Session helpers ──
+    function xmGetSession(){try{return JSON.parse(localStorage.getItem('xm_session')||'null');}catch(e){return null;}}
+    function xmSetSession(u){localStorage.setItem('xm_session',JSON.stringify(u));}
+    function xmClearSession(){localStorage.removeItem('xm_session');}
+
+    // ── Generate IA code ──
+    function genIACode(){return 'IA-'+Math.random().toString(16).slice(2,8).toUpperCase();}
+
+    // ── Init on load ──
+    window.addEventListener('DOMContentLoaded', async function(){
+      calcXM();
+      var s = xmGetSession();
+      if(s) await xmShowDashboard(s);
+    });
+
+    // ── REGISTER ──
+    async function submitXMReg(e){
+      e.preventDefault();
+      var f = e.target;
+      var nombre = f.querySelector('input[placeholder="Tu nombre"]').value.trim();
+      var apellidos = f.querySelector('input[placeholder="Tus apellidos"]').value.trim();
+      var email = f.querySelector('input[type="email"]').value.trim();
+      var phone = f.querySelector('input[type="tel"]').value.trim();
+      var pais = f.querySelector('select').value;
+      var pass = f.querySelector('input[type="password"]').value;
+      var btn = f.querySelector('button[type="submit"]');
+      btn.textContent = 'Creando cuenta…'; btn.disabled = true;
+      try {
+        // Check if email already exists
+        var {data: existing} = await SB.from('users').select('id').eq('email', email).maybeSingle();
+        if(existing){
+          alert('⚠️ Ya existe una cuenta con ese email. Inicia sesión.');
+          btn.textContent = 'Crear cuenta XenderMoney →'; btn.disabled = false;
+          return;
+        }
+        var iaCode = genIACode();
+        var now = new Date().toISOString();
+        var {data: newUser, error} = await SB.from('users').insert({
+          name: nombre + ' ' + apellidos,
+          email: email,
+          phone: phone,
+          country: pais,
+          ia_code: iaCode,
+          role: 'cliente',
+          status: 'active',
+          kyc_status: 'pending',
+          created_at: now
+        }).select().single();
+        if(error) throw error;
+        // Create wallet
+        await SB.from('wallets').insert({user_id: newUser.id, currency: 'EUR', balance: 0, created_at: now});
+        xmSetSession({id: newUser.id, name: newUser.name, email: newUser.email, ia_code: iaCode, country: pais});
+        await xmShowDashboard(xmGetSession());
+      } catch(err) {
+        alert('❌ Error al crear cuenta: ' + (err.message||'inténtalo de nuevo'));
+        btn.textContent = 'Crear cuenta XenderMoney →'; btn.disabled = false;
+      }
+    }
+
+    // ── LOGIN ──
+    async function xmLogin(e){
+      e.preventDefault();
+      var email = document.getElementById('xm-login-email').value.trim();
+      var btn = document.getElementById('xm-login-btn');
+      btn.textContent = 'Entrando…'; btn.disabled = true;
+      try {
+        var {data: user, error} = await SB.from('users').select('*').eq('email', email).maybeSingle();
+        if(!user){alert('❌ No encontramos una cuenta con ese email.');btn.textContent='Entrar →';btn.disabled=false;return;}
+        xmSetSession({id: user.id, name: user.name, email: user.email, ia_code: user.ia_code, country: user.country});
+        document.getElementById('xm-login-modal').style.display = 'none';
+        await xmShowDashboard(xmGetSession());
+      } catch(err) {
+        alert('❌ Error: ' + (err.message||'inténtalo de nuevo'));
+        btn.textContent = 'Entrar →'; btn.disabled = false;
+      }
+    }
+
+    // ── DASHBOARD ──
+    async function xmShowDashboard(session){
+      var dash = document.getElementById('xm-dashboard');
+      if(!dash) return;
+      dash.style.display = 'block';
+      document.getElementById('xm-dash-name').textContent = session.name.split(' ')[0];
+      document.getElementById('xm-dash-email').textContent = session.email;
+      document.getElementById('xm-dash-code').textContent = session.ia_code||'—';
+      // Load wallet balance
+      try {
+        var {data: wallets} = await SB.from('wallets').select('*').eq('user_id', session.id);
+        var eur = wallets ? wallets.find(function(w){return w.currency==='EUR';}) : null;
+        var usd = wallets ? wallets.find(function(w){return w.currency==='USD';}) : null;
+        document.getElementById('xm-dash-bal-eur').textContent = eur ? '€' + parseFloat(eur.balance||0).toFixed(2) : '€0.00';
+        document.getElementById('xm-dash-bal-usd').textContent = usd ? '$' + parseFloat(usd.balance||0).toFixed(2) : '$0.00';
+      } catch(e) {
+        document.getElementById('xm-dash-bal-eur').textContent = '€0.00';
+        document.getElementById('xm-dash-bal-usd').textContent = '$0.00';
+      }
+      // Load last 5 transactions
+      try {
+        var {data: txns} = await SB.from('transactions').select('*').eq('user_id', session.id).order('created_at',{ascending:false}).limit(5);
+        var list = document.getElementById('xm-dash-txns');
+        if(txns && txns.length){
+          list.innerHTML = txns.map(function(t){
+            var sign = (t.type==='receive'||t.type==='topup') ? '+' : '-';
+            var color = sign==='+' ? '#22C55E' : '#F5A623';
+            var d = t.created_at ? new Date(t.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '—';
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">'
+              +'<div><div style="font-size:13px;font-weight:600;color:#fff;">'+(t.description||t.type||'Transferencia')+'</div>'
+              +'<div style="font-size:11px;color:#8A9AB8;">'+d+'</div></div>'
+              +'<div style="font-size:14px;font-weight:800;color:'+color+';">'+sign+(t.amount||0)+' '+(t.currency||'EUR')+'</div></div>';
+          }).join('');
+        } else {
+          list.innerHTML = '<p style="color:#8A9AB8;font-size:13px;text-align:center;padding:20px 0;">Aún no tienes transacciones.</p>';
+        }
+      } catch(e) {
+        document.getElementById('xm-dash-txns').innerHTML = '<p style="color:#8A9AB8;font-size:13px;">Error cargando transacciones.</p>';
+      }
+      // Scroll to dashboard
+      dash.scrollIntoView({behavior:'smooth'});
+    }
+
+    function xmLogout(){
+      xmClearSession();
+      document.getElementById('xm-dashboard').style.display = 'none';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function xmOpenLogin(){document.getElementById('xm-login-modal').style.display='flex';}
+    function xmCloseLogin(){document.getElementById('xm-login-modal').style.display='none';}
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -61,6 +196,14 @@
     .nav-actions { display: flex; gap: 12px; align-items: center; }
     .btn-ghost { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s; }
     .btn-ghost:hover { border-color: rgba(255,255,255,0.5); }
+
+    /* ── DASHBOARD ── */
+    #xm-dashboard { display:none; }
+    .dash-card { background: var(--navy-card); border: 1px solid rgba(245,166,35,0.15); border-radius: 20px; padding: 28px; }
+    .dash-bal-box { background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(245,166,35,0.04)); border: 1px solid rgba(245,166,35,0.25); border-radius: 16px; padding: 20px; text-align:center; }
+
+    /* ── LOGIN MODAL ── */
+    #xm-login-modal { display:none; position:fixed; inset:0; z-index:9999; background:rgba(10,18,35,0.92); backdrop-filter:blur(12px); align-items:center; justify-content:center; }
     .btn-orange { background: var(--orange); color: var(--navy); border: none; border-radius: 8px; padding: 10px 22px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all .2s; }
     .btn-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
     .lang-switcher { display: flex; gap: 4px; align-items: center; }
@@ -364,8 +507,8 @@
     <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷 FR</button>
   </div>
   <div class="nav-actions">
-    <a href="#" class="btn-ghost" data-i18n="nav_login">Log in</a>
-    <a href="#registro-xm" class="btn-orange" data-i18n="nav_open">Open account</a>
+    <a href="#" class="btn-ghost" onclick="xmOpenLogin();return false;" data-i18n="nav_login">Iniciar sesión</a>
+    <a href="#registro-xm" class="btn-orange" data-i18n="nav_open">Abrir cuenta</a>
   </div>
   <button class="ham-btn-xm" id="ham-btn-xm" onclick="toggleHamXm()">☰</button>
 </nav>
@@ -1627,7 +1770,6 @@ function calcXM(){
   var fee=amt*0.01;
   document.getElementById('xm-result').innerHTML='<div style="font-size:28px;font-weight:900;color:#F5A623;margin-bottom:8px;">'+converted.toFixed(0)+' '+document.getElementById('xm-to').value+'</div><div style="font-size:13px;color:#8A9AB8;">Comisión estimada: '+fee.toFixed(2)+' '+document.getElementById('xm-from').value+' · Tipo: 1 '+document.getElementById('xm-from').value+' = '+rate+' '+document.getElementById('xm-to').value+'</div>';
 }
-function submitXMReg(e){e.preventDefault();alert('✅ ¡Cuenta XenderMoney creada! Revisa tu email para verificar.');}
 </script>
 
 <!-- ═══ CALCULADORA DE ENVÍO ═══ -->
@@ -1710,7 +1852,75 @@ function submitXMReg(e){e.preventDefault();alert('✅ ¡Cuenta XenderMoney cread
   #registro-xm form{grid-template-columns:1fr!important;}
 }
 </style>
-<script>window.addEventListener('DOMContentLoaded',function(){calcXM();});</script>
+<!-- ═══ LOGIN MODAL ═══ -->
+<div id="xm-login-modal" onclick="if(event.target===this)xmCloseLogin()">
+  <div style="background:#162440;border:1px solid rgba(245,166,35,0.2);border-radius:20px;padding:36px;width:100%;max-width:420px;margin:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <h2 style="font-size:20px;font-weight:900;color:#fff;">Iniciar sesión</h2>
+      <button onclick="xmCloseLogin()" style="background:none;border:none;color:#8A9AB8;font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <form onsubmit="xmLogin(event)">
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px;font-weight:700;color:#F5A623;display:block;margin-bottom:8px;">EMAIL</label>
+        <input id="xm-login-email" type="email" placeholder="tu@email.com" required
+          style="width:100%;padding:13px 14px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;outline:none;font-family:inherit;">
+      </div>
+      <button id="xm-login-btn" type="submit"
+        style="width:100%;padding:14px;background:#F5A623;color:#0F1A2E;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;">
+        Entrar →
+      </button>
+    </form>
+    <p style="text-align:center;margin-top:16px;font-size:13px;color:#8A9AB8;">
+      ¿Sin cuenta? <a href="#registro-xm" onclick="xmCloseLogin()" style="color:#F5A623;font-weight:700;">Regístrate gratis →</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══ WALLET DASHBOARD ═══ -->
+<section id="xm-dashboard" style="padding:100px 6% 60px;background:#0F1A2E;">
+  <div style="max-width:900px;margin:0 auto;">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#F5A623;text-transform:uppercase;margin-bottom:6px;">MI CUENTA</div>
+        <h2 style="font-size:clamp(20px,2.5vw,28px);font-weight:900;color:#fff;">Bienvenido, <span id="xm-dash-name">—</span></h2>
+        <div style="font-size:13px;color:#8A9AB8;margin-top:4px;"><span id="xm-dash-email">—</span> · Código: <span id="xm-dash-code" style="color:#F5A623;font-weight:700;">—</span></div>
+      </div>
+      <button onclick="xmLogout()" style="background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);color:#8A9AB8;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;">Cerrar sesión</button>
+    </div>
+    <!-- Balance cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+      <div class="dash-bal-box">
+        <div style="font-size:11px;font-weight:700;color:#F5A623;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Saldo EUR</div>
+        <div id="xm-dash-bal-eur" style="font-size:32px;font-weight:900;color:#F5A623;">€0.00</div>
+      </div>
+      <div class="dash-bal-box">
+        <div style="font-size:11px;font-weight:700;color:#8A9AB8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Saldo USD</div>
+        <div id="xm-dash-bal-usd" style="font-size:32px;font-weight:900;color:#C8D0DC;">$0.00</div>
+      </div>
+    </div>
+    <!-- Quick actions -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;">
+      <a href="#calculadora-xm" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;background:#162440;border:1px solid rgba(245,166,35,0.15);border-radius:14px;text-decoration:none;transition:all .2s;" onmouseenter="this.style.borderColor='rgba(245,166,35,0.4)'" onmouseleave="this.style.borderColor='rgba(245,166,35,0.15)'">
+        <span style="font-size:24px;">📤</span><span style="font-size:13px;font-weight:700;color:#fff;">Enviar</span>
+      </a>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;background:#162440;border:1px solid rgba(255,255,255,0.08);border-radius:14px;cursor:pointer;" onclick="alert('Recarga disponible próximamente')">
+        <span style="font-size:24px;">📥</span><span style="font-size:13px;font-weight:700;color:#fff;">Recargar</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;background:#162440;border:1px solid rgba(255,255,255,0.08);border-radius:14px;cursor:pointer;" onclick="alert('Historial completo próximamente')">
+        <span style="font-size:24px;">📋</span><span style="font-size:13px;font-weight:700;color:#fff;">Historial</span>
+      </div>
+    </div>
+    <!-- Transactions -->
+    <div class="dash-card">
+      <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:16px;">Últimas transacciones</div>
+      <div id="xm-dash-txns">
+        <p style="color:#8A9AB8;font-size:13px;text-align:center;padding:20px 0;">Cargando…</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 </body>
 </html>
 
