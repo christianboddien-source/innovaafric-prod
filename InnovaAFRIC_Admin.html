@@ -17224,15 +17224,34 @@ async function loadLTV(){
   var list=(r&&r.success&&r.data.users)||[];
 
   if(!list.length){
-    list=(ALL_USERS||[]).slice(0,25).map(function(u,i){
-      var txns=Math.floor(Math.random()*50)+1;
-      var avgCommission=2.1+Math.random()*2;
-      var ltv=Math.round(txns*avgCommission*100)/100;
-      var projected=Math.round(ltv*1.8*100)/100;
-      var segment=ltv>500?'champion':ltv>200?'loyal':ltv>50?'potential':'new';
-      return {id:u.id||'u'+i,full_name:u.full_name||'Usuario '+i,country:u.country||'CM',
-        created_at:u.created_at||new Date(Date.now()-Math.random()*365*86400000).toISOString(),
-        txns:txns,revenue:ltv,ltv:ltv,projected:projected,segment:segment};
+    try{
+      var txRes=await SB.from('transactions').select('user_id,amount,fee,type,created_at').limit(3000);
+      var txns2=txRes.data||[];
+      var utMap={};
+      txns2.forEach(function(t){
+        if(!utMap[t.user_id])utMap[t.user_id]={count:0,revenue:0};
+        utMap[t.user_id].count++;
+        // Use fee if available, otherwise estimate 2.2% commission
+        utMap[t.user_id].revenue+=Number(t.fee)||Number(t.amount||0)*0.022;
+      });
+      var built=(ALL_USERS||[]).filter(function(u){return utMap[u.id];}).map(function(u){
+        var ud=utMap[u.id];
+        var ltv=Math.round(ud.revenue*100)/100;
+        var monthsSinceReg=u.created_at?Math.max(1,Math.floor((Date.now()-new Date(u.created_at).getTime())/2592000000)):6;
+        var projected=Math.round(ltv*(1+12/monthsSinceReg)*100)/100;
+        var segment=ltv>500?'champion':ltv>200?'loyal':ltv>50?'potential':'new';
+        return{id:u.id,full_name:u.full_name||u.email,country:u.country||'—',
+          created_at:u.created_at||new Date().toISOString(),
+          txns:ud.count,revenue:ltv,ltv:ltv,projected:projected,segment:segment};
+      }).sort(function(a,b){return b.ltv-a.ltv;});
+      if(built.length)list=built;
+    }catch(e){}
+    if(!list.length)list=(ALL_USERS||[]).slice(0,25).map(function(u,i){
+      var t=Math.floor(20+i*2);var rev=Math.round(t*2.1*100)/100;
+      return{id:u.id||'u'+i,full_name:u.full_name||'Usuario '+i,country:u.country||'CM',
+        created_at:u.created_at||new Date().toISOString(),
+        txns:t,revenue:rev,ltv:rev,projected:Math.round(rev*1.8*100)/100,
+        segment:rev>500?'champion':rev>200?'loyal':rev>50?'potential':'new'};
     }).sort(function(a,b){return b.ltv-a.ltv;});
   }
 
@@ -17306,12 +17325,43 @@ async function loadNPS(){
   var data=(r&&r.success&&r.data)||null;
 
   if(!data){
-    var promoters=Math.floor(Math.random()*200)+150;
-    var passives=Math.floor(Math.random()*80)+60;
-    var detractors=Math.floor(Math.random()*40)+20;
-    var total=promoters+passives+detractors;
-    var score=Math.round(((promoters-detractors)/total)*100);
-    data={score:score,total:total,promoters:promoters,passives:passives,detractors:detractors,
+    try{
+      var npsRes=await SB.from('nps_responses').select('score,comment,user_id,country,created_at,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(500).catch(function(){return{data:null};});
+      var npsRows=npsRes.data;
+      if(npsRows&&npsRows.length){
+        var period2=period||'30d';
+        var fromNPS=new Date();
+        if(period2==='7d')fromNPS.setDate(fromNPS.getDate()-7);
+        else if(period2==='30d')fromNPS.setDate(fromNPS.getDate()-30);
+        else if(period2==='90d')fromNPS.setDate(fromNPS.getDate()-90);
+        npsRows=npsRows.filter(function(r){return!period2||period2==='all'||new Date(r.created_at)>=fromNPS;});
+        var promoters=npsRows.filter(function(r){return r.score>=9;}).length;
+        var passives=npsRows.filter(function(r){return r.score>=7&&r.score<=8;}).length;
+        var detractors=npsRows.filter(function(r){return r.score<=6;}).length;
+        var total=npsRows.length;
+        var score=total?Math.round(((promoters-detractors)/total)*100):0;
+        var dist=new Array(11).fill(0);
+        npsRows.forEach(function(r){if(r.score>=0&&r.score<=10)dist[r.score]++;});
+        var byCountryMap={};
+        npsRows.forEach(function(r){
+          var cc=r.country||(r.user&&r.user.country)||'XX';
+          if(!byCountryMap[cc])byCountryMap[cc]={code:cc,sum:0,cnt:0};
+          byCountryMap[cc].sum+=r.score;byCountryMap[cc].cnt++;
+        });
+        var by_country=Object.values(byCountryMap).map(function(c){return{code:c.code,score:Math.round(c.sum/c.cnt)};}).sort(function(a,b){return b.score-a.score;}).slice(0,6);
+        // Monthly trend: last 7 months
+        var trendMap={};
+        for(var mi=6;mi>=0;mi--){var d=new Date();d.setMonth(d.getMonth()-mi);trendMap[d.getFullYear()+'-'+d.getMonth()]=[];}
+        npsRows.forEach(function(r){var d=new Date(r.created_at);var k=d.getFullYear()+'-'+d.getMonth();if(trendMap[k])trendMap[k].push(r.score);});
+        var trend=Object.values(trendMap).map(function(arr){if(!arr.length)return null;var p=arr.filter(function(s){return s>=9;}).length;var d=arr.filter(function(s){return s<=6;}).length;return Math.round(((p-d)/arr.length)*100);});
+        var comments=npsRows.filter(function(r){return r.comment;}).slice(0,8).map(function(r){return{score:r.score,text:r.comment,user:(r.user&&r.user.full_name)||'Usuario',country:r.country||'—',date:r.created_at};});
+        data={score:score,total:total,promoters:promoters,passives:passives,detractors:detractors,distribution:dist,by_country:by_country,trend:trend,comments:comments};
+      }
+    }catch(e){}
+  }
+  if(!data){
+    // static demo fallback when Supabase table doesn't exist
+    data={score:44,total:310,promoters:162,passives:98,detractors:50,
       distribution:[2,1,3,2,4,8,12,18,28,32,15],
       by_country:[{code:'ES',score:52},{code:'CM',score:44},{code:'FR',score:48},{code:'GQ',score:38}],
       trend:[38,41,43,46,44,48,52],
@@ -17398,10 +17448,33 @@ async function loadForecast(){
   var r=await rwAPI('GET','/admin/reports/forecast?horizon='+horizon);
   var data=(r&&r.success&&r.data)||null;
 
-  // Build historical (last 12 months) + projected data
-  var historical=Array.from({length:12},function(_,i){return Math.round(8000+i*400+(Math.random()-0.3)*1500);});
-  var lastVal=historical[historical.length-1];
-  var growthRate=0.08+Math.random()*0.05;
+  // Build historical from real Supabase transactions
+  var historical=[];var histLabels=[];
+  try{
+    var fromDate=new Date();fromDate.setMonth(fromDate.getMonth()-12);
+    var txRes=await SB.from('transactions').select('amount,fee,created_at').gte('created_at',fromDate.toISOString()).limit(5000);
+    var allTxns=txRes.data||[];
+    // Group by month
+    var monthMap={};
+    allTxns.forEach(function(t){
+      var d=new Date(t.created_at);
+      var key=d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0');
+      if(!monthMap[key])monthMap[key]=0;
+      monthMap[key]+=Number(t.fee)||Number(t.amount||0)*0.022;
+    });
+    var monthKeys=Object.keys(monthMap).sort().slice(-12);
+    historical=monthKeys.map(function(k){return Math.round(monthMap[k]);});
+    histLabels=monthKeys.map(function(k){var p=k.split('-');var d=new Date(p[0],p[1]-1);return d.toLocaleDateString('es',{month:'short',year:'2-digit'});});
+  }catch(e){}
+  if(!historical.length){
+    historical=Array.from({length:12},function(_,i){return Math.round(8000+i*400);});
+    histLabels=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  }
+  var lastVal=historical[historical.length-1]||8000;
+  // Real growth rate from last 3 months vs previous 3 months
+  var last3=historical.slice(-3).reduce(function(a,b){return a+b;},0)/3;
+  var prev3=historical.slice(-6,-3).reduce(function(a,b){return a+b;},0)/3||last3*0.9;
+  var growthRate=prev3>0?Math.max(0.01,(last3-prev3)/prev3):0.08;
   var projectedMonths=Math.ceil(horizon/30);
   var projected=Array.from({length:projectedMonths},function(_,i){return Math.round(lastVal*Math.pow(1+growthRate/12,i+1));});
   var confidence=projected.map(function(v,i){return{low:Math.round(v*(1-0.05*(i+1))),high:Math.round(v*(1+0.05*(i+1)))};});
@@ -17414,7 +17487,6 @@ async function loadForecast(){
   document.getElementById('fc-break-even').textContent='Mes '+(Math.floor(projectedMonths/2)+1);
   document.getElementById('fc-confidence').textContent='±'+(Math.round(growthPct*0.6))+'%';
 
-  var histLabels=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   var projLabels=Array.from({length:projectedMonths},function(_,i){return 'P+'+(i+1);});
 
   mkChart('forecast-chart',{
@@ -17461,10 +17533,37 @@ async function loadFunnel(){
   var r=await rwAPI('GET','/admin/reports/funnel?period='+period+(country?'&country='+country:''));
   var data=(r&&r.success&&r.data)||null;
 
-  var registered=data&&data.registered||Math.round(800+Math.random()*200);
-  var kyc=data&&data.kyc||Math.round(registered*0.62);
-  var firstTxn=data&&data.first_txn||Math.round(kyc*0.74);
-  var active=data&&data.active||Math.round(firstTxn*0.58);
+  var registered,kyc,firstTxn,active;
+  if(data&&data.registered){
+    registered=data.registered;kyc=data.kyc;firstTxn=data.first_txn;active=data.active;
+  }else{
+    try{
+      var from2=new Date();
+      if(period==='7d')from2.setDate(from2.getDate()-7);
+      else if(period==='30d')from2.setDate(from2.getDate()-30);
+      else if(period==='90d')from2.setDate(from2.getDate()-90);
+      else from2=new Date(2020,0,1);
+      var uQ=SB.from('users').select('id,kyc_status,country,created_at').gte('created_at',from2.toISOString()).limit(2000);
+      if(country)uQ=uQ.eq('country',country);
+      var uRes=await uQ;
+      var uList=uRes.data||[];
+      registered=uList.length||ALL_USERS&&ALL_USERS.length||0;
+      kyc=uList.filter(function(u){return u.kyc_status==='approved'||u.kyc_status==='verified';}).length;
+      var uIds=uList.map(function(u){return u.id;});
+      var txQ=SB.from('transactions').select('user_id').order('created_at',{ascending:false}).limit(2000);
+      var txR=uIds.length?await txQ.in('user_id',uIds):await txQ;
+      var txUids=[...new Set((txR.data||[]).map(function(t){return t.user_id;}))];
+      firstTxn=txUids.length;
+      var thirtyAgo=new Date(Date.now()-30*86400000).toISOString();
+      var actQ=SB.from('transactions').select('user_id').gte('created_at',thirtyAgo).limit(2000);
+      var actR=uIds.length?await actQ.in('user_id',uIds):await actQ;
+      active=[...new Set((actR.data||[]).map(function(t){return t.user_id;}))].length;
+      if(!registered){registered=ALL_USERS&&ALL_USERS.length||0;kyc=Math.round(registered*0.62);firstTxn=Math.round(kyc*0.74);active=Math.round(firstTxn*0.58);}
+    }catch(e){
+      registered=ALL_USERS&&ALL_USERS.length||800;
+      kyc=Math.round(registered*0.62);firstTxn=Math.round(kyc*0.74);active=Math.round(firstTxn*0.58);
+    }
+  }
 
   document.getElementById('fn-registered').textContent=registered.toLocaleString('es');
   document.getElementById('fn-kyc').textContent=kyc.toLocaleString('es');
@@ -17502,7 +17601,70 @@ var ALL_RANKING=[];
 async function loadCountryRanking(){
   var kpi=document.getElementById('cr-kpi').value;
   var r=await rwAPI('GET','/admin/reports/country-ranking?kpi='+kpi);
-  ALL_RANKING=(r&&r.success&&r.data.countries)||[
+  var apiRanking=(r&&r.success&&r.data&&r.data.countries)||null;
+  if(!apiRanking){
+    try{
+      var COUNTRY_META={
+        CM:{name:'Camerún',flag:'🇨🇲'},ES:{name:'España',flag:'🇪🇸'},GQ:{name:'Guinea Ecuatorial',flag:'🇬🇶'},
+        FR:{name:'Francia',flag:'🇫🇷'},CI:{name:'Costa de Marfil',flag:'🇨🇮'},SN:{name:'Senegal',flag:'🇸🇳'},
+        NG:{name:'Nigeria',flag:'🇳🇬'},GA:{name:'Gabón',flag:'🇬🇦'},CD:{name:'R.D. Congo',flag:'🇨🇩'},
+        DE:{name:'Alemania',flag:'🇩🇪'},IT:{name:'Italia',flag:'🇮🇹'},GB:{name:'Reino Unido',flag:'🇬🇧'}
+      };
+      // Users by country
+      var uCR=await SB.from('users').select('id,country,created_at').limit(3000).catch(function(){return{data:[]};});
+      var uCRList=uCR.data||[];
+      var countryUsers={};
+      var countryNewUsers={};
+      var threeMonthsAgo=new Date();threeMonthsAgo.setMonth(threeMonthsAgo.getMonth()-3);
+      var sixMonthsAgo=new Date();sixMonthsAgo.setMonth(sixMonthsAgo.getMonth()-6);
+      uCRList.forEach(function(u){
+        var cc=u.country||'XX';
+        if(!countryUsers[cc])countryUsers[cc]={ids:[],recent:0,prev:0};
+        countryUsers[cc].ids.push(u.id);
+        var reg=new Date(u.created_at);
+        if(reg>=threeMonthsAgo)countryUsers[cc].recent++;
+        else if(reg>=sixMonthsAgo)countryUsers[cc].prev++;
+      });
+      // Transactions by country (via user_id → country)
+      var txCR=await SB.from('transactions').select('user_id,amount,fee,status').limit(5000).catch(function(){return{data:[]};});
+      var txCRList=txCR.data||[];
+      // Build user→country map
+      var u2cc={};
+      uCRList.forEach(function(u){u2cc[u.id]=u.country||'XX';});
+      var countryTx={};
+      txCRList.forEach(function(t){
+        var cc=u2cc[t.user_id]||'XX';
+        if(!countryTx[cc])countryTx[cc]={volume:0,revenue:0};
+        var amt=Number(t.amount)||0;
+        countryTx[cc].volume+=amt;
+        countryTx[cc].revenue+=Number(t.fee)||amt*0.022;
+      });
+      // Build ranking list
+      apiRanking=Object.keys(countryUsers).filter(function(cc){return cc!=='XX'&&countryUsers[cc].ids.length>=1;}).map(function(cc){
+        var cu=countryUsers[cc];
+        var ct=countryTx[cc]||{volume:0,revenue:0};
+        var usersCount=cu.ids.length;
+        var vol=Math.round(ct.volume);
+        var rev=Math.round(ct.revenue*100)/100;
+        var arpu=usersCount?Math.round(rev/usersCount*100)/100:0;
+        var growth=cu.prev>0?Math.round(((cu.recent-cu.prev)/cu.prev)*100):cu.recent>0?100:0;
+        var meta=COUNTRY_META[cc]||{name:cc,flag:'🌍'};
+        // Composite score: users 30%, volume 30%, revenue 25%, growth 15% — normalised 0-100 within dataset
+        return{code:cc,name:meta.name,flag:meta.flag,users:usersCount,volume:vol,revenue:rev,growth:growth,arpu:arpu,_raw:true};
+      }).sort(function(a,b){return b.users-a.users;});
+      // Normalise scores
+      if(apiRanking.length){
+        var maxU=Math.max.apply(null,apiRanking.map(function(c){return c.users;}));
+        var maxV=Math.max.apply(null,apiRanking.map(function(c){return c.volume;}));
+        var maxR=Math.max.apply(null,apiRanking.map(function(c){return c.revenue;}));
+        var maxG=Math.max.apply(null,apiRanking.map(function(c){return Math.abs(c.growth);}));
+        apiRanking.forEach(function(c){
+          c.score=Math.round((c.users/maxU)*30+(c.volume/(maxV||1))*30+(c.revenue/(maxR||1))*25+(Math.abs(c.growth)/(maxG||1))*15);
+        });
+      }
+    }catch(e){apiRanking=null;}
+  }
+  ALL_RANKING=apiRanking||[
     {code:'CM',name:'Camerún',flag:'🇨🇲',users:1240,volume:85000,revenue:2125,growth:18,arpu:1.71,score:82},
     {code:'ES',name:'España',flag:'🇪🇸',users:890,volume:120000,revenue:3000,growth:12,arpu:3.37,score:88},
     {code:'GQ',name:'Guinea Ecuatorial',flag:'🇬🇶',users:340,volume:22000,revenue:550,growth:25,arpu:1.62,score:64},
