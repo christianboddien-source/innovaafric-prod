@@ -1827,9 +1827,9 @@ var _XM_RATES={'EUR-XAF':655.957,'EUR-XOF':655.957,'EUR-GNF':9800,'EUR-USD':1.08
 
 async function loadLiveRates(){
   try{
-    var {data}=await SB.from('exchange_rates').select('pair,rate');
+    var {data}=await SB.from('exchange_rates').select('from_curr,to_curr,rate');
     if(data&&data.length){
-      data.forEach(function(r){if(r.pair&&r.rate)_XM_RATES[r.pair]=r.rate;});
+      data.forEach(function(r){if(r.from_curr&&r.to_curr&&r.rate)_XM_RATES[r.from_curr+'-'+r.to_curr]=r.rate;});
     }
   }catch(e){}
   calcXM();
