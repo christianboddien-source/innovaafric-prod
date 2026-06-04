@@ -925,16 +925,172 @@ select.form-input option{background:var(--s2)}
 
     <!-- RATES -->
     <div id="pg-rates" style="display:none">
-      <div class="card">
+      <!-- Tasas globales -->
+      <div class="card" style="margin-bottom:16px">
         <div class="card-head">
-          <div><div class="card-title">📈 Tasas y comisiones</div><div class="card-sub">Guardado en Supabase · config table</div></div>
+          <div><div class="card-title">📈 Tasas y comisiones globales</div><div class="card-sub">Valores base · Supabase config table</div></div>
           <button class="topbar-btn btn-primary" onclick="saveRates()">💾 Guardar en Supabase</button>
         </div>
         <div style="padding:20px">
           <div style="font-size:13px;font-weight:600;margin-bottom:12px">Tasas de cambio</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px" id="rates-editor"></div>
-          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Comisiones</div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Comisiones globales</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="fees-editor"></div>
+        </div>
+      </div>
+      <!-- Tasas y comisiones por país -->
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🌍 Tasas y comisiones por país</div><div class="card-sub">Reglas específicas por país, moneda y tipo de operación</div></div>
+          <div style="display:flex;gap:8px">
+            <select class="filter-select" id="cr-filter-type" onchange="loadCountryRates()">
+              <option value="">Todos los tipos</option>
+              <option value="tasa">Tasas de cambio</option>
+              <option value="comision">Comisiones</option>
+              <option value="limite">Límites</option>
+            </select>
+            <select class="filter-select" id="cr-filter-country" onchange="loadCountryRates()">
+              <option value="">Todos los países</option>
+              <option value="CM">🇨🇲 Camerún</option>
+              <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+              <option value="SN">🇸🇳 Senegal</option>
+              <option value="CI">🇨🇮 Costa de Marfil</option>
+              <option value="GA">🇬🇦 Gabón</option>
+              <option value="CG">🇨🇬 Congo</option>
+              <option value="CD">🇨🇩 R.D. Congo</option>
+              <option value="NG">🇳🇬 Nigeria</option>
+              <option value="GH">🇬🇭 Ghana</option>
+              <option value="KE">🇰🇪 Kenia</option>
+              <option value="MA">🇲🇦 Marruecos</option>
+              <option value="ES">🇪🇸 España</option>
+              <option value="FR">🇫🇷 Francia</option>
+              <option value="DE">🇩🇪 Alemania</option>
+              <option value="ALL">🌐 Global</option>
+            </select>
+            <button class="topbar-btn btn-primary" onclick="openNewCountryRate()">+ Nueva tasa</button>
+          </div>
+        </div>
+        <div style="padding:16px 20px" id="country-rates-list"><div class="loading-cell"><div class="spin"></div></div></div>
+      </div>
+    </div>
+
+    <!-- MODAL: Nueva tasa/comisión por país -->
+    <div class="modal-overlay" id="m-new-country-rate" style="display:none" onclick="if(event.target===this)closeModal('m-new-country-rate')">
+      <div class="modal" style="max-width:520px;width:95%">
+        <div class="modal-head">
+          <div class="modal-title" id="cr-modal-title">➕ Nueva tasa / comisión</div>
+          <button class="modal-close" onclick="closeModal('m-new-country-rate')">✕</button>
+        </div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+          <input type="hidden" id="cr-edit-id">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">País *</label>
+              <select class="form-input" id="cr-country">
+                <option value="ALL">🌐 Global (todos)</option>
+                <option value="CM">🇨🇲 Camerún</option>
+                <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+                <option value="SN">🇸🇳 Senegal</option>
+                <option value="CI">🇨🇮 Costa de Marfil</option>
+                <option value="GA">🇬🇦 Gabón</option>
+                <option value="CG">🇨🇬 Congo</option>
+                <option value="CD">🇨🇩 R.D. Congo</option>
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="GH">🇬🇭 Ghana</option>
+                <option value="KE">🇰🇪 Kenia</option>
+                <option value="MA">🇲🇦 Marruecos</option>
+                <option value="TZ">🇹🇿 Tanzania</option>
+                <option value="UG">🇺🇬 Uganda</option>
+                <option value="ET">🇪🇹 Etiopía</option>
+                <option value="ES">🇪🇸 España</option>
+                <option value="FR">🇫🇷 Francia</option>
+                <option value="DE">🇩🇪 Alemania</option>
+                <option value="IT">🇮🇹 Italia</option>
+                <option value="PT">🇵🇹 Portugal</option>
+                <option value="BE">🇧🇪 Bélgica</option>
+                <option value="CH">🇨🇭 Suiza</option>
+                <option value="US">🇺🇸 EE.UU.</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Tipo *</label>
+              <select class="form-input" id="cr-type" onchange="toggleCrFields()">
+                <option value="comision">💸 Comisión</option>
+                <option value="tasa">💱 Tasa de cambio</option>
+                <option value="limite">🔒 Límite operación</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Concepto / Nombre *</label>
+            <input class="form-input" id="cr-name" placeholder="Ej: MTN Mobile Money, Envío EUR→XAF, Límite diario...">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group" style="margin:0">
+              <label class="form-label" id="cr-val-label">Valor (%)</label>
+              <input class="form-input" id="cr-value" type="number" step="0.001" placeholder="0.00">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Moneda / Par</label>
+              <select class="form-input" id="cr-currency">
+                <option value="">— Ninguna —</option>
+                <option value="EUR">EUR — Euro</option>
+                <option value="XAF">XAF — Franco CFA CEMAC</option>
+                <option value="XOF">XOF — Franco CFA UEMOA</option>
+                <option value="USD">USD — Dólar</option>
+                <option value="NGN">NGN — Naira</option>
+                <option value="GHS">GHS — Cedi</option>
+                <option value="KES">KES — Chelín keniano</option>
+                <option value="MAD">MAD — Dírham</option>
+                <option value="EUR→XAF">EUR → XAF</option>
+                <option value="EUR→XOF">EUR → XOF</option>
+                <option value="EUR→USD">EUR → USD</option>
+                <option value="USD→XAF">USD → XAF</option>
+                <option value="EUR→NGN">EUR → NGN</option>
+                <option value="EUR→GHS">EUR → GHS</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="cr-limit-fields" style="display:none">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Mín. por operación</label>
+              <input class="form-input" id="cr-min" type="number" step="0.01" placeholder="0">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Máx. por operación</label>
+              <input class="form-input" id="cr-max" type="number" step="0.01" placeholder="Sin límite">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Método de pago</label>
+              <select class="form-input" id="cr-method">
+                <option value="">— Todos —</option>
+                <option value="mtn">MTN Mobile Money</option>
+                <option value="orange">Orange Money</option>
+                <option value="banco">Transferencia bancaria</option>
+                <option value="xendermoney">XenderMoney</option>
+                <option value="card">Tarjeta</option>
+                <option value="cash">Efectivo</option>
+                <option value="p2p">P2P</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">Estado</label>
+              <select class="form-input" id="cr-active">
+                <option value="1">✅ Activo</option>
+                <option value="0">❌ Inactivo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin:0">
+            <label class="form-label">Notas internas</label>
+            <input class="form-input" id="cr-notes" placeholder="Descripción interna, condiciones especiales...">
+          </div>
+        </div>
+        <div style="padding:0 20px 20px;display:flex;justify-content:flex-end;gap:8px">
+          <button class="topbar-btn btn-ghost" onclick="closeModal('m-new-country-rate')">Cancelar</button>
+          <button class="topbar-btn btn-primary" onclick="saveCountryRate()">💾 Guardar</button>
         </div>
       </div>
     </div>
@@ -6192,7 +6348,7 @@ function nav(page,el){
   if(page==='circulares')loadCirculares();
   if(page==='orders')loadOrders();
   if(page==='kyc')loadKYC();
-  if(page==='rates')loadRatesEditor();
+  if(page==='rates'){loadRatesEditor();loadCountryRates();}
   if(page==='support')loadSupport();
   if(page==='campaigns')loadCampaigns();
   if(page==='simulator'){runSimulator();loadImpactPanel(1000,150);}
@@ -6891,6 +7047,153 @@ async function saveRates(){
     toast('Guardado en local (crea tabla config en Supabase para persistir)','info');
   }
   logAdminAction('save_rates','Tasas y comisiones actualizadas');
+}
+
+// ── TASAS Y COMISIONES POR PAÍS ──────────────────────────
+var COUNTRY_RATES=[];
+var CR_COUNTRY_NAMES={ALL:'🌐 Global',CM:'🇨🇲 Camerún',GQ:'🇬🇶 Guinea Ec.',SN:'🇸🇳 Senegal',CI:'🇨🇮 Costa de Marfil',GA:'🇬🇦 Gabón',CG:'🇨🇬 Congo',CD:'🇨🇩 R.D.Congo',NG:'🇳🇬 Nigeria',GH:'🇬🇭 Ghana',KE:'🇰🇪 Kenia',MA:'🇲🇦 Marruecos',TZ:'🇹🇿 Tanzania',UG:'🇺🇬 Uganda',ET:'🇪🇹 Etiopía',ES:'🇪🇸 España',FR:'🇫🇷 Francia',DE:'🇩🇪 Alemania',IT:'🇮🇹 Italia',PT:'🇵🇹 Portugal',BE:'🇧🇪 Bélgica',CH:'🇨🇭 Suiza',US:'🇺🇸 EE.UU.'};
+var CR_TYPE_LABELS={comision:'💸 Comisión',tasa:'💱 Tasa',limite:'🔒 Límite'};
+var CR_METHOD_LABELS={mtn:'MTN Money',orange:'Orange Money',banco:'Banco',xendermoney:'XenderMoney',card:'Tarjeta',cash:'Efectivo',p2p:'P2P','':`Todos`};
+
+async function loadCountryRates(){
+  var list=document.getElementById('country-rates-list');
+  if(!list)return;
+  list.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
+  try{
+    var res=await SB.from('config').select('value').eq('key','country_rates').single();
+    COUNTRY_RATES=JSON.parse((res.data&&res.data.value)||'[]');
+  }catch(e){
+    var ls=localStorage.getItem('ia_country_rates');
+    COUNTRY_RATES=ls?JSON.parse(ls):[];
+  }
+  var filterType=document.getElementById('cr-filter-type')&&document.getElementById('cr-filter-type').value;
+  var filterCountry=document.getElementById('cr-filter-country')&&document.getElementById('cr-filter-country').value;
+  var rows=COUNTRY_RATES;
+  if(filterType)rows=rows.filter(function(r){return r.type===filterType;});
+  if(filterCountry)rows=rows.filter(function(r){return r.country===filterCountry;});
+  if(!rows.length){
+    list.innerHTML='<div class="td-empty">Sin entradas — Usa "+ Nueva tasa" para añadir</div>';
+    return;
+  }
+  list.innerHTML='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">'
+    +'<thead><tr style="border-bottom:1px solid var(--b1);color:var(--muted);font-size:11px;font-weight:600">'
+    +'<th style="padding:8px 10px;text-align:left">PAÍS</th>'
+    +'<th style="padding:8px 10px;text-align:left">TIPO</th>'
+    +'<th style="padding:8px 10px;text-align:left">CONCEPTO</th>'
+    +'<th style="padding:8px 10px;text-align:left">MÉTODO</th>'
+    +'<th style="padding:8px 10px;text-align:left">MONEDA</th>'
+    +'<th style="padding:8px 10px;text-align:right">VALOR</th>'
+    +'<th style="padding:8px 10px;text-align:right">MÍN/MÁX</th>'
+    +'<th style="padding:8px 10px;text-align:center">ESTADO</th>'
+    +'<th style="padding:8px 10px;text-align:center">ACCIONES</th>'
+    +'</tr></thead><tbody>'
+    +rows.map(function(r,i){
+      var idx=COUNTRY_RATES.indexOf(r);
+      var valStr=r.type==='tasa'?r.value:r.value+'%';
+      var limStr=(r.min||r.max)?((r.min||'0')+' – '+(r.max||'∞')):('—');
+      return'<tr style="border-bottom:1px solid var(--b1)" onmouseover="this.style.background=\'var(--b1)\'" onmouseout="this.style.background=\'\'">'
+        +'<td style="padding:9px 10px;font-weight:600">'+(CR_COUNTRY_NAMES[r.country]||r.country)+'</td>'
+        +'<td style="padding:9px 10px"><span style="background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:2px 8px;font-size:11px">'+(CR_TYPE_LABELS[r.type]||r.type)+'</span></td>'
+        +'<td style="padding:9px 10px">'+(r.name||'—')+'<br><span style="font-size:10px;color:var(--muted)">'+(r.notes||'')+'</span></td>'
+        +'<td style="padding:9px 10px;font-size:11px;color:var(--muted)">'+(CR_METHOD_LABELS[r.method]||r.method||'Todos')+'</td>'
+        +'<td style="padding:9px 10px;font-family:var(--mono);font-size:12px;color:var(--cyan)">'+(r.currency||'—')+'</td>'
+        +'<td style="padding:9px 10px;text-align:right;font-family:var(--mono);font-weight:700;color:var(--txt)">'+valStr+'</td>'
+        +'<td style="padding:9px 10px;text-align:right;font-size:11px;color:var(--muted)">'+limStr+'</td>'
+        +'<td style="padding:9px 10px;text-align:center">'+(r.active!=='0'?'<span style="background:rgba(16,185,129,.15);color:#10b981;border-radius:10px;padding:2px 8px;font-size:11px">✅ Activo</span>':'<span style="background:rgba(239,68,68,.15);color:#ef4444;border-radius:10px;padding:2px 8px;font-size:11px">❌ Inactivo</span>')+'</td>'
+        +'<td style="padding:9px 10px;text-align:center;display:flex;gap:6px;justify-content:center">'
+        +'<button onclick="editCountryRate('+idx+')" style="background:var(--cyan-d);border:none;border-radius:6px;padding:4px 10px;color:var(--cyan);cursor:pointer;font-size:11px">✏️ Editar</button>'
+        +'<button onclick="deleteCountryRate('+idx+')" style="background:rgba(239,68,68,.15);border:none;border-radius:6px;padding:4px 10px;color:#ef4444;cursor:pointer;font-size:11px">🗑️</button>'
+        +'</td></tr>';
+    }).join('')
+    +'</tbody></table></div>';
+}
+
+function toggleCrFields(){
+  var type=document.getElementById('cr-type')&&document.getElementById('cr-type').value;
+  var lbl=document.getElementById('cr-val-label');
+  var lf=document.getElementById('cr-limit-fields');
+  if(lbl){
+    if(type==='tasa')lbl.textContent='Valor (tasa directa)';
+    else if(type==='limite')lbl.textContent='Valor referencia';
+    else lbl.textContent='Valor (%)';
+  }
+  if(lf)lf.style.display=type==='limite'?'grid':'none';
+}
+
+function openNewCountryRate(){
+  document.getElementById('cr-edit-id').value='';
+  document.getElementById('cr-modal-title').textContent='➕ Nueva tasa / comisión';
+  ['cr-country','cr-type','cr-name','cr-value','cr-currency','cr-method','cr-notes','cr-min','cr-max'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value=id==='cr-country'?'ALL':id==='cr-type'?'comision':id==='cr-active'?'1':'';
+  });
+  document.getElementById('cr-active').value='1';
+  toggleCrFields();
+  openModal('m-new-country-rate');
+}
+
+function editCountryRate(idx){
+  var r=COUNTRY_RATES[idx];if(!r)return;
+  document.getElementById('cr-edit-id').value=idx;
+  document.getElementById('cr-modal-title').textContent='✏️ Editar tasa / comisión';
+  document.getElementById('cr-country').value=r.country||'ALL';
+  document.getElementById('cr-type').value=r.type||'comision';
+  document.getElementById('cr-name').value=r.name||'';
+  document.getElementById('cr-value').value=r.value||'';
+  document.getElementById('cr-currency').value=r.currency||'';
+  document.getElementById('cr-method').value=r.method||'';
+  document.getElementById('cr-active').value=r.active!==undefined?String(r.active):'1';
+  document.getElementById('cr-notes').value=r.notes||'';
+  document.getElementById('cr-min').value=r.min||'';
+  document.getElementById('cr-max').value=r.max||'';
+  toggleCrFields();
+  openModal('m-new-country-rate');
+}
+
+async function saveCountryRate(){
+  var name=document.getElementById('cr-name').value.trim();
+  var value=document.getElementById('cr-value').value.trim();
+  if(!name||value===''){toast('Nombre y valor son obligatorios','error');return;}
+  var entry={
+    country:document.getElementById('cr-country').value,
+    type:document.getElementById('cr-type').value,
+    name:name,
+    value:parseFloat(value),
+    currency:document.getElementById('cr-currency').value,
+    method:document.getElementById('cr-method').value,
+    active:document.getElementById('cr-active').value,
+    notes:document.getElementById('cr-notes').value.trim(),
+    min:document.getElementById('cr-min').value||'',
+    max:document.getElementById('cr-max').value||'',
+    updated_at:new Date().toISOString()
+  };
+  var editId=document.getElementById('cr-edit-id').value;
+  if(editId!==''){
+    COUNTRY_RATES[parseInt(editId)]=entry;
+  }else{
+    entry.created_at=new Date().toISOString();
+    COUNTRY_RATES.push(entry);
+  }
+  await _saveCountryRatesToDB();
+  closeModal('m-new-country-rate');
+  loadCountryRates();
+  toast('✅ Tasa guardada','success');
+}
+
+async function deleteCountryRate(idx){
+  if(!confirm('¿Eliminar esta entrada?'))return;
+  COUNTRY_RATES.splice(idx,1);
+  await _saveCountryRatesToDB();
+  loadCountryRates();
+  toast('🗑️ Entrada eliminada','info');
+}
+
+async function _saveCountryRatesToDB(){
+  var json=JSON.stringify(COUNTRY_RATES);
+  try{
+    await SB.from('config').upsert([{key:'country_rates',value:json,updated_at:new Date().toISOString()}]);
+  }catch(e){
+    localStorage.setItem('ia_country_rates',json);
+  }
 }
 
 // ── SUPPORT (Supabase support_tickets) ───────────────────
