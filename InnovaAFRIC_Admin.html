@@ -17569,9 +17569,23 @@ function filterCTR(){
   renderCTRTable(ALL_CTR.filter(function(c){return(!st||c.status===st)&&(!mo||c.date.startsWith(mo));}));
 }
 
-function submitCTR(ref){
+async function submitCTR(ref){
   var item=ALL_CTR.find(function(c){return c.ref===ref;});
-  if(item){item.status='submitted';renderCTRTable(ALL_CTR);toast('📤 CTR '+ref+' enviado al regulador','success');logAdminAction('submit_ctr','ref:'+ref);}
+  if(!item)return;
+  item.status='submitted';
+  item.submitted_at=new Date().toISOString();
+  localStorage.setItem('ia_ctr_reports',JSON.stringify(ALL_CTR));
+  renderCTRTable(ALL_CTR);
+  try{
+    await rwAPI('POST','/admin/compliance/ctr/submit',{ref}).catch(()=>null);
+    await SB.from('ctr_reports').upsert({
+      ref:item.ref,user_name:item.user,country:item.country,
+      amount:item.amount,currency:'EUR',txn_type:item.txn_type,
+      status:'submitted',report_date:new Date().toISOString().slice(0,10)
+    }).catch(()=>null);
+  }catch(e){}
+  toast('📤 CTR '+ref+' enviado al regulador','success');
+  logAdminAction('submit_ctr','ref:'+ref);
 }
 
 function printCTR(ref){
@@ -17818,14 +17832,37 @@ async function loadComplianceDashboard(){
 var ALL_CASES=[];
 
 async function loadCases(){
-  var stored=JSON.parse(localStorage.getItem('ia_compliance_cases')||'[]');
-  ALL_CASES=stored.length?stored:[
-    {id:'C001',ref:'CASE-2026-0005',subject:'Unknown Entity',type:'sanctions',desc:'Coincidencia en lista OFAC',assignee:'Compliance Officer',priority:'critical',status:'investigating',opened:'2026-06-01'},
-    {id:'C002',ref:'CASE-2026-0004',subject:'Moussa Al-Rashid',type:'aml',desc:'Patrón estructuración detectado',assignee:'Finance Officer',priority:'high',status:'open',opened:'2026-05-28'},
-    {id:'C003',ref:'CASE-2026-0003',subject:'Jean Mbeki',type:'kyc',desc:'Documentos KYC caducados',assignee:'KYC Officer',priority:'medium',status:'open',opened:'2026-05-20'},
-    {id:'C004',ref:'CASE-2026-0002',subject:'Carlos Ruiz',type:'fraud',desc:'Chargebacks múltiples',assignee:'Support Agent',priority:'high',status:'escalated',opened:'2026-05-10'},
-    {id:'C005',ref:'CASE-2026-0001',subject:'Marie Nguyen',type:'aml',desc:'Transferencias a jurisdicción restringida',assignee:'Compliance Officer',priority:'medium',status:'closed',opened:'2026-04-01'}
-  ];
+  try{
+    var apiR=await rwAPI('GET','/admin/compliance/cases').catch(()=>null);
+    if(apiR&&apiR.success&&apiR.data&&apiR.data.cases&&apiR.data.cases.length){
+      ALL_CASES=apiR.data.cases;
+    }else{
+      // Try Supabase aml_cases table
+      var sbR=await SB.from('aml_cases').select('*').order('created_at',{ascending:false}).limit(100).catch(()=>({data:[]}));
+      var sbCases=sbR.data||[];
+      if(sbCases.length){
+        ALL_CASES=sbCases.map(function(c){
+          return{id:c.id,ref:c.case_ref||c.id,subject:c.user_id||'—',type:'aml',
+            desc:(c.flags||[]).join(', ')||c.notes||'—',assignee:c.assigned_to||'Compliance',
+            priority:c.risk_score>=80?'critical':c.risk_score>=60?'high':c.risk_score>=40?'medium':'low',
+            status:c.status||'open',opened:c.created_at?new Date(c.created_at).toLocaleDateString('es'):'—'};
+        });
+        localStorage.setItem('ia_compliance_cases',JSON.stringify(ALL_CASES));
+      }else{
+        var stored=JSON.parse(localStorage.getItem('ia_compliance_cases')||'[]');
+        ALL_CASES=stored.length?stored:[
+          {id:'C001',ref:'CASE-2026-0005',subject:'Unknown Entity',type:'sanctions',desc:'Coincidencia en lista OFAC',assignee:'Compliance Officer',priority:'critical',status:'investigating',opened:'2026-06-01'},
+          {id:'C002',ref:'CASE-2026-0004',subject:'Moussa Al-Rashid',type:'aml',desc:'Patrón estructuración detectado',assignee:'Finance Officer',priority:'high',status:'open',opened:'2026-05-28'},
+          {id:'C003',ref:'CASE-2026-0003',subject:'Jean Mbeki',type:'kyc',desc:'Documentos KYC caducados',assignee:'KYC Officer',priority:'medium',status:'open',opened:'2026-05-20'},
+          {id:'C004',ref:'CASE-2026-0002',subject:'Carlos Ruiz',type:'fraud',desc:'Chargebacks múltiples',assignee:'Support Agent',priority:'high',status:'escalated',opened:'2026-05-10'},
+          {id:'C005',ref:'CASE-2026-0001',subject:'Marie Nguyen',type:'aml',desc:'Transferencias a jurisdicción restringida',assignee:'Compliance Officer',priority:'medium',status:'closed',opened:'2026-04-01'}
+        ];
+      }
+    }
+  }catch(e){
+    var stored=JSON.parse(localStorage.getItem('ia_compliance_cases')||'[]');
+    ALL_CASES=stored.length?stored:[];
+  }
   document.getElementById('cases-count-label').textContent=ALL_CASES.filter(function(c){return c.status!=='closed';}).length+' casos activos';
   renderCasesTable(ALL_CASES);
 }
@@ -17860,10 +17897,20 @@ function filterCases(){
   renderCasesTable(ALL_CASES.filter(function(c){return(!st||c.status===st)&&(!tp||c.type===tp)&&(!pr||c.priority===pr);}));
 }
 
-function advanceCase(id){
+async function advanceCase(id){
   var c=ALL_CASES.find(function(x){return x.id===id;});if(!c)return;
   var next={open:'investigating',investigating:'escalated',escalated:'closed'}[c.status];
-  if(next){c.status=next;localStorage.setItem('ia_compliance_cases',JSON.stringify(ALL_CASES));renderCasesTable(ALL_CASES);toast('📁 Caso avanzado: '+next,'success');logAdminAction('advance_case','id:'+id+' status:'+next);}
+  if(!next)return;
+  c.status=next;
+  if(next==='closed')c.closed_at=new Date().toISOString();
+  localStorage.setItem('ia_compliance_cases',JSON.stringify(ALL_CASES));
+  renderCasesTable(ALL_CASES);
+  try{
+    await rwAPI('PATCH','/admin/compliance/cases/'+id,{status:next}).catch(()=>null);
+    await SB.from('aml_cases').update({status:next,updated_at:new Date().toISOString()}).eq('id',id).catch(()=>null);
+  }catch(e){}
+  toast('📁 Caso avanzado a: '+next,'success');
+  logAdminAction('advance_case','id:'+id+' → '+next);
 }
 
 async function createCase(){
