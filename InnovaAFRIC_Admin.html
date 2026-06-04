@@ -13778,20 +13778,40 @@ function populateCampaignTemplates(){
 }
 
 /* ── CAMPAIGNS ──────────────────────────────────────────────── */
-function loadCampaigns(){
-  filterCampaigns(CAMPAIGNS_DATA);
+async function loadCampaigns(){
+  var src=null;
+  try{
+    var sbCam=await SB.from('campaigns').select('id,name,channel,audience,sent_count,open_rate,conv_rate,scheduled_at,status,created_at').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
+    if(sbCam.data&&sbCam.data.length){
+      src=sbCam.data.map(function(c){
+        return{
+          id:c.id,name:c.name,channel:c.channel||'email',
+          audience:c.audience||'todos',
+          sent:Number(c.sent_count||0),
+          openRate:Number(c.open_rate||0),
+          convRate:Number(c.conv_rate||0),
+          date:c.scheduled_at?c.scheduled_at.slice(0,10):(c.created_at?c.created_at.slice(0,10):'—'),
+          status:c.status||'borrador'
+        };
+      });
+      CAMPAIGNS_DATA.length=0;
+      src.forEach(function(c){CAMPAIGNS_DATA.push(c);});
+    }
+  }catch(e){}
+  var list=src||CAMPAIGNS_DATA;
+  filterCampaigns(list);
   populateCampaignTemplates();
-  var stats=CAMPAIGNS_DATA.reduce((a,c)=>({
-    total:a.total+1,sent:a.sent+c.sent,active:a.active+(c.status==='activa'?1:0),
-    avgOpen:a.avgOpen+c.openRate
-  }),{total:0,sent:0,active:0,avgOpen:0});
-  var comp=CAMPAIGNS_DATA.filter(c=>c.status==='completada');
+  var total=list.length;
+  var sent=list.reduce(function(s,c){return s+(c.sent||0);},0);
+  var active=list.filter(function(c){return c.status==='activa';}).length;
+  var comp=list.filter(function(c){return c.status==='completada'&&c.openRate>0;});
+  var avgOpen=comp.length?+(comp.reduce(function(s,c){return s+c.openRate;},0)/comp.length).toFixed(1):0;
   var el=document.getElementById('campaigns-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${stats.total}</div><div class="kpi-lbl">Campañas totales</div></div>
-    <div class="kpi-card"><div class="kpi-val">${stats.sent.toLocaleString()}</div><div class="kpi-lbl">Mensajes enviados</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">${stats.active}</div><div class="kpi-lbl">Activas ahora</div></div>
-    <div class="kpi-card"><div class="kpi-val">${comp.length?(comp.reduce((s,c)=>s+c.openRate,0)/comp.length).toFixed(1):0}%</div><div class="kpi-lbl">Apertura media</div></div>`;
+  if(el)el.innerHTML=
+    '<div class="kpi-card"><div class="kpi-val">'+total+'</div><div class="kpi-lbl">Campañas totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+sent.toLocaleString('es')+'</div><div class="kpi-lbl">Mensajes enviados</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+active+'</div><div class="kpi-lbl">Activas ahora</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+avgOpen+'%</div><div class="kpi-lbl">Apertura media</div></div>';
 }
 
 function filterCampaigns(data){
@@ -14718,19 +14738,41 @@ var SLA_DATA=[
 ];
 
 /* ── PARTNERS ───────────────────────────────────────────────── */
-function loadPartners(){
-  rwAPI('GET','/partners').then(d=>filterPartners(d&&d.length?d:PARTNERS_DATA)).catch(()=>filterPartners(PARTNERS_DATA));
-  var stats=PARTNERS_DATA.reduce((a,p)=>({
-    total:a.total+1,active:a.active+(p.status==='activo'?1:0),vol:a.vol+p.vol,
-    neg:a.neg+(p.status==='negociacion'?1:0)
-  }),{total:0,active:0,vol:0,neg:0});
+async function loadPartners(){
+  var src=null;
+  try{
+    var apiP=await rwAPI('GET','/partners').catch(function(){return null;});
+    if(apiP&&apiP.length){src=apiP;}
+    else{
+      var sbP=await SB.from('partners').select('id,name,type,country,contact_email,monthly_volume,revenue_share,contract_end,status,created_at').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
+      if(sbP.data&&sbP.data.length){
+        src=sbP.data.map(function(p){
+          return{
+            id:p.id,name:p.name,type:p.type||'fintech',country:p.country||'—',
+            contact:p.contact_email||'—',
+            vol:Number(p.monthly_volume||0),
+            revShare:Number(p.revenue_share||0),
+            contract:p.contract_end?p.contract_end.slice(0,10):'—',
+            status:p.status||'activo'
+          };
+        });
+        PARTNERS_DATA.length=0;
+        src.forEach(function(p){PARTNERS_DATA.push(p);});
+      }
+    }
+  }catch(e){}
+  var list=src||PARTNERS_DATA;
+  filterPartners(list);
+  var stats=list.reduce(function(a,p){
+    return{total:a.total+1,active:a.active+(p.status==='activo'?1:0),vol:a.vol+(p.vol||0),neg:a.neg+(p.status==='negociacion'?1:0)};
+  },{total:0,active:0,vol:0,neg:0});
   var el=document.getElementById('partners-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${stats.total}</div><div class="kpi-lbl">Socios totales</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">${stats.active}</div><div class="kpi-lbl">Activos</div></div>
-    <div class="kpi-card"><div class="kpi-val">XOF ${(stats.vol/1000000).toFixed(0)}M</div><div class="kpi-lbl">Volumen mensual</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">${stats.neg}</div><div class="kpi-lbl">En negociación</div></div>`;
-  var pending=INVOICES_DATA.filter(i=>i.status==='vencida').length;
+  if(el)el.innerHTML=
+    '<div class="kpi-card"><div class="kpi-val">'+stats.total+'</div><div class="kpi-lbl">Socios totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+stats.active+'</div><div class="kpi-lbl">Activos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">XOF '+(stats.vol/1000000).toFixed(0)+'M</div><div class="kpi-lbl">Volumen mensual</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">'+stats.neg+'</div><div class="kpi-lbl">En negociación</div></div>';
+  var pending=INVOICES_DATA.filter(function(i){return i.status==='vencida';}).length;
   var badge=document.getElementById('sb-b2b-inv-count');
   if(badge&&pending>0){badge.textContent=pending;badge.style.display='inline';}
 }
@@ -14956,8 +14998,28 @@ function suspendWL(id){
 }
 
 /* ── API KEYS ───────────────────────────────────────────────── */
-function loadAPIKeys(){
-  filterAPIKeys(APIKEYS_DATA);
+async function loadAPIKeys(){
+  var src=null;
+  try{
+    var sbAK=await SB.from('api_keys').select('id,partner_name,key_prefix,environment,permissions,call_count,last_used_at,created_at,status').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
+    if(sbAK.data&&sbAK.data.length){
+      src=sbAK.data.map(function(k){
+        return{
+          partner:k.partner_name||'—',
+          key:(k.key_prefix||'ik_live_')+'...masked',
+          env:k.environment||'production',
+          perms:k.permissions||'read',
+          calls:Number(k.call_count||0),
+          lastUse:k.last_used_at?k.last_used_at.slice(0,10):'—',
+          created:k.created_at?k.created_at.slice(0,10):'—',
+          status:k.status||'activa'
+        };
+      });
+      APIKEYS_DATA.length=0;
+      src.forEach(function(k){APIKEYS_DATA.push(k);});
+    }
+  }catch(e){}
+  filterAPIKeys(src||APIKEYS_DATA);
 }
 
 function filterAPIKeys(data){
@@ -15050,13 +15112,30 @@ function renderSLACharts(){
   });
 }
 
-function refreshSLA(){
-  SLA_DATA.forEach(s=>{
-    s.latency=Math.max(50,s.latency+Math.round((Math.random()-0.5)*30));
-    s.uptime=Math.min(100,+(s.uptime+(Math.random()-0.4)*0.05).toFixed(2));
+async function refreshSLA(){
+  toast('Verificando SLA partners...','info');
+  // Ping Railway to get real API latency as reference
+  var apiLat=null;
+  try{
+    var t0=Date.now();
+    await rwAPI('GET','/health').catch(function(){return null;});
+    apiLat=Date.now()-t0;
+  }catch(e){}
+  SLA_DATA.forEach(function(s){
+    if(apiLat!==null){
+      // Scale partner latency proportionally to real API latency (each partner has a base ratio)
+      var nameHash=s.partner.split('').reduce(function(h,c){return((h<<5)-h+c.charCodeAt(0))|0;},0);
+      var ratio=0.8+((Math.abs(nameHash)%5)*0.1); // 0.8x–1.2x of api latency
+      s.latency=Math.round(apiLat*ratio);
+    }
+    // Uptime: recompute from incidents — don't drift randomly
+    var monthHours=30*24;
+    var downtime=s.incidents*0.5; // assume 30min avg per incident
+    s.uptime=Math.min(100,+(((monthHours-downtime)/monthHours)*100).toFixed(2));
     s.status=s.uptime>=s.agreed?'ok':'breach';
   });
-  toast('SLA actualizado','success');loadSLAMonitor();
+  toast('SLA actualizado'+(apiLat?' — API: '+apiLat+'ms':''),'success');
+  loadSLAMonitor();
 }
 
 function exportSLAPDF(){
@@ -15153,23 +15232,42 @@ var PROMOS_DATA=[
 ];
 
 /* ── MERCHANTS ──────────────────────────────────────────────── */
-function loadMerchants(){
-  rwAPI('GET','/merchants').then(d=>{
-    filterMerchants(d&&d.length?d:MERCHANTS_DATA);
-  }).catch(()=>filterMerchants(MERCHANTS_DATA));
-  var stats=MERCHANTS_DATA.reduce((a,m)=>({
-    total:a.total+1,active:a.active+(m.status==='activo'?1:0),
-    vol:a.vol+m.sales,pending:a.pending+(m.status==='pendiente'?1:0)
-  }),{total:0,active:0,vol:0,pending:0});
+async function loadMerchants(){
+  var src=null;
+  try{
+    var apiM=await rwAPI('GET','/merchants').catch(function(){return null;});
+    if(apiM&&apiM.length){src=apiM;}
+    else{
+      var sbM=await SB.from('merchants').select('id,name,category,country,monthly_sales,commission_rate,kyc_status,status,created_at').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
+      if(sbM.data&&sbM.data.length){
+        src=sbM.data.map(function(m){
+          return{
+            id:m.id,name:m.name,cat:m.category||'retail',country:m.country||'—',
+            sales:Number(m.monthly_sales||0),
+            commission:Number(m.commission_rate||2.5),
+            kyc:m.kyc_status||'pendiente',
+            status:m.status||'pendiente'
+          };
+        });
+        MERCHANTS_DATA.length=0;
+        src.forEach(function(m){MERCHANTS_DATA.push(m);});
+      }
+    }
+  }catch(e){}
+  var list=src||MERCHANTS_DATA;
+  filterMerchants(list);
+  var stats=list.reduce(function(a,m){
+    return{total:a.total+1,active:a.active+(m.status==='activo'?1:0),vol:a.vol+(m.sales||0),pending:a.pending+(m.kyc==='pendiente'?1:0)};
+  },{total:0,active:0,vol:0,pending:0});
   var el=document.getElementById('merchant-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${stats.total}</div><div class="kpi-lbl">Comercios totales</div></div>
-    <div class="kpi-card"><div class="kpi-val">${stats.active}</div><div class="kpi-lbl">Activos</div></div>
-    <div class="kpi-card"><div class="kpi-val">XOF ${(stats.vol/1000000).toFixed(1)}M</div><div class="kpi-lbl">Volumen mensual</div></div>
-    <div class="kpi-card"><div class="kpi-val">${stats.pending}</div><div class="kpi-lbl">Pendientes KYC</div></div>`;
+  if(el)el.innerHTML=
+    '<div class="kpi-card"><div class="kpi-val">'+stats.total+'</div><div class="kpi-lbl">Comercios totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+stats.active+'</div><div class="kpi-lbl">Activos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">XOF '+(stats.vol/1000000).toFixed(1)+'M</div><div class="kpi-lbl">Volumen mensual</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(stats.pending>0?'var(--amber)':'var(--green)')+'">'+stats.pending+'</div><div class="kpi-lbl">Pendientes KYC</div></div>';
   var badge=document.getElementById('sb-refunds-count');
-  var pending=REFUNDS_DATA.filter(r=>r.status==='pendiente').length;
-  if(badge&&pending>0){badge.textContent=pending;badge.style.display='inline';}
+  var pendingRef=REFUNDS_DATA.filter(function(r){return r.status==='pendiente';}).length;
+  if(badge&&pendingRef>0){badge.textContent=pendingRef;badge.style.display='inline';}
 }
 
 function filterMerchants(data){
@@ -15357,18 +15455,42 @@ function activateProduct(id){
 }
 
 /* ── REVIEWS ────────────────────────────────────────────────── */
-function loadReviews(){
-  rwAPI('GET','/reviews').then(d=>{
-    filterReviews(d&&d.length?d:REVIEWS_DATA);
-  }).catch(()=>filterReviews(REVIEWS_DATA));
-  renderReviewsCharts(REVIEWS_DATA);
-  var avg=(REVIEWS_DATA.reduce((s,r)=>s+r.rating,0)/REVIEWS_DATA.length).toFixed(1);
+async function loadReviews(){
+  var src=null;
+  try{
+    var apiR2=await rwAPI('GET','/reviews').catch(function(){return null;});
+    if(apiR2&&apiR2.length){src=apiR2;}
+    else{
+      var sbRv=await SB.from('reviews').select('id,user_id,merchant_id,rating,comment,status,created_at,user:user_id(full_name),merchant:merchant_id(name)').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
+      if(sbRv.data&&sbRv.data.length){
+        src=sbRv.data.map(function(r){
+          return{
+            id:r.id,
+            user:(r.user&&r.user.full_name)||r.user_id,
+            merchant:(r.merchant&&r.merchant.name)||r.merchant_id||'—',
+            rating:Number(r.rating||3),
+            comment:r.comment||'—',
+            date:r.created_at?r.created_at.slice(0,10):'—',
+            status:r.status||'pendiente'
+          };
+        });
+        REVIEWS_DATA.length=0;
+        src.forEach(function(r){REVIEWS_DATA.push(r);});
+      }
+    }
+  }catch(e){}
+  var list=src||REVIEWS_DATA;
+  filterReviews(list);
+  renderReviewsCharts(list);
+  var avg=list.length?(list.reduce(function(s,r){return s+r.rating;},0)/list.length).toFixed(1):0;
+  var pending=list.filter(function(r){return r.status==='pendiente';}).length;
+  var negative=list.filter(function(r){return r.rating<=2;}).length;
   var el=document.getElementById('reviews-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${REVIEWS_DATA.length}</div><div class="kpi-lbl">Total reseñas</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">${avg} ⭐</div><div class="kpi-lbl">Rating promedio</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">${REVIEWS_DATA.filter(r=>r.status==='pendiente').length}</div><div class="kpi-lbl">Pendientes moderación</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--red)">${REVIEWS_DATA.filter(r=>r.rating<=2).length}</div><div class="kpi-lbl">Reseñas negativas</div></div>`;
+  if(el)el.innerHTML=
+    '<div class="kpi-card"><div class="kpi-val">'+list.length+'</div><div class="kpi-lbl">Total reseñas</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">'+avg+' ⭐</div><div class="kpi-lbl">Rating promedio</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(pending>0?'var(--amber)':'var(--green)')+'">'+pending+'</div><div class="kpi-lbl">Pendientes moderación</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(negative>0?'var(--red)':'var(--green)')+'">'+negative+'</div><div class="kpi-lbl">Reseñas negativas</div></div>';
 }
 
 function filterReviews(data){
@@ -15423,17 +15545,44 @@ function deleteReview(id){
 }
 
 /* ── PROMO CODES ────────────────────────────────────────────── */
-function loadPromoCodes(){
-  rwAPI('GET','/promo-codes').then(d=>{
-    filterPromos(d&&d.length?d:PROMOS_DATA);
-  }).catch(()=>filterPromos(PROMOS_DATA));
-  var active=PROMOS_DATA.filter(p=>p.status==='activo');
+async function loadPromoCodes(){
+  var src=null;
+  try{
+    var apiPr=await rwAPI('GET','/promo-codes').catch(function(){return null;});
+    if(apiPr&&apiPr.length){src=apiPr;}
+    else{
+      var sbPr=await SB.from('promo_codes').select('id,code,type,value,uses_count,max_uses,expires_at,status,created_at').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
+      if(sbPr.data&&sbPr.data.length){
+        var now=new Date();
+        src=sbPr.data.map(function(p){
+          var expired=p.expires_at&&new Date(p.expires_at)<now;
+          var exhausted=p.max_uses&&Number(p.uses_count||0)>=Number(p.max_uses);
+          var status=p.status||(expired?'expirado':exhausted?'agotado':'activo');
+          return{
+            code:p.code,type:p.type||'porcentaje',
+            value:Number(p.value||0),
+            uses:Number(p.uses_count||0),
+            limit:Number(p.max_uses||0),
+            expires:p.expires_at?p.expires_at.slice(0,10):'—',
+            status:status
+          };
+        });
+        PROMOS_DATA.length=0;
+        src.forEach(function(p){PROMOS_DATA.push(p);});
+      }
+    }
+  }catch(e){}
+  var list=src||PROMOS_DATA;
+  filterPromos(list);
+  var active=list.filter(function(p){return p.status==='activo';}).length;
+  var totalUses=list.reduce(function(s,p){return s+(p.uses||0);},0);
+  var expired=list.filter(function(p){return p.status==='expirado';}).length;
   var el=document.getElementById('promo-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${PROMOS_DATA.length}</div><div class="kpi-lbl">Códigos totales</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--green)">${active.length}</div><div class="kpi-lbl">Activos</div></div>
-    <div class="kpi-card"><div class="kpi-val">${PROMOS_DATA.reduce((s,p)=>s+p.uses,0).toLocaleString()}</div><div class="kpi-lbl">Usos totales</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--red)">${PROMOS_DATA.filter(p=>p.status==='expirado').length}</div><div class="kpi-lbl">Expirados</div></div>`;
+  if(el)el.innerHTML=
+    '<div class="kpi-card"><div class="kpi-val">'+list.length+'</div><div class="kpi-lbl">Códigos totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+active+'</div><div class="kpi-lbl">Activos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+totalUses.toLocaleString('es')+'</div><div class="kpi-lbl">Usos totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(expired>0?'var(--red)':'var(--green)')+'">'+expired+'</div><div class="kpi-lbl">Expirados</div></div>';
 }
 
 function filterPromos(data){
@@ -16965,7 +17114,10 @@ async function loadComplianceDashboard(){
   var countries=Object.keys(countryMap).map(function(code){
     var d=countryMap[code];
     var kycPct=d.total?Math.round(d.kyc/d.total*100):0;
-    return{code:code,name:countryNames[code]||code,kyc:kycPct,aml:Math.min(100,kycPct+Math.round(Math.random()*10)),licenses:['GQ','CM','ES','FR','GA'].includes(code),issues:kycPct<50?3:kycPct<70?1:0};
+    var frozen=(ALL_FROZEN||[]).filter(function(f){return f.country===code;}).length;
+    var openCases=(ALL_CASES||[]).filter(function(c){return c.country===code&&c.status==='abierto';}).length;
+    var amlScore=Math.max(0,Math.min(100,Math.round(100-frozen*5-openCases*3-(100-kycPct)*0.3)));
+    return{code:code,name:countryNames[code]||code,kyc:kycPct,aml:amlScore,licenses:['GQ','CM','ES','FR','GA'].includes(code),issues:kycPct<50?3:kycPct<70?1:0};
   }).sort(function(a,b){return b.kyc-a.kyc;});
   // Fallback if no users per country
   if(!countries.length)countries=[
@@ -17338,12 +17490,12 @@ async function loadHeatmap(){
     }
   }catch(e){}
   if(!usedRealData){
+    // Deterministic activity pattern: weekday peaks at 8-12 and 18-22, lower on weekends
+    var HOUR_WEIGHT=[2,1,1,1,2,4,8,15,22,20,18,16,14,13,15,17,20,22,20,18,14,10,7,4];
     matrix=days.map(function(d,di){
+      var dayFactor=di<5?1.0:0.55; // weekday vs weekend
       return Array.from({length:24},function(_,h){
-        var base=Math.random()*100;
-        if(di<5&&(h>=8&&h<=12||h>=18&&h<=22))base*=2.5;
-        if(di>=5)base*=0.7;
-        return Math.round(base);
+        return Math.round(HOUR_WEIGHT[h]*dayFactor*3.5);
       });
     });
   }
