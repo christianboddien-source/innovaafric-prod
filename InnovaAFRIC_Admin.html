@@ -15517,40 +15517,81 @@ var AHORRO_DATA=[
   {id:'A006',user:'Bintu Kamara',goal:'Retiro',target:5000000,saved:890000,rate:6.0,status:'activo',months:60}
 ];
 
-function loadAhorro(){
-  rwAPI('GET','/savings/goals').then(d=>{
-    filterAhorro(d&&d.length?d:AHORRO_DATA);
-  }).catch(()=>filterAhorro(AHORRO_DATA));
+async function loadAhorro(){
+  try{
+    var apiR=await rwAPI('GET','/savings/goals').catch(()=>null);
+    if(apiR&&apiR.success&&apiR.data&&apiR.data.length){
+      AHORRO_DATA=apiR.data;
+    }else{
+      // Build from Supabase savings_goals table
+      var res=await SB.from('savings_goals').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(200);
+      if(res.data&&res.data.length){
+        AHORRO_DATA=res.data.map(function(g){
+          return{
+            id:g.id,user:(g.user&&(g.user.full_name||g.user.email))||'—',
+            goal:g.goal_type||g.name||'Ahorro',
+            target:Number(g.target_amount||0),
+            saved:Number(g.current_amount||0),
+            rate:Number(g.interest_rate||0),
+            status:g.status||'activo',
+            months:g.duration_months||12,
+            deposit:Number(g.periodic_amount||0),
+            frequency:g.frequency||'mensual',
+            currency:g.currency||'XAF',
+            next_deposit:g.next_deposit_date||null
+          };
+        });
+      }
+    }
+  }catch(e){}
+  // KPI cards
+  var active=AHORRO_DATA.filter(function(a){return a.status==='activo'||a.status==='active';}).length;
+  var completed=AHORRO_DATA.filter(function(a){return a.status==='completado'||a.status==='completed';}).length;
+  var totalSaved=AHORRO_DATA.reduce(function(s,a){return s+a.saved;},0);
+  var now=new Date();var thisMonth=now.getFullYear()+'-'+(now.getMonth()+1).toString().padStart(2,'0');
+  var monthlyDeposits=AHORRO_DATA.filter(function(a){return a.next_deposit&&a.next_deposit.startsWith(thisMonth);}).length;
+  var el;
+  if((el=document.getElementById('ah-active')))el.textContent=active;
+  if((el=document.getElementById('ah-total-saved')))el.textContent=(totalSaved/100).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  if((el=document.getElementById('ah-monthly')))el.textContent=monthlyDeposits||AHORRO_DATA.filter(function(a){return a.status==='activo'||a.status==='active';}).length;
+  if((el=document.getElementById('ah-completed')))el.textContent=completed;
+  filterAhorro(AHORRO_DATA);
   renderAhorroCharts(AHORRO_DATA);
 }
 
 function filterAhorro(data){
-  var q=(document.getElementById('ahorro-search')||{}).value||'';
-  var st=(document.getElementById('ahorro-status')||{}).value||'';
-  var filtered=data.filter(a=>{
-    var mq=!q||a.user.toLowerCase().includes(q.toLowerCase())||a.goal.toLowerCase().includes(q.toLowerCase());
-    var ms=!st||a.status===st;
-    return mq&&ms;
+  var st=(document.getElementById('ah-status-f')||document.getElementById('ahorro-status')||{}).value||'';
+  var type=(document.getElementById('ah-type-f')||{}).value||'';
+  var filtered=data.filter(function(a){
+    var ms=!st||(a.status||'').toLowerCase().includes(st.toLowerCase());
+    var mt=!type||(a.goal||'').toLowerCase().includes(type.toLowerCase());
+    return ms&&mt;
   });
   var tb=document.getElementById('tb-ahorro');
   if(!tb)return;
-  var colors={activo:'badge-green',completado:'badge-cyan',pausado:'badge-amber'};
-  tb.innerHTML=filtered.map(a=>{
-    var pct=Math.round((a.saved/a.target)*100);
-    return`<tr>
-      <td>${a.id}</td><td>${a.user}</td><td>${a.goal}</td>
-      <td>XOF ${a.target.toLocaleString()}</td>
-      <td>XOF ${a.saved.toLocaleString()}</td>
-      <td><div style="background:#1a2235;border-radius:4px;height:8px"><div style="background:var(--cyan);width:${pct}%;height:8px;border-radius:4px"></div></div><small>${pct}%</small></td>
-      <td>${a.rate}%</td>
-      <td><span class="badge ${colors[a.status]||'badge-gray'}">${a.status}</span></td>
-      <td>${a.months}m</td>
-    </tr>`;
+  var colors={activo:'badge-green',active:'badge-green',completado:'badge-cyan',completed:'badge-cyan',pausado:'badge-amber',paused:'badge-amber',cancelado:'badge-red',cancelled:'badge-red'};
+  tb.innerHTML=filtered.map(function(a){
+    var pct=a.target>0?Math.min(100,Math.round((a.saved/a.target)*100)):0;
+    var barC=pct>=100?'var(--green)':pct>=50?'var(--cyan)':'var(--amber)';
+    var cur=a.currency||'XAF';
+    return'<tr>'
+      +'<td><div style="font-weight:500">'+a.user+'</div></td>'
+      +'<td>'+a.goal+'</td>'
+      +'<td style="font-family:var(--mono)">'+cur+' '+Number(a.target).toLocaleString('es')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--cyan)">'+cur+' '+Number(a.saved).toLocaleString('es')+'</td>'
+      +'<td><div style="background:#1a2235;border-radius:4px;height:8px;width:80px;display:inline-block;vertical-align:middle"><div style="background:'+barC+';width:'+pct+'%;height:8px;border-radius:4px"></div></div> <small>'+pct+'%</small></td>'
+      +'<td style="font-family:var(--mono)">'+(a.deposit?cur+' '+Number(a.deposit).toLocaleString('es'):'—')+'</td>'
+      +'<td><span style="background:var(--s2);padding:2px 8px;border-radius:4px;font-size:11px">'+(a.frequency||'mensual')+'</span></td>'
+      +'<td><span class="badge '+(colors[a.status]||'badge-gray')+'">'+(a.status||'—')+'</span></td>'
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="btn-xs btn-ghost" onclick="toast(\'Depósito manual registrado\',\'success\')">+ Dep.</button>'
+      +'<button class="btn-xs btn-ghost" onclick="toast(\'Plan pausado\',\'info\')">⏸</button>'
+      +'</td></tr>';
   }).join('');
-  var tot=filtered.reduce((s,a)=>s+a.saved,0);
-  var tgt=filtered.reduce((s,a)=>s+a.target,0);
-  var ss=document.getElementById('ahorro-summary');
-  if(ss)ss.textContent=`${filtered.length} metas · XOF ${tot.toLocaleString()} ahorrado de XOF ${tgt.toLocaleString()}`;
+  var tot=filtered.reduce(function(s,a){return s+Number(a.saved||0);},0);
+  var tgt=filtered.reduce(function(s,a){return s+Number(a.target||0);},0);
+  var ss=document.getElementById('ah-count-label');
+  if(ss)ss.textContent=filtered.length+' metas · '+(filtered[0]&&filtered[0].currency||'XAF')+' '+tot.toLocaleString('es')+' ahorrado de '+tgt.toLocaleString('es');
 }
 
 function renderAhorroCharts(data){
@@ -15632,23 +15673,45 @@ async function loadCreditScores(){
 }
 
 function filterCreditScores(data){
-  var q=(document.getElementById('credit-search')||{}).value||'';
-  var tier=(document.getElementById('credit-tier')||{}).value||'';
-  var filtered=data.filter(u=>{
+  var q=(document.getElementById('cs-q')||document.getElementById('credit-search')||{}).value||'';
+  var lvl=(document.getElementById('cs-level-f')||document.getElementById('credit-tier')||{}).value||'';
+  var filtered=data.filter(function(u){
     var mq=!q||u.user.toLowerCase().includes(q.toLowerCase());
-    var mt=!tier||u.tier.startsWith(tier);
-    return mq&&mt;
+    var ml=!lvl||(lvl==='excellent'&&u.score>=800)||(lvl==='good'&&u.score>=600&&u.score<800)||(lvl==='fair'&&u.score>=400&&u.score<600)||(lvl==='poor'&&u.score<400);
+    return mq&&ml;
   });
+  // KPI cards
+  var ex=data.filter(function(u){return u.score>=800;}).length;
+  var gd=data.filter(function(u){return u.score>=600&&u.score<800;}).length;
+  var fr=data.filter(function(u){return u.score>=400&&u.score<600;}).length;
+  var pr=data.filter(function(u){return u.score<400;}).length;
+  var el;
+  if((el=document.getElementById('cs-excellent')))el.textContent=ex;
+  if((el=document.getElementById('cs-good')))el.textContent=gd;
+  if((el=document.getElementById('cs-fair')))el.textContent=fr;
+  if((el=document.getElementById('cs-poor')))el.textContent=pr;
   var tb=document.getElementById('tb-credit');
   if(!tb)return;
   var tierColor={'A+':'badge-green','A':'badge-cyan','B+':'badge-cyan','B':'badge-amber','B-':'badge-amber','C':'badge-red','D':'badge-red'};
-  tb.innerHTML=filtered.map(u=>`<tr>
-    <td>${u.id}</td><td>${u.user}</td>
-    <td><span style="font-size:1.1em;font-weight:700;color:${u.score>=700?'var(--green)':u.score>=600?'var(--amber)':'var(--red)'}">${u.score}</span></td>
-    <td><span class="badge ${tierColor[u.tier]||'badge-gray'}">${u.tier}</span></td>
-    <td>${u.txCount}</td><td>${u.repayRate}%</td><td>${u.defaulted}</td><td>${u.updated}</td>
-    <td><button class="btn-xs btn-cyan" onclick="calcCreditScore('${u.id}')">Recalcular</button></td>
-  </tr>`).join('');
+  tb.innerHTML=filtered.map(function(u){
+    var maxLoan=u.score>=800?5000:u.score>=700?2000:u.score>=600?1000:u.score>=500?500:0;
+    var barW=Math.round((u.score-300)/5.5);
+    var barC=u.score>=700?'var(--green)':u.score>=600?'var(--amber)':'var(--red)';
+    return'<tr>'
+      +'<td><div style="font-weight:500">'+u.user+'</div></td>'
+      +'<td><div style="display:flex;align-items:center;gap:8px">'
+      +'<div style="background:#1a2235;border-radius:4px;height:8px;width:80px"><div style="background:'+barC+';width:'+barW+'%;height:8px;border-radius:4px"></div></div>'
+      +'<span style="font-weight:700;color:'+barC+'">'+u.score+'</span>'
+      +'</div></td>'
+      +'<td><span class="badge '+(tierColor[u.tier]||'badge-gray')+'">'+u.tier+'</span></td>'
+      +'<td style="color:var(--green)">'+u.repayRate+'%</td>'
+      +'<td style="color:var(--amber)">'+(u.defaulted>0?u.defaulted+' impagos':'—')+'</td>'
+      +'<td style="color:#94a3b8">'+u.txCount+' TX</td>'
+      +'<td style="color:var(--cyan);font-weight:600">'+maxLoan.toLocaleString('es')+' EUR</td>'
+      +'<td style="font-size:11px;color:#94a3b8">'+u.updated+'</td>'
+      +'<td><button class="btn-xs btn-cyan" onclick="calcCreditScore(\''+u.id+'\')">↻</button></td>'
+      +'</tr>';
+  }).join('');
 }
 
 function renderCreditChart(data){
@@ -15660,11 +15723,26 @@ function renderCreditChart(data){
     else if(u.score>=600)buckets['600-649']++;
     else buckets['<600']++;
   });
-  mkChart('chart-credit-dist',{
+  mkChart('credit-dist-chart',{
     type:'bar',
-    data:{labels:Object.keys(buckets),datasets:[{label:'Usuarios',data:Object.values(buckets),backgroundColor:['#10b981','#06b6d4','#8b5cf6','#f59e0b','#ef4444']}]},
-    options:{plugins:{legend:{labels:{color:'#9ca3af'}}},scales:{x:{ticks:{color:'#9ca3af'}},y:{ticks:{color:'#9ca3af',stepSize:1}}}}
+    data:{labels:Object.keys(buckets),datasets:[{label:'Usuarios',data:Object.values(buckets),backgroundColor:['#10b981','#06b6d4','#8b5cf6','#f59e0b','#ef4444'],borderRadius:4}]},
+    options:{plugins:{legend:{labels:{color:'#9ca3af'}}},scales:{x:{ticks:{color:'#9ca3af'}},y:{ticks:{color:'#9ca3af',stepSize:1},beginAtZero:true}}}
   });
+  // Factors panel
+  var factorsEl=document.getElementById('credit-factors-wrap');
+  if(factorsEl){
+    var avg=data.length?Math.round(data.reduce(function(s,u){return s+u.score;},0)/data.length):0;
+    var factors=[
+      {label:'Historial de transacciones',val:Math.min(100,Math.round(data.reduce(function(s,u){return s+Math.min(u.txCount,50);},0)/Math.max(data.length,1)*2)),color:'var(--cyan)'},
+      {label:'Tasa de repago préstamos',val:Math.round(data.reduce(function(s,u){return s+u.repayRate;},0)/Math.max(data.length,1)),color:'var(--green)'},
+      {label:'Score promedio',val:Math.round((avg-300)/5.5),color:'var(--amber)'},
+      {label:'Sin impagos',val:Math.round(data.filter(function(u){return u.defaulted===0;}).length/Math.max(data.length,1)*100),color:'var(--purple)'}
+    ];
+    factorsEl.innerHTML=factors.map(function(f){
+      return'<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+f.label+'</span><span style="color:'+f.color+';font-weight:600">'+f.val+'%</span></div>'
+        +'<div style="background:#1a2235;border-radius:4px;height:8px"><div style="background:'+f.color+';width:'+f.val+'%;height:8px;border-radius:4px"></div></div></div>';
+    }).join('');
+  }
 }
 
 function calcCreditScore(id){
@@ -16027,12 +16105,29 @@ var AML_DEMO_RULES=[
 async function loadAMLRules(){
   var r=await rwAPI('GET','/admin/aml/rules');
   ALL_AML_RULES=(r&&r.success&&r.data.rules)||AML_DEMO_RULES;
-  var active=ALL_AML_RULES.filter(function(r){return r.active;}).length;
+  var active=ALL_AML_RULES.filter(function(ru){return ru.active;}).length;
   document.getElementById('aml-active-rules').textContent=active;
-  document.getElementById('aml-alerts-today').textContent=Math.floor(Math.random()*8)+2;
-  document.getElementById('aml-pending-review').textContent=Math.floor(Math.random()*5)+1;
-  document.getElementById('aml-blocked-today').textContent=Math.floor(Math.random()*3);
   document.getElementById('aml-rules-count').textContent=ALL_AML_RULES.length+' reglas configuradas — '+active+' activas';
+  // Real stats from Supabase
+  try{
+    var today=new Date();today.setHours(0,0,0,0);
+    var txRes=await SB.from('transactions').select('user_id,amount,status,type,created_at').gte('created_at',today.toISOString()).limit(500);
+    var txns=txRes.data||[];
+    // Alerts: transactions above 9000 threshold (common AML threshold)
+    var amlAlerts=txns.filter(function(t){return Number(t.amount)>=9000;}).length;
+    // Failed/suspicious
+    var suspicious=txns.filter(function(t){return t.status==='failed'||t.status==='suspicious';}).length;
+    // Frozen accounts
+    var frozenRes=await SB.from('users').select('id').eq('is_frozen',true).catch(()=>({data:[]}));
+    var frozen=(frozenRes.data||[]).length;
+    document.getElementById('aml-alerts-today').textContent=amlAlerts+suspicious;
+    document.getElementById('aml-pending-review').textContent=suspicious;
+    document.getElementById('aml-blocked-today').textContent=frozen;
+  }catch(e){
+    document.getElementById('aml-alerts-today').textContent='—';
+    document.getElementById('aml-pending-review').textContent='—';
+    document.getElementById('aml-blocked-today').textContent='—';
+  }
   renderAMLRules(ALL_AML_RULES);
 }
 
@@ -16060,29 +16155,65 @@ async function runAMLScan(){
   toast('⚖️ Ejecutando escaneo AML...','info');
   var tb=document.getElementById('tb-aml-alerts');
   if(tb)tb.innerHTML='<tr><td colspan="8" class="loading-cell"><div class="spin"></div> Analizando transacciones...</td></tr>';
-  await new Promise(function(r){setTimeout(r,1800);});
-  var alerts=[
-    {user:'Amara Diallo',rule:'Velocidad alta de envíos',amount:3200,country:'CM',severity:'critical',status:'pending',date:new Date().toISOString()},
-    {user:'John Ateba',rule:'País de alto riesgo',amount:850,country:'GQ',severity:'high',status:'pending',date:new Date(Date.now()-3600000).toISOString()},
-    {user:'Unknown User',rule:'Estructuración detectada',amount:9800,country:'ES',severity:'critical',status:'reviewing',date:new Date(Date.now()-7200000).toISOString()}
-  ];
-  var sevColors={critical:'var(--red)',high:'var(--amber)',medium:'var(--cyan)',low:'#94a3b8'};
-  if(tb)tb.innerHTML=alerts.map(function(a){
-    return '<tr>'
-      +'<td><div style="font-weight:500">'+a.user+'</div></td>'
-      +'<td style="font-size:12px;color:var(--amber)">'+a.rule+'</td>'
-      +'<td style="color:var(--green);font-weight:600">'+a.amount.toLocaleString('es')+' €</td>'
-      +'<td>'+a.country+'</td>'
-      +'<td><span style="color:'+sevColors[a.severity]+';font-weight:600">'+a.severity.toUpperCase()+'</span></td>'
-      +'<td><span style="color:'+(a.status==='pending'?'var(--amber)':'var(--cyan)')+'">'+a.status+'</span></td>'
-      +'<td style="color:#94a3b8;font-size:12px">'+new Date(a.date).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
-      +'<td style="display:flex;gap:6px">'
-      +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-create-sar\')">📋 SAR</button>'
-      +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-freeze-account\')">🧊</button>'
-      +'</td></tr>';
-  }).join('');
-  toast('✅ Escaneo AML completado — '+alerts.length+' alertas generadas','success');
-  logAdminAction('aml_scan','alerts:'+alerts.length);
+  try{
+    // Fetch recent transactions with user data
+    var from=new Date();from.setDate(from.getDate()-7);
+    var txRes=await SB.from('transactions').select('*,user:user_id(full_name,email,country)').gte('created_at',from.toISOString()).order('amount',{ascending:false}).limit(500);
+    var txns=txRes.data||[];
+    var alerts=[];
+    var userTxCount={};var userTxAmount={};
+    txns.forEach(function(t){
+      var uid=t.user_id;
+      userTxCount[uid]=(userTxCount[uid]||0)+1;
+      userTxAmount[uid]=(userTxAmount[uid]||0)+Number(t.amount||0);
+    });
+    txns.forEach(function(t){
+      var uid=t.user_id;
+      var userName=(t.user&&(t.user.full_name||t.user.email))||'Usuario desconocido';
+      var country=(t.user&&t.user.country)||t.currency||'—';
+      var amt=Number(t.amount||0);
+      var rule=null;var severity='medium';
+      // Rule 1: Large single transaction
+      if(amt>=9000){rule='Transacción >9,000 (umbral CTR)';severity='critical';}
+      // Rule 2: Structuring (amount just below threshold)
+      else if(amt>=8000&&amt<9000){rule='Estructuración posible (cerca del límite)';severity='high';}
+      // Rule 3: High velocity (>10 TX in 7 days)
+      else if(userTxCount[uid]>10&&amt>500){rule='Alta velocidad de operaciones ('+userTxCount[uid]+' TX en 7d)';severity='high';}
+      // Rule 4: Cumulative high amount
+      else if(userTxAmount[uid]>15000&&amt>1000){rule='Volumen acumulado elevado ('+userTxAmount[uid].toLocaleString('es')+' total)';severity='high';}
+      // Rule 5: Failed attempt
+      else if(t.status==='failed'&&amt>2000){rule='Intento fallido de importe alto';severity='medium';}
+      if(rule&&!alerts.find(function(a){return a.userId===uid&&a.rule===rule;})){
+        alerts.push({userId:uid,user:userName,rule:rule,amount:amt,country:country,severity:severity,status:'pending',date:t.created_at||new Date().toISOString()});
+      }
+    });
+    var sevColors={critical:'var(--red)',high:'var(--amber)',medium:'var(--cyan)',low:'#94a3b8'};
+    if(!alerts.length){
+      if(tb)tb.innerHTML='<tr><td colspan="8" class="td-empty">✅ Sin alertas AML en los últimos 7 días</td></tr>';
+    }else{
+      if(tb)tb.innerHTML=alerts.slice(0,20).map(function(a){
+        return'<tr>'
+          +'<td><div style="font-weight:500">'+a.user+'</div></td>'
+          +'<td style="font-size:12px;color:var(--amber)">'+a.rule+'</td>'
+          +'<td style="color:var(--green);font-weight:600">'+a.amount.toLocaleString('es')+' €</td>'
+          +'<td>'+a.country+'</td>'
+          +'<td><span style="color:'+sevColors[a.severity]+';font-weight:600">'+a.severity.toUpperCase()+'</span></td>'
+          +'<td><span style="color:var(--amber)">pending</span></td>'
+          +'<td style="color:#94a3b8;font-size:12px">'+new Date(a.date).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+          +'<td style="display:flex;gap:6px">'
+          +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-create-sar\')">📋 SAR</button>'
+          +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-freeze-account\')">🧊</button>'
+          +'</td></tr>';
+      }).join('');
+    }
+    document.getElementById('aml-alerts-today').textContent=alerts.filter(function(a){return a.severity==='critical'||a.severity==='high';}).length;
+    document.getElementById('aml-pending-review').textContent=alerts.length;
+    toast('✅ Escaneo AML completado — '+alerts.length+' alertas detectadas','success');
+    logAdminAction('aml_scan','real_alerts:'+alerts.length);
+  }catch(e){
+    if(tb)tb.innerHTML='<tr><td colspan="8" class="td-empty">Error en escaneo: '+e.message+'</td></tr>';
+    toast('Error en escaneo AML','error');
+  }
 }
 
 function toggleAMLRule(id){
