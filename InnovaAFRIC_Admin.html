@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>InnovaAFRIC · Admin v33</title>
+<title>InnovaAFRIC · Admin v34</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -16290,7 +16290,7 @@ async function loadForecast(){
   var growthRate=0.08+Math.random()*0.05;
   var projectedMonths=Math.ceil(horizon/30);
   var projected=Array.from({length:projectedMonths},function(_,i){return Math.round(lastVal*Math.pow(1+growthRate/12,i+1));});
-  var confidence=projected.map(function(v,i){return{low:Math.round(v*(1-0.05*(i+1))),high:Math.round(v*(1+0.05*(i+1)));});
+  var confidence=projected.map(function(v,i){return{low:Math.round(v*(1-0.05*(i+1))),high:Math.round(v*(1+0.05*(i+1)))};});
 
   var totalProjected=projected.reduce(function(a,b){return a+b;},0);
   var growthPct=((projected[projected.length-1]-lastVal)/lastVal*100).toFixed(1);
