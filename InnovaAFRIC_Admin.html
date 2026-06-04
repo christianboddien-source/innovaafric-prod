@@ -2085,10 +2085,27 @@ select.form-input option{background:var(--s2)}
           <div style="display:flex;gap:8px">
             <select class="filter-select" id="banco-country-filter" onchange="filterBancos()">
               <option value="">Todos los países</option>
-              <option value="GQ">🇬🇶 Guinea Ec.</option><option value="CM">🇨🇲 Camerún</option>
-              <option value="SN">🇸🇳 Senegal</option><option value="GA">🇬🇦 Gabón</option>
-              <option value="ES">🇪🇸 España</option><option value="FR">🇫🇷 Francia</option>
-              <option value="GB">🇬🇧 Reino Unido</option>
+              <optgroup label="── Europa ──">
+                <option value="ES">🇪🇸 España</option>
+                <option value="FR">🇫🇷 Francia</option>
+              </optgroup>
+              <optgroup label="── África Central ──">
+                <option value="CM">🇨🇲 Camerún</option>
+                <option value="GQ">🇬🇶 Guinea Ec.</option>
+                <option value="GA">🇬🇦 Gabón</option>
+                <option value="CG">🇨🇬 Congo</option>
+                <option value="CD">🇨🇩 R.D. Congo</option>
+              </optgroup>
+              <optgroup label="── África Occidental ──">
+                <option value="SN">🇸🇳 Senegal</option>
+                <option value="CI">🇨🇮 Côte d'Ivoire</option>
+                <option value="GH">🇬🇭 Ghana</option>
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="ML">🇲🇱 Mali</option>
+                <option value="BF">🇧🇫 Burkina Faso</option>
+                <option value="TG">🇹🇬 Togo</option>
+                <option value="BJ">🇧🇯 Bénin</option>
+              </optgroup>
             </select>
             <button class="topbar-btn btn-primary" onclick="openModal('m-new-banco')">+ Nuevo banco</button>
             <button class="topbar-btn btn-ghost" onclick="loadBancos()">↻</button>
@@ -10408,13 +10425,89 @@ loadDashboard=async function(){
 
 // ── BANCO ────────────────────────────────────────────
 var ALL_BANCOS=JSON.parse(localStorage.getItem('ia_bancos')||'[]');
+// ── BANCO MASTER LIST v3 — España, Francia, África Central, África Occidental ──
+var _BANCO_MASTER=[
+  // ── ESPAÑA ──────────────────────────────────────────
+  {id:'b1',emoji:'🇪🇸',name:'Banco Santander',country:'ES',city:'Madrid',swift:'BSCHESMMXXX',iban:'ES91 0049 0001 5914 1006 7788',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 900 222 600',address:'Plaza Canalejas 1, Madrid',fee:0.1,delay:'sepa',active:true},
+  {id:'b_es2',emoji:'🇪🇸',name:'BBVA',country:'ES',city:'Madrid',swift:'BBVAESMMXXX',iban:'ES80 0182 6670 4402 0159 3265',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 900 224 466',address:'C. de Azul 4, Madrid',fee:0.1,delay:'sepa',active:true},
+  {id:'b_es3',emoji:'🇪🇸',name:'CaixaBank',country:'ES',city:'Barcelona',swift:'CAIXESBBXXX',iban:'ES79 2100 0418 4502 0005 1332',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 900 324 324',address:'Av. Diagonal 621-629, Barcelona',fee:0.1,delay:'sepa',active:true},
+  {id:'b_es4',emoji:'🇪🇸',name:'Sabadell',country:'ES',city:'Alicante',swift:'BSABESBBXXX',iban:'ES20 0081 0166 2100 0102 7326',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 900 500 215',address:'Av. Óscar Esplá 37, Alicante',fee:0.12,delay:'sepa',active:true},
+  {id:'b_es5',emoji:'🇪🇸',name:'Bankinter',country:'ES',city:'Madrid',swift:'BKBKESMMXXX',iban:'ES17 0128 0715 3501 0012 3456',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 901 135 135',address:'P.º de la Castellana 29, Madrid',fee:0.12,delay:'sepa',active:true},
+  {id:'b_es6',emoji:'🇪🇸',name:'ING España',country:'ES',city:'Madrid',swift:'INGDESMM',iban:'ES50 1465 0100 9819 0075 5678',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 800 000 901',address:'P.º de la Castellana 189, Madrid',fee:0.0,delay:'sepa',active:true},
+  // ── FRANCIA ─────────────────────────────────────────
+  {id:'b3',emoji:'🇫🇷',name:'BNP Paribas',country:'FR',city:'Paris',swift:'BNPAFRPPXXX',iban:'FR76 3000 6000 0112 3456 7890 189',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 1 42 00 00 00',address:'Bd des Italiens 16, Paris',fee:0.1,delay:'sepa',active:true},
+  {id:'b_fr2',emoji:'🇫🇷',name:'Crédit Agricole',country:'FR',city:'Paris',swift:'AGRIFRPPXXX',iban:'FR76 1820 6004 1010 0505 0130 014',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 1 43 23 52 02',address:'12 Place des États-Unis, Montrouge',fee:0.1,delay:'sepa',active:true},
+  {id:'b_fr3',emoji:'🇫🇷',name:'Société Générale',country:'FR',city:'Paris',swift:'SOGEFRPPXXX',iban:'FR76 3000 3005 6300 0402 0379 851',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 1 42 14 20 00',address:'Bd Haussmann 29, Paris',fee:0.1,delay:'sepa',active:true},
+  {id:'b_fr4',emoji:'🇫🇷',name:'La Banque Postale',country:'FR',city:'Paris',swift:'PSSTFRPPXXX',iban:'FR76 2004 1000 0109 6732 1Z0 2606',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 810 821 821',address:'Rue de la Convention 115, Paris',fee:0.0,delay:'sepa',active:true},
+  {id:'b_fr5',emoji:'🇫🇷',name:'Crédit Mutuel',country:'FR',city:'Strasbourg',swift:'CMCIFRPPXXX',iban:'FR76 1027 8060 3200 0208 7650 160',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 3 88 14 88 14',address:'Rue La Boétie 88-90, Strasbourg',fee:0.1,delay:'sepa',active:true},
+  {id:'b_fr6',emoji:'🇫🇷',name:'LCL',country:'FR',city:'Paris',swift:'CRLYFRPPXXX',iban:'FR76 3002 7175 0000 0157 8022 062',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 810 35 35 35',address:'Rue Grammont 20, Paris',fee:0.1,delay:'sepa',active:true},
+  // ── CAMEROUN ────────────────────────────────────────
+  {id:'b4',emoji:'🇨🇲',name:'CCEI Bank CM',country:'CM',city:'Yaundé',swift:'CCEICMBXXXX',iban:'CM21 0010 0000 0000 9876 5432',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 222 221 234',address:'Bd Liberté, Yaundé',fee:0.3,delay:'1d',active:true},
+  {id:'b_cm2',emoji:'🇨🇲',name:'Afriland First Bank',country:'CM',city:'Yaundé',swift:'AFLBCMCAXXX',iban:'CM21 1001 0000 0000 5678 9012',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 222 236 000',address:'Av. J. Ahidjo, Yaundé',fee:0.3,delay:'1d',active:true},
+  {id:'b_cm3',emoji:'🇨🇲',name:'SCB Cameroun',country:'CM',city:'Douala',swift:'SCBCCMCAXXX',iban:'CM21 1500 0000 0000 1122 3344',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 233 428 000',address:'Bd de la Liberté, Douala',fee:0.35,delay:'1d',active:true},
+  {id:'b_cm4',emoji:'🇨🇲',name:'UBA Cameroun',country:'CM',city:'Douala',swift:'UNAFCMCAXXX',iban:'CM21 1700 0000 0000 3344 5566',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 233 504 700',address:'Av. du Général de Gaulle, Douala',fee:0.3,delay:'1d',active:true},
+  {id:'b_cm5',emoji:'🇨🇲',name:'Ecobank Cameroun',country:'CM',city:'Douala',swift:'ECOCCMCAXXX',iban:'CM21 1800 0000 0000 5566 7788',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 233 508 000',address:'Rue Joss, Douala',fee:0.3,delay:'1d',active:true},
+  // ── GUINEA ECUATORIAL ────────────────────────────────
+  {id:'b2',emoji:'🇬🇶',name:'BGFI Bank GQ',country:'GQ',city:'Malabo',swift:'BGFIGQBXXXX',iban:'GQ72 0050 0000 0000 1234 5678',iban_prefix:'GQ',currency:'XAF',titular:'InnovaAFRIC GQ',phone:'+240 333 200 000',address:'Av. Independencia, Malabo',fee:0.5,delay:'same_day',active:true},
+  {id:'b_gq2',emoji:'🇬🇶',name:'CCEI Bank GQ',country:'GQ',city:'Malabo',swift:'CCEIGQGAXXX',iban:'GQ72 0010 0000 0000 8765 4321',iban_prefix:'GQ',currency:'XAF',titular:'InnovaAFRIC GQ',phone:'+240 333 093 200',address:'Calle del Rey, Malabo',fee:0.4,delay:'same_day',active:true},
+  // ── GABÓN ───────────────────────────────────────────
+  {id:'b_ga1',emoji:'🇬🇦',name:'BGFI Bank Gabon',country:'GA',city:'Libreville',swift:'BGFIGAGAXXX',iban:'GA21 4000 0000 0000 1234 5678',iban_prefix:'GA',currency:'XAF',titular:'InnovaAFRIC GA',phone:'+241 77 750 000',address:'Bd Triomphal Omar Bongo, Libreville',fee:0.35,delay:'1d',active:true},
+  {id:'b_ga2',emoji:'🇬🇦',name:'UGB Gabon',country:'GA',city:'Libreville',swift:'UGBAGAGAXXX',iban:'GA21 4001 0000 0000 2345 6789',iban_prefix:'GA',currency:'XAF',titular:'InnovaAFRIC GA',phone:'+241 72 180 000',address:'Av. du Colonel Parant, Libreville',fee:0.4,delay:'1d',active:true},
+  {id:'b_ga3',emoji:'🇬🇦',name:'BICIG Gabon',country:'GA',city:'Libreville',swift:'BICIGAGAXXX',iban:'GA21 4002 0000 0000 3456 7890',iban_prefix:'GA',currency:'XAF',titular:'InnovaAFRIC GA',phone:'+241 74 201 600',address:'Av. du Gouverneur Général Fourneau, Libreville',fee:0.4,delay:'1d',active:true},
+  {id:'b_ga4',emoji:'🇬🇦',name:'Ecobank Gabon',country:'GA',city:'Libreville',swift:'ECOCKGAGAXXX',iban:'GA21 4003 0000 0000 4567 8901',iban_prefix:'GA',currency:'XAF',titular:'InnovaAFRIC GA',phone:'+241 74 358 000',address:'Bd du Bord de Mer, Libreville',fee:0.35,delay:'1d',active:true},
+  // ── CONGO (República) ────────────────────────────────
+  {id:'b_cg1',emoji:'🇨🇬',name:'La Congolaise de Banque',country:'CG',city:'Brazzaville',swift:'LCBACGCAXXX',iban:'CG21 0030 0000 0000 1122 3344',iban_prefix:'CG',currency:'XAF',titular:'InnovaAFRIC CG',phone:'+242 06 670 00 00',address:'Av. Amilcar Cabral, Brazzaville',fee:0.4,delay:'1d',active:true},
+  {id:'b_cg2',emoji:'🇨🇬',name:'Ecobank Congo',country:'CG',city:'Brazzaville',swift:'ECOCKCGCAXXX',iban:'CG21 0031 0000 0000 2233 4455',iban_prefix:'CG',currency:'XAF',titular:'InnovaAFRIC CG',phone:'+242 06 888 00 00',address:'Av. du Maréchal F. Mobutu, Brazzaville',fee:0.35,delay:'1d',active:true},
+  {id:'b_cg3',emoji:'🇨🇬',name:'BGFI Bank Congo',country:'CG',city:'Brazzaville',swift:'BGFICGCAXXX',iban:'CG21 0032 0000 0000 3344 5566',iban_prefix:'CG',currency:'XAF',titular:'InnovaAFRIC CG',phone:'+242 06 550 00 00',address:'Rue Lyangou, Brazzaville',fee:0.35,delay:'1d',active:true},
+  // ── R.D. CONGO ──────────────────────────────────────
+  {id:'b_cd1',emoji:'🇨🇩',name:'Rawbank',country:'CD',city:'Kinshasa',swift:'RWBKCDKIXXX',iban:'CD21 0010 0000 0000 1234 5678',iban_prefix:'CD',currency:'USD',titular:'InnovaAFRIC CD',phone:'+243 81 555 5500',address:'Bd du 30 Juin, Kinshasa',fee:0.5,delay:'1d',active:true},
+  {id:'b_cd2',emoji:'🇨🇩',name:'TMB Trust Merchant Bank',country:'CD',city:'Kinshasa',swift:'TMBLCDKIXXX',iban:'CD21 0020 0000 0000 2345 6789',iban_prefix:'CD',currency:'USD',titular:'InnovaAFRIC CD',phone:'+243 81 008 0000',address:'Av. du Port 7, Kinshasa',fee:0.5,delay:'1d',active:true},
+  {id:'b_cd3',emoji:'🇨🇩',name:'Equity Bank Congo',country:'CD',city:'Kinshasa',swift:'EQBKCDKIXXX',iban:'CD21 0030 0000 0000 3456 7890',iban_prefix:'CD',currency:'USD',titular:'InnovaAFRIC CD',phone:'+243 82 800 0000',address:'Av. Colonel Ebeya, Kinshasa',fee:0.45,delay:'1d',active:true},
+  // ── SENEGAL ─────────────────────────────────────────
+  {id:'b5',emoji:'🇸🇳',name:'CBAO Sénégal',country:'SN',city:'Dakar',swift:'CBAOSNDA',iban:'SN21 0800 0000 0000 1234 5678',iban_prefix:'SN',currency:'XOF',titular:'InnovaAFRIC SN',phone:'+221 33 849 00 00',address:'Av. El Hadji Malick Sy, Dakar',fee:0.4,delay:'1d',active:true},
+  {id:'b_sn2',emoji:'🇸🇳',name:'Ecobank Sénégal',country:'SN',city:'Dakar',swift:'ECOCSNDAXXX',iban:'SN21 0801 0000 0000 2345 6789',iban_prefix:'SN',currency:'XOF',titular:'InnovaAFRIC SN',phone:'+221 33 829 00 00',address:'Km 1,5 Bd du Centenaire, Dakar',fee:0.35,delay:'1d',active:true},
+  {id:'b_sn3',emoji:'🇸🇳',name:'UBA Sénégal',country:'SN',city:'Dakar',swift:'UNAFSNDAXXX',iban:'SN21 0802 0000 0000 3456 7890',iban_prefix:'SN',currency:'XOF',titular:'InnovaAFRIC SN',phone:'+221 33 879 00 00',address:'5 Place de l\'Indépendance, Dakar',fee:0.4,delay:'1d',active:true},
+  {id:'b_sn4',emoji:'🇸🇳',name:'Coris Bank SN',country:'SN',city:'Dakar',swift:'CORISSNDAXXX',iban:'SN21 0803 0000 0000 4567 8901',iban_prefix:'SN',currency:'XOF',titular:'InnovaAFRIC SN',phone:'+221 33 849 90 00',address:'Av. Cheikh Anta Diop, Dakar',fee:0.4,delay:'1d',active:true},
+  // ── CÔTE D\'IVOIRE ───────────────────────────────────
+  {id:'b_ci1',emoji:'🇨🇮',name:'Ecobank CI',country:'CI',city:'Abidjan',swift:'ECOCCIABXXX',iban:'CI21 0100 0000 0000 1122 3344',iban_prefix:'CI',currency:'XOF',titular:'InnovaAFRIC CI',phone:'+225 27 20 31 92 00',address:'Immeuble Alliance, Plateau, Abidjan',fee:0.35,delay:'1d',active:true},
+  {id:'b_ci2',emoji:'🇨🇮',name:'SGBCI',country:'CI',city:'Abidjan',swift:'SGCIABIDXXX',iban:'CI21 0101 0000 0000 2233 4455',iban_prefix:'CI',currency:'XOF',titular:'InnovaAFRIC CI',phone:'+225 27 20 20 12 34',address:'Bd de la République, Plateau, Abidjan',fee:0.35,delay:'1d',active:true},
+  {id:'b_ci3',emoji:'🇨🇮',name:'BOA Côte d\'Ivoire',country:'CI',city:'Abidjan',swift:'AFRIBICIXXX',iban:'CI21 0102 0000 0000 3344 5566',iban_prefix:'CI',currency:'XOF',titular:'InnovaAFRIC CI',phone:'+225 27 20 30 30 30',address:'Av. Botreau-Roussel, Abidjan',fee:0.4,delay:'1d',active:true},
+  {id:'b_ci4',emoji:'🇨🇮',name:'UBA CI',country:'CI',city:'Abidjan',swift:'UNAFCIABXXX',iban:'CI21 0103 0000 0000 4455 6677',iban_prefix:'CI',currency:'XOF',titular:'InnovaAFRIC CI',phone:'+225 27 20 25 00 00',address:'Imm. CCIA, Plateau, Abidjan',fee:0.4,delay:'1d',active:true},
+  {id:'b_ci5',emoji:'🇨🇮',name:'NSIA Banque',country:'CI',city:'Abidjan',swift:'NSIACIABXXX',iban:'CI21 0104 0000 0000 5566 7788',iban_prefix:'CI',currency:'XOF',titular:'InnovaAFRIC CI',phone:'+225 27 22 40 07 07',address:'Av. Nogues, Plateau, Abidjan',fee:0.4,delay:'1d',active:true},
+  // ── GHANA ────────────────────────────────────────────
+  {id:'b_gh1',emoji:'🇬🇭',name:'GCB Bank Ghana',country:'GH',city:'Accra',swift:'GHCBGHACXXX',iban:'GH21 0010 0000 0000 1234 5678',iban_prefix:'GH',currency:'GHS',titular:'InnovaAFRIC GH',phone:'+233 30 221 3540',address:'Thorpe Rd, Accra',fee:0.4,delay:'1d',active:true},
+  {id:'b_gh2',emoji:'🇬🇭',name:'Ecobank Ghana',country:'GH',city:'Accra',swift:'ECOCGHACXXX',iban:'GH21 0011 0000 0000 2345 6789',iban_prefix:'GH',currency:'GHS',titular:'InnovaAFRIC GH',phone:'+233 30 231 4401',address:'19 Seventh Ave, Ridge West, Accra',fee:0.35,delay:'1d',active:true},
+  {id:'b_gh3',emoji:'🇬🇭',name:'Access Bank Ghana',country:'GH',city:'Accra',swift:'ABNGGHACXXX',iban:'GH21 0012 0000 0000 3456 7890',iban_prefix:'GH',currency:'GHS',titular:'InnovaAFRIC GH',phone:'+233 30 274 3000',address:'Starlets 91 Rd, Accra',fee:0.4,delay:'1d',active:true},
+  // ── NIGERIA ──────────────────────────────────────────
+  {id:'b_ng1',emoji:'🇳🇬',name:'First Bank Nigeria',country:'NG',city:'Lagos',swift:'FBNINGLAXXXX',iban:'NG21 0010 0000 0000 1234 5678',iban_prefix:'NG',currency:'NGN',titular:'InnovaAFRIC NG',phone:'+234 700 343 4424',address:'Samuel Asabia House, Lagos',fee:0.4,delay:'1d',active:true},
+  {id:'b_ng2',emoji:'🇳🇬',name:'GTBank Nigeria',country:'NG',city:'Lagos',swift:'GTBINGLAXXXX',iban:'NG21 0011 0000 0000 2345 6789',iban_prefix:'NG',currency:'NGN',titular:'InnovaAFRIC NG',phone:'+234 700 482 5422',address:'635 Akin Adesola St, Victoria Island, Lagos',fee:0.35,delay:'1d',active:true},
+  {id:'b_ng3',emoji:'🇳🇬',name:'Zenith Bank Nigeria',country:'NG',city:'Lagos',swift:'ZEIBNGLAXXXX',iban:'NG21 0012 0000 0000 3456 7890',iban_prefix:'NG',currency:'NGN',titular:'InnovaAFRIC NG',phone:'+234 700 936 4448',address:'Plot 84 Ajose Adeogun St, Victoria Island, Lagos',fee:0.35,delay:'1d',active:true},
+  {id:'b_ng4',emoji:'🇳🇬',name:'UBA Nigeria',country:'NG',city:'Lagos',swift:'UNAFNGLAXXXX',iban:'NG21 0013 0000 0000 4567 8901',iban_prefix:'NG',currency:'NGN',titular:'InnovaAFRIC NG',phone:'+234 700 822 5500',address:'57 Marina St, Lagos Island, Lagos',fee:0.4,delay:'1d',active:true},
+  // ── MALI ─────────────────────────────────────────────
+  {id:'b_ml1',emoji:'🇲🇱',name:'BOA Mali',country:'ML',city:'Bamako',swift:'AFRIBAMAXXX',iban:'ML21 0070 0000 0000 1122 3344',iban_prefix:'ML',currency:'XOF',titular:'InnovaAFRIC ML',phone:'+223 20 70 01 02',address:'Avenue Moussa Traoré, Bamako',fee:0.4,delay:'1d',active:true},
+  {id:'b_ml2',emoji:'🇲🇱',name:'Ecobank Mali',country:'ML',city:'Bamako',swift:'ECOCMLBAXXX',iban:'ML21 0071 0000 0000 2233 4455',iban_prefix:'ML',currency:'XOF',titular:'InnovaAFRIC ML',phone:'+223 20 70 06 06',address:'Square Lumumba, Bamako',fee:0.35,delay:'1d',active:true},
+  // ── BURKINA FASO ─────────────────────────────────────
+  {id:'b_bf1',emoji:'🇧🇫',name:'Coris Bank BF',country:'BF',city:'Ouagadougou',swift:'CORISBFBXXX',iban:'BF21 0060 0000 0000 1122 3344',iban_prefix:'BF',currency:'XOF',titular:'InnovaAFRIC BF',phone:'+226 25 32 91 22',address:'Av. de la Nation, Ouagadougou',fee:0.4,delay:'1d',active:true},
+  {id:'b_bf2',emoji:'🇧🇫',name:'BOA Burkina Faso',country:'BF',city:'Ouagadougou',swift:'AFRIBFBFXXX',iban:'BF21 0061 0000 0000 2233 4455',iban_prefix:'BF',currency:'XOF',titular:'InnovaAFRIC BF',phone:'+226 25 31 87 50',address:'Av. Dimdolobsom, Ouagadougou',fee:0.4,delay:'1d',active:true},
+  // ── TOGO ──────────────────────────────────────────────
+  {id:'b_tg1',emoji:'🇹🇬',name:'Ecobank Togo',country:'TG',city:'Lomé',swift:'ECOCTOGL',iban:'TG21 0050 0000 0000 1122 3344',iban_prefix:'TG',currency:'XOF',titular:'InnovaAFRIC TG',phone:'+228 22 21 72 14',address:'20 Rue du Commerce, Lomé',fee:0.35,delay:'1d',active:true},
+  {id:'b_tg2',emoji:'🇹🇬',name:'Orabank Togo',country:'TG',city:'Lomé',swift:'ORABTOGLXXX',iban:'TG21 0051 0000 0000 2233 4455',iban_prefix:'TG',currency:'XOF',titular:'InnovaAFRIC TG',phone:'+228 22 53 06 00',address:'Bd du 13 Janvier, Lomé',fee:0.4,delay:'1d',active:true},
+  // ── BÉNIN ─────────────────────────────────────────────
+  {id:'b_bj1',emoji:'🇧🇯',name:'BOA Bénin',country:'BJ',city:'Cotonou',swift:'AFRIBJAXXXX',iban:'BJ21 0040 0000 0000 1122 3344',iban_prefix:'BJ',currency:'XOF',titular:'InnovaAFRIC BJ',phone:'+229 21 31 31 28',address:'Av. Jean-Paul II, Cotonou',fee:0.4,delay:'1d',active:true},
+  {id:'b_bj2',emoji:'🇧🇯',name:'Ecobank Bénin',country:'BJ',city:'Cotonou',swift:'ECOCBJCOXXX',iban:'BJ21 0041 0000 0000 2233 4455',iban_prefix:'BJ',currency:'XOF',titular:'InnovaAFRIC BJ',phone:'+229 21 31 40 23',address:'Rue du Gouverneur Bayol, Cotonou',fee:0.35,delay:'1d',active:true}
+];
+// Migración automática — añadir bancos nuevos sin borrar los existentes
+if(localStorage.getItem('ia_bancos_v')!=='3'){
+  var _existingIds=ALL_BANCOS.map(function(b){return b.id;});
+  _BANCO_MASTER.forEach(function(b){
+    if(_existingIds.indexOf(b.id)<0)ALL_BANCOS.push(b);
+    else{var i=ALL_BANCOS.findIndex(function(x){return x.id===b.id;});if(i>=0&&!ALL_BANCOS[i].custom)ALL_BANCOS[i]=b;}
+  });
+  localStorage.setItem('ia_bancos',JSON.stringify(ALL_BANCOS));
+  localStorage.setItem('ia_bancos_v','3');
+}
 if(!ALL_BANCOS.length){
-  ALL_BANCOS=[
-    {id:'b1',emoji:'🏦',name:'BGFI Bank',country:'GQ',city:'Malabo',swift:'BGFIGQGA',iban:'GQ72 0050 0000 0000 1234 5678',currency:'XAF',titular:'InnovaAFRIC GQ',phone:'+240 333 200 000',address:'Av. de la Independencia, Malabo'},
-    {id:'b2',emoji:'🏦',name:'Santander',country:'ES',city:'Madrid',swift:'BSCHESMM',iban:'ES91 0049 0001 5914 1006 7788',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 91 000 000',address:'Plaza Canalejas 1, Madrid'},
-    {id:'b3',emoji:'🏦',name:'BNP Paribas',country:'FR',city:'París',swift:'BNPAFRPP',iban:'FR76 3000 6000 0112 3456 7890 189',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 1 42 00 00',address:'16 Bd des Italiens, Paris'},
-    {id:'b4',emoji:'🏦',name:'CCEI Bank',country:'CM',city:'Yaundé',swift:'CCEIXXXX',iban:'CM21 0010 0000 0000 9876 5432',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 222 000 000',address:'Rue du Commerce, Yaundé'}
-  ];
+  ALL_BANCOS=_BANCO_MASTER.slice();
   localStorage.setItem('ia_bancos',JSON.stringify(ALL_BANCOS));
 }
 
@@ -10423,14 +10516,9 @@ function loadBancos(){
   ALL_BANCOS=ALL_BANCOS.filter(function(b){return b&&b.name&&b.name!=='undefined'&&b.id;});
   // Si están vacíos, resetear con datos correctos
   if(!ALL_BANCOS.length){
-    ALL_BANCOS=[
-      {id:'b1',emoji:'🏦',name:'BGFI Bank GQ',country:'GQ',city:'Malabo',swift:'BGFIGQBX',iban:'GQ72 0050 0000 0000 1234 5678',iban_prefix:'GQ',currency:'XAF',titular:'InnovaAFRIC GQ',phone:'+240 333 200 000',address:'Av. Independencia, Malabo',fee:0.5,delay:'same_day',active:true},
-      {id:'b2',emoji:'🏦',name:'Banco Santander',country:'ES',city:'Madrid',swift:'BSCHESMMXXX',iban:'ES91 0049 0001 5914 1006 7788',iban_prefix:'ES',currency:'EUR',titular:'InnovaAFRIC SL',phone:'+34 900 222 600',address:'Plaza Canalejas 1, Madrid',fee:0.1,delay:'sepa',active:true},
-      {id:'b3',emoji:'🏦',name:'BNP Paribas',country:'FR',city:'París',swift:'BNPAFRPPXXX',iban:'FR76 3000 6000 0112 3456 7890 189',iban_prefix:'FR',currency:'EUR',titular:'InnovaAFRIC SARL',phone:'+33 1 42 00 00 00',address:'Bd des Italiens 16, Paris',fee:0.1,delay:'sepa',active:true},
-      {id:'b4',emoji:'🏦',name:'CCEI Bank CM',country:'CM',city:'Yaundé',swift:'CCEICMBX',iban:'CM21 0010 0000 0000 9876 5432',iban_prefix:'CM',currency:'XAF',titular:'InnovaAFRIC CM',phone:'+237 222 221 234',address:'Bd Liberté, Yaundé',fee:0.3,delay:'1d',active:true},
-      {id:'b5',emoji:'🏦',name:'CBAO Sénégal',country:'SN',city:'Dakar',swift:'CBAOSNDA',iban:'SN21 0800 0000 0000 1234 5678',iban_prefix:'SN',currency:'XOF',titular:'InnovaAFRIC SN',phone:'+221 33 849 00 00',address:'Av. El Hadji Malick Sy, Dakar',fee:0.4,delay:'1d',active:true}
-    ];
+    ALL_BANCOS=_BANCO_MASTER.slice();
     localStorage.setItem('ia_bancos',JSON.stringify(ALL_BANCOS));
+    localStorage.setItem('ia_bancos_v','3');
   }
   filterBancos();
   var el;
