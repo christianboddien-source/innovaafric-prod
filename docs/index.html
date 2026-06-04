@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Documentación — INNOVAAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0B0F19;color:#e2e8f0;min-height:100vh}
+
+.nav{padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #06b6d4;background:#0B0F19;position:sticky;top:0;z-index:50}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-ia{width:34px;height:34px;background:#06b6d4;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-name{font-size:17px;font-weight:800;color:#fff}
+.nav-name span{color:#06b6d4}
+.nav-sub{font-size:11px;color:#64748b;margin-top:1px}
+.nav-version{font-size:11px;color:#64748b;background:#1e293b;padding:4px 12px;border-radius:20px;border:1px solid #334155}
+
+.hero{text-align:center;padding:72px 40px 56px;background:linear-gradient(180deg,#0B0F19 0%,#111827 100%)}
+.hero-ia{width:72px;height:72px;background:#06b6d4;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#000;margin:0 auto 20px;box-shadow:0 0 48px rgba(6,182,212,.35)}
+.hero-title{font-size:40px;font-weight:800;color:#fff;margin-bottom:6px}
+.hero-title span{color:#06b6d4}
+.hero-sub{font-size:17px;color:#64748b;margin-bottom:32px}
+.hero-langs{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.hero-lang{display:flex;align-items:center;gap:6px;background:#1e293b;border:1px solid #334155;padding:6px 16px;border-radius:20px;font-size:13px;color:#94a3b8}
+.hero-stat{display:inline-flex;align-items:center;gap:8px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.25);color:#06b6d4;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;margin-top:20px}
+
+.grid-section{max-width:1100px;margin:0 auto;padding:56px 40px}
+.section-label{font-size:11px;font-weight:700;color:#06b6d4;text-transform:uppercase;letter-spacing:.12em;margin-bottom:24px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:#1e293b}
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:48px}
+.doc-card{background:#111827;border:1px solid #1e293b;border-radius:16px;padding:24px;text-decoration:none;color:inherit;transition:all .2s;display:block;position:relative;overflow:hidden}
+.doc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,#06b6d4);border-radius:3px 3px 0 0}
+.doc-card:hover{border-color:#06b6d4;transform:translateY(-2px);box-shadow:0 8px 32px rgba(6,182,212,.15)}
+.doc-num{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.doc-icon{font-size:28px;margin-bottom:10px}
+.doc-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+.doc-title-en{font-size:12px;color:#64748b;margin-bottom:10px}
+.doc-desc{font-size:13px;color:#94a3b8;line-height:1.6;margin-bottom:14px}
+.doc-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:8px;background:#1e293b;color:#64748b;border:1px solid #334155}
+.tag.cyan{background:rgba(6,182,212,.1);color:#06b6d4;border-color:rgba(6,182,212,.2)}
+.tag.green{background:rgba(34,197,94,.1);color:#22c55e;border-color:rgba(34,197,94,.2)}
+.tag.amber{background:rgba(245,158,11,.1);color:#f59e0b;border-color:rgba(245,158,11,.2)}
+.tag.red{background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.2)}
+.tag.purple{background:rgba(139,92,246,.1);color:#a78bfa;border-color:rgba(139,92,246,.2)}
+.doc-arrow{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:18px;color:#334155;transition:color .2s,right .2s}
+.doc-card:hover .doc-arrow{color:#06b6d4;right:16px}
+
+.stats-bar{background:#111827;border:1px solid #1e293b;border-radius:16px;padding:28px 40px;display:flex;gap:0;justify-content:space-around;margin-bottom:48px}
+.stat-item{text-align:center}
+.stat-val{font-size:28px;font-weight:800;color:#06b6d4;margin-bottom:4px}
+.stat-lbl{font-size:12px;color:#64748b}
+.stat-div{width:1px;background:#1e293b}
+
+.quick-start{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(6,182,212,.04));border:1px solid rgba(6,182,212,.2);border-radius:16px;padding:32px 40px;margin-bottom:48px}
+.qs-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.qs-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.qs-step{text-align:center}
+.qs-num{width:40px;height:40px;border-radius:50%;background:#06b6d4;color:#000;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.qs-txt{font-size:12px;color:#94a3b8;line-height:1.5}
+.qs-arrow{display:flex;align-items:center;justify-content:center;color:#334155;font-size:20px;padding-top:20px}
+
+.footer{border-top:1px solid #1e293b;padding:32px 40px;text-align:center}
+.footer-logo{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-logo span{color:#06b6d4}
+.footer-text{font-size:13px;color:#64748b}
+
+@media(max-width:768px){
+  .docs-grid{grid-template-columns:1fr}
+  .stats-bar{flex-wrap:wrap;gap:20px}.stat-div{display:none}
+  .qs-steps{grid-template-columns:1fr 1fr}
+  .qs-arrow{display:none}
+  .grid-section{padding:40px 20px}
+  .hero{padding:48px 20px 40px}
+  .hero-title{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-ia">IA</div>
+    <div>
+      <div class="nav-name">INNOVA<span>AFRIC</span></div>
+      <div class="nav-sub">Centro de Documentación</div>
+    </div>
+  </div>
+  <div class="nav-version">Docs v1.0 · 2025</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-ia">IA</div>
+  <div class="hero-title">INNOVA<span>AFRIC</span></div>
+  <div class="hero-sub">Centro de Documentación Oficial · Official Documentation Hub · Centre de Documentation Officiel</div>
+  <div class="hero-langs">
+    <div class="hero-lang">🇪🇸 Español</div>
+    <div class="hero-lang">🇬🇧 English</div>
+    <div class="hero-lang">🇫🇷 Français</div>
+  </div>
+  <div class="hero-stat">📚 11 documentos · 3 idiomas · Ecosistema tricontinental</div>
+</div>
+
+<div class="grid-section">
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val">5</div><div class="stat-lbl">Plataformas web</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><div class="stat-val">49</div><div class="stat-lbl">Rutas API</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><div class="stat-val">56+</div><div class="stat-lbl">Tablas Supabase</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><div class="stat-val">74</div><div class="stat-lbl">Módulos admin</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><div class="stat-val">15+</div><div class="stat-lbl">Países</div></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><div class="stat-val">3</div><div class="stat-lbl">Idiomas</div></div>
+  </div>
+
+  <!-- QUICK START -->
+  <div class="quick-start">
+    <div class="qs-title">⚡ Quick Start — Empieza aquí</div>
+    <div class="qs-steps">
+      <div class="qs-step">
+        <div class="qs-num">1</div>
+        <div class="qs-txt"><strong style="color:#fff">Informe Técnico</strong><br>Entiende la arquitectura completa del ecosistema</div>
+      </div>
+      <div class="qs-arrow">→</div>
+      <div class="qs-step">
+        <div class="qs-num">2</div>
+        <div class="qs-txt"><strong style="color:#fff">Manual Dashboard</strong><br>Aprende a usar los 74 módulos del panel admin</div>
+      </div>
+      <div class="qs-arrow">→</div>
+      <div class="qs-step">
+        <div class="qs-num">3</div>
+        <div class="qs-txt"><strong style="color:#fff">API Reference</strong><br>Integra sistemas externos con la REST API</div>
+      </div>
+      <div class="qs-arrow">→</div>
+      <div class="qs-step">
+        <div class="qs-num">4</div>
+        <div class="qs-txt"><strong style="color:#fff">Onboarding</strong><br>Guía para nuevos usuarios de las apps Xender</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS TÉCNICOS -->
+  <div class="section-label">🔧 Documentación Técnica · Technical Docs · Documentation Technique</div>
+  <div class="docs-grid">
+
+    <a href="01_informe_tecnico.html" class="doc-card" style="--accent:#06b6d4">
+      <div class="doc-num">Documento 01</div>
+      <div class="doc-icon">🏗️</div>
+      <div class="doc-title">Informe Técnico</div>
+      <div class="doc-title-en">Technical Report · Rapport Technique</div>
+      <div class="doc-desc">Arquitectura completa del ecosistema: 5 plataformas, Railway API, Supabase, GitHub Pages, flujo de datos tricontinental.</div>
+      <div class="doc-tags">
+        <span class="tag cyan">Node.js</span>
+        <span class="tag cyan">Supabase</span>
+        <span class="tag cyan">Railway</span>
+        <span class="tag">Arquitectura</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="02_api_reference.html" class="doc-card" style="--accent:#8b5cf6">
+      <div class="doc-num">Documento 02</div>
+      <div class="doc-icon">📡</div>
+      <div class="doc-title">Referencia API REST</div>
+      <div class="doc-title-en">REST API Reference · Référence API REST</div>
+      <div class="doc-desc">25 endpoints documentados con ejemplos JSON de request/response, códigos de error y niveles de autenticación.</div>
+      <div class="doc-tags">
+        <span class="tag purple">REST</span>
+        <span class="tag purple">JSON</span>
+        <span class="tag purple">JWT</span>
+        <span class="tag">25 endpoints</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="05_guia_despliegue.html" class="doc-card" style="--accent:#22c55e">
+      <div class="doc-num">Documento 05</div>
+      <div class="doc-icon">🚀</div>
+      <div class="doc-title">Guía de Despliegue</div>
+      <div class="doc-title-en">Deployment Guide · Guide de Déploiement</div>
+      <div class="doc-desc">Paso a paso para desplegar la API en Railway y los frontends en GitHub Pages. CI/CD automático con cada push.</div>
+      <div class="doc-tags">
+        <span class="tag green">Railway</span>
+        <span class="tag green">GitHub Pages</span>
+        <span class="tag green">CI/CD</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="06_esquema_base_datos.html" class="doc-card" style="--accent:#f59e0b">
+      <div class="doc-num">Documento 06</div>
+      <div class="doc-icon">🗄️</div>
+      <div class="doc-title">Esquema Base de Datos</div>
+      <div class="doc-title-en">Database Schema · Schéma de Base de Données</div>
+      <div class="doc-desc">56+ tablas de Supabase y modelos Prisma documentados con columnas, tipos, índices y relaciones.</div>
+      <div class="doc-tags">
+        <span class="tag amber">PostgreSQL</span>
+        <span class="tag amber">Prisma</span>
+        <span class="tag amber">Supabase</span>
+        <span class="tag">56+ tablas</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="10_manual_integracion_api.html" class="doc-card" style="--accent:#8b5cf6">
+      <div class="doc-num">Documento 10</div>
+      <div class="doc-icon">🔌</div>
+      <div class="doc-title">Manual de Integración API</div>
+      <div class="doc-title-en">API Integration Guide · Guide d'Intégration API</div>
+      <div class="doc-desc">Para partners e integradores: autenticación, webhooks, todos los endpoints con ejemplos en JS, Python y PHP.</div>
+      <div class="doc-tags">
+        <span class="tag purple">Webhooks</span>
+        <span class="tag purple">SDK</span>
+        <span class="tag cyan">Partners</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+  </div>
+
+  <!-- DOCUMENTOS OPERATIVOS -->
+  <div class="section-label">⚙️ Documentación Operativa · Operational Docs · Documentation Opérationnelle</div>
+  <div class="docs-grid">
+
+    <a href="07_manual_dashboard.html" class="doc-card" style="--accent:#06b6d4">
+      <div class="doc-num">Documento 07</div>
+      <div class="doc-icon">🖥️</div>
+      <div class="doc-title">Manual Dashboard Admin</div>
+      <div class="doc-title-en">Admin Dashboard Manual · Manuel Tableau de Bord</div>
+      <div class="doc-desc">Guía completa de los 74 módulos del panel de administración con mockups visuales y pasos de uso en 3 idiomas.</div>
+      <div class="doc-tags">
+        <span class="tag cyan">74 módulos</span>
+        <span class="tag cyan">Mockups CSS</span>
+        <span class="tag green">ES · EN · FR</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="04_manual_administrador.html" class="doc-card" style="--accent:#f59e0b">
+      <div class="doc-num">Documento 04</div>
+      <div class="doc-icon">🛡️</div>
+      <div class="doc-title">Manual del Administrador</div>
+      <div class="doc-title-en">Administrator Manual · Manuel Administrateur</div>
+      <div class="doc-desc">Guía de uso del panel de administración: gestión de usuarios, transacciones, KYC y operaciones diarias.</div>
+      <div class="doc-tags">
+        <span class="tag amber">Admin</span>
+        <span class="tag amber">KYC</span>
+        <span class="tag amber">Operaciones</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="11_manual_operativo_financiero.html" class="doc-card" style="--accent:#22c55e">
+      <div class="doc-num">Documento 11</div>
+      <div class="doc-icon">💰</div>
+      <div class="doc-title">Manual Operativo Financiero</div>
+      <div class="doc-title-en">Financial Operations Manual · Manuel Financier</div>
+      <div class="doc-desc">Cierre contable mensual, gestión del float, estructura de comisiones, calendario fiscal por país y conciliación.</div>
+      <div class="doc-tags">
+        <span class="tag green">Finanzas</span>
+        <span class="tag green">Contabilidad</span>
+        <span class="tag red">Confidencial</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="09_guia_seguridad_compliance.html" class="doc-card" style="--accent:#ef4444">
+      <div class="doc-num">Documento 09</div>
+      <div class="doc-icon">🔐</div>
+      <div class="doc-title">Seguridad y Compliance</div>
+      <div class="doc-title-en">Security & Compliance · Sécurité et Conformité</div>
+      <div class="doc-desc">RGPD, política AML/KYC, arquitectura de ciberseguridad, protocolo de respuesta a incidentes y código de conducta.</div>
+      <div class="doc-tags">
+        <span class="tag red">RGPD</span>
+        <span class="tag red">AML/KYC</span>
+        <span class="tag red">FATF</span>
+        <span class="tag red">Confidencial</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+  </div>
+
+  <!-- DOCUMENTOS DE USUARIO -->
+  <div class="section-label">👤 Documentación de Usuario · User Docs · Documentation Utilisateur</div>
+  <div class="docs-grid">
+
+    <a href="03_manual_usuario.html" class="doc-card" style="--accent:#06b6d4">
+      <div class="doc-num">Documento 03</div>
+      <div class="doc-icon">📱</div>
+      <div class="doc-title">Manual de Usuario</div>
+      <div class="doc-title-en">User Manual · Manuel Utilisateur</div>
+      <div class="doc-desc">Guía completa para usuarios de las 4 apps Xender: XenderMoney, XenderShop, XenderDelivery y XenderBigShop.</div>
+      <div class="doc-tags">
+        <span class="tag cyan">XenderMoney</span>
+        <span class="tag cyan">XenderShop</span>
+        <span class="tag cyan">Delivery</span>
+        <span class="tag cyan">BigShop</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+    <a href="08_manual_onboarding.html" class="doc-card" style="--accent:#22c55e">
+      <div class="doc-num">Documento 08</div>
+      <div class="doc-icon">🚀</div>
+      <div class="doc-title">Manual de Onboarding</div>
+      <div class="doc-title-en">Onboarding Manual · Manuel d'Intégration</div>
+      <div class="doc-desc">Registro, verificación OTP, niveles KYC y primera transferencia. Todo en menos de 5 minutos con pantallas reales.</div>
+      <div class="doc-tags">
+        <span class="tag green">Registro</span>
+        <span class="tag green">KYC</span>
+        <span class="tag green">Nuevos usuarios</span>
+      </div>
+      <div class="doc-arrow">→</div>
+    </a>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-logo">INNOVA<span>AFRIC</span></div>
+  <div class="footer-text">© 2025 INNOVAAFRIC · Documentación Oficial · 11 documentos · 3 idiomas<br>
+  <span style="color:#374151;font-size:12px;margin-top:4px;display:block">Todos los documentos son descargables como PDF desde el botón de cada página</span></div>
+</div>
+
+</body>
+</html>
