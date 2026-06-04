@@ -7967,14 +7967,32 @@ async function changeUserPassword(uid,email){
   }catch(e){toast('Error: '+e.message,'error');}
 }
 async function sendMassNotif(){
-  const msg=document.getElementById('notif-msg').value.trim();
-  const target=document.getElementById('notif-target').value;
+  var msg=document.getElementById('notif-msg').value.trim();
+  var target=document.getElementById('notif-target').value;
   if(!msg){toast('Escribe un mensaje','error');return;}
-  const count=ALL_USERS.filter(u=>target==='all'||u.role===target).length;
-  if(!confirm('Enviar notificación a '+count+' usuarios?'))return;
-  toast('Notificación enviada a '+count+' usuarios','success');
+  var targets=ALL_USERS.filter(function(u){return target==='all'||u.role===target;});
+  var count=targets.length;
+  if(!confirm('Enviar notificación a '+count+' usuarios?\n\n"'+msg.substring(0,80)+'"'))return;
+  var batch=targets.map(function(u){return{user_id:u.id,title:'📢 InnovaAFRIC',body:msg,type:'mass',target_role:target,read:false,created_at:new Date().toISOString()};});
+  var ok=false;
+  try{
+    var r=await rwAPI('POST','/admin/notifications/mass',{message:msg,target,user_ids:targets.map(function(u){return u.id;})});
+    if(r&&r.success)ok=true;
+  }catch(e){}
+  if(!ok){
+    try{
+      // Supabase: insert in batches of 100
+      for(var i=0;i<batch.length;i+=100){
+        await SB.from('notifications').insert(batch.slice(i,i+100));
+      }
+      ok=true;
+    }catch(e2){
+      localStorage.setItem('ia_queued_mass_notif_'+Date.now(),JSON.stringify({msg,target,count}));
+    }
+  }
+  toast((ok?'✅':'⏳')+' Notificación '+(ok?'enviada':'en cola')+' para '+count+' usuarios','success');
   document.getElementById('notif-msg').value='';
-  logAdminAction('mass_notif','Notificación a '+count+' usuarios ('+target+'): '+msg.substring(0,50));
+  logAdminAction('mass_notif','→ '+count+' usuarios ('+target+'): '+msg.substring(0,50));
 }
 
 // ── UTILS ─────────────────────────────────────────────────
@@ -15571,17 +15589,29 @@ function filterAPIKeys(data){
   </tr>`).join('');
 }
 
-function generateAPIKey(){
-  var f={partner:document.getElementById('ak-partner').value,env:document.getElementById('ak-env').value,
-    limit:document.getElementById('ak-limit').value};
-  if(!f.partner){toast('Nombre del socio obligatorio','warning');return;}
-  var prefix=f.env==='production'?'ik_live_':'ik_test_';
-  var rand=Math.random().toString(36).slice(2,8);
-  var newKey={partner:f.partner,key:prefix+rand+'_xxx...yyy',env:f.env,
-    perms:'read',calls:0,lastUse:'—',created:new Date().toISOString().slice(0,10),status:'activa'};
-  APIKEYS_DATA.push(newKey);
-  toast('API key generada: '+newKey.key,'success');closeModal('m-create-apikey');filterAPIKeys();
-  logAdminAction('generate_api_key',f.partner+' ('+f.env+')');
+async function generateAPIKey(){
+  var partner=document.getElementById('ak-partner').value.trim();
+  var env=document.getElementById('ak-env').value;
+  var limit=document.getElementById('ak-limit').value;
+  if(!partner){toast('Nombre del socio obligatorio','warning');return;}
+  var prefix=env==='production'?'ik_live_':'ik_test_';
+  var rand=(typeof crypto!=='undefined'&&crypto.randomUUID)?crypto.randomUUID().replace(/-/g,'').slice(0,16):Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,10);
+  var fullKey=prefix+rand;
+  var keyPrefix=fullKey.slice(0,12)+'...';
+  var newKey={partner_name:partner,key_prefix:keyPrefix,full_key:fullKey,environment:env,
+    permissions:'read',call_count:0,rate_limit:parseInt(limit)||1000,status:'activa',created_at:new Date().toISOString()};
+  try{
+    var r=await rwAPI('POST','/admin/api-keys',{partner,env,key:fullKey,limit});
+    if(r&&r.success){}
+    else throw new Error('Railway fallback');
+  }catch(e){
+    try{await SB.from('api_keys').insert(newKey);}catch(e2){localStorage.setItem('ia_apikey_'+Date.now(),JSON.stringify(newKey));}
+  }
+  APIKEYS_DATA.push({partner,key:keyPrefix,env,perms:'read',calls:0,lastUse:'—',created:new Date().toISOString().slice(0,10),status:'activa'});
+  toast('🔑 API key generada: '+keyPrefix,'success');
+  closeModal('m-create-apikey');
+  filterAPIKeys();
+  logAdminAction('generate_api_key',partner+' ('+env+')');
 }
 function revokeAPIKey(partner){
   var k=APIKEYS_DATA.find(x=>x.partner===partner&&x.status==='activa');if(!k)return;
@@ -15985,7 +16015,7 @@ function createProduct(){
   rwAPI('POST','/marketplace/products',f).then(()=>{
     toast('Producto creado','success');closeModal('m-create-product');loadMarketplace();
     logAdminAction('create_product',f.name);
-  }).catch(()=>{toast('Producto registrado (demo)','info');closeModal('m-create-product');});
+  }).catch(()=>sbSave('products',f,'/marketplace/products',loadMarketplace,'m-create-product','Producto creado'));
 }
 function editProduct(id){
   var p=(typeof PRODUCTS_DATA!=='undefined'?PRODUCTS_DATA:[]).find(function(x){return x.id===id;});
@@ -20334,13 +20364,18 @@ async function loadAdvancedAnalytics(){
           backgroundColor:['#6366f1','#22c55e','#f59e0b','#06b6d4'],borderRadius:6}]
       },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
     }
-    // Revenue by country
-    var revCountryR=await SB.from('transactions').select('country,amount').eq('status','completed').limit(3000);
+    // Revenue by country — guard: column may not exist
     var byCountry={};
-    (revCountryR.data||[]).forEach(function(t){
-      var c=t.country||'Otro';
-      byCountry[c]=(byCountry[c]||0)+(parseFloat(t.amount)||0);
-    });
+    try{
+      var revCountryR=await SB.from('transactions').select('country,amount').eq('status','completed').limit(3000);
+      (revCountryR.data||[]).forEach(function(t){
+        var c=t.country||'Otro';
+        byCountry[c]=(byCountry[c]||0)+(parseFloat(t.amount)||0);
+      });
+    }catch(e){
+      // fallback: use ALL_USERS country distribution as proxy
+      (ALL_USERS||[]).forEach(function(u){var c=u.country||'Otro';byCountry[c]=(byCountry[c]||0)+1;});
+    }
     var sortedCountries=Object.entries(byCountry).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
     var rcCtx=document.getElementById('chart-rev-country');
     if(rcCtx&&typeof Chart!=='undefined'){
@@ -20443,44 +20478,61 @@ async function _renderCohortTable(){
   }catch(e){console.warn('Cohort error',e);}
 }
 
-// ── B16 LIVE POLLING ──────────────────────────────────────────
+// ── B16 LIVE POLLING (with circuit breaker) ───────────────────
 var _pollState={kycPending:0,suspTxns:0,overdueLoans:0};
 var _pollInterval=null;
+var _pollFailCount=0;
+var _pollBackoff=30000; // start at 30s
 
 async function _livePoll(){
   try{
-    var[kycR,suspR,loanR]=await Promise.all([
-      SB.from('kyc_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
-      SB.from('transactions').select('id',{count:'exact',head:true}).eq('flag','suspicious'),
-      SB.from('loans').select('id',{count:'exact',head:true}).eq('status','overdue')
-    ]);
+    // Query without 'flag' column guard — use try/catch per query
+    var kycR=await SB.from('kyc_requests').select('id',{count:'exact',head:true}).eq('status','pending').catch(function(){return{count:0};});
+    var loanR=await SB.from('loans').select('id',{count:'exact',head:true}).eq('status','overdue').catch(function(){return{count:0};});
+    // suspicious txns: try flag column, fallback to is_suspicious boolean
+    var suspCount=0;
+    try{
+      var suspR=await SB.from('transactions').select('id',{count:'exact',head:true}).eq('flag','suspicious');
+      suspCount=suspR.count||0;
+    }catch(e){
+      try{
+        var suspR2=await SB.from('transactions').select('id',{count:'exact',head:true}).eq('is_suspicious',true);
+        suspCount=suspR2.count||0;
+      }catch(e2){suspCount=0;}
+    }
     var kyc=kycR.count||0;
-    var susp=suspR.count||0;
+    var susp=suspCount;
     var loans=loanR.count||0;
-    // Notify on increases
-    if(kyc>_pollState.kycPending&&_pollState.kycPending!==0){
-      var diff=kyc-_pollState.kycPending;
-      addNotif('🪪 KYC pendientes','+'+(diff)+' solicitudes nuevas — total '+kyc,'warn');
-    }
-    if(susp>_pollState.suspTxns&&_pollState.suspTxns!==0){
-      var diffS=susp-_pollState.suspTxns;
-      addNotif('🚨 Transacciones sospechosas','+'+(diffS)+' nuevas — total '+susp,'danger');
-    }
-    if(loans>_pollState.overdueLoans&&_pollState.overdueLoans!==0){
-      var diffL=loans-_pollState.overdueLoans;
-      addNotif('⚠️ Préstamos vencidos','+'+(diffL)+' nuevos — total '+loans,'warn');
-    }
+    // Notify on increases (skip first poll — baseline)
+    if(_pollState.kycPending!==0&&kyc>_pollState.kycPending)
+      addNotif('🪪 KYC pendientes','+'+(kyc-_pollState.kycPending)+' nuevas — total '+kyc,'warn');
+    if(_pollState.suspTxns!==0&&susp>_pollState.suspTxns)
+      addNotif('🚨 Transacciones sospechosas','+'+(susp-_pollState.suspTxns)+' nuevas — total '+susp,'danger');
+    if(_pollState.overdueLoans!==0&&loans>_pollState.overdueLoans)
+      addNotif('⚠️ Préstamos vencidos','+'+(loans-_pollState.overdueLoans)+' nuevos — total '+loans,'warn');
     _pollState={kycPending:kyc,suspTxns:susp,overdueLoans:loans};
-    // Topbar live dot
+    // Reset circuit breaker on success
+    _pollFailCount=0;
+    _pollBackoff=30000;
+    // Topbar dot color
     var dot=document.getElementById('notif-dot');
-    if(dot){
-      var critical=susp>5||loans>10;
-      dot.style.background=critical?'#f43f5e':'#6366f1';
-    }
-    // Update last-update stamp
+    if(dot)dot.style.background=(susp>5||loans>10)?'#f43f5e':'#6366f1';
+    // Timestamp
     var lu=document.getElementById('last-update');
     if(lu)lu.textContent='↺ '+new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
-  }catch(e){/* silent — network may be down */}
+  }catch(e){
+    // Circuit breaker: exponential backoff up to 10 min
+    _pollFailCount++;
+    _pollBackoff=Math.min(_pollBackoff*2,600000);
+    if(_pollInterval){clearInterval(_pollInterval);_pollInterval=null;}
+    if(_pollFailCount<8){
+      setTimeout(function(){
+        _pollInterval=setInterval(_livePoll,_pollBackoff);
+        _livePoll();
+      },_pollBackoff);
+    }
+    // else give up silently after 8 consecutive failures
+  }
 }
 
 function _startLivePoll(){
