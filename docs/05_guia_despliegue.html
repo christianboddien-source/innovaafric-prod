@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNOVAAFRIC — Guía de Despliegue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--cyan:#06b6d4;--dark:#0B0F19;--secondary:#111827;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--bg-alt:#f8fafc;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;font-size:14px;line-height:1.7;}
+  .nav{position:sticky;top:0;z-index:100;background:var(--dark);display:flex;align-items:center;padding:0 2rem;height:52px;gap:1rem;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+  .nav-logo{font-size:1.2rem;font-weight:800;color:#fff;}
+  .nav-logo span{color:var(--cyan);}
+  .nav-badge{background:var(--cyan);color:var(--dark);font-weight:800;font-size:.75rem;padding:2px 7px;border-radius:4px;margin-right:.5rem;}
+  .nav-title{color:#9ca3af;font-size:.85rem;margin-left:auto;}
+  .cover{background:var(--dark);color:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;page-break-after:always;}
+  .cover-badge{width:100px;height:100px;background:var(--cyan);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:var(--dark);margin-bottom:2rem;}
+  .cover-logo{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;}
+  .cover-logo span{color:var(--cyan);}
+  .cover-subtitle{color:#9ca3af;font-size:1rem;margin-bottom:3rem;}
+  .cover-title{font-size:2rem;font-weight:700;max-width:680px;line-height:1.3;margin-bottom:.5rem;}
+  .cover-title-en{font-size:1.2rem;font-weight:400;color:var(--cyan);margin-bottom:3rem;}
+  .cover-meta{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
+  .cover-meta-item{text-align:center;}
+  .cover-meta-label{font-size:.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;}
+  .cover-meta-value{font-size:1rem;font-weight:600;color:var(--cyan);}
+  .cover-divider{width:80px;height:3px;background:var(--cyan);margin:2rem auto;}
+  .content{max-width:960px;margin:0 auto;padding:3rem 2rem;}
+  .lang-divider{border:none;border-top:3px dashed var(--border);margin:3rem 0;}
+  .lang-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid var(--cyan);}
+  .lang-flag{font-size:1.6rem;}
+  .lang-name{font-size:1.3rem;font-weight:700;color:var(--dark);}
+  .section{margin-bottom:2.5rem;}
+  .section-header{background:var(--dark);color:#fff;padding:.75rem 1.25rem;border-left:4px solid var(--cyan);border-radius:0 6px 6px 0;margin-bottom:1.25rem;font-size:1rem;font-weight:600;}
+  .section-header .num{color:var(--cyan);margin-right:.5rem;}
+  h3{font-size:.95rem;font-weight:600;color:var(--dark);margin:1.25rem 0 .5rem;border-bottom:1px solid var(--border);padding-bottom:.3rem;}
+  h4{font-size:.88rem;font-weight:600;color:var(--secondary);margin:.9rem 0 .4rem;}
+  p{margin-bottom:.85rem;}
+  ul,ol{margin-left:1.5rem;margin-bottom:.9rem;}
+  li{margin-bottom:.3rem;}
+  table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.85rem;}
+  thead tr{background:var(--dark);color:#fff;}
+  thead th{padding:.65rem 1rem;text-align:left;font-weight:600;}
+  thead th:first-child{border-left:4px solid var(--cyan);}
+  tbody tr:nth-child(odd){background:var(--bg-alt);}
+  tbody tr:nth-child(even){background:#fff;}
+  tbody td{padding:.6rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;}
+  pre,code{font-family:'Courier New',monospace;}
+  pre{background:var(--dark);color:var(--cyan);padding:1.25rem;border-radius:8px;overflow-x:auto;font-size:.82rem;margin-bottom:1.25rem;line-height:1.6;}
+  pre .comment{color:#6b7280;}
+  pre .key{color:#f9a8d4;}
+  code{background:#f1f5f9;color:#0e7490;padding:1px 5px;border-radius:3px;font-size:.82rem;}
+  .callout{padding:.9rem 1.25rem;border-radius:6px;margin-bottom:1.25rem;border-left:4px solid;font-size:.88rem;}
+  .callout-info{background:#ecfeff;border-color:var(--cyan);color:#0e7490;}
+  .callout-warning{background:#fffbeb;border-color:#f59e0b;color:#92400e;}
+  .callout-danger{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+  .callout-success{background:#f0fdf4;border-color:#22c55e;color:#166534;}
+  .callout-title{font-weight:700;margin-bottom:.3rem;}
+  .steps{counter-reset:step;list-style:none;margin-left:0;}
+  .steps li{counter-increment:step;display:flex;gap:.9rem;margin-bottom:1rem;align-items:flex-start;}
+  .steps li::before{content:counter(step);min-width:28px;height:28px;border-radius:50%;background:var(--cyan);color:var(--dark);font-weight:700;font-size:.82rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .big-step{border:1px solid var(--border);border-radius:10px;margin-bottom:1.5rem;overflow:hidden;}
+  .big-step-header{background:var(--secondary);color:#fff;padding:.85rem 1.25rem;display:flex;align-items:center;gap:.75rem;}
+  .big-step-num{background:var(--cyan);color:var(--dark);font-weight:900;font-size:1rem;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .big-step-title{font-weight:700;font-size:1rem;}
+  .big-step-body{padding:1.25rem;}
+  .env-var{display:flex;align-items:flex-start;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--border);}
+  .env-var:last-child{border-bottom:none;}
+  .env-key{font-family:'Courier New',monospace;font-size:.83rem;font-weight:700;color:var(--dark);min-width:220px;flex-shrink:0;}
+  .env-desc{font-size:.85rem;color:var(--muted);}
+  .env-required{font-size:.7rem;background:#fef2f2;color:#991b1b;border:1px solid #fca5a5;padding:1px 6px;border-radius:4px;font-weight:600;margin-left:.5rem;}
+  .trouble-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden;}
+  .trouble-error{background:#fef2f2;padding:.75rem 1rem;font-family:'Courier New',monospace;font-size:.82rem;color:#991b1b;font-weight:600;}
+  .trouble-fix{padding:.75rem 1rem;font-size:.87rem;}
+  footer{background:var(--dark);color:#9ca3af;text-align:center;padding:1.5rem;font-size:.8rem;margin-top:4rem;}
+  footer strong{color:var(--cyan);}
+  @media print{
+    .nav{display:none;}
+    .cover{background:#fff!important;color:#000!important;page-break-after:always;min-height:auto;padding:3cm 2cm;}
+    .cover-badge{background:#ddd!important;color:#000!important;}
+    .cover-logo span,.cover-title-en{color:#000!important;}
+    .section-header{background:#f0f0f0!important;color:#000!important;}
+    .big-step-header{background:#f0f0f0!important;color:#000!important;}
+    .big-step-num{background:#ddd!important;color:#000!important;}
+    pre{background:#f8f8f8!important;color:#000!important;border:1px solid #ccc;}
+    .steps li::before{background:#ddd!important;color:#000!important;}
+    footer{background:#f0f0f0!important;color:#333!important;}
+    .big-step{page-break-inside:avoid;}
+    @page{margin:2cm;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-badge">IA</span>
+  <span class="nav-logo">INNOVA<span>AFRIC</span></span>
+  <span class="nav-title">Guía de Despliegue — Deployment Guide v1.0 — Junio 2026</span>
+</nav>
+
+<div class="cover">
+  <div class="cover-badge">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-subtitle">innovaafric.com — Ecosistema Fintech Tricontinental</div>
+  <div class="cover-divider"></div>
+  <div class="cover-title">Guía de Despliegue</div>
+  <div class="cover-title-en">Deployment Guide — Full Infrastructure Setup from Scratch</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="cover-meta-label">Versión</div><div class="cover-meta-value">v1.0</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Fecha</div><div class="cover-meta-value">Junio 2026</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Documento</div><div class="cover-meta-value">DOC-005</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Idiomas</div><div class="cover-meta-value">ES / EN</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ===== ESPAÑOL ===== -->
+<div class="lang-section">
+  <div class="lang-header">
+    <div class="lang-flag">🇪🇸</div>
+    <div class="lang-name">ESPAÑOL</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">0.</span> Prerequisitos</div>
+    <table>
+      <thead><tr><th>Herramienta</th><th>Versión mínima</th><th>Propósito</th></tr></thead>
+      <tbody>
+        <tr><td>Node.js</td><td>18+</td><td>Ejecutar el backend localmente y scripts de migración</td></tr>
+        <tr><td>npm</td><td>9+</td><td>Gestor de paquetes</td></tr>
+        <tr><td>Git</td><td>2.x</td><td>Control de versiones y trigger de despliegue</td></tr>
+        <tr><td>Cuenta Railway</td><td>—</td><td>Hosting del backend API y PostgreSQL</td></tr>
+        <tr><td>Cuenta Supabase</td><td>—</td><td>Base de datos frontal, Storage, Realtime</td></tr>
+        <tr><td>Cuenta GitHub</td><td>—</td><td>Repositorios + GitHub Pages para frontend</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-warning">
+      <div class="callout-title">Tiempo estimado de despliegue completo</div>
+      Primera vez: ~2-3 horas. Redespliegue desde cero: ~45 minutos. El tiempo más largo lo ocupa la configuración manual de Supabase.
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">1</div>
+      <div class="big-step-title">Clonar Repositorios</div>
+    </div>
+    <div class="big-step-body">
+      <pre>
+<span class="comment"># Backend API</span>
+git clone https://github.com/INNOVAAFRIC/innovaafric-api.git
+cd innovaafric-api
+npm install
+
+<span class="comment"># Frontend (todas las apps)</span>
+git clone https://github.com/INNOVAAFRIC/innovaafric-prod.git
+cd innovaafric-prod
+<span class="comment"># No requiere npm install — es HTML/CSS/JS puro</span>
+      </pre>
+      <div class="callout callout-info">
+        <div class="callout-title">Estructura del repositorio backend</div>
+        <code>src/routes/</code> — 49 módulos de rutas | <code>prisma/</code> — schema y migraciones | <code>src/middleware/</code> — auth, logging | <code>server.js</code> — punto de entrada
+      </div>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">2</div>
+      <div class="big-step-title">Configurar Supabase</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Accede a <strong>supabase.com</strong> y crea un nuevo proyecto. Elige una región cercana a África Occidental (ej. Frankfurt o São Paulo).</li>
+        <li>En el SQL Editor, ejecuta el script completo de migración:<pre>-- Pega y ejecuta el contenido de:
+supabase_migration_v1.sql
+<span class="comment">-- Crea las 56+ tablas con índices y claves foráneas</span></pre></li>
+        <li>Desactiva RLS en todas las tablas:<pre>-- Ejecuta en SQL Editor:
+supabase_rls_disable_all.sql</pre></li>
+        <li>Crea el trigger de webhook pg_net:<pre>supabase_webhook_trigger.sql
+<span class="comment">-- Antes de ejecutar, edita la URL del webhook:</span>
+<span class="comment">-- Sustituye 'TU_RAILWAY_URL' por la URL real de Railway</span></pre></li>
+        <li>Carga los tipos de cambio iniciales:<pre>supabase_exchange_rates.sql
+<span class="comment">-- Inserta 21 pares EUR/USD/GBP/XAF/XOF/GNF</span></pre></li>
+        <li>Crea el Storage bucket para documentos KYC:<br>
+          Storage → New bucket → Nombre: <code>kyc-docs</code> → Marcar como <strong>Public</strong> → Crear</li>
+        <li>Copia los valores de conexión:<br>
+          Settings → API → copia <strong>Project URL</strong> y <strong>service_role key</strong></li>
+      </ol>
+      <div class="callout callout-danger">
+        <div class="callout-title">service_role key vs anon key</div>
+        Usa la <strong>service_role key</strong> (no la anon key) para el backend Railway. La anon key se usa en el frontend. La service_role bypassa RLS y tiene acceso total.
+      </div>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">3</div>
+      <div class="big-step-title">Configurar Railway (Backend API)</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Accede a <strong>railway.app</strong> y crea un nuevo proyecto.</li>
+        <li>Selecciona <strong>"Deploy from GitHub repo"</strong> → conecta la cuenta de GitHub → selecciona <code>innovaafric-api</code>.</li>
+        <li>Añade el plugin PostgreSQL:<br>
+          New → Database → Add PostgreSQL → Railway inyecta automáticamente <code>DATABASE_URL</code></li>
+        <li>Configura las variables de entorno en Railway (Settings → Variables):</li>
+      </ol>
+
+      <div style="border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem;">
+        <div class="env-var">
+          <span class="env-key">JWT_SECRET<span class="env-required">requerida</span></span>
+          <span class="env-desc">Secreto para firmar tokens JWT. Usa una cadena aleatoria de 64+ caracteres.</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">DATABASE_URL<span class="env-required">auto</span></span>
+          <span class="env-desc">Inyectada automáticamente por el plugin PostgreSQL de Railway.</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">SUPABASE_URL<span class="env-required">requerida</span></span>
+          <span class="env-desc">URL del proyecto Supabase. Ej: https://xxxx.supabase.co</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">SUPABASE_SERVICE_KEY<span class="env-required">requerida</span></span>
+          <span class="env-desc">service_role key de Supabase (NO la anon key).</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">WEBHOOK_SECRET<span class="env-required">requerida</span></span>
+          <span class="env-desc">Secreto compartido entre Supabase pg_net trigger y Railway. Genera uno aleatorio.</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">ALLOWED_ORIGINS<span class="env-required">requerida</span></span>
+          <span class="env-desc">URLs del frontend separadas por coma. Ej: https://tu-usuario.github.io,https://xendermoney.com</span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">NODE_ENV</span>
+          <span class="env-desc">Establece a <code>production</code></span>
+        </div>
+        <div class="env-var">
+          <span class="env-key">PORT</span>
+          <span class="env-desc">Opcional. Railway lo asigna automáticamente si no se especifica.</span>
+        </div>
+      </div>
+
+      <ol class="steps" start="5">
+        <li>Railway ejecuta automáticamente al desplegar:<pre>npm install
+npx prisma generate
+npx prisma migrate deploy
+node server.js  <span class="comment"># o el start script de package.json</span></pre></li>
+        <li>Espera ~2-3 minutos. Verifica en los logs: <code>"Server running on port XXXX"</code></li>
+      </ol>
+
+      <div class="callout callout-info">
+        <div class="callout-title">Healthcheck de Railway</div>
+        Railway verifica que el servidor responda en el puerto asignado. El servidor debe arrancar <strong>antes</strong> de que terminen las migraciones si es el primer deploy — el código está diseñado para arrancar inmediatamente mientras las migraciones corren en background.
+      </div>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">4</div>
+      <div class="big-step-title">Configurar Frontend (GitHub Pages)</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>En el repositorio <code>innovaafric-prod</code>, abre el archivo <code>index.html</code> de cada app.</li>
+        <li>Actualiza las constantes de Supabase al inicio del script:<pre>
+<span class="comment">// En cada index.html de las 4 apps:</span>
+const SB_URL = 'https://TU-PROYECTO.supabase.co';
+const SB_KEY = 'TU-ANON-KEY';  <span class="comment">// anon key para el frontend</span>
+const API_URL = 'https://TU-APP.up.railway.app'; <span class="comment">// URL de Railway</span>
+        </pre></li>
+        <li>Habilita GitHub Pages:<br>
+          GitHub repo → Settings → Pages → Source: <strong>Deploy from branch</strong> → Branch: <code>main</code> → Guardar</li>
+        <li>Haz el primer push a main:<pre>git add .
+git commit -m "feat: configure production URLs"
+git push origin main</pre></li>
+        <li>GitHub Pages desplegará automáticamente en ~30 segundos.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">5</div>
+      <div class="big-step-title">Verificación del Despliegue</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Comprueba que Railway responde:<pre>curl https://TU-APP.up.railway.app/v1/auth/me
+<span class="comment"># Debe devolver: 401 Unauthorized (la API está viva)</span></pre></li>
+        <li>Registra un usuario de prueba desde XenderMoney.</li>
+        <li>Verifica en Supabase Dashboard → Table Editor → <code>users</code> que el usuario fue insertado.</li>
+        <li>Verifica en Railway logs que el webhook fue procesado:<pre>Received sync-user webhook
+User created in Railway DB: uuid-del-usuario</pre></li>
+        <li>Inicia sesión con el usuario de prueba y verifica que el token JWT se almacena en <code>localStorage.xm_session</code>.</li>
+        <li>Navega a XenderShop — debes seguir autenticado sin volver a hacer login.</li>
+      </ol>
+      <div class="callout callout-success">
+        <div class="callout-title">Despliegue exitoso</div>
+        Si todos los pasos anteriores funcionan, la infraestructura está completamente operativa.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6.</span> Variables de Entorno — Referencia Completa</div>
+    <table>
+      <thead><tr><th>Variable</th><th>Entorno</th><th>Ejemplo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>JWT_SECRET</code></td><td>Railway</td><td><code>s3cr3t-r4nd0m-64chars...</code></td><td>Secreto JWT — nunca expongas</td></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Railway (auto)</td><td><code>postgresql://user:pass@host/db</code></td><td>Inyectado por plugin Railway</td></tr>
+        <tr><td><code>SUPABASE_URL</code></td><td>Railway</td><td><code>https://abc.supabase.co</code></td><td>URL proyecto Supabase</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_KEY</code></td><td>Railway</td><td><code>eyJhbGci...</code></td><td>service_role key — nunca al frontend</td></tr>
+        <tr><td><code>WEBHOOK_SECRET</code></td><td>Railway + Supabase trigger</td><td><code>wh-s3cr3t-abc123</code></td><td>Mismo valor en ambos lados</td></tr>
+        <tr><td><code>ALLOWED_ORIGINS</code></td><td>Railway</td><td><code>https://user.github.io</code></td><td>CORS allowlist, comas entre URLs</td></tr>
+        <tr><td><code>NODE_ENV</code></td><td>Railway</td><td><code>production</code></td><td>Modo producción</td></tr>
+        <tr><td><code>SB_URL</code></td><td>Frontend JS</td><td><code>https://abc.supabase.co</code></td><td>En index.html de cada app</td></tr>
+        <tr><td><code>SB_KEY</code></td><td>Frontend JS</td><td><code>eyJhbGci...</code></td><td>anon key — seguro para el frontend</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">7.</span> Solución de Problemas</div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">Error: prisma migrate deploy failed — relation "User" already exists</div>
+      <div class="trouble-fix"><strong>Causa:</strong> Las migraciones ya fueron aplicadas en un deploy anterior. <strong>Solución:</strong> Este error es inofensivo — el servidor arranca de todas formas. Si persiste, verifica que <code>DATABASE_URL</code> apunta a la base de datos correcta.</div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">CORS error: blocked by CORS policy — No 'Access-Control-Allow-Origin'</div>
+      <div class="trouble-fix"><strong>Causa:</strong> La URL del frontend no está en <code>ALLOWED_ORIGINS</code>. <strong>Solución:</strong> Añade la URL exacta de GitHub Pages (incluyendo https://) a la variable <code>ALLOWED_ORIGINS</code> en Railway y redespliega.</div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">401 Unauthorized — JsonWebTokenError: invalid signature</div>
+      <div class="trouble-fix"><strong>Causa:</strong> El <code>JWT_SECRET</code> en Railway cambió y los tokens existentes son inválidos. <strong>Solución:</strong> Los usuarios deben volver a iniciar sesión. Si ocurre en deploy nuevo, verifica que <code>JWT_SECRET</code> es exactamente igual al anterior.</div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">Webhook sync-user: 403 Forbidden — Invalid webhook secret</div>
+      <div class="trouble-fix"><strong>Causa:</strong> El <code>WEBHOOK_SECRET</code> en el trigger pg_net de Supabase no coincide con la variable en Railway. <strong>Solución:</strong> Edita la función trigger en Supabase SQL Editor y actualiza el valor del header <code>X-Webhook-Secret</code>.</div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">ERROR: extension "pg_net" does not exist</div>
+      <div class="trouble-fix"><strong>Causa:</strong> La extensión pg_net no está habilitada en el proyecto Supabase. <strong>Solución:</strong> Ve a Supabase → Database → Extensions → busca "pg_net" → habilitar. Luego vuelve a ejecutar el script del trigger.</div>
+    </div>
+
+    <div class="trouble-item">
+      <div class="trouble-error">Railway healthcheck failed — Service not responding on port</div>
+      <div class="trouble-fix"><strong>Causa:</strong> El servidor tarda demasiado en arrancar (migraciones largas). <strong>Solución:</strong> El código debe iniciar el servidor HTTP antes de ejecutar las migraciones. Verifica que el <code>package.json start</code> script arranque el servidor primero.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="lang-divider">
+
+<!-- ===== ENGLISH ===== -->
+<div class="lang-section">
+  <div class="lang-header">
+    <div class="lang-flag">🇬🇧</div>
+    <div class="lang-name">ENGLISH</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">0.</span> Prerequisites</div>
+    <table>
+      <thead><tr><th>Tool</th><th>Min Version</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Node.js</td><td>18+</td><td>Run backend locally and migration scripts</td></tr>
+        <tr><td>npm</td><td>9+</td><td>Package manager</td></tr>
+        <tr><td>Git</td><td>2.x</td><td>Version control and deployment trigger</td></tr>
+        <tr><td>Railway account</td><td>—</td><td>Backend API hosting and PostgreSQL</td></tr>
+        <tr><td>Supabase account</td><td>—</td><td>Frontend database, Storage, Realtime</td></tr>
+        <tr><td>GitHub account</td><td>—</td><td>Repositories + GitHub Pages for frontend</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">1</div>
+      <div class="big-step-title">Clone Repositories</div>
+    </div>
+    <div class="big-step-body">
+      <pre>
+<span class="comment"># Backend API</span>
+git clone https://github.com/INNOVAAFRIC/innovaafric-api.git
+cd innovaafric-api && npm install
+
+<span class="comment"># Frontend (all apps — pure HTML/CSS/JS, no npm needed)</span>
+git clone https://github.com/INNOVAAFRIC/innovaafric-prod.git
+      </pre>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">2</div>
+      <div class="big-step-title">Supabase Setup</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Create a new project at <strong>supabase.com</strong>. Choose a region close to West Africa (Frankfurt or São Paulo recommended).</li>
+        <li>In the SQL Editor, run <code>supabase_migration_v1.sql</code> — creates all 56+ tables.</li>
+        <li>Run <code>supabase_rls_disable_all.sql</code> — disables Row Level Security on all tables.</li>
+        <li>Edit and run <code>supabase_webhook_trigger.sql</code> — replace <code>'TU_RAILWAY_URL'</code> with your actual Railway URL before running.</li>
+        <li>Run <code>supabase_exchange_rates.sql</code> — seeds initial FX rates for 21 currency pairs.</li>
+        <li>Create Storage bucket: Storage → New bucket → Name: <code>kyc-docs</code> → Check <strong>Public</strong> → Create.</li>
+        <li>Copy credentials: Settings → API → copy <strong>Project URL</strong> and <strong>service_role key</strong>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">3</div>
+      <div class="big-step-title">Railway Setup (Backend API)</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Create a new project at <strong>railway.app</strong> → Deploy from GitHub repo → select <code>innovaafric-api</code>.</li>
+        <li>Add PostgreSQL plugin: New → Database → Add PostgreSQL → <code>DATABASE_URL</code> is auto-injected.</li>
+        <li>Set all required environment variables (see reference table in Spanish section).</li>
+        <li>Railway automatically runs: <code>npm install</code> → <code>prisma generate</code> → <code>prisma migrate deploy</code> → <code>node server.js</code></li>
+        <li>Wait ~2-3 minutes. Check logs for: <code>"Server running on port XXXX"</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">4</div>
+      <div class="big-step-title">Frontend Configuration (GitHub Pages)</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>In each app's <code>index.html</code>, update the configuration constants at the top of the script block with your Supabase URL, anon key, and Railway API URL.</li>
+        <li>Enable GitHub Pages: repo Settings → Pages → Source: Deploy from branch → Branch: <code>main</code> → Save.</li>
+        <li>Push to main — GitHub Pages deploys automatically in ~30 seconds.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="big-step">
+    <div class="big-step-header">
+      <div class="big-step-num">5</div>
+      <div class="big-step-title">Deployment Verification</div>
+    </div>
+    <div class="big-step-body">
+      <ol class="steps">
+        <li>Test API is alive: <code>GET /v1/auth/me</code> → must return 401 (not 502 or timeout).</li>
+        <li>Register a test user on XenderMoney.</li>
+        <li>Check Supabase Table Editor → <code>users</code> table — user should appear.</li>
+        <li>Check Railway logs — should show webhook received and user synced to Railway DB.</li>
+        <li>Log in with test user → verify <code>localStorage.xm_session</code> is populated.</li>
+        <li>Navigate to XenderShop — should still be authenticated (shared session working).</li>
+      </ol>
+      <div class="callout callout-success">
+        <div class="callout-title">Deployment successful</div>
+        All 6 checks passing means the full infrastructure is operational.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6.</span> Troubleshooting</div>
+    <table>
+      <thead><tr><th>Error</th><th>Cause</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td><code>prisma migrate failed</code></td><td>Migrations already applied</td><td>Harmless — server still starts. Verify DATABASE_URL is correct.</td></tr>
+        <tr><td><code>CORS blocked</code></td><td>Frontend URL not in ALLOWED_ORIGINS</td><td>Add exact GitHub Pages URL to ALLOWED_ORIGINS in Railway and redeploy.</td></tr>
+        <tr><td><code>JWT invalid signature</code></td><td>JWT_SECRET changed between deploys</td><td>Users must re-login. Ensure JWT_SECRET is consistent across redeploys.</td></tr>
+        <tr><td><code>Webhook 403</code></td><td>WEBHOOK_SECRET mismatch</td><td>Update the secret in Supabase pg_net trigger SQL to match Railway env var.</td></tr>
+        <tr><td><code>pg_net not found</code></td><td>Extension not enabled</td><td>Supabase → Database → Extensions → enable pg_net, then re-run trigger SQL.</td></tr>
+        <tr><td><code>Railway healthcheck failed</code></td><td>Server slow to start</td><td>Server must bind port before running migrations. Check server.js startup order.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <strong>INNOVAAFRIC</strong> © 2026 — innovaafric.com &nbsp;|&nbsp; DOC-005 — Guía de Despliegue v1.0 &nbsp;|&nbsp; Junio 2026
+</footer>
+</body>
+</html>

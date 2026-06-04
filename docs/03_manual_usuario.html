@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNOVAAFRIC — Manual de Usuario</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--cyan:#06b6d4;--dark:#0B0F19;--secondary:#111827;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--bg-alt:#f8fafc;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;font-size:14px;line-height:1.7;}
+  .nav{position:sticky;top:0;z-index:100;background:var(--dark);display:flex;align-items:center;padding:0 2rem;height:52px;gap:1rem;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+  .nav-logo{font-size:1.2rem;font-weight:800;color:#fff;letter-spacing:-.5px;}
+  .nav-logo span{color:var(--cyan);}
+  .nav-badge{background:var(--cyan);color:var(--dark);font-weight:800;font-size:.75rem;padding:2px 7px;border-radius:4px;margin-right:.5rem;}
+  .nav-title{color:#9ca3af;font-size:.85rem;margin-left:auto;}
+  .cover{background:var(--dark);color:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;page-break-after:always;}
+  .cover-badge{width:100px;height:100px;background:var(--cyan);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:var(--dark);margin-bottom:2rem;letter-spacing:-2px;}
+  .cover-logo{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;}
+  .cover-logo span{color:var(--cyan);}
+  .cover-subtitle{color:#9ca3af;font-size:1rem;margin-bottom:3rem;}
+  .cover-title{font-size:2rem;font-weight:700;max-width:680px;line-height:1.3;margin-bottom:.5rem;}
+  .cover-title-en{font-size:1.2rem;font-weight:400;color:var(--cyan);margin-bottom:.3rem;}
+  .cover-title-fr{font-size:1rem;font-weight:400;color:#9ca3af;margin-bottom:3rem;}
+  .cover-meta{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
+  .cover-meta-item{text-align:center;}
+  .cover-meta-label{font-size:.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;}
+  .cover-meta-value{font-size:1rem;font-weight:600;color:var(--cyan);}
+  .cover-divider{width:80px;height:3px;background:var(--cyan);margin:2rem auto;}
+  .content{max-width:960px;margin:0 auto;padding:3rem 2rem;}
+  .lang-section{margin-bottom:3rem;}
+  .lang-header{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid var(--cyan);}
+  .lang-flag{font-size:1.6rem;}
+  .lang-name{font-size:1.3rem;font-weight:700;color:var(--dark);}
+  .section{margin-bottom:2rem;}
+  .section-header{background:var(--dark);color:#fff;padding:.75rem 1.25rem;border-left:4px solid var(--cyan);border-radius:0 6px 6px 0;margin-bottom:1.25rem;font-size:1rem;font-weight:600;}
+  .section-header .num{color:var(--cyan);margin-right:.5rem;}
+  h3{font-size:.95rem;font-weight:600;color:var(--dark);margin:1.25rem 0 .5rem;border-bottom:1px solid var(--border);padding-bottom:.3rem;}
+  h4{font-size:.88rem;font-weight:600;color:var(--secondary);margin:.9rem 0 .4rem;}
+  p{margin-bottom:.85rem;}
+  ul,ol{margin-left:1.5rem;margin-bottom:.9rem;}
+  li{margin-bottom:.3rem;}
+  table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.85rem;}
+  thead tr{background:var(--dark);color:#fff;}
+  thead th{padding:.65rem 1rem;text-align:left;font-weight:600;}
+  thead th:first-child{border-left:4px solid var(--cyan);}
+  tbody tr:nth-child(odd){background:var(--bg-alt);}
+  tbody tr:nth-child(even){background:#fff;}
+  tbody td{padding:.6rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;}
+  code{background:#f1f5f9;color:#0e7490;padding:1px 5px;border-radius:3px;font-size:.82rem;font-family:'Courier New',monospace;}
+  .callout{padding:.9rem 1.25rem;border-radius:6px;margin-bottom:1.25rem;border-left:4px solid;font-size:.88rem;}
+  .callout-info{background:#ecfeff;border-color:var(--cyan);color:#0e7490;}
+  .callout-warning{background:#fffbeb;border-color:#f59e0b;color:#92400e;}
+  .callout-success{background:#f0fdf4;border-color:#22c55e;color:#166534;}
+  .callout-title{font-weight:700;margin-bottom:.3rem;}
+  .steps{counter-reset:step;list-style:none;margin-left:0;}
+  .steps li{counter-increment:step;display:flex;gap:.9rem;margin-bottom:.9rem;align-items:flex-start;}
+  .steps li::before{content:counter(step);min-width:26px;height:26px;border-radius:50%;background:var(--cyan);color:var(--dark);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .kyc-status{display:inline-flex;align-items:center;gap:.4rem;padding:2px 10px;border-radius:10px;font-size:.8rem;font-weight:600;}
+  .status-pending{background:#fef3c7;color:#92400e;}
+  .status-approved{background:#dcfce7;color:#166534;}
+  .status-rejected{background:#fee2e2;color:#991b1b;}
+  .app-card{border:1px solid var(--border);border-radius:10px;padding:1.25rem;border-top:4px solid var(--cyan);margin-bottom:1rem;}
+  .app-card h4{font-size:1rem;font-weight:700;color:var(--dark);margin:0 0 .5rem;}
+  .app-card p{margin:0;font-size:.87rem;color:var(--muted);}
+  .faq-item{border:1px solid var(--border);border-radius:6px;margin-bottom:.6rem;overflow:hidden;}
+  .faq-q{background:var(--bg-alt);padding:.75rem 1rem;font-weight:600;font-size:.88rem;color:var(--dark);}
+  .faq-a{padding:.75rem 1rem;font-size:.87rem;color:var(--text);}
+  .lang-divider{border:none;border-top:3px dashed var(--border);margin:3rem 0;}
+  footer{background:var(--dark);color:#9ca3af;text-align:center;padding:1.5rem;font-size:.8rem;margin-top:4rem;}
+  footer strong{color:var(--cyan);}
+  @media print{
+    .nav{display:none;}
+    .cover{background:#fff!important;color:#000!important;page-break-after:always;min-height:auto;padding:3cm 2cm;}
+    .cover-badge{background:#ddd!important;color:#000!important;}
+    .cover-logo span,.cover-title-en{color:#000!important;}
+    .section-header{background:#f0f0f0!important;color:#000!important;}
+    .steps li::before{background:#ddd!important;color:#000!important;}
+    footer{background:#f0f0f0!important;color:#333!important;}
+    .section{page-break-inside:avoid;}
+    @page{margin:2cm;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-badge">IA</span>
+  <span class="nav-logo">INNOVA<span>AFRIC</span></span>
+  <span class="nav-title">Manual de Usuario — Guía de Uso v1.0 — Junio 2026</span>
+</nav>
+
+<div class="cover">
+  <div class="cover-badge">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-subtitle">innovaafric.com — Ecosistema Fintech Tricontinental</div>
+  <div class="cover-divider"></div>
+  <div class="cover-title">Manual de Usuario</div>
+  <div class="cover-title-en">User Guide</div>
+  <div class="cover-title-fr">Guide de l'Utilisateur</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="cover-meta-label">Versión</div><div class="cover-meta-value">v1.0</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Fecha</div><div class="cover-meta-value">Junio 2026</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Documento</div><div class="cover-meta-value">DOC-003</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Idiomas</div><div class="cover-meta-value">ES / EN / FR</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ===== ESPAÑOL ===== -->
+<div class="lang-section">
+  <div class="lang-header">
+    <div class="lang-flag">🇪🇸</div>
+    <div class="lang-name">ESPAÑOL</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">1.</span> Introducción — Las 4 Aplicaciones Xender</div>
+    <p>INNOVAAFRIC ofrece cuatro aplicaciones web diseñadas para el ecosistema financiero y comercial africano. Con una sola cuenta puedes acceder a todas ellas.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      <div class="app-card"><h4>XenderMoney</h4><p>Billetera digital, transferencias internacionales, calculadora de divisas, KYC, préstamos y ahorros.</p></div>
+      <div class="app-card"><h4>XenderShop</h4><p>Mercado online de productos africanos. Compra, vende y aplica códigos de descuento.</p></div>
+      <div class="app-card"><h4>XenderDelivery</h4><p>Seguimiento de pedidos y registro de riders para entregas de última milla.</p></div>
+      <div class="app-card"><h4>XenderBigShop</h4><p>Plataforma B2B para merchants compradores y partners proveedores al por mayor.</p></div>
+    </div>
+    <div class="callout callout-info">
+      <div class="callout-title">Sesión Compartida</div>
+      Un único inicio de sesión funciona en las 4 aplicaciones. Si ya iniciaste sesión en XenderMoney, accede directamente a XenderShop, XenderDelivery o XenderBigShop sin volver a introducir contraseña.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">2.</span> Primeros Pasos — Crear tu Cuenta</div>
+    <ol class="steps">
+      <li>Visita <strong>XenderMoney</strong> en tu navegador.</li>
+      <li>Haz clic en <strong>"Crear cuenta"</strong> o <strong>"Registrarse"</strong>.</li>
+      <li>Completa el formulario: nombre completo, correo electrónico, teléfono, contraseña y país.</li>
+      <li>Acepta los términos y condiciones.</li>
+      <li>Haz clic en <strong>"Registrar"</strong>. Serás redirigido al dashboard automáticamente.</li>
+      <li>Opcional: completa la verificación KYC para desbloquear límites de transferencia más altos.</li>
+    </ol>
+    <div class="callout callout-success">
+      <div class="callout-title">Cuenta creada</div>
+      Tu billetera se crea automáticamente con saldo 0 en todas las divisas soportadas (EUR, USD, GBP, XAF, XOF, GNF).
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">3.</span> XenderMoney</div>
+    <h3>3.1 Dashboard de Billetera</h3>
+    <p>El dashboard muestra tus saldos en todas las divisas, el historial de transacciones recientes y accesos directos a las funciones principales.</p>
+    <table>
+      <thead><tr><th>Sección</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Saldos</td><td>Vista de tus balances en EUR, USD, GBP, XAF, XOF, GNF</td></tr>
+        <tr><td>Enviar Dinero</td><td>Transfiere fondos a otro usuario</td></tr>
+        <tr><td>Historial</td><td>Lista de todas tus transacciones con filtros</td></tr>
+        <tr><td>KYC</td><td>Estado de tu verificación de identidad</td></tr>
+        <tr><td>Préstamos</td><td>Solicitar y gestionar préstamos activos</td></tr>
+        <tr><td>Calculadora FX</td><td>Calcular tipos de cambio en tiempo real</td></tr>
+      </tbody>
+    </table>
+
+    <h3>3.2 Enviar Dinero</h3>
+    <ol class="steps">
+      <li>Haz clic en <strong>"Enviar Dinero"</strong>.</li>
+      <li>Introduce el correo o ID del destinatario.</li>
+      <li>Selecciona la divisa de origen y destino.</li>
+      <li>Introduce el importe a enviar.</li>
+      <li>Revisa el tipo de cambio y la comisión aplicada.</li>
+      <li>Confirma la transferencia con tu contraseña.</li>
+    </ol>
+
+    <h3>3.3 Calculadora de Divisas</h3>
+    <p>La calculadora FX soporta <strong>21 pares de divisas</strong> incluyendo:</p>
+    <table>
+      <thead><tr><th>Par</th><th>Par</th><th>Par</th><th>Par</th></tr></thead>
+      <tbody>
+        <tr><td>EUR / USD</td><td>EUR / XAF</td><td>USD / XAF</td><td>GBP / EUR</td></tr>
+        <tr><td>EUR / XOF</td><td>USD / XOF</td><td>EUR / GNF</td><td>USD / GNF</td></tr>
+        <tr><td>XAF / XOF</td><td>GBP / USD</td><td>GBP / XAF</td><td>GBP / XOF</td></tr>
+      </tbody>
+    </table>
+    <p>Los tipos de cambio se actualizan periódicamente desde la tabla <code>exchange_rates</code> en Supabase.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">4.</span> Verificación KYC</div>
+    <h3>4.1 ¿Qué es KYC?</h3>
+    <p>KYC (Know Your Customer) es el proceso de verificación de identidad requerido por regulaciones financieras. Al completarlo desbloqueas límites de transferencia más altos y acceso completo a todos los servicios.</p>
+
+    <h3>4.2 Documentos Aceptados</h3>
+    <table>
+      <thead><tr><th>Tipo de Documento</th><th>Requisitos</th></tr></thead>
+      <tbody>
+        <tr><td>Pasaporte</td><td>Vigente, foto clara, número visible</td></tr>
+        <tr><td>DNI / Cédula Nacional</td><td>Ambas caras, vigente</td></tr>
+        <tr><td>Permiso de conducir</td><td>Con foto, vigente</td></tr>
+        <tr><td>Tarjeta de residencia</td><td>Vigente, ambas caras</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.3 Proceso de Verificación</h3>
+    <ol class="steps">
+      <li>Entra en tu perfil y selecciona <strong>"Verificar identidad"</strong>.</li>
+      <li>Elige el tipo de documento.</li>
+      <li>Sube una foto clara del documento (JPG/PNG, máx. 5MB).</li>
+      <li>Envía la solicitud.</li>
+      <li>Espera revisión del equipo (habitualmente 24-48h).</li>
+      <li>Recibirás una notificación con el resultado.</li>
+    </ol>
+
+    <h3>4.4 Estados KYC</h3>
+    <p>
+      <span class="kyc-status status-pending">Pendiente</span> — Solicitud enviada, en revisión.<br><br>
+      <span class="kyc-status status-approved">Aprobado</span> — Identidad verificada. Acceso completo desbloqueado.<br><br>
+      <span class="kyc-status status-rejected">Rechazado</span> — Documento no válido. Revisa el motivo y vuelve a intentarlo.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">5.</span> XenderShop</div>
+    <h3>5.1 Explorar Productos</h3>
+    <p>Navega por categorías de productos africanos: alimentación, artesanía, textil, tecnología, cosméticos y más. Filtra por país de origen, precio y categoría.</p>
+
+    <h3>5.2 Proceso de Compra</h3>
+    <ol class="steps">
+      <li>Selecciona el producto y cantidad.</li>
+      <li>Añade al carrito.</li>
+      <li>En el carrito, introduce un <strong>código de descuento</strong> si tienes uno.</li>
+      <li>Introduce la dirección de entrega.</li>
+      <li>Revisa el resumen del pedido.</li>
+      <li>Confirma el pago desde tu billetera XenderMoney.</li>
+    </ol>
+
+    <h3>5.3 Registro como Vendedor</h3>
+    <p>Para vender en XenderShop necesitas:</p>
+    <ul>
+      <li>Cuenta verificada (KYC aprobado)</li>
+      <li>Información de tu negocio</li>
+      <li>Cuenta bancaria o billetera para recibir pagos</li>
+      <li>Al menos un producto para publicar</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6.</span> XenderDelivery</div>
+    <h3>6.1 Seguimiento de Pedido</h3>
+    <p>Tras realizar un pedido en XenderShop, puedes rastrear el estado en tiempo real desde XenderDelivery usando tu número de pedido o el código de seguimiento recibido por notificación.</p>
+
+    <h3>6.2 Registrarse como Rider</h3>
+    <p>Requisitos para ser rider de XenderDelivery:</p>
+    <table>
+      <thead><tr><th>Campo</th><th>Requerido</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre completo</td><td>Sí</td></tr>
+        <tr><td>Teléfono</td><td>Sí</td></tr>
+        <tr><td>Email</td><td>Sí</td></tr>
+        <tr><td>Ciudad de operación</td><td>Sí</td></tr>
+        <tr><td>Tipo de vehículo (moto/bici/coche)</td><td>Sí</td></tr>
+        <tr><td>Zona geográfica</td><td>Sí</td></tr>
+        <tr><td>Documento de identidad</td><td>Sí</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">7.</span> XenderBigShop</div>
+    <h3>7.1 Merchant (Comprador B2B)</h3>
+    <p>Los merchants son empresas o comerciantes que compran productos al por mayor. Para registrarse necesitan: nombre de empresa, email, teléfono, tipo de negocio, país, y número de registro mercantil.</p>
+
+    <h3>7.2 Partner (Proveedor B2B)</h3>
+    <p>Los partners son proveedores que suministran productos en volumen a merchants. El registro requiere información similar más detalles de capacidad de suministro y categorías de productos ofrecidos.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">8.</span> Preguntas Frecuentes (FAQ)</div>
+
+    <div class="faq-item"><div class="faq-q">1. ¿Puedo usar una sola cuenta en todas las apps?</div><div class="faq-a">Sí. Un único registro en XenderMoney te da acceso a XenderShop, XenderDelivery y XenderBigShop automáticamente.</div></div>
+    <div class="faq-item"><div class="faq-q">2. ¿Cuánto tiempo tarda la verificación KYC?</div><div class="faq-a">Habitualmente entre 24 y 48 horas laborables. Recibirás una notificación cuando se resuelva.</div></div>
+    <div class="faq-item"><div class="faq-q">3. ¿Qué divisas están disponibles?</div><div class="faq-a">EUR, USD, GBP, XAF (Franco CFA BEAC), XOF (Franco CFA BCEAO) y GNF (Franco Guineano).</div></div>
+    <div class="faq-item"><div class="faq-q">4. ¿Mi KYC fue rechazado. ¿Qué hago?</div><div class="faq-a">Revisa el motivo en tu perfil, corrige el problema (foto borrosa, documento caducado) y vuelve a enviar.</div></div>
+    <div class="faq-item"><div class="faq-q">5. ¿Hay límites de transferencia?</div><div class="faq-a">Sin KYC: límite reducido. Con KYC aprobado: límites estándar. Contacta soporte para límites aumentados.</div></div>
+    <div class="faq-item"><div class="faq-q">6. ¿Cómo aplico un código de descuento?</div><div class="faq-a">En XenderShop, durante el proceso de checkout, introduce el código en el campo "Código promocional" antes de confirmar.</div></div>
+    <div class="faq-item"><div class="faq-q">7. ¿Puedo cancelar un pedido?</div><div class="faq-a">Solo si el pedido aún está en estado "pendiente". Contacta soporte si ya fue confirmado.</div></div>
+    <div class="faq-item"><div class="faq-q">8. ¿Cómo recupero mi contraseña?</div><div class="faq-a">Haz clic en "¿Olvidaste tu contraseña?" en la pantalla de login e introduce tu correo electrónico registrado.</div></div>
+    <div class="faq-item"><div class="faq-q">9. ¿Dónde veo el tipo de cambio actual?</div><div class="faq-a">En la sección "Calculadora FX" de XenderMoney, los tipos se actualizan periódicamente.</div></div>
+    <div class="faq-item"><div class="faq-q">10. ¿Cómo contacto con soporte?</div><div class="faq-a">Desde tu perfil en cualquier app, accede a "Soporte" para abrir un ticket. Tiempo de respuesta: 24-48h.</div></div>
+  </div>
+</div>
+
+<hr class="lang-divider">
+
+<!-- ===== ENGLISH ===== -->
+<div class="lang-section">
+  <div class="lang-header">
+    <div class="lang-flag">🇬🇧</div>
+    <div class="lang-name">ENGLISH</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">1.</span> Introduction — The 4 Xender Applications</div>
+    <p>INNOVAAFRIC offers four web applications for the African financial and commercial ecosystem. One account gives you access to all four.</p>
+    <div class="callout callout-info">
+      <div class="callout-title">Shared Session</div>
+      A single login works across all 4 apps. Log in once at XenderMoney and navigate to any other app without re-entering your credentials.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">2.</span> Getting Started</div>
+    <ol class="steps">
+      <li>Visit <strong>XenderMoney</strong> in your browser.</li>
+      <li>Click <strong>"Create Account"</strong> or <strong>"Sign Up"</strong>.</li>
+      <li>Fill in: full name, email, phone, password, and country.</li>
+      <li>Accept the terms and conditions.</li>
+      <li>Click <strong>"Register"</strong>. You'll be redirected to your dashboard automatically.</li>
+      <li>Complete KYC verification to unlock higher transfer limits.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">3.</span> XenderMoney</div>
+    <h3>3.1 Wallet Dashboard</h3>
+    <p>Your dashboard shows balances in all supported currencies, recent transactions, and quick-access buttons for key features: Send Money, FX Calculator, KYC, Loans.</p>
+
+    <h3>3.2 Sending Money</h3>
+    <ol class="steps">
+      <li>Click <strong>"Send Money"</strong>.</li>
+      <li>Enter the recipient's email or user ID.</li>
+      <li>Select source and destination currencies.</li>
+      <li>Enter the amount to send.</li>
+      <li>Review the exchange rate and fee.</li>
+      <li>Confirm the transfer.</li>
+    </ol>
+
+    <h3>3.3 Currency Calculator</h3>
+    <p>The FX calculator supports 21 currency pairs including EUR, USD, GBP, XAF, XOF, and GNF. Rates are updated periodically from live market data.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">4.</span> KYC Verification</div>
+    <h3>4.1 Accepted Documents</h3>
+    <table>
+      <thead><tr><th>Document Type</th><th>Requirements</th></tr></thead>
+      <tbody>
+        <tr><td>Passport</td><td>Valid, clear photo, number visible</td></tr>
+        <tr><td>National ID Card</td><td>Both sides, valid</td></tr>
+        <tr><td>Driver's License</td><td>With photo, valid</td></tr>
+        <tr><td>Residence Permit</td><td>Valid, both sides</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.2 KYC Statuses</h3>
+    <p>
+      <span class="kyc-status status-pending">Pending</span> — Request submitted, under review (24-48h).<br><br>
+      <span class="kyc-status status-approved">Approved</span> — Identity verified. Full access unlocked.<br><br>
+      <span class="kyc-status status-rejected">Rejected</span> — Invalid document. Check reason and resubmit.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">5.</span> XenderShop, XenderDelivery & XenderBigShop</div>
+    <h3>5.1 XenderShop — Checkout Process</h3>
+    <ol class="steps">
+      <li>Browse products and add to cart.</li>
+      <li>Enter a <strong>promo code</strong> if available.</li>
+      <li>Enter delivery address.</li>
+      <li>Review order summary and confirm payment from your XenderMoney wallet.</li>
+    </ol>
+
+    <h3>5.2 XenderDelivery — Track an Order</h3>
+    <p>After placing an order in XenderShop, track real-time delivery status in XenderDelivery using your order number or tracking code received via notification.</p>
+
+    <h3>5.3 XenderBigShop — B2B Registration</h3>
+    <p><strong>Merchant (Buyer):</strong> Register as a business buyer to purchase products in bulk. Requires KYC, business name, tax ID, and country.<br>
+    <strong>Partner (Supplier):</strong> Register as a supplier to offer products to merchants. Requires business information plus supply capacity details.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6.</span> FAQ</div>
+    <div class="faq-item"><div class="faq-q">1. Can I use one account across all apps?</div><div class="faq-a">Yes. One registration in XenderMoney gives access to all 4 applications automatically.</div></div>
+    <div class="faq-item"><div class="faq-q">2. How long does KYC verification take?</div><div class="faq-a">Usually 24-48 business hours. You will receive a notification with the result.</div></div>
+    <div class="faq-item"><div class="faq-q">3. What currencies are available?</div><div class="faq-a">EUR, USD, GBP, XAF (BEAC CFA Franc), XOF (BCEAO CFA Franc), and GNF (Guinean Franc).</div></div>
+    <div class="faq-item"><div class="faq-q">4. How do I apply a promo code?</div><div class="faq-a">In XenderShop checkout, enter the code in the "Promo Code" field before confirming.</div></div>
+    <div class="faq-item"><div class="faq-q">5. How do I contact support?</div><div class="faq-a">From your profile in any app, go to "Support" to open a ticket. Response time: 24-48h.</div></div>
+  </div>
+</div>
+
+<hr class="lang-divider">
+
+<!-- ===== FRANÇAIS ===== -->
+<div class="lang-section">
+  <div class="lang-header">
+    <div class="lang-flag">🇫🇷</div>
+    <div class="lang-name">FRANÇAIS</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">1.</span> Introduction — Les 4 Applications Xender</div>
+    <p>INNOVAAFRIC propose quatre applications web pour l'écosystème financier et commercial africain. Un seul compte vous donne accès à toutes les quatre.</p>
+    <div class="callout callout-info">
+      <div class="callout-title">Session Partagée</div>
+      Une seule connexion fonctionne sur les 4 applications. Connectez-vous une fois sur XenderMoney et naviguez vers n'importe quelle autre application sans ressaisir vos identifiants.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">2.</span> Premiers Pas — Créer votre Compte</div>
+    <ol class="steps">
+      <li>Visitez <strong>XenderMoney</strong> dans votre navigateur.</li>
+      <li>Cliquez sur <strong>"Créer un compte"</strong>.</li>
+      <li>Remplissez le formulaire : nom complet, email, téléphone, mot de passe, pays.</li>
+      <li>Acceptez les conditions d'utilisation.</li>
+      <li>Cliquez sur <strong>"S'inscrire"</strong>. Vous serez redirigé vers votre tableau de bord.</li>
+      <li>Complétez la vérification KYC pour débloquer des limites de transfert plus élevées.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">3.</span> XenderMoney — Portefeuille et Transferts</div>
+    <h3>3.1 Tableau de Bord</h3>
+    <p>Votre tableau de bord affiche vos soldes dans toutes les devises supportées, l'historique des transactions récentes et des raccourcis vers les fonctions principales.</p>
+
+    <h3>3.2 Envoyer de l'Argent</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>"Envoyer de l'argent"</strong>.</li>
+      <li>Entrez l'email ou l'ID du destinataire.</li>
+      <li>Sélectionnez les devises source et destination.</li>
+      <li>Saisissez le montant à envoyer.</li>
+      <li>Vérifiez le taux de change et les frais.</li>
+      <li>Confirmez le transfert.</li>
+    </ol>
+
+    <h3>3.3 Calculateur de Devises</h3>
+    <p>Le calculateur FX supporte <strong>21 paires de devises</strong> dont EUR, USD, GBP, XAF, XOF et GNF. Les taux sont mis à jour périodiquement.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">4.</span> Vérification KYC</div>
+    <h3>4.1 Documents Acceptés</h3>
+    <table>
+      <thead><tr><th>Type de Document</th><th>Exigences</th></tr></thead>
+      <tbody>
+        <tr><td>Passeport</td><td>Valide, photo claire, numéro visible</td></tr>
+        <tr><td>Carte Nationale d'Identité</td><td>Les deux faces, valide</td></tr>
+        <tr><td>Permis de conduire</td><td>Avec photo, valide</td></tr>
+        <tr><td>Titre de séjour</td><td>Valide, les deux faces</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.2 Statuts KYC</h3>
+    <p>
+      <span class="kyc-status status-pending">En attente</span> — Demande soumise, en cours de révision (24-48h).<br><br>
+      <span class="kyc-status status-approved">Approuvé</span> — Identité vérifiée. Accès complet débloqué.<br><br>
+      <span class="kyc-status status-rejected">Rejeté</span> — Document invalide. Vérifiez la raison et soumettez à nouveau.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">5.</span> FAQ</div>
+    <div class="faq-item"><div class="faq-q">1. Puis-je utiliser un seul compte sur toutes les apps ?</div><div class="faq-a">Oui. Une seule inscription sur XenderMoney donne accès aux 4 applications automatiquement.</div></div>
+    <div class="faq-item"><div class="faq-q">2. Combien de temps prend la vérification KYC ?</div><div class="faq-a">Habituellement entre 24 et 48 heures ouvrables. Vous recevrez une notification avec le résultat.</div></div>
+    <div class="faq-item"><div class="faq-q">3. Quelles devises sont disponibles ?</div><div class="faq-a">EUR, USD, GBP, XAF (Franc CFA BEAC), XOF (Franc CFA BCEAO) et GNF (Franc Guinéen).</div></div>
+    <div class="faq-item"><div class="faq-q">4. Comment contacter le support ?</div><div class="faq-a">Depuis votre profil dans n'importe quelle app, accédez à "Support" pour ouvrir un ticket. Délai de réponse : 24-48h.</div></div>
+    <div class="faq-item"><div class="faq-q">5. Comment appliquer un code promo ?</div><div class="faq-a">Dans XenderShop lors du paiement, entrez le code dans le champ "Code promotionnel" avant de confirmer.</div></div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <strong>INNOVAAFRIC</strong> © 2026 — innovaafric.com &nbsp;|&nbsp; DOC-003 — Manual de Usuario v1.0 &nbsp;|&nbsp; Junio 2026
+</footer>
+</body>
+</html>

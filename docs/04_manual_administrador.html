@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNOVAAFRIC — Manual del Administrador</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--cyan:#06b6d4;--dark:#0B0F19;--secondary:#111827;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--bg-alt:#f8fafc;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;font-size:14px;line-height:1.7;}
+  .nav{position:sticky;top:0;z-index:100;background:var(--dark);display:flex;align-items:center;padding:0 2rem;height:52px;gap:1rem;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+  .nav-logo{font-size:1.2rem;font-weight:800;color:#fff;}
+  .nav-logo span{color:var(--cyan);}
+  .nav-badge{background:var(--cyan);color:var(--dark);font-weight:800;font-size:.75rem;padding:2px 7px;border-radius:4px;margin-right:.5rem;}
+  .nav-title{color:#9ca3af;font-size:.85rem;margin-left:auto;}
+  .cover{background:var(--dark);color:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;page-break-after:always;}
+  .cover-badge{width:100px;height:100px;background:var(--cyan);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:900;color:var(--dark);margin-bottom:2rem;}
+  .cover-logo{font-size:2.8rem;font-weight:900;letter-spacing:-1px;margin-bottom:.5rem;}
+  .cover-logo span{color:var(--cyan);}
+  .cover-subtitle{color:#9ca3af;font-size:1rem;margin-bottom:3rem;}
+  .cover-title{font-size:2rem;font-weight:700;max-width:680px;line-height:1.3;margin-bottom:.5rem;}
+  .cover-title-sub{font-size:1.1rem;font-weight:400;color:var(--cyan);margin-bottom:3rem;}
+  .cover-meta{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
+  .cover-meta-item{text-align:center;}
+  .cover-meta-label{font-size:.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;}
+  .cover-meta-value{font-size:1rem;font-weight:600;color:var(--cyan);}
+  .cover-divider{width:80px;height:3px;background:var(--cyan);margin:2rem auto;}
+  .content{max-width:960px;margin:0 auto;padding:3rem 2rem;}
+  .section{margin-bottom:2.5rem;}
+  .section-header{background:var(--dark);color:#fff;padding:.75rem 1.25rem;border-left:4px solid var(--cyan);border-radius:0 6px 6px 0;margin-bottom:1.25rem;font-size:1rem;font-weight:600;}
+  .section-header .num{color:var(--cyan);margin-right:.5rem;}
+  h3{font-size:.95rem;font-weight:600;color:var(--dark);margin:1.25rem 0 .5rem;border-bottom:1px solid var(--border);padding-bottom:.3rem;}
+  h4{font-size:.88rem;font-weight:600;color:var(--secondary);margin:.9rem 0 .4rem;}
+  p{margin-bottom:.85rem;}
+  ul,ol{margin-left:1.5rem;margin-bottom:.9rem;}
+  li{margin-bottom:.3rem;}
+  table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.85rem;}
+  thead tr{background:var(--dark);color:#fff;}
+  thead th{padding:.65rem 1rem;text-align:left;font-weight:600;}
+  thead th:first-child{border-left:4px solid var(--cyan);}
+  tbody tr:nth-child(odd){background:var(--bg-alt);}
+  tbody tr:nth-child(even){background:#fff;}
+  tbody td{padding:.6rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;}
+  pre,code{font-family:'Courier New',monospace;}
+  pre{background:var(--dark);color:var(--cyan);padding:1.25rem;border-radius:8px;overflow-x:auto;font-size:.82rem;margin-bottom:1.25rem;line-height:1.6;}
+  code{background:#f1f5f9;color:#0e7490;padding:1px 5px;border-radius:3px;font-size:.82rem;}
+  .callout{padding:.9rem 1.25rem;border-radius:6px;margin-bottom:1.25rem;border-left:4px solid;font-size:.88rem;}
+  .callout-info{background:#ecfeff;border-color:var(--cyan);color:#0e7490;}
+  .callout-warning{background:#fffbeb;border-color:#f59e0b;color:#92400e;}
+  .callout-danger{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+  .callout-title{font-weight:700;margin-bottom:.3rem;}
+  .steps{counter-reset:step;list-style:none;margin-left:0;}
+  .steps li{counter-increment:step;display:flex;gap:.9rem;margin-bottom:.9rem;align-items:flex-start;}
+  .steps li::before{content:counter(step);min-width:26px;height:26px;border-radius:50%;background:var(--cyan);color:var(--dark);font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+  .kpi-card{border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;border-top:3px solid var(--cyan);}
+  .kpi-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;}
+  .kpi-value{font-size:1.4rem;font-weight:800;color:var(--dark);}
+  .kpi-sub{font-size:.75rem;color:var(--muted);}
+  .level-badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:10px;font-size:.78rem;font-weight:600;}
+  .level-2{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+  .level-3{background:#faf5ff;color:#7e22ce;border:1px solid #e9d5ff;}
+  .level-4{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;}
+  .fallback-tier{border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.6rem;display:flex;gap:1rem;align-items:flex-start;}
+  .fallback-num{width:32px;height:32px;border-radius:50%;background:var(--cyan);color:var(--dark);font-weight:800;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .fallback-content h4{margin:0 0 .25rem;font-size:.9rem;font-weight:700;color:var(--dark);}
+  .fallback-content p{margin:0;font-size:.85rem;color:var(--muted);}
+  footer{background:var(--dark);color:#9ca3af;text-align:center;padding:1.5rem;font-size:.8rem;margin-top:4rem;}
+  footer strong{color:var(--cyan);}
+  @media print{
+    .nav{display:none;}
+    .cover{background:#fff!important;color:#000!important;page-break-after:always;min-height:auto;padding:3cm 2cm;}
+    .cover-badge{background:#ddd!important;color:#000!important;}
+    .cover-logo span,.cover-title-sub{color:#000!important;}
+    .section-header{background:#f0f0f0!important;color:#000!important;}
+    .steps li::before,.fallback-num{background:#ddd!important;color:#000!important;}
+    pre{background:#f8f8f8!important;color:#000!important;border:1px solid #ccc;}
+    .kpi-card{border-top-color:#333;}
+    footer{background:#f0f0f0!important;color:#333!important;}
+    .section{page-break-inside:avoid;}
+    @page{margin:2cm;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-badge">IA</span>
+  <span class="nav-logo">INNOVA<span>AFRIC</span></span>
+  <span class="nav-title">Manual del Administrador — Panel de Control v1.0 — Junio 2026</span>
+</nav>
+
+<div class="cover">
+  <div class="cover-badge">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-subtitle">innovaafric.com — Ecosistema Fintech Tricontinental</div>
+  <div class="cover-divider"></div>
+  <div class="cover-title">Manual del Administrador</div>
+  <div class="cover-title-sub">Panel de Control — Guía Completa de Gestión</div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="cover-meta-label">Versión</div><div class="cover-meta-value">v1.0</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Fecha</div><div class="cover-meta-value">Junio 2026</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Documento</div><div class="cover-meta-value">DOC-004</div></div>
+    <div class="cover-meta-item"><div class="cover-meta-label">Acceso</div><div class="cover-meta-value">Nivel 2-4</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <div class="section-header"><span class="num">1.</span> Acceso al Panel de Administración</div>
+    <h3>1.1 Credenciales y Niveles de Acceso</h3>
+    <p>El panel de administración está restringido a usuarios con nivel 2 o superior. El acceso se realiza con las mismas credenciales del ecosistema INNOVAAFRIC pero el nivel debe estar configurado por un superadmin.</p>
+    <table>
+      <thead><tr><th>Nivel</th><th>Rol</th><th>Acceso</th></tr></thead>
+      <tbody>
+        <tr><td><span class="level-badge level-2">Nivel 2</span></td><td>Staff</td><td>Ver usuarios, ver transacciones, dashboard básico, tickets de soporte</td></tr>
+        <tr><td><span class="level-badge level-3">Nivel 3</span></td><td>Admin</td><td>Todo de Nivel 2 + gestión KYC, baneos, notificaciones, compliance, API keys lectura</td></tr>
+        <tr><td><span class="level-badge level-4">Nivel 4</span></td><td>Superadmin</td><td>Acceso completo: crear/revocar API keys, nóminas, configuración del sistema, gestión de roles</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-danger">
+      <div class="callout-title">Seguridad</div>
+      Nunca compartas credenciales de administrador. Cada acción realizada queda registrada con el ID del administrador y la marca de tiempo. Los accesos de Nivel 4 deben revisarse trimestralmente.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">2.</span> Dashboard — KPIs y Estadísticas</div>
+    <p>El dashboard principal muestra los indicadores clave de rendimiento en tiempo real. Los datos se obtienen del endpoint <code>GET /v1/admin/stats</code>.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Usuarios Totales</div>
+        <div class="kpi-value">12,450</div>
+        <div class="kpi-sub">+340 este mes</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Volumen Wallets</div>
+        <div class="kpi-value">€1.25M</div>
+        <div class="kpi-sub">Saldo total EUR</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Transacciones</div>
+        <div class="kpi-value">89,234</div>
+        <div class="kpi-sub">Historial total</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ingresos / Mes</div>
+        <div class="kpi-value">€15,800</div>
+        <div class="kpi-sub">Comisiones junio</div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>KPI</th><th>Descripción</th><th>Acción si es alto</th></tr></thead>
+      <tbody>
+        <tr><td>KYC pendientes</td><td>Solicitudes de verificación esperando revisión</td><td>Revisar en sección KYC</td></tr>
+        <tr><td>Tickets abiertos</td><td>Tickets de soporte sin resolver</td><td>Asignar a staff disponible</td></tr>
+        <tr><td>Usuarios activos 30d</td><td>Usuarios con al menos 1 transacción en 30 días</td><td>Indicador de salud de plataforma</td></tr>
+        <tr><td>Casos compliance</td><td>Alertas AML y CTR pendientes de resolución</td><td>Prioridad alta — revisar inmediatamente</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">3.</span> Gestión de Usuarios</div>
+    <h3>3.1 Buscar y Ver Perfil</h3>
+    <ol class="steps">
+      <li>Ve a <strong>Usuarios</strong> en el menú lateral.</li>
+      <li>Usa los filtros: búsqueda por nombre/email, país, rol, estado KYC.</li>
+      <li>Haz clic en un usuario para ver su perfil completo.</li>
+      <li>El perfil muestra: datos personales, KYC, wallets, historial de transacciones, tickets y notas admin.</li>
+    </ol>
+
+    <h3>3.2 Banear / Desbanear Usuario</h3>
+    <ol class="steps">
+      <li>Abre el perfil del usuario.</li>
+      <li>Haz clic en <strong>"Banear"</strong>.</li>
+      <li>Introduce el motivo del baneo y la duración (en días o indefinido).</li>
+      <li>Confirma. El usuario quedará bloqueado inmediatamente.</li>
+      <li>Para desbanear: abre el perfil del usuario baneado y haz clic en <strong>"Levantar baneo"</strong>.</li>
+    </ol>
+    <div class="callout callout-warning">
+      <div class="callout-title">Registro de Auditoría</div>
+      Cada baneo/desbaneo queda registrado con: admin responsable, motivo, fecha y duración. Este historial es inmutable.
+    </div>
+
+    <h3>3.3 Aprobar KYC Manualmente</h3>
+    <ol class="steps">
+      <li>Ve a <strong>KYC</strong> en el menú o filtra usuarios por <em>kyc_status = pending</em>.</li>
+      <li>Revisa el documento subido (se abre desde Supabase Storage).</li>
+      <li>Selecciona <strong>"Aprobar"</strong> o <strong>"Rechazar"</strong>.</li>
+      <li>En caso de rechazo, escribe el motivo que se enviará al usuario por notificación.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">4.</span> Monitoreo de Transacciones</div>
+    <h3>4.1 Filtros Disponibles</h3>
+    <table>
+      <thead><tr><th>Filtro</th><th>Valores</th></tr></thead>
+      <tbody>
+        <tr><td>Tipo</td><td>transfer, deposit, withdrawal, loan_payment, order_payment</td></tr>
+        <tr><td>Divisa</td><td>EUR, USD, GBP, XAF, XOF, GNF</td></tr>
+        <tr><td>Estado</td><td>pending, completed, failed, flagged</td></tr>
+        <tr><td>Rango de fechas</td><td>Selector de fecha inicio y fin</td></tr>
+        <tr><td>Importe mínimo</td><td>Para detectar transacciones de alto valor</td></tr>
+        <tr><td>País del usuario</td><td>Código ISO 2 letras (CM, FR, GN, SN...)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.2 Marcar como Sospechosa</h3>
+    <p>Desde el detalle de una transacción, usa el botón <strong>"Marcar como sospechosa"</strong> para cambiar su estado a <code>flagged</code>. Esta acción crea automáticamente un caso de compliance asociado.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">5.</span> Gestión KYC</div>
+    <table>
+      <thead><tr><th>Acción</th><th>Nivel requerido</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Ver solicitudes pendientes</td><td>Nivel 2</td><td>Lista ordenada por fecha de envío</td></tr>
+        <tr><td>Revisar documento</td><td>Nivel 2</td><td>Ver imagen del documento en Supabase Storage</td></tr>
+        <tr><td>Aprobar KYC</td><td>Nivel 3</td><td>Cambia kyc_status a "approved", notifica al usuario</td></tr>
+        <tr><td>Rechazar KYC</td><td>Nivel 3</td><td>Requiere motivo escrito, notifica al usuario</td></tr>
+        <tr><td>Forzar aprobación</td><td>Nivel 4</td><td>Override manual sin revisión de documento</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">6.</span> Notificaciones</div>
+    <h3>6.1 Notificación Masiva</h3>
+    <ol class="steps">
+      <li>Ve a <strong>Notificaciones → Nueva notificación masiva</strong>.</li>
+      <li>Escribe el título y el cuerpo del mensaje.</li>
+      <li>Selecciona el tipo: <code>info</code>, <code>warning</code>, <code>system</code>, <code>promotion</code>.</li>
+      <li>Filtra el destino: todos los usuarios, por país, por rol, o por estado KYC.</li>
+      <li>Previsualiza y confirma el envío.</li>
+    </ol>
+    <div class="callout callout-info">
+      <div class="callout-title">Endpoint usado</div>
+      <code>POST /v1/admin/notifications/mass</code> — Las notificaciones se crean en la tabla <code>notifications</code> de Supabase.
+    </div>
+
+    <h3>6.2 Notificación Individual</h3>
+    <p>Desde el perfil de un usuario específico, usa <strong>"Enviar notificación"</strong> para enviar un mensaje personalizado.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">7.</span> Gestión de API Keys</div>
+    <div class="callout callout-danger">
+      <div class="callout-title">Solo Nivel 4 (Superadmin)</div>
+      La creación y revocación de API keys requiere nivel 4. Las claves completas solo se muestran en el momento de creación. Guárdalas de forma segura.
+    </div>
+
+    <h3>7.1 Crear API Key</h3>
+    <ol class="steps">
+      <li>Ve a <strong>API Keys → Nueva clave</strong>.</li>
+      <li>Introduce el nombre del partner.</li>
+      <li>Selecciona el entorno: <code>production</code> o <code>sandbox</code>.</li>
+      <li>Define los permisos: <code>read:users</code>, <code>read:transactions</code>, <code>write:orders</code>, etc.</li>
+      <li>Establece el límite de peticiones por minuto.</li>
+      <li>Haz clic en <strong>"Crear"</strong>. Copia y guarda la clave completa — solo se muestra una vez.</li>
+    </ol>
+
+    <h3>7.2 Revocar API Key</h3>
+    <p>Desde la lista de API keys, cambia el estado a <code>revoked</code>. Las peticiones con esa clave devolverán 401 inmediatamente.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">8.</span> Compliance y AML</div>
+    <h3>8.1 Informes CTR (Currency Transaction Report)</h3>
+    <p>Los CTR se generan automáticamente cuando una transacción supera los umbrales regulatorios, o manualmente por un admin. Se accede desde <strong>Compliance → CTR Reports</strong>.</p>
+
+    <h3>8.2 Casos de Compliance</h3>
+    <table>
+      <thead><tr><th>Estado</th><th>Descripción</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><code>open</code></td><td>Caso abierto, requiere investigación</td><td>Asignar a investigador, añadir notas</td></tr>
+        <tr><td><code>under_review</code></td><td>En proceso de investigación</td><td>Documentar hallazgos</td></tr>
+        <tr><td><code>escalated</code></td><td>Escalado a autoridades regulatorias</td><td>Preparar SAR (Suspicious Activity Report)</td></tr>
+        <tr><td><code>resolved</code></td><td>Caso cerrado con resolución documentada</td><td>Archivar</td></tr>
+      </tbody>
+    </table>
+
+    <h3>8.3 SAR — Suspicious Activity Report</h3>
+    <p>Desde un caso escalado, utiliza <strong>"Generar SAR"</strong> para crear el informe de actividad sospechosa. El documento se exporta en PDF y queda archivado en el sistema.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">9.</span> Analytics</div>
+    <h3>9.1 Gráficas Disponibles</h3>
+    <table>
+      <thead><tr><th>Gráfica</th><th>Descripción</th><th>Filtro</th></tr></thead>
+      <tbody>
+        <tr><td>Crecimiento de usuarios</td><td>Nuevos registros por día/semana/mes</td><td>Rango de fechas, país</td></tr>
+        <tr><td>Volumen por divisa</td><td>Total transferido por cada par de divisas</td><td>Período de tiempo</td></tr>
+        <tr><td>Desglose por país</td><td>Distribución geográfica de usuarios y volumen</td><td>Continente, región</td></tr>
+        <tr><td>Retención</td><td>% usuarios activos tras 7/30/90 días</td><td>Cohorte de registro</td></tr>
+        <tr><td>Ingresos por comisiones</td><td>Comisiones por tipo de transacción</td><td>Mes, trimestre</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">10.</span> Configuración por País</div>
+    <p>INNOVAAFRIC opera en múltiples países con regulaciones distintas. Desde <strong>Configuración → Países</strong> puedes habilitar o deshabilitar funciones específicas por país.</p>
+    <table>
+      <thead><tr><th>Función</th><th>Configurable por país</th></tr></thead>
+      <tbody>
+        <tr><td>Transferencias internacionales</td><td>Sí — requiere aprobación regulatoria local</td></tr>
+        <tr><td>Préstamos</td><td>Sí — límites y tasas configurables</td></tr>
+        <tr><td>KYC obligatorio</td><td>Sí — umbral de transacción que activa el KYC</td></tr>
+        <tr><td>Divisas soportadas</td><td>Sí — según disponibilidad del mercado local</td></tr>
+        <tr><td>XenderDelivery</td><td>Sí — activo solo en ciudades con riders registrados</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">11.</span> Tickets de Soporte</div>
+    <ol class="steps">
+      <li>Ve a <strong>Soporte → Tickets</strong>.</li>
+      <li>Filtra por estado (<code>open</code>, <code>in_progress</code>, <code>resolved</code>) y prioridad (<code>low</code>, <code>medium</code>, <code>high</code>, <code>urgent</code>).</li>
+      <li>Abre el ticket, lee el historial de mensajes del usuario.</li>
+      <li>Responde directamente desde el panel — el usuario recibe notificación.</li>
+      <li>Cambia el estado del ticket según corresponda.</li>
+      <li>Si requiere escalado técnico, asigna a un staff específico.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">12.</span> Nóminas (Payroll)</div>
+    <div class="callout callout-warning">
+      <div class="callout-title">Solo Nivel 4</div>
+      La gestión de nóminas requiere nivel 4 (Superadmin).
+    </div>
+    <h3>12.1 Crear una Ejecución de Nómina</h3>
+    <ol class="steps">
+      <li>Ve a <strong>Nóminas → Nueva ejecución</strong>.</li>
+      <li>Introduce el período de nómina (ej. Junio 2026).</li>
+      <li>Añade ítems de nómina: empleado, importe, moneda, tipo (salario/bonus/comisión).</li>
+      <li>Revisa el total antes de aprobar.</li>
+      <li>Haz clic en <strong>"Aprobar ejecución"</strong>. Los pagos se procesan automáticamente.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><span class="num">13.</span> Sistema de Fallback de 3 Niveles</div>
+    <p>El Admin Panel utiliza un sistema de 3 niveles de fallback para garantizar disponibilidad máxima incluso cuando algún servicio no responde.</p>
+
+    <div class="fallback-tier">
+      <div class="fallback-num">1</div>
+      <div class="fallback-content">
+        <h4>Railway API (Principal)</h4>
+        <p>Datos en tiempo real desde la API REST de Railway. Todas las operaciones de escritura se realizan aquí. Si Railway responde en &lt;5s, se usa este nivel.</p>
+      </div>
+    </div>
+    <div class="fallback-tier">
+      <div class="fallback-num">2</div>
+      <div class="fallback-content">
+        <h4>Supabase (Secundario)</h4>
+        <p>Si Railway no responde, el panel lee directamente de Supabase usando el SDK de JavaScript. Permite ver usuarios y transacciones pero con funcionalidad de escritura limitada.</p>
+      </div>
+    </div>
+    <div class="fallback-tier">
+      <div class="fallback-num">3</div>
+      <div class="fallback-content">
+        <h4>localStorage Cache (Último recurso)</h4>
+        <p>Si tanto Railway como Supabase no responden, el panel muestra los últimos datos cacheados en <code>localStorage</code> del navegador. Solo lectura. Los datos pueden tener hasta 24h de antigüedad.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">Indicador de Estado del Sistema</div>
+      El panel muestra en la esquina superior derecha qué nivel de fallback está activo: verde (Railway), naranja (Supabase) o rojo (cache local).
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>INNOVAAFRIC</strong> © 2026 — innovaafric.com &nbsp;|&nbsp; DOC-004 — Manual del Administrador v1.0 &nbsp;|&nbsp; Junio 2026
+</footer>
+</body>
+</html>
