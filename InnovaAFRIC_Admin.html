@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>InnovaAFRIC · Admin v32</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>InnovaAFRIC · Admin v33</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -6454,15 +6457,16 @@ async function loadDashboard(){
     const wallets=await SB.from('wallets').select('eur,xaf,usd');
     const totalEur=(wallets.data||[]).reduce((s,w)=>s+Number(w.eur||0),0);
     const avgEur=wallets.data?.length?totalEur/wallets.data.length:0;
-    document.getElementById('k-total-eur').textContent='€'+totalEur.toFixed(2);
-    document.getElementById('k-avg-eur').textContent='Promedio: €'+avgEur.toFixed(2);
+    var _e;
+    _e=document.getElementById('k-total-eur');if(_e)_e.textContent='€'+totalEur.toFixed(2);
+    _e=document.getElementById('k-avg-eur');if(_e)_e.textContent='Promedio: €'+avgEur.toFixed(2);
     const activeUsers=new Set((txns.data||[]).map(t=>t.user_id)).size;
     const actRate=uc>0?Math.round(activeUsers/uc*100):0;
-    document.getElementById('k-activity').textContent=actRate+'%';
-    document.getElementById('k-activity-sub').textContent=activeUsers+' de '+uc+' con transacciones';
+    _e=document.getElementById('k-activity');if(_e)_e.textContent=actRate+'%';
+    _e=document.getElementById('k-activity-sub');if(_e)_e.textContent=activeUsers+' de '+uc+' con transacciones';
     const countries=new Set((users.data||[]).map(u=>u.country).filter(Boolean));
-    document.getElementById('k-countries').textContent=countries.size;
-    document.getElementById('k-countries-sub').textContent=[...countries].slice(0,6).join(', ')||'—';
+    _e=document.getElementById('k-countries');if(_e)_e.textContent=countries.size;
+    _e=document.getElementById('k-countries-sub');if(_e)_e.textContent=[...countries].slice(0,6).join(', ')||'—';
 
     // Chart - registros por día
     const last7=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return d.toISOString().split('T')[0];});
