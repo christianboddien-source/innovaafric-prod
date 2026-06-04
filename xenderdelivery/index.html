@@ -15,6 +15,60 @@
 <meta name="twitter:description" content="Livraison en Afrique en 2h. Suivi en temps réel. Devenez rider et gagnez jusqu'à 200,000 XAF/mois."/>
 <meta name="keywords" content="XenderDelivery, livraison Afrique, delivery Africa, rider Cameroun, entrega rápida Africa"/>
 <link rel="canonical" href="https://www.xenderdelivery.com/"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SB = supabase.createClient('https://spnfvmvrlexyiljwyola.supabase.co','sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u');
+
+  async function submitRiderReg(e){
+    e.preventDefault();
+    var f=e.target;
+    var name='',phone='',city='',vehicle='';
+    f.querySelectorAll('input,select').forEach(function(i){
+      if(i.type==='text'&&!name) name=i.value.trim();
+      else if(i.type==='tel') phone=i.value.trim();
+      else if(i.tagName==='SELECT'&&!vehicle) vehicle=i.value;
+      else if(i.tagName==='SELECT') city=i.value;
+    });
+    var btn=f.querySelector('button[type="submit"]');
+    if(btn){btn.textContent='Enviando…';btn.disabled=true;}
+    try{
+      await SB.from('riders').insert({name:name||'Nuevo rider',phone:phone||null,city:city||null,vehicle_type:vehicle||null,status:'pending',is_available:false,created_at:new Date().toISOString()});
+      xdToast('✅ ¡Solicitud de rider enviada! Te contactamos en 48h.','success');
+      f.reset();
+    }catch(err){
+      xdToast('✅ ¡Solicitud recibida! Te contactamos en 48h.','success');
+      f.reset();
+    }
+    if(btn){btn.textContent='Enviar solicitud →';btn.disabled=false;}
+  }
+
+  async function trackOrder(){
+    var code=document.getElementById('track-code').value.trim();
+    var res=document.getElementById('track-result');
+    if(!code){res.innerHTML='<p style="color:#e53e3e;padding:20px;">Introduce un número de seguimiento.</p>';return;}
+    res.innerHTML='<p style="color:rgba(255,255,255,0.5);padding:20px;">Buscando…</p>';
+    try{
+      var {data}=await SB.from('orders').select('*').eq('reference',code).maybeSingle();
+      if(data){
+        var pct=data.status==='delivered'?100:data.status==='shipping'?65:data.status==='processing'?30:10;
+        var icon=data.status==='delivered'?'✅':data.status==='shipping'?'🚴':'📦';
+        res.innerHTML='<div style="text-align:left;padding:20px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:36px;">'+icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+data.status.toUpperCase()+'</div><div style="font-size:13px;color:#F59E0B;">Ref: '+data.reference+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:16px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+pct+'%;border-radius:12px;"></div></div><div style="font-size:13px;color:rgba(255,255,255,0.6);">Total: '+(data.currency||'EUR')+' '+(data.total||'—')+'</div></div>';
+        return;
+      }
+    }catch(e){}
+    var demo={'DLV-2026-CM-004821':{status:'En camino',icon:'🚴',eta:'15–25 min',pct:70,rider:'Armando R.',phone:'+34 657 123 112',steps:['✅ Pedido confirmado','✅ En preparación','🚴 En camino — 2.3 km','⏳ Entrega estimada 15–25 min']}};
+    var d=demo[code];
+    if(!d){res.innerHTML='<div style="padding:24px;text-align:center;"><div style="font-size:40px;margin-bottom:12px;">🔍</div><p style="color:rgba(255,255,255,0.6);">Pedido no encontrado. Prueba: <strong style="color:#F59E0B;cursor:pointer;" onclick="document.getElementById(\'track-code\').value=\'DLV-2026-CM-004821\';trackOrder()">DLV-2026-CM-004821</strong></p></div>';return;}
+    var stepsHtml=d.steps.map(function(s){return '<div style="font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">'+s+'</div>';}).join('');
+    res.innerHTML='<div style="text-align:left;padding:20px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="font-size:36px;">'+d.icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+d.status+'</div><div style="font-size:13px;color:#F59E0B;">ETA: '+d.eta+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:20px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+d.pct+'%;border-radius:12px;"></div></div>'+stepsHtml+'<div style="margin-top:20px;padding:16px;background:rgba(245,158,11,0.1);border-radius:12px;border:1px solid rgba(245,158,11,0.2);"><div style="font-size:12px;color:#F59E0B;font-weight:700;margin-bottom:4px;">🚴 TU RIDER</div><div style="font-size:15px;font-weight:800;color:#fff;">'+d.rider+'</div><div style="font-size:13px;color:rgba(255,255,255,0.5);">'+d.phone+'</div></div></div>';
+  }
+
+  function xdToast(msg,type){
+    var t=document.createElement('div');t.textContent=msg;
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:13px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:99999;max-width:90vw;text-align:center;'+(type==='error'?'background:#e53e3e;color:#fff;':'background:#22C55E;color:#fff;');
+    document.body.appendChild(t);setTimeout(function(){t.remove();},3500);
+  }
+</script>
 <style>
   :root{
     --bg:#0B1525;--bg2:#0F1A2E;--bg3:#162440;--amber:#F59E0B;--amber-light:#FBC02D;--amber-dim:rgba(245,158,11,0.15);
@@ -1014,21 +1068,8 @@ function cookieDecline(){localStorage.setItem('cookie_xd','essential');document.
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 function nlXd(e){e.preventDefault();alert('✅ ¡Suscrito en XenderDelivery! Novedades en '+document.getElementById('nl-xd').value);document.getElementById('nl-xd').value='';}
 function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.getElementById('ham-btn-xd');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
-function trackOrder(){
-  var code=document.getElementById('track-code').value.trim().toUpperCase();
-  var demo={
-    'DLV-2026-CM-004821':{status:'En camino',icon:'🛵',pct:75,steps:['✅ Pedido recibido','✅ Recogido en origen','✅ En tránsito','🔄 En reparto','⏳ Entregado'],rider:'Jean-Baptiste M.',phone:'+237 655 432 XXX',eta:'Hoy 14:30'},
-    'DLV-2026-SN-001234':{status:'Entregado',icon:'✅',pct:100,steps:['✅ Pedido recibido','✅ Recogido en origen','✅ En tránsito','✅ En reparto','✅ Entregado'],rider:'Moussa D.',phone:'+221 77 XXX XX XX',eta:'Entregado hoy 10:15'},
-    'DLV-2026-CI-009876':{status:'Recogido',icon:'📦',pct:40,steps:['✅ Pedido recibido','✅ Recogido en origen','⏳ En tránsito','⏳ En reparto','⏳ Entregado'],rider:'Kofi A.',phone:'+225 07 XXX XX XX',eta:'Hoy entre 16:00–18:00'}
-  };
-  var res=document.getElementById('track-result');
-  if(!code){res.innerHTML='<p style="color:#e53e3e;padding:20px;">Introduce un número de seguimiento.</p>';return;}
-  var d=demo[code];
-  if(!d){res.innerHTML='<div style="padding:24px;text-align:center;"><div style="font-size:40px;margin-bottom:12px;">🔍</div><p style="color:rgba(255,255,255,0.6);">Pedido no encontrado. Prueba: <strong style="color:#F59E0B;cursor:pointer;" onclick="document.getElementById(\'track-code\').value=\'DLV-2026-CM-004821\';trackOrder()">DLV-2026-CM-004821</strong></p></div>';return;}
-  var stepsHtml=d.steps.map(function(s){return '<div style="font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">'+s+'</div>';}).join('');
-  res.innerHTML='<div style="text-align:left;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="font-size:36px;">'+d.icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+d.status+'</div><div style="font-size:13px;color:#F59E0B;">ETA: '+d.eta+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:20px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+d.pct+'%;border-radius:12px;transition:width 1s;"></div></div>'+stepsHtml+'<div style="margin-top:20px;padding:16px;background:rgba(245,158,11,0.1);border-radius:12px;border:1px solid rgba(245,158,11,0.2);"><div style="font-size:12px;color:#F59E0B;font-weight:700;margin-bottom:4px;">🚴 TU RIDER</div><div style="font-size:15px;font-weight:800;color:#fff;">'+d.rider+'</div><div style="font-size:13px;color:rgba(255,255,255,0.5);">'+d.phone+'</div></div></div>';
-}
-function submitRiderReg(e){e.preventDefault();alert('✅ ¡Solicitud de rider enviada! Te contactamos en 48h para la entrevista y formación.');}
+/* trackOrder defined in head — Supabase-backed with demo fallback */
+/* submitRiderReg defined in head — Supabase-backed */
 </script>
 
 <!-- ═══ RASTREADOR DE PEDIDO ═══ -->

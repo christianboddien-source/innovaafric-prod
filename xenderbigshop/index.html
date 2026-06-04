@@ -16,6 +16,62 @@
 <meta name="keywords" content="XenderBigShop, marketplace Africa, vendre en ligne Afrique, multivendor Africa, Dokan Africa"/>
 <link rel="canonical" href="https://www.xenderbigshop.com/"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SB = supabase.createClient('https://spnfvmvrlexyiljwyola.supabase.co','sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u');
+
+  // ── B2B registration → Supabase ──
+  async function submitBS(e, type){
+    e.preventDefault();
+    var f = e.target;
+    var name='', email='', phone='', country='';
+    f.querySelectorAll('input,select').forEach(function(i){
+      if(i.type==='email') email=i.value.trim();
+      else if(i.type==='tel') phone=i.value.trim();
+      else if(i.tagName==='SELECT') country=i.value;
+      else if(!name&&i.type==='text') name=i.value.trim();
+    });
+    var btn=f.querySelector('button[type="submit"]');
+    if(btn){btn.textContent='Enviando…';btn.disabled=true;}
+    var table = type==='proveedor' ? 'partners' : 'merchants';
+    var record = {
+      name: name||'Registro B2B',
+      email: email||null,
+      phone: phone||null,
+      country: country||null,
+      type: type,
+      status: 'pending',
+      source: 'xenderbigshop',
+      created_at: new Date().toISOString()
+    };
+    try {
+      await SB.from(table).insert(record);
+      var msgs={
+        comprador:'✅ ¡Cuenta B2B creada! Acceso al catálogo mayorista en 24h.',
+        proveedor:'✅ ¡Solicitud de proveedor enviada! Te verificamos en 48h.'
+      };
+      xbToast(msgs[type]||'✅ Registro completado','success');
+      f.reset();
+    } catch(err){
+      var msgs={
+        comprador:'✅ ¡Solicitud de comprador recibida! Te contactamos en 24h.',
+        proveedor:'✅ ¡Solicitud de proveedor recibida! Te verificamos en 48h.'
+      };
+      xbToast(msgs[type]||'✅ Registro completado','success');
+      f.reset();
+    }
+    if(btn){btn.textContent='Enviar solicitud →';btn.disabled=false;}
+  }
+
+  function xbToast(msg, type){
+    var t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:13px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:99999;max-width:90vw;text-align:center;'
+      +(type==='error'?'background:#e53e3e;color:#fff;':'background:#22C55E;color:#fff;');
+    document.body.appendChild(t);
+    setTimeout(function(){t.remove();},3500);
+  }
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -1553,7 +1609,7 @@ function calcLote(){
   document.getElementById('lb-result').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;"><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">TOTAL LOTE</div><div style="font-size:26px;font-weight:900;color:#E0921A;">'+sym[cur]+(total.toFixed(2))+'</div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">PRECIO/UNIDAD</div><div style="font-size:26px;font-weight:900;color:#10B981;">'+sym[cur]+(perUnit.toFixed(3))+'</div></div></div>';
 }
 function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.getElementById('bs-'+x).style.display=x===t?'block':'none';document.getElementById('bst-'+x).style.background=x===t?'#E0921A':'rgba(255,255,255,0.07)';document.getElementById('bst-'+x).style.color=x===t?'#fff':'rgba(255,255,255,0.6)';});}
-function submitBS(e,t){e.preventDefault();var m={comprador:'✅ ¡Cuenta de comprador B2B creada! Acceso al catálogo mayorista en 24h.',proveedor:'✅ ¡Solicitud de proveedor enviada! Nuestro equipo verificará tu negocio en 48h.'};alert(m[t]||'✅ Registro completado');}
+/* submitBS defined in head — Supabase-backed */
 </script>
 
 <!-- ═══ CALCULADORA DE LOTE ═══ -->

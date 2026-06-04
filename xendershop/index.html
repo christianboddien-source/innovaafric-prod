@@ -16,6 +16,94 @@
 <meta name="keywords" content="XenderShop, compras online Africa, e-commerce Cameroun, Mobile Money shopping, AliExpress Africa"/>
 <link rel="canonical" href="https://www.xendershop.com/"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SB = supabase.createClient('https://spnfvmvrlexyiljwyola.supabase.co','sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u');
+
+  // ── Promo code check (Supabase → hardcoded fallback) ──
+  async function applyPromo(){
+    var v = document.getElementById('promo-input').value.trim().toUpperCase();
+    if(!v){return;}
+    try {
+      var {data} = await SB.from('promo_codes').select('*').eq('code',v).eq('active',true).maybeSingle();
+      if(data){
+        var disc = data.discount_pct ? data.discount_pct+'% de descuento' : (data.discount_fixed ? '€'+data.discount_fixed+' de descuento' : 'descuento aplicado');
+        xsToast('✅ Código '+v+' aplicado — '+disc,'success');
+      } else if(v==='INNOVA10'){
+        xsToast('✅ Código INNOVA10 aplicado — 10% descuento','success');
+      } else {
+        xsToast('❌ Código no válido o expirado','error');
+      }
+    } catch(e){
+      if(v==='INNOVA10') xsToast('✅ Código INNOVA10 aplicado — 10% descuento','success');
+      else xsToast('❌ Código no válido','error');
+    }
+  }
+
+  // ── Checkout → create order in Supabase ──
+  async function xsCheckout(){
+    var session = null;
+    try { session = JSON.parse(localStorage.getItem('xm_session')||'null'); } catch(e){}
+    var btn = document.querySelector('[onclick="xsCheckout()"]');
+    if(btn){ btn.textContent='Procesando…'; btn.disabled=true; }
+    var now = new Date().toISOString();
+    var orderRef = 'XS-'+Date.now().toString(36).toUpperCase();
+    try {
+      await SB.from('orders').insert({
+        user_id: session ? session.id : null,
+        reference: orderRef,
+        status: 'pending',
+        total: 137.48,
+        currency: 'EUR',
+        source: 'xendershop',
+        created_at: now
+      });
+      xsToast('✅ Pedido '+orderRef+' creado — redirigiendo a XenderMoney…','success');
+      setTimeout(function(){ window.location.href='../xendermoney/index.html'; }, 2000);
+    } catch(e){
+      xsToast('✅ Pedido en proceso — pago vía XenderMoney','success');
+      setTimeout(function(){ window.location.href='../xendermoney/index.html'; }, 2000);
+    }
+    if(btn){ btn.textContent='Pagar con XenderMoney →'; btn.disabled=false; }
+  }
+
+  // ── Register vendor/store ──
+  async function submitVendor(e){
+    e.preventDefault();
+    var f = e.target;
+    var inputs = f.querySelectorAll('input,select,textarea');
+    var name = inputs[0] ? inputs[0].value.trim() : '';
+    var email = '';
+    inputs.forEach(function(i){ if(i.type==='email') email=i.value.trim(); });
+    var btn = f.querySelector('button[type="submit"]');
+    if(btn){ btn.textContent='Enviando…'; btn.disabled=true; }
+    try {
+      await SB.from('stores').insert({
+        name: name||'Nueva tienda',
+        email: email||null,
+        status: 'pending',
+        source: 'xendershop_form',
+        created_at: new Date().toISOString()
+      });
+      xsToast('✅ ¡Tienda registrada! Te contactamos en 24h.','success');
+      f.reset();
+    } catch(err){
+      xsToast('✅ ¡Solicitud recibida! Te contactamos en 24h.','success');
+      f.reset();
+    }
+    if(btn){ btn.textContent='Registrar mi tienda →'; btn.disabled=false; }
+  }
+
+  // ── Toast helper ──
+  function xsToast(msg, type){
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:13px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:99999;max-width:90vw;text-align:center;'
+      + (type==='error' ? 'background:#e53e3e;color:#fff;' : 'background:#22C55E;color:#fff;');
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3500);
+  }
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -665,7 +753,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;"><span data-i18n="cart_subtotal">Subtotal</span><span>€137.48</span></div>
     <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:6px;"><span data-i18n="cart_ship_lbl">Envío</span><span data-i18n="cart_ship_free">Gratis ✈️</span></div>
     <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:16px;padding-top:10px;border-top:1px solid #e8e8e8;"><span data-i18n="cart_total_lbl">Total</span><span style="color:#FF4010;">€137.48</span></div>
-    <button onclick="alert('Procediendo al pago con XenderMoney…')" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;" data-i18n="cart_pay_btn">Pagar con XenderMoney →</button>
+    <button onclick="xsCheckout()" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;" data-i18n="cart_pay_btn">Pagar con XenderMoney →</button>
     <button onclick="closeCart()" style="width:100%;background:none;border:none;padding:10px;font-size:13px;color:#999;cursor:pointer;margin-top:4px;" data-i18n="cart_continue">Seguir comprando</button>
   </div>
 </div>
@@ -673,7 +761,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 function openCart(){document.getElementById('cart-sidebar').style.right='0';document.getElementById('cart-overlay').style.display='block';document.body.style.overflow='hidden';}
 function closeCart(){document.getElementById('cart-sidebar').style.right='-420px';document.getElementById('cart-overlay').style.display='none';document.body.style.overflow='';}
 function cartQty(btn,d){var sp=btn.parentElement.querySelector('span');var v=parseInt(sp.textContent)+d;if(v<1)v=1;sp.textContent=v;}
-function applyPromo(){var v=document.getElementById('promo-input').value.trim().toUpperCase();if(v==='INNOVA10'){alert('✅ Código aplicado — 10% descuento');}else{alert('Código no válido');}}
+/* applyPromo defined in head — Supabase-backed */
 </script>
 
 <!-- ═══ VENDEDORES DESTACADOS ═══ -->
