@@ -114,6 +114,12 @@ CREATE TABLE IF NOT EXISTS notifications (
   read        BOOLEAN DEFAULT false,
   created_at  TIMESTAMPTZ DEFAULT now()
 );
+-- Extend if table already existed without these columns
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS title TEXT;
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS body TEXT;
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'info';
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS target_role TEXT;
+ALTER TABLE notifications ADD COLUMN IF NOT EXISTS read BOOLEAN DEFAULT false;
 CREATE INDEX IF NOT EXISTS notif_user_idx ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS notif_read_idx ON notifications(read);
 
@@ -589,16 +595,23 @@ ALTER TABLE ctr_reports        ENABLE ROW LEVEL SECURITY;
 
 -- Service role bypasses RLS — admin panel uses service key
 -- These policies allow authenticated admins to read/write
-CREATE POLICY IF NOT EXISTS "admin_log_all" ON admin_log
-  FOR ALL USING (true);
-CREATE POLICY IF NOT EXISTS "notifications_all" ON notifications
-  FOR ALL USING (true);
-CREATE POLICY IF NOT EXISTS "api_keys_all" ON api_keys
-  FOR ALL USING (true);
-CREATE POLICY IF NOT EXISTS "sar_reports_all" ON sar_reports
-  FOR ALL USING (true);
-CREATE POLICY IF NOT EXISTS "ctr_reports_all" ON ctr_reports
-  FOR ALL USING (true);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='admin_log_all' AND tablename='admin_log') THEN
+    CREATE POLICY "admin_log_all" ON admin_log FOR ALL USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='notifications_all' AND tablename='notifications') THEN
+    CREATE POLICY "notifications_all" ON notifications FOR ALL USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='api_keys_all' AND tablename='api_keys') THEN
+    CREATE POLICY "api_keys_all" ON api_keys FOR ALL USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='sar_reports_all' AND tablename='sar_reports') THEN
+    CREATE POLICY "sar_reports_all" ON sar_reports FOR ALL USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='ctr_reports_all' AND tablename='ctr_reports') THEN
+    CREATE POLICY "ctr_reports_all" ON ctr_reports FOR ALL USING (true);
+  END IF;
+END $$;
 
 -- ============================================================
 -- INDEXES for performance
