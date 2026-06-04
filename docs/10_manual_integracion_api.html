@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual de Integración API — INNOVAAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;line-height:1.6}
+:root{--cyan:#06b6d4;--navy:#0B0F19;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+.top-nav{position:sticky;top:0;z-index:100;background:#0B0F19;padding:0 32px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--cyan)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-ia{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-brand{font-size:16px;font-weight:700;color:#fff}.nav-brand span{color:var(--cyan)}
+.nav-title{font-size:12px;color:#94a3b8;font-style:italic}
+.nav-print{background:var(--cyan);color:#000;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.cover{min-height:100vh;background:linear-gradient(135deg,#0B0F19,#111827,#0f1e2a);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px}
+.cover-ia{width:90px;height:90px;background:var(--cyan);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#000;margin:0 auto 24px;box-shadow:0 0 40px rgba(6,182,212,.4)}
+.cover-logo{font-size:48px;font-weight:800;color:#fff;margin-bottom:8px}.cover-logo span{color:var(--cyan)}
+.cover-badge{display:inline-block;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
+.cover-title{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+.cover-subtitle{font-size:16px;color:#94a3b8;margin-bottom:40px}
+.cover-langs{display:flex;gap:32px;justify-content:center;margin-bottom:40px}
+.cover-lang .flag{font-size:32px;display:block;margin-bottom:4px}
+.cover-lang .name{font-size:12px;color:#64748b}
+.cover-divider{width:60px;height:3px;background:var(--cyan);margin:32px auto}
+.cover-meta{display:flex;gap:32px;justify-content:center}
+.cover-meta-item .label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.1em}
+.cover-meta-item .value{font-size:14px;font-weight:600;color:#94a3b8;margin-top:2px}
+.content{max-width:960px;margin:0 auto;padding:60px 40px}
+.sec-header{background:linear-gradient(135deg,#0B0F19,#111827);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;padding:20px 28px;margin:50px 0 28px;display:flex;align-items:center;gap:16px}
+.sec-icon{font-size:32px}
+.sec-num{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
+.sec-sub{font-size:13px;color:#64748b;margin-top:2px}
+.card{border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-head{background:#f8fafc;padding:16px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px}
+.card-icon{font-size:22px}
+.card-title{font-size:15px;font-weight:700;color:#0f172a}
+.card-langs{font-size:12px;color:#64748b;margin-top:2px}
+.code-block{background:#0B0F19;border-radius:12px;padding:20px;margin:16px 24px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;overflow-x:auto;position:relative}
+.code-block .comment{color:#64748b}
+.code-block .key{color:#f59e0b}
+.code-block .val{color:#22c55e}
+.code-block .str{color:#06b6d4}
+.code-block .method{color:#8b5cf6;font-weight:700}
+.code-block .url{color:#e2e8f0}
+.code-block .header-line{color:#f472b6}
+.lang-tab{display:flex;gap:6px;padding:12px 24px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;flex-wrap:wrap}
+.tab{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #e2e8f0;background:#fff;color:#64748b}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.endpoint-row{display:flex;align-items:center;gap:12px;padding:14px 24px;border-bottom:1px solid #f1f5f9}
+.endpoint-row:last-child{border-bottom:none}
+.method-badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:monospace;min-width:56px;text-align:center}
+.method-badge.GET{background:rgba(16,185,129,.12);color:#059669}
+.method-badge.POST{background:rgba(6,182,212,.12);color:#0891b2}
+.method-badge.PUT{background:rgba(245,158,11,.12);color:#d97706}
+.method-badge.PATCH{background:rgba(139,92,246,.12);color:#7c3aed}
+.method-badge.DELETE{background:rgba(239,68,68,.12);color:#dc2626}
+.ep-path{font-family:monospace;font-size:13px;color:#0f172a;font-weight:600;flex:1}
+.ep-desc{font-size:12px;color:#64748b}
+.ep-auth{font-size:10px;padding:2px 8px;border-radius:10px;background:#f1f5f9;color:#64748b;font-weight:600}
+.trilingual{display:grid;grid-template-columns:1fr 1fr 1fr}
+.lang-block{padding:20px 24px;border-right:1px solid #f1f5f9}
+.lang-block:last-child{border-right:none}
+.lang-flag{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px}
+.lang-block p{font-size:13px;color:#475569;margin-bottom:10px;line-height:1.7}
+.lang-block ol{padding-left:18px}
+.lang-block li{font-size:13px;color:#334155;margin-bottom:5px;line-height:1.6}
+.error-table{width:100%;border-collapse:collapse;font-size:12px}
+.error-table th{background:#0B0F19;color:#94a3b8;padding:10px 14px;text-align:left;font-weight:600}
+.error-table td{padding:10px 14px;border-bottom:1px solid #f1f5f9}
+.error-table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.green{background:rgba(16,185,129,.12);color:#059669}
+.badge.red{background:rgba(239,68,68,.12);color:#dc2626}
+.badge.amber{background:rgba(245,158,11,.12);color:#d97706}
+.badge.cyan{background:rgba(6,182,212,.12);color:#0891b2}
+.doc-footer{background:#0B0F19;color:#94a3b8;text-align:center;padding:40px;margin-top:60px}
+.footer-logo{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-logo span{color:var(--cyan)}
+@media(max-width:768px){.trilingual{grid-template-columns:1fr}.content{padding:40px 20px}}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-ia">IA</div>
+    <div><div class="nav-brand">INNOVA<span>AFRIC</span></div><div class="nav-title">Manual de Integración API</div></div>
+  </div>
+  <button class="nav-print" onclick="window.print()">⬇️ Descargar PDF</button>
+</nav>
+
+<div class="cover">
+  <div class="cover-ia">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-badge">Developer Docs · Para Partners e Integradores</div>
+  <div class="cover-title">Manual de Integración API</div>
+  <div class="cover-subtitle">REST API · Autenticación · Webhooks · Ejemplos de código<br>Partner Integration Guide · Guide d'Intégration pour Partenaires</div>
+  <div class="cover-langs">
+    <div class="cover-lang"><span class="flag">🇪🇸</span><span class="name">Español</span></div>
+    <div class="cover-lang"><span class="flag">🇬🇧</span><span class="name">English</span></div>
+    <div class="cover-lang"><span class="flag">🇫🇷</span><span class="name">Français</span></div>
+  </div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="label">Documento</div><div class="value">10 — API Guide</div></div>
+    <div class="cover-meta-item"><div class="label">Base URL</div><div class="value">api.innovaafric.com</div></div>
+    <div class="cover-meta-item"><div class="label">Versión API</div><div class="value">v1 — REST/JSON</div></div>
+    <div class="cover-meta-item"><div class="label">Endpoints</div><div class="value">49 routes</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- SECTION 1: INICIO RAPIDO -->
+<div class="sec-header">
+  <div class="sec-icon">⚡</div>
+  <div>
+    <div class="sec-num">Sección 1</div>
+    <div class="sec-title">Inicio Rápido · Quick Start · Démarrage Rapide</div>
+    <div class="sec-sub">Hacer tu primera llamada a la API en menos de 5 minutos</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🔑</div><div><div class="card-title">Obtener credenciales de API</div><div class="card-langs">🇬🇧 Get API credentials · 🇫🇷 Obtenir les identifiants API</div></div></div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>Para integrar con la API de INNOVAAFRIC necesitas una <strong>API Key</strong> generada desde el panel de administración. Hay dos entornos disponibles.</p>
+      <ol>
+        <li>Inicia sesión en el panel de administración</li>
+        <li>Ve a <strong>Integraciones → Hub → Claves API</strong></li>
+        <li>Crea una nueva API Key con los permisos necesarios</li>
+        <li>Copia y guarda la clave — solo se muestra una vez</li>
+        <li>Usa el entorno <strong>sandbox</strong> para pruebas y <strong>production</strong> para producción</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>To integrate with the INNOVAAFRIC API you need an <strong>API Key</strong> generated from the admin panel. Two environments are available.</p>
+      <ol>
+        <li>Log in to the administration panel</li>
+        <li>Go to <strong>Integrations → Hub → API Keys</strong></li>
+        <li>Create a new API Key with the required permissions</li>
+        <li>Copy and save the key — it is only shown once</li>
+        <li>Use <strong>sandbox</strong> environment for testing and <strong>production</strong> for live</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Pour intégrer l'API INNOVAAFRIC, vous avez besoin d'une <strong>Clé API</strong> générée depuis le panneau d'administration. Deux environnements sont disponibles.</p>
+      <ol>
+        <li>Connectez-vous au panneau d'administration</li>
+        <li>Allez dans <strong>Intégrations → Hub → Clés API</strong></li>
+        <li>Créez une nouvelle clé API avec les permissions nécessaires</li>
+        <li>Copiez et sauvegardez la clé — elle n'est affichée qu'une seule fois</li>
+        <li>Utilisez l'environnement <strong>sandbox</strong> pour les tests et <strong>production</strong> pour la production</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🌐</div><div><div class="card-title">URLs base y autenticación</div><div class="card-langs">🇬🇧 Base URLs and authentication · 🇫🇷 URLs de base et authentification</div></div></div>
+  <div class="code-block">
+<span class="comment"># ── ENTORNOS / ENVIRONMENTS ──────────────────────────────────</span>
+<span class="comment"># Sandbox (pruebas / testing / tests)</span>
+<span class="key">BASE_URL</span> = <span class="str">"https://api-sandbox.innovaafric.com/api"</span>
+
+<span class="comment"># Producción (live / production)</span>
+<span class="key">BASE_URL</span> = <span class="str">"https://api.innovaafric.com/api"</span>
+
+<span class="comment"># ── AUTENTICACIÓN / AUTHENTICATION ───────────────────────────</span>
+<span class="comment"># Incluir en cada request como header HTTP</span>
+<span class="key">Authorization</span>: <span class="str">Bearer &lt;YOUR_API_KEY&gt;</span>
+<span class="key">Content-Type</span>: <span class="str">application/json</span>
+<span class="key">X-API-Version</span>: <span class="str">v1</span>
+
+<span class="comment"># ── EJEMPLO / EXAMPLE ────────────────────────────────────────</span>
+curl -X GET <span class="str">"https://api.innovaafric.com/api/transfers"</span> \
+  -H <span class="str">"Authorization: Bearer ia_live_xxxxxxxxxxxx"</span> \
+  -H <span class="str">"Content-Type: application/json"</span>
+  </div>
+</div>
+
+<!-- SECTION 2: ENDPOINTS PRINCIPALES -->
+<div class="sec-header">
+  <div class="sec-icon">📡</div>
+  <div>
+    <div class="sec-num">Sección 2</div>
+    <div class="sec-title">Endpoints Principales · Key Endpoints · Endpoints Principaux</div>
+    <div class="sec-sub">Los endpoints más utilizados para integraciones de partners</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">💸</div><div><div class="card-title">Transferencias / Transfers / Virements</div></div></div>
+  <div class="endpoint-row"><span class="method-badge POST">POST</span><span class="ep-path">/api/transfers</span><span class="ep-desc">Crear una nueva transferencia</span><span class="ep-auth">🔑 API Key</span></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/transfers</span><span class="ep-desc">Listar transferencias (paginado)</span><span class="ep-auth">🔑 API Key</span></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/transfers/:id</span><span class="ep-desc">Obtener detalle de una transferencia</span><span class="ep-auth">🔑 API Key</span></div>
+  <div class="endpoint-row"><span class="method-badge PATCH">PATCH</span><span class="ep-path">/api/transfers/:id/status</span><span class="ep-desc">Actualizar estado (solo admin)</span><span class="ep-auth">🔑 Admin</span></div>
+  <div class="code-block" style="margin:0 24px 24px">
+<span class="comment">// POST /api/transfers — Crear transferencia</span>
+{
+  <span class="key">"amount"</span>: <span class="val">100</span>,
+  <span class="key">"fromCurrency"</span>: <span class="str">"EUR"</span>,
+  <span class="key">"toCurrency"</span>: <span class="str">"XAF"</span>,
+  <span class="key">"recipientName"</span>: <span class="str">"Jean Dupont"</span>,
+  <span class="key">"recipientPhone"</span>: <span class="str">"+237612345678"</span>,
+  <span class="key">"deliveryMethod"</span>: <span class="str">"mtn_momo"</span>,  <span class="comment">// mtn_momo | orange_money | bank_transfer</span>
+  <span class="key">"reference"</span>: <span class="str">"ORDER-2025-001"</span>  <span class="comment">// referencia del partner (opcional)</span>
+}
+
+<span class="comment">// Respuesta exitosa 201</span>
+{
+  <span class="key">"success"</span>: <span class="val">true</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"id"</span>: <span class="str">"txn_abc123"</span>,
+    <span class="key">"status"</span>: <span class="str">"pending"</span>,
+    <span class="key">"amount"</span>: <span class="val">100</span>,
+    <span class="key">"amountReceived"</span>: <span class="val">63947</span>,
+    <span class="key">"exchangeRate"</span>: <span class="val">655.957</span>,
+    <span class="key">"fee"</span>: <span class="val">2.50</span>,
+    <span class="key">"estimatedDelivery"</span>: <span class="str">"2025-06-04T15:30:00Z"</span>
+  }
+}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">👤</div><div><div class="card-title">Usuarios / Users / Utilisateurs</div></div></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/users</span><span class="ep-desc">Listar todos los usuarios (admin)</span><span class="ep-auth">🔑 Admin</span></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/users/:id</span><span class="ep-desc">Perfil completo de un usuario</span><span class="ep-auth">🔑 API Key</span></div>
+  <div class="endpoint-row"><span class="method-badge POST">POST</span><span class="ep-path">/api/auth/register</span><span class="ep-desc">Registrar nuevo usuario</span><span class="ep-auth">🌐 Public</span></div>
+  <div class="endpoint-row"><span class="method-badge POST">POST</span><span class="ep-path">/api/auth/login</span><span class="ep-desc">Autenticar usuario, obtener JWT</span><span class="ep-auth">🌐 Public</span></div>
+  <div class="code-block" style="margin:0 24px 24px">
+<span class="comment">// POST /api/auth/register — Registrar usuario</span>
+{
+  <span class="key">"name"</span>: <span class="str">"Jean Dupont"</span>,
+  <span class="key">"email"</span>: <span class="str">"jean@email.com"</span>,
+  <span class="key">"phone"</span>: <span class="str">"+237612345678"</span>,
+  <span class="key">"password"</span>: <span class="str">"SecurePass123!"</span>,
+  <span class="key">"country"</span>: <span class="str">"CM"</span>
+}
+
+<span class="comment">// POST /api/auth/login — Iniciar sesión</span>
+{
+  <span class="key">"email"</span>: <span class="str">"jean@email.com"</span>,
+  <span class="key">"password"</span>: <span class="str">"SecurePass123!"</span>
+}
+<span class="comment">// Respuesta: { "token": "eyJhbGc...", "user": { "id": "...", "name": "..." } }</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">💱</div><div><div class="card-title">Tasas de cambio / Exchange Rates / Taux de Change</div></div></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/exchange-rates</span><span class="ep-desc">Obtener todas las tasas actuales</span><span class="ep-auth">🌐 Public</span></div>
+  <div class="endpoint-row"><span class="method-badge GET">GET</span><span class="ep-path">/api/exchange-rates/simulate</span><span class="ep-desc">Simular conversión con comisiones</span><span class="ep-auth">🌐 Public</span></div>
+  <div class="code-block" style="margin:0 24px 24px">
+<span class="comment">// GET /api/exchange-rates/simulate?from=EUR&to=XAF&amount=100</span>
+{
+  <span class="key">"from"</span>: <span class="str">"EUR"</span>,
+  <span class="key">"to"</span>: <span class="str">"XAF"</span>,
+  <span class="key">"amount"</span>: <span class="val">100</span>,
+  <span class="key">"rate"</span>: <span class="val">655.957</span>,
+  <span class="key">"fee"</span>: <span class="val">2.50</span>,
+  <span class="key">"feePercent"</span>: <span class="val">2.5</span>,
+  <span class="key">"amountAfterFee"</span>: <span class="val">97.50</span>,
+  <span class="key">"amountReceived"</span>: <span class="val">63956</span>,
+  <span class="key">"updatedAt"</span>: <span class="str">"2025-06-04T14:00:00Z"</span>
+}
+  </div>
+</div>
+
+<!-- SECTION 3: WEBHOOKS -->
+<div class="sec-header">
+  <div class="sec-icon">🔔</div>
+  <div>
+    <div class="sec-num">Sección 3</div>
+    <div class="sec-title">Webhooks · Webhooks · Webhooks</div>
+    <div class="sec-sub">Recibir notificaciones en tiempo real sobre eventos de la plataforma</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">⚡</div><div><div class="card-title">Configurar y recibir webhooks</div><div class="card-langs">🇬🇧 Configure and receive webhooks · 🇫🇷 Configurer et recevoir des webhooks</div></div></div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>Los webhooks envían notificaciones automáticas a tu servidor cuando ocurren eventos en INNOVAAFRIC. Tu endpoint debe responder con <strong>HTTP 200</strong> en menos de 5 segundos.</p>
+      <ol>
+        <li>Ve al panel admin → <strong>Integraciones → Hub</strong></li>
+        <li>Registra la URL de tu endpoint HTTPS</li>
+        <li>Selecciona los eventos que quieres recibir</li>
+        <li>Guarda el <strong>Webhook Secret</strong> para verificar la firma</li>
+        <li>Verifica la firma HMAC-SHA256 en cada request recibido</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>Webhooks send automatic notifications to your server when events occur in INNOVAAFRIC. Your endpoint must respond with <strong>HTTP 200</strong> within 5 seconds.</p>
+      <ol>
+        <li>Go to admin panel → <strong>Integrations → Hub</strong></li>
+        <li>Register your HTTPS endpoint URL</li>
+        <li>Select the events you want to receive</li>
+        <li>Save the <strong>Webhook Secret</strong> to verify the signature</li>
+        <li>Verify the HMAC-SHA256 signature on each received request</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Les webhooks envoient des notifications automatiques à votre serveur lorsque des événements se produisent dans INNOVAAFRIC. Votre endpoint doit répondre avec <strong>HTTP 200</strong> en moins de 5 secondes.</p>
+      <ol>
+        <li>Allez dans le panneau admin → <strong>Intégrations → Hub</strong></li>
+        <li>Enregistrez l'URL de votre endpoint HTTPS</li>
+        <li>Sélectionnez les événements que vous souhaitez recevoir</li>
+        <li>Sauvegardez le <strong>Webhook Secret</strong> pour vérifier la signature</li>
+        <li>Vérifiez la signature HMAC-SHA256 sur chaque requête reçue</li>
+      </ol>
+    </div>
+  </div>
+  <div class="code-block" style="margin:0 24px 24px">
+<span class="comment">// Payload de ejemplo — transfer.completed</span>
+{
+  <span class="key">"event"</span>: <span class="str">"transfer.completed"</span>,
+  <span class="key">"timestamp"</span>: <span class="str">"2025-06-04T14:32:00Z"</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"transferId"</span>: <span class="str">"txn_abc123"</span>,
+    <span class="key">"status"</span>: <span class="str">"completed"</span>,
+    <span class="key">"amount"</span>: <span class="val">100</span>,
+    <span class="key">"amountReceived"</span>: <span class="val">63947</span>,
+    <span class="key">"recipientPhone"</span>: <span class="str">"+237612345678"</span>,
+    <span class="key">"completedAt"</span>: <span class="str">"2025-06-04T14:31:55Z"</span>
+  }
+}
+
+<span class="comment">// Verificar firma (Node.js)</span>
+<span class="method">const</span> crypto = require(<span class="str">'crypto'</span>);
+<span class="method">const</span> signature = req.headers[<span class="str">'x-innovaafric-signature'</span>];
+<span class="method">const</span> expected = crypto
+  .createHmac(<span class="str">'sha256'</span>, WEBHOOK_SECRET)
+  .update(JSON.stringify(req.body))
+  .digest(<span class="str">'hex'</span>);
+<span class="method">if</span> (signature !== `sha256=${expected}`) throw <span class="str">'Invalid signature'</span>;
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">📋</div><div><div class="card-title">Eventos disponibles</div><div class="card-langs">🇬🇧 Available events · 🇫🇷 Événements disponibles</div></div></div>
+  <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div>
+      <div style="font-weight:700;font-size:13px;color:#0f172a;margin-bottom:10px">💸 Transferencias</div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge cyan">transfer.created</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge green">transfer.completed</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge red">transfer.failed</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge amber">transfer.refunded</span></div>
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:13px;color:#0f172a;margin-bottom:10px">👤 Usuarios</div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge cyan">user.registered</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge green">user.kyc_approved</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge red">user.kyc_rejected</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge red">user.blocked</span></div>
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:13px;color:#0f172a;margin-bottom:10px">💳 Pagos</div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge green">payment.success</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge red">payment.failed</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge amber">payment.disputed</span></div>
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:13px;color:#0f172a;margin-bottom:10px">🚨 Seguridad</div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge red">fraud.detected</span></div>
+      <div style="font-size:12px;font-family:monospace;margin-bottom:4px"><span class="badge amber">risk.score_changed</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: ERRORES -->
+<div class="sec-header">
+  <div class="sec-icon">❌</div>
+  <div>
+    <div class="sec-num">Sección 4</div>
+    <div class="sec-title">Códigos de Error · Error Codes · Codes d'Erreur</div>
+    <div class="sec-sub">Referencia completa de errores y cómo resolverlos</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="padding:24px;overflow-x:auto">
+    <table class="error-table">
+      <thead><tr><th>Código HTTP</th><th>Código interno</th><th>Descripción</th><th>Solución</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge red">400</span></td><td>VALIDATION_ERROR</td><td>Parámetros inválidos o faltantes</td><td>Revisa el body del request</td></tr>
+        <tr><td><span class="badge red">401</span></td><td>UNAUTHORIZED</td><td>API Key inválida o expirada</td><td>Regenera tu API Key en el panel</td></tr>
+        <tr><td><span class="badge red">403</span></td><td>FORBIDDEN</td><td>Sin permisos para este recurso</td><td>Verifica los permisos de tu API Key</td></tr>
+        <tr><td><span class="badge red">404</span></td><td>NOT_FOUND</td><td>Recurso no encontrado</td><td>Verifica el ID del recurso</td></tr>
+        <tr><td><span class="badge amber">409</span></td><td>DUPLICATE</td><td>Transferencia duplicada (misma referencia)</td><td>Usa referencias únicas por transferencia</td></tr>
+        <tr><td><span class="badge amber">422</span></td><td>KYC_REQUIRED</td><td>Usuario necesita mayor nivel KYC</td><td>Solicita al usuario subir de nivel KYC</td></tr>
+        <tr><td><span class="badge amber">422</span></td><td>LIMIT_EXCEEDED</td><td>Supera límite de transacción del usuario</td><td>Reduce el monto o sube el nivel KYC</td></tr>
+        <tr><td><span class="badge amber">429</span></td><td>RATE_LIMITED</td><td>Demasiadas solicitudes (límite: 1000/hora)</td><td>Implementa backoff exponencial</td></tr>
+        <tr><td><span class="badge red">500</span></td><td>INTERNAL_ERROR</td><td>Error interno del servidor</td><td>Reportar a support@innovaafric.com</td></tr>
+        <tr><td><span class="badge red">503</span></td><td>SERVICE_UNAVAILABLE</td><td>Proveedor de pagos no disponible</td><td>Reintentar en 30 segundos</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="code-block" style="margin:0 24px 24px">
+<span class="comment">// Formato estándar de error</span>
+{
+  <span class="key">"success"</span>: <span class="val">false</span>,
+  <span class="key">"error"</span>: {
+    <span class="key">"code"</span>: <span class="str">"VALIDATION_ERROR"</span>,
+    <span class="key">"message"</span>: <span class="str">"El campo 'amount' es obligatorio"</span>,
+    <span class="key">"field"</span>: <span class="str">"amount"</span>,  <span class="comment">// campo específico si aplica</span>
+    <span class="key">"requestId"</span>: <span class="str">"req_xyz789"</span>  <span class="comment">// para soporte técnico</span>
+  }
+}
+  </div>
+</div>
+
+<!-- SECTION 5: EJEMPLOS SDK -->
+<div class="sec-header">
+  <div class="sec-icon">💻</div>
+  <div>
+    <div class="sec-num">Sección 5</div>
+    <div class="sec-title">Ejemplos de Código · Code Examples · Exemples de Code</div>
+    <div class="sec-sub">Implementaciones de referencia en los lenguajes más usados</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🟨</div><div><div class="card-title">JavaScript / Node.js</div></div></div>
+  <div class="code-block">
+<span class="comment">// Instalar: npm install node-fetch</span>
+<span class="method">const</span> fetch = require(<span class="str">'node-fetch'</span>);
+
+<span class="method">const</span> INNOVA_API = <span class="str">'https://api.innovaafric.com/api'</span>;
+<span class="method">const</span> API_KEY = process.env.INNOVAAFRIC_API_KEY;
+
+<span class="comment">// Crear transferencia</span>
+<span class="method">async function</span> createTransfer(data) {
+  <span class="method">const</span> res = <span class="method">await</span> fetch(`${INNOVA_API}/transfers`, {
+    method: <span class="str">'POST'</span>,
+    headers: {
+      <span class="str">'Authorization'</span>: `Bearer ${API_KEY}`,
+      <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span>
+    },
+    body: JSON.stringify(data)
+  });
+  <span class="method">if</span> (!res.ok) <span class="method">throw await</span> res.json();
+  <span class="method">return await</span> res.json();
+}
+
+<span class="comment">// Obtener tasa de cambio</span>
+<span class="method">async function</span> getRate(from, to, amount) {
+  <span class="method">const</span> params = <span class="method">new</span> URLSearchParams({ from, to, amount });
+  <span class="method">const</span> res = <span class="method">await</span> fetch(`${INNOVA_API}/exchange-rates/simulate?${params}`);
+  <span class="method">return await</span> res.json();
+}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🐍</div><div><div class="card-title">Python</div></div></div>
+  <div class="code-block">
+<span class="comment"># Instalar: pip install requests</span>
+<span class="method">import</span> requests, os
+
+INNOVA_API = <span class="str">"https://api.innovaafric.com/api"</span>
+API_KEY = os.environ[<span class="str">"INNOVAAFRIC_API_KEY"</span>]
+HEADERS = {
+    <span class="str">"Authorization"</span>: f<span class="str">"Bearer {API_KEY}"</span>,
+    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+}
+
+<span class="comment"># Crear transferencia</span>
+<span class="method">def</span> create_transfer(amount, to_currency, recipient_phone):
+    payload = {
+        <span class="str">"amount"</span>: amount,
+        <span class="str">"fromCurrency"</span>: <span class="str">"EUR"</span>,
+        <span class="str">"toCurrency"</span>: to_currency,
+        <span class="str">"recipientPhone"</span>: recipient_phone,
+        <span class="str">"deliveryMethod"</span>: <span class="str">"mtn_momo"</span>
+    }
+    r = requests.post(f<span class="str">"{INNOVA_API}/transfers"</span>, json=payload, headers=HEADERS)
+    r.raise_for_status()
+    <span class="method">return</span> r.json()
+
+<span class="comment"># Verificar estado</span>
+<span class="method">def</span> get_transfer(transfer_id):
+    r = requests.get(f<span class="str">"{INNOVA_API}/transfers/{transfer_id}"</span>, headers=HEADERS)
+    <span class="method">return</span> r.json()
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🐘</div><div><div class="card-title">PHP</div></div></div>
+  <div class="code-block">
+<span class="comment"><?php</span>
+<span class="key">$INNOVA_API</span> = <span class="str">'https://api.innovaafric.com/api'</span>;
+<span class="key">$API_KEY</span> = getenv(<span class="str">'INNOVAAFRIC_API_KEY'</span>);
+
+<span class="method">function</span> innovaRequest(<span class="key">$method</span>, <span class="key">$path</span>, <span class="key">$data</span> = <span class="val">null</span>) {
+    <span class="method">global</span> <span class="key">$INNOVA_API</span>, <span class="key">$API_KEY</span>;
+    <span class="key">$ch</span> = curl_init(<span class="key">$INNOVA_API</span> . <span class="key">$path</span>);
+    curl_setopt_array(<span class="key">$ch</span>, [
+        CURLOPT_RETURNTRANSFER =&gt; <span class="val">true</span>,
+        CURLOPT_CUSTOMREQUEST  =&gt; <span class="key">$method</span>,
+        CURLOPT_HTTPHEADER     =&gt; [
+            <span class="str">"Authorization: Bearer "</span> . <span class="key">$API_KEY</span>,
+            <span class="str">"Content-Type: application/json"</span>
+        ],
+        CURLOPT_POSTFIELDS     =&gt; <span class="key">$data</span> ? json_encode(<span class="key">$data</span>) : <span class="val">null</span>
+    ]);
+    <span class="key">$result</span> = json_decode(curl_exec(<span class="key">$ch</span>), <span class="val">true</span>);
+    curl_close(<span class="key">$ch</span>);
+    <span class="method">return</span> <span class="key">$result</span>;
+}
+
+<span class="comment">// Ejemplo: crear transferencia</span>
+<span class="key">$transfer</span> = innovaRequest(<span class="str">'POST'</span>, <span class="str">'/transfers'</span>, [
+    <span class="str">'amount'</span> =&gt; <span class="val">50</span>,
+    <span class="str">'fromCurrency'</span> =&gt; <span class="str">'EUR'</span>,
+    <span class="str">'toCurrency'</span> =&gt; <span class="str">'XAF'</span>,
+    <span class="str">'recipientPhone'</span> =&gt; <span class="str">'+237612345678'</span>,
+    <span class="str">'deliveryMethod'</span> =&gt; <span class="str">'orange_money'</span>
+]);
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">📋</div><div><div class="card-title">Soporte para partners</div><div class="card-langs">🇬🇧 Partner support · 🇫🇷 Support partenaires</div></div></div>
+  <div style="padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">📧</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">Email técnico</div>
+      <div style="font-size:12px;color:#64748b">api@innovaafric.com</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:4px">Respuesta &lt;24h</div>
+    </div>
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">🧪</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">Sandbox</div>
+      <div style="font-size:12px;color:#64748b">api-sandbox.innovaafric.com</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:4px">Datos de prueba incluidos</div>
+    </div>
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">📊</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">Status page</div>
+      <div style="font-size:12px;color:#64748b">status.innovaafric.com</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:4px">Uptime en tiempo real</div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="doc-footer">
+  <div class="footer-logo">INNOVA<span>AFRIC</span></div>
+  <p style="margin:8px 0 4px;font-size:14px;color:#9ca3af">Manual de Integración API · API Integration Guide · Guide d'Intégration API</p>
+  <p style="color:#6b7280;font-size:12px">© 2025 INNOVAAFRIC · Documento 10 · API v1 · Para uso de partners autorizados</p>
+</div>
+</body>
+</html>

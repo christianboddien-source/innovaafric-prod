@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seguridad y Compliance — INNOVAAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;line-height:1.6}
+:root{--cyan:#06b6d4;--navy:#0B0F19;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+.top-nav{position:sticky;top:0;z-index:100;background:#0B0F19;padding:0 32px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--cyan)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-ia{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-brand{font-size:16px;font-weight:700;color:#fff}.nav-brand span{color:var(--cyan)}
+.nav-title{font-size:12px;color:#94a3b8;font-style:italic}
+.nav-print{background:var(--cyan);color:#000;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.cover{min-height:100vh;background:linear-gradient(135deg,#0B0F19,#111827,#0f1e2a);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px}
+.cover-ia{width:90px;height:90px;background:var(--cyan);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#000;margin:0 auto 24px;box-shadow:0 0 40px rgba(6,182,212,.4)}
+.cover-logo{font-size:48px;font-weight:800;color:#fff;margin-bottom:8px}.cover-logo span{color:var(--cyan)}
+.cover-badge{display:inline-block;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
+.cover-title{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+.cover-subtitle{font-size:16px;color:#94a3b8;margin-bottom:40px}
+.cover-langs{display:flex;gap:32px;justify-content:center;margin-bottom:40px}
+.cover-lang .flag{font-size:32px;display:block;margin-bottom:4px}
+.cover-lang .name{font-size:12px;color:#64748b}
+.cover-divider{width:60px;height:3px;background:var(--cyan);margin:32px auto}
+.cover-meta{display:flex;gap:32px;justify-content:center}
+.cover-meta-item .label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.1em}
+.cover-meta-item .value{font-size:14px;font-weight:600;color:#94a3b8;margin-top:2px}
+.content{max-width:960px;margin:0 auto;padding:60px 40px}
+.sec-header{background:linear-gradient(135deg,#0B0F19,#111827);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;padding:20px 28px;margin:50px 0 28px;display:flex;align-items:center;gap:16px}
+.sec-icon{font-size:32px}
+.sec-num{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
+.sec-sub{font-size:13px;color:#64748b;margin-top:2px}
+.card{border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-head{background:#f8fafc;padding:16px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px}
+.card-icon{font-size:22px}
+.card-title{font-size:15px;font-weight:700;color:#0f172a}
+.card-langs{font-size:12px;color:#64748b;margin-top:2px}
+.trilingual{display:grid;grid-template-columns:1fr 1fr 1fr}
+.lang-block{padding:20px 24px;border-right:1px solid #f1f5f9}
+.lang-block:last-child{border-right:none}
+.lang-flag{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px}
+.lang-block p{font-size:13px;color:#475569;margin-bottom:10px;line-height:1.7}
+.lang-block ul,.lang-block ol{padding-left:18px}
+.lang-block li{font-size:13px;color:#334155;margin-bottom:5px;line-height:1.6}
+.reg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:24px}
+.reg-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center}
+.reg-flag{font-size:28px;margin-bottom:8px}
+.reg-name{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.reg-law{font-size:11px;color:#64748b}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;margin:2px}
+.badge.green{background:rgba(16,185,129,.12);color:#059669}
+.badge.amber{background:rgba(245,158,11,.12);color:#d97706}
+.badge.red{background:rgba(239,68,68,.12);color:#dc2626}
+.badge.cyan{background:rgba(6,182,212,.12);color:#0891b2}
+.badge.purple{background:rgba(139,92,246,.12);color:#7c3aed}
+.matrix{width:100%;border-collapse:collapse;font-size:12px}
+.matrix th{background:#0B0F19;color:#94a3b8;padding:10px 14px;text-align:left;font-weight:600}
+.matrix td{padding:10px 14px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.matrix tr:last-child td{border-bottom:none}
+.matrix tr:hover td{background:#f8fafc}
+.incident-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start}
+.inc-num{width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.inc-num.orange{background:#f97316}
+.inc-num.green{background:#22c55e}
+.inc-content{flex:1}
+.inc-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.inc-text{font-size:13px;color:#475569;line-height:1.6}
+.doc-footer{background:#0B0F19;color:#94a3b8;text-align:center;padding:40px;margin-top:60px}
+.footer-logo{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-logo span{color:var(--cyan)}
+@media(max-width:768px){.trilingual{grid-template-columns:1fr}.reg-grid{grid-template-columns:1fr 1fr}.content{padding:40px 20px}}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-ia">IA</div>
+    <div><div class="nav-brand">INNOVA<span>AFRIC</span></div><div class="nav-title">Seguridad & Compliance</div></div>
+  </div>
+  <button class="nav-print" onclick="window.print()">⬇️ Descargar PDF</button>
+</nav>
+
+<div class="cover">
+  <div class="cover-ia">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-badge">Documento Oficial · Official Document · Document Officiel</div>
+  <div class="cover-title">Guía de Seguridad y Compliance</div>
+  <div class="cover-subtitle">RGPD · AML/KYC · Ciberseguridad · Respuesta a Incidentes<br>GDPR · Data Protection · Cybersecurity · Incident Response</div>
+  <div class="cover-langs">
+    <div class="cover-lang"><span class="flag">🇪🇸</span><span class="name">Español</span></div>
+    <div class="cover-lang"><span class="flag">🇬🇧</span><span class="name">English</span></div>
+    <div class="cover-lang"><span class="flag">🇫🇷</span><span class="name">Français</span></div>
+  </div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="label">Documento</div><div class="value">09 — Seguridad</div></div>
+    <div class="cover-meta-item"><div class="label">Clasificación</div><div class="value">Confidencial</div></div>
+    <div class="cover-meta-item"><div class="label">Regulaciones</div><div class="value">RGPD · FATF · COBAC</div></div>
+    <div class="cover-meta-item"><div class="label">Revisión</div><div class="value">Semestral</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- SECTION 1: REGULACIONES -->
+<div class="sec-header">
+  <div class="sec-icon">⚖️</div>
+  <div>
+    <div class="sec-num">Sección 1</div>
+    <div class="sec-title">Marco Regulatorio · Regulatory Framework · Cadre Réglementaire</div>
+    <div class="sec-sub">Regulaciones aplicables en las 3 regiones del ecosistema INNOVAAFRIC</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">🌍</div>
+    <div>
+      <div class="card-title">Regulaciones por región</div>
+      <div class="card-langs">🇬🇧 Regulations by region · 🇫🇷 Réglementations par région</div>
+    </div>
+  </div>
+  <div class="reg-grid">
+    <div class="reg-card">
+      <div class="reg-flag">🇪🇺</div>
+      <div class="reg-name">Europa</div>
+      <div class="reg-law"><span class="badge cyan">RGPD/GDPR</span><span class="badge cyan">PSD2</span><span class="badge cyan">AML5</span><span class="badge purple">eIDAS</span></div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-flag">🌍</div>
+      <div class="reg-name">África Central (CEMAC)</div>
+      <div class="reg-law"><span class="badge green">COBAC</span><span class="badge green">BEAC</span><span class="badge amber">GABAC</span></div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-flag">🌍</div>
+      <div class="reg-name">África Occidental (UEMOA)</div>
+      <div class="reg-law"><span class="badge green">BCEAO</span><span class="badge green">GIABA</span><span class="badge amber">CIMA</span></div>
+    </div>
+    <div class="reg-card" style="grid-column:span 1">
+      <div class="reg-flag">🌐</div>
+      <div class="reg-name">Internacional</div>
+      <div class="reg-law"><span class="badge purple">FATF/GAFI</span><span class="badge purple">SWIFT</span><span class="badge purple">Wolfsberg</span></div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-flag">🇧🇷</div>
+      <div class="reg-name">América Latina</div>
+      <div class="reg-law"><span class="badge amber">LGPD</span><span class="badge amber">BACEN</span></div>
+    </div>
+    <div class="reg-card">
+      <div class="reg-flag">🔒</div>
+      <div class="reg-name">Certificaciones</div>
+      <div class="reg-law"><span class="badge cyan">PCI DSS</span><span class="badge cyan">ISO 27001</span><span class="badge cyan">SOC 2</span></div>
+    </div>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>INNOVAAFRIC opera en un marco regulatorio tricontinental que combina las exigencias de protección de datos europeas (RGPD), las normativas bancarias africanas (COBAC, BCEAO) y los estándares internacionales antilavado (FATF/GAFI).</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>INNOVAAFRIC operates within a tri-continental regulatory framework combining European data protection requirements (GDPR), African banking regulations (COBAC, BCEAO) and international anti-money laundering standards (FATF).</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>INNOVAAFRIC opère dans un cadre réglementaire tricontinental combinant les exigences européennes de protection des données (RGPD), les réglementations bancaires africaines (COBAC, BCEAO) et les normes internationales anti-blanchiment (GAFI).</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: RGPD -->
+<div class="sec-header">
+  <div class="sec-icon">🛡️</div>
+  <div>
+    <div class="sec-num">Sección 2</div>
+    <div class="sec-title">Protección de Datos (RGPD) · Data Protection (GDPR) · Protection des Données (RGPD)</div>
+    <div class="sec-sub">Política de privacidad, derechos del usuario y gestión de consentimientos</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">📋</div>
+    <div>
+      <div class="card-title">Datos recopilados y base legal</div>
+      <div class="card-langs">🇬🇧 Data collected and legal basis · 🇫🇷 Données collectées et base légale</div>
+    </div>
+  </div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Categoría de datos</th>
+          <th>Datos específicos</th>
+          <th>Base legal</th>
+          <th>Retención</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Identidad</strong></td><td>Nombre, foto, documento ID</td><td><span class="badge cyan">Cumplimiento legal (KYC)</span></td><td>5 años post-cierre</td></tr>
+        <tr><td><strong>Contacto</strong></td><td>Email, teléfono, dirección</td><td><span class="badge green">Ejecución del contrato</span></td><td>Duración de la cuenta</td></tr>
+        <tr><td><strong>Financieros</strong></td><td>Transacciones, saldos, cuentas</td><td><span class="badge cyan">Obligación legal AML</span></td><td>7 años (obligatorio)</td></tr>
+        <tr><td><strong>Técnicos</strong></td><td>IP, dispositivo, navegador</td><td><span class="badge purple">Interés legítimo (seguridad)</span></td><td>12 meses</td></tr>
+        <tr><td><strong>Marketing</strong></td><td>Preferencias, interacciones</td><td><span class="badge amber">Consentimiento explícito</span></td><td>Hasta retirada del consentimiento</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">👤</div>
+    <div>
+      <div class="card-title">Derechos de los usuarios</div>
+      <div class="card-langs">🇬🇧 User rights · 🇫🇷 Droits des utilisateurs</div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <ul>
+        <li>🔍 <strong>Derecho de acceso:</strong> solicitar copia de todos sus datos (respuesta en 30 días)</li>
+        <li>✏️ <strong>Derecho de rectificación:</strong> corregir datos incorrectos o incompletos</li>
+        <li>🗑️ <strong>Derecho al olvido:</strong> eliminar datos cuando no sean necesarios (salvo obligaciones legales)</li>
+        <li>📦 <strong>Portabilidad:</strong> exportar datos en formato JSON o CSV</li>
+        <li>🚫 <strong>Oposición:</strong> negarse al tratamiento para marketing directo</li>
+        <li>⏸️ <strong>Limitación:</strong> restringir el tratamiento en casos de disputa</li>
+      </ul>
+      <p style="margin-top:12px;font-size:12px;color:#64748b">Ejercer derechos: privacy@innovaafric.com</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <ul>
+        <li>🔍 <strong>Right of access:</strong> request a copy of all your data (response within 30 days)</li>
+        <li>✏️ <strong>Right of rectification:</strong> correct incorrect or incomplete data</li>
+        <li>🗑️ <strong>Right to erasure:</strong> delete data when no longer necessary (except legal obligations)</li>
+        <li>📦 <strong>Portability:</strong> export data in JSON or CSV format</li>
+        <li>🚫 <strong>Objection:</strong> refuse processing for direct marketing</li>
+        <li>⏸️ <strong>Restriction:</strong> restrict processing in dispute cases</li>
+      </ul>
+      <p style="margin-top:12px;font-size:12px;color:#64748b">Exercise rights: privacy@innovaafric.com</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <ul>
+        <li>🔍 <strong>Droit d'accès :</strong> demander une copie de toutes vos données (réponse sous 30 jours)</li>
+        <li>✏️ <strong>Droit de rectification :</strong> corriger des données incorrectes ou incomplètes</li>
+        <li>🗑️ <strong>Droit à l'effacement :</strong> supprimer les données quand elles ne sont plus nécessaires</li>
+        <li>📦 <strong>Portabilité :</strong> exporter les données au format JSON ou CSV</li>
+        <li>🚫 <strong>Opposition :</strong> refuser le traitement pour le marketing direct</li>
+        <li>⏸️ <strong>Limitation :</strong> restreindre le traitement dans les cas de litige</li>
+      </ul>
+      <p style="margin-top:12px;font-size:12px;color:#64748b">Exercer vos droits : privacy@innovaafric.com</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: AML/KYC -->
+<div class="sec-header">
+  <div class="sec-icon">🔍</div>
+  <div>
+    <div class="sec-num">Sección 3</div>
+    <div class="sec-title">Política AML/KYC · AML/KYC Policy · Politique LBC/KYC</div>
+    <div class="sec-sub">Procedimientos contra el lavado de dinero y financiación del terrorismo</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">🚨</div>
+    <div>
+      <div class="card-title">Indicadores de actividad sospechosa (Red Flags)</div>
+      <div class="card-langs">🇬🇧 Suspicious activity indicators · 🇫🇷 Indicateurs d'activité suspecte</div>
+    </div>
+  </div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Indicador</th>
+          <th>Nivel de riesgo</th>
+          <th>Acción automática</th>
+          <th>Acción manual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Múltiples transferencias fraccionadas en 24h</td><td><span class="badge red">Alto</span></td><td>Alerta + congelación temporal</td><td>Revisión compliance</td></tr>
+        <tr><td>Transacción desde país de alto riesgo FATF</td><td><span class="badge red">Alto</span></td><td>Bloqueo automático + notificación</td><td>Due Diligence reforzado</td></tr>
+        <tr><td>Cambio repentino de patrón de comportamiento</td><td><span class="badge amber">Medio</span></td><td>Trust Score reducido</td><td>Monitoreo aumentado 30 días</td></tr>
+        <tr><td>Transacción que supera límite KYC actual</td><td><span class="badge amber">Medio</span></td><td>Rechazo con solicitud de upgrade KYC</td><td>—</td></tr>
+        <tr><td>Información en lista OFAC / Sanciones ONU</td><td><span class="badge red">Crítico</span></td><td>Bloqueo permanente inmediato</td><td>Reporte a autoridades</td></tr>
+        <tr><td>Uso de VPN / IP de alto riesgo</td><td><span class="badge amber">Medio</span></td><td>Verificación adicional requerida</td><td>Revisión logs de acceso</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">📊</div>
+    <div>
+      <div class="card-title">Diligencia debida y monitoreo continuo</div>
+      <div class="card-langs">🇬🇧 Due diligence and continuous monitoring · 🇫🇷 Diligence raisonnable et surveillance continue</div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p><strong>Diligencia simplificada (SDD):</strong> usuarios con bajo riesgo, transacciones pequeñas, países de bajo riesgo.</p>
+      <p><strong>Diligencia estándar (CDD):</strong> todos los usuarios con KYC Nivel 1. Verificación de identidad y revisión periódica anual.</p>
+      <p><strong>Diligencia reforzada (EDD):</strong> PEPs (Personas Políticamente Expuestas), altos volúmenes, países de riesgo elevado. Revisión trimestral y fuente de fondos obligatoria.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p><strong>Simplified Due Diligence (SDD):</strong> low-risk users, small transactions, low-risk countries.</p>
+      <p><strong>Customer Due Diligence (CDD):</strong> all users with Level 1 KYC. Identity verification and annual periodic review.</p>
+      <p><strong>Enhanced Due Diligence (EDD):</strong> PEPs (Politically Exposed Persons), high volumes, high-risk countries. Quarterly review and mandatory source of funds verification.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p><strong>Diligence simplifiée (SDD) :</strong> utilisateurs à faible risque, petites transactions, pays à faible risque.</p>
+      <p><strong>Diligence standard (CDD) :</strong> tous les utilisateurs avec KYC Niveau 1. Vérification d'identité et révision périodique annuelle.</p>
+      <p><strong>Diligence renforcée (EDD) :</strong> PPE (Personnes Politiquement Exposées), volumes élevés, pays à risque élevé. Révision trimestrielle et source de fonds obligatoire.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: CIBERSEGURIDAD -->
+<div class="sec-header">
+  <div class="sec-icon">🔐</div>
+  <div>
+    <div class="sec-num">Sección 4</div>
+    <div class="sec-title">Ciberseguridad · Cybersecurity · Cybersécurité</div>
+    <div class="sec-sub">Medidas técnicas y organizativas de seguridad de la infraestructura</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">🏗️</div>
+    <div>
+      <div class="card-title">Arquitectura de seguridad técnica</div>
+      <div class="card-langs">🇬🇧 Technical security architecture · 🇫🇷 Architecture de sécurité technique</div>
+    </div>
+  </div>
+  <div style="padding:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
+        <div style="font-size:16px;margin-bottom:8px">🔑 Autenticación</div>
+        <ul style="padding-left:16px;font-size:13px;color:#334155">
+          <li>JWT tokens con expiración de 24h</li>
+          <li>Refresh tokens seguros (httpOnly cookie)</li>
+          <li>2FA obligatorio para administradores</li>
+          <li>OTP SMS/email para transacciones &gt;€500</li>
+          <li>Rate limiting: 5 intentos fallidos → bloqueo temporal 15 min</li>
+        </ul>
+      </div>
+      <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
+        <div style="font-size:16px;margin-bottom:8px">🔒 Cifrado</div>
+        <ul style="padding-left:16px;font-size:13px;color:#334155">
+          <li>TLS 1.3 en todas las comunicaciones</li>
+          <li>AES-256 para datos en reposo (Supabase)</li>
+          <li>Contraseñas: bcrypt con salt (cost 12)</li>
+          <li>Claves API: almacenadas en Railway env vars</li>
+          <li>Documentos KYC: bucket privado Supabase Storage</li>
+        </ul>
+      </div>
+      <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
+        <div style="font-size:16px;margin-bottom:8px">🌐 Perímetro</div>
+        <ul style="padding-left:16px;font-size:13px;color:#334155">
+          <li>CORS configurado para dominios autorizados únicamente</li>
+          <li>IP Whitelist para acceso al panel de administración</li>
+          <li>WAF (Web Application Firewall) en Railway</li>
+          <li>Headers de seguridad: CSP, HSTS, X-Frame-Options</li>
+          <li>RLS desactivado — seguridad gestionada en API layer</li>
+        </ul>
+      </div>
+      <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
+        <div style="font-size:16px;margin-bottom:8px">📊 Monitoreo</div>
+        <ul style="padding-left:16px;font-size:13px;color:#334155">
+          <li>Logs inmutables de todas las acciones de administradores</li>
+          <li>Alertas en tiempo real por actividad sospechosa</li>
+          <li>Uptime monitoring: alertas si latencia &gt;500ms</li>
+          <li>Backups automáticos Supabase: diarios, retención 30 días</li>
+          <li>Escaneo de vulnerabilidades mensual</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: INCIDENTES -->
+<div class="sec-header">
+  <div class="sec-icon">🚨</div>
+  <div>
+    <div class="sec-num">Sección 5</div>
+    <div class="sec-title">Respuesta a Incidentes · Incident Response · Réponse aux Incidents</div>
+    <div class="sec-sub">Procedimiento de actuación ante brechas de seguridad y fraude</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">🔥</div>
+    <div>
+      <div class="card-title">Protocolo de respuesta — Brecha de datos</div>
+      <div class="card-langs">🇬🇧 Response protocol — Data breach · 🇫🇷 Protocole de réponse — Violation de données</div>
+    </div>
+  </div>
+  <div style="padding:24px">
+    <div class="incident-step">
+      <div class="inc-num">1</div>
+      <div class="inc-content">
+        <div class="inc-title">🕐 0–1h — Detección y contención</div>
+        <div class="inc-text">El sistema de monitoreo detecta la anomalía y genera alerta automática al SuperAdmin. El equipo de seguridad activa el modo de contención: aislamiento del sistema afectado, revocación de tokens de acceso comprometidos y activación del plan de continuidad. // The monitoring system detects the anomaly and generates automatic alert. Security team activates containment: isolation of affected system, revocation of compromised access tokens. // Le système de surveillance détecte l'anomalie. L'équipe sécurité active le confinement : isolation du système, révocation des tokens compromis.</div>
+      </div>
+    </div>
+    <div class="incident-step">
+      <div class="inc-num orange">2</div>
+      <div class="inc-content">
+        <div class="inc-title">🕑 1–24h — Evaluación y notificación</div>
+        <div class="inc-text">Evaluación del alcance: qué datos se vieron afectados, cuántos usuarios, qué tipo de información. Si la brecha afecta a ciudadanos europeos, la AEPD debe ser notificada en máximo <strong>72 horas</strong>. Si hay riesgo para los usuarios, estos son notificados de forma individual. // Assessment: which data affected, how many users. GDPR breach must be reported to DPA within <strong>72 hours</strong>. // Évaluation de la portée. Si la violation concerne des citoyens européens, la CNIL doit être notifiée dans un délai de <strong>72 heures</strong>.</div>
+      </div>
+    </div>
+    <div class="incident-step">
+      <div class="inc-num orange">3</div>
+      <div class="inc-content">
+        <div class="inc-title">🕓 24–72h — Investigación y remediación</div>
+        <div class="inc-text">Análisis forense para determinar el vector de ataque. Aplicación de parches y medidas correctivas. Revisión y endurecimiento de todos los sistemas relacionados. Documentación completa del incidente para el expediente regulatorio. // Forensic analysis to determine attack vector. Patch application and corrective measures. Full incident documentation. // Analyse forensique pour déterminer le vecteur d'attaque. Application de correctifs. Documentation complète de l'incident.</div>
+      </div>
+    </div>
+    <div class="incident-step">
+      <div class="inc-num green">4</div>
+      <div class="inc-content">
+        <div class="inc-title">📋 Post-incidente — Lecciones aprendidas</div>
+        <div class="inc-text">Informe completo del incidente (RCA — Root Cause Analysis). Actualización de procedimientos de seguridad. Formación adicional del equipo si aplica. Notificación de cierre a las autoridades reguladoras. Comunicación final a los usuarios afectados si necesario. // Full incident report (RCA). Security procedure updates. Regulatory authority closure notification. // Rapport complet sur l'incident. Mise à jour des procédures de sécurité. Notification de clôture aux autorités réglementaires.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon">📞</div>
+    <div>
+      <div class="card-title">Contactos de emergencia</div>
+      <div class="card-langs">🇬🇧 Emergency contacts · 🇫🇷 Contacts d'urgence</div>
+    </div>
+  </div>
+  <div style="padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">🔐</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">Seguridad interna</div>
+      <div style="font-size:12px;color:#64748b">security@innovaafric.com</div>
+      <div style="font-size:12px;color:#64748b">24/7 on-call</div>
+    </div>
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">⚖️</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">DPO / Compliance</div>
+      <div style="font-size:12px;color:#64748b">dpo@innovaafric.com</div>
+      <div style="font-size:12px;color:#64748b">L-V 09:00–18:00 CET</div>
+    </div>
+    <div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">🏛️</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:4px">Reguladores UE</div>
+      <div style="font-size:12px;color:#64748b">AEPD: www.aepd.es</div>
+      <div style="font-size:12px;color:#64748b">CNIL: www.cnil.fr</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: POLITICAS INTERNAS -->
+<div class="sec-header">
+  <div class="sec-icon">📋</div>
+  <div>
+    <div class="sec-num">Sección 6</div>
+    <div class="sec-title">Políticas Internas · Internal Policies · Politiques Internes</div>
+    <div class="sec-sub">Obligaciones del equipo de INNOVAAFRIC en materia de seguridad</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">✅</div><div><div class="card-title">Código de conducta de seguridad para el equipo</div><div class="card-langs">🇬🇧 Security code of conduct for the team · 🇫🇷 Code de conduite sécurité pour l'équipe</div></div></div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <ul>
+        <li>✅ Usar contraseña única y 2FA en todas las cuentas de administrador</li>
+        <li>✅ Nunca compartir credenciales con compañeros — cada admin tiene su propia cuenta</li>
+        <li>✅ Bloquear el ordenador al ausentarse del puesto</li>
+        <li>✅ Reportar cualquier actividad sospechosa de inmediato a security@innovaafric.com</li>
+        <li>✅ No exportar datos de usuarios a dispositivos personales sin autorización</li>
+        <li>🚫 Nunca acceder al panel desde redes WiFi públicas sin VPN</li>
+        <li>🚫 Prohibido instalar software no autorizado en equipos de trabajo</li>
+        <li>🚫 No revelar información técnica de la infraestructura a terceros</li>
+      </ul>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <ul>
+        <li>✅ Use unique password and 2FA on all admin accounts</li>
+        <li>✅ Never share credentials with colleagues — each admin has their own account</li>
+        <li>✅ Lock computer when leaving the workstation</li>
+        <li>✅ Report any suspicious activity immediately to security@innovaafric.com</li>
+        <li>✅ Do not export user data to personal devices without authorization</li>
+        <li>🚫 Never access the panel from public WiFi networks without VPN</li>
+        <li>🚫 Prohibited to install unauthorized software on work equipment</li>
+        <li>🚫 Do not disclose technical infrastructure information to third parties</li>
+      </ul>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <ul>
+        <li>✅ Utiliser un mot de passe unique et le 2FA sur tous les comptes admin</li>
+        <li>✅ Ne jamais partager ses identifiants — chaque admin a son propre compte</li>
+        <li>✅ Verrouiller l'ordinateur en quittant son poste</li>
+        <li>✅ Signaler toute activité suspecte immédiatement à security@innovaafric.com</li>
+        <li>✅ Ne pas exporter les données utilisateurs vers des appareils personnels sans autorisation</li>
+        <li>🚫 Ne jamais accéder au panneau depuis des réseaux WiFi publics sans VPN</li>
+        <li>🚫 Installation de logiciels non autorisés sur les équipements de travail interdite</li>
+        <li>🚫 Ne pas divulguer d'informations techniques sur l'infrastructure à des tiers</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="doc-footer">
+  <div class="footer-logo">INNOVA<span>AFRIC</span></div>
+  <p style="margin:8px 0 4px;font-size:14px;color:#9ca3af">Guía de Seguridad y Compliance · Security & Compliance Guide · Guide Sécurité et Conformité</p>
+  <p style="color:#6b7280;font-size:12px">© 2025 INNOVAAFRIC · Documento 09 · CONFIDENCIAL · Revisión semestral</p>
+</div>
+</body>
+</html>

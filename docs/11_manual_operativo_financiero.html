@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual Operativo Financiero — INNOVAAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;line-height:1.6}
+:root{--cyan:#06b6d4;--navy:#0B0F19;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+.top-nav{position:sticky;top:0;z-index:100;background:#0B0F19;padding:0 32px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--cyan)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-ia{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-brand{font-size:16px;font-weight:700;color:#fff}.nav-brand span{color:var(--cyan)}
+.nav-title{font-size:12px;color:#94a3b8;font-style:italic}
+.nav-print{background:var(--cyan);color:#000;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.cover{min-height:100vh;background:linear-gradient(135deg,#0B0F19,#111827,#0a1628);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px}
+.cover-ia{width:90px;height:90px;background:var(--cyan);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#000;margin:0 auto 24px;box-shadow:0 0 40px rgba(6,182,212,.4)}
+.cover-logo{font-size:48px;font-weight:800;color:#fff;margin-bottom:8px}.cover-logo span{color:var(--cyan)}
+.cover-badge{display:inline-block;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
+.cover-title{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+.cover-subtitle{font-size:16px;color:#94a3b8;margin-bottom:40px}
+.cover-langs{display:flex;gap:32px;justify-content:center;margin-bottom:40px}
+.cover-lang .flag{font-size:32px;display:block;margin-bottom:4px}
+.cover-lang .name{font-size:12px;color:#64748b}
+.cover-divider{width:60px;height:3px;background:var(--cyan);margin:32px auto}
+.cover-meta{display:flex;gap:32px;justify-content:center}
+.cover-meta-item .label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.1em}
+.cover-meta-item .value{font-size:14px;font-weight:600;color:#94a3b8;margin-top:2px}
+.content{max-width:960px;margin:0 auto;padding:60px 40px}
+.sec-header{background:linear-gradient(135deg,#0B0F19,#111827);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;padding:20px 28px;margin:50px 0 28px;display:flex;align-items:center;gap:16px}
+.sec-icon{font-size:32px}
+.sec-num{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em}
+.sec-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
+.sec-sub{font-size:13px;color:#64748b;margin-top:2px}
+.card{border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-head{background:#f8fafc;padding:16px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px}
+.card-icon{font-size:22px}
+.card-title{font-size:15px;font-weight:700;color:#0f172a}
+.card-langs{font-size:12px;color:#64748b;margin-top:2px}
+.trilingual{display:grid;grid-template-columns:1fr 1fr 1fr}
+.lang-block{padding:20px 24px;border-right:1px solid #f1f5f9}
+.lang-block:last-child{border-right:none}
+.lang-flag{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px}
+.lang-block p{font-size:13px;color:#475569;margin-bottom:10px;line-height:1.7}
+.lang-block ol,.lang-block ul{padding-left:18px}
+.lang-block li{font-size:13px;color:#334155;margin-bottom:5px;line-height:1.6}
+.fin-table{width:100%;border-collapse:collapse;font-size:12px}
+.fin-table th{background:#0B0F19;color:#94a3b8;padding:10px 14px;text-align:left;font-weight:600}
+.fin-table td{padding:10px 14px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.fin-table tr:last-child td{border-bottom:none}
+.fin-table tr:hover td{background:#f8fafc}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px}
+.kpi-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center}
+.kpi-val{font-size:22px;font-weight:800;color:#0f172a;margin-bottom:4px}
+.kpi-lbl{font-size:11px;color:#64748b;font-weight:500}
+.checklist{padding:20px 24px}
+.check-item{display:flex;gap:10px;margin-bottom:12px;padding:10px 14px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;align-items:flex-start}
+.check-box{width:20px;height:20px;border-radius:5px;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;font-weight:800;flex-shrink:0;margin-top:1px}
+.check-text{font-size:13px;color:#334155;line-height:1.5}
+.check-text strong{color:#0f172a}
+.timeline-wrap{padding:24px}
+.t-item{display:flex;gap:16px;margin-bottom:20px}
+.t-dot{width:12px;height:12px;border-radius:50%;background:var(--cyan);margin-top:4px;flex-shrink:0}
+.t-dot.green{background:#22c55e}
+.t-dot.amber{background:#f59e0b}
+.t-dot.red{background:#ef4444}
+.t-content{flex:1}
+.t-title{font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.t-text{font-size:13px;color:#475569;line-height:1.6}
+.t-time{font-size:11px;color:#94a3b8;margin-top:4px}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.green{background:rgba(16,185,129,.12);color:#059669}
+.badge.amber{background:rgba(245,158,11,.12);color:#d97706}
+.badge.red{background:rgba(239,68,68,.12);color:#dc2626}
+.badge.cyan{background:rgba(6,182,212,.12);color:#0891b2}
+.doc-footer{background:#0B0F19;color:#94a3b8;text-align:center;padding:40px;margin-top:60px}
+.footer-logo{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-logo span{color:var(--cyan)}
+@media(max-width:768px){.trilingual{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr 1fr}.content{padding:40px 20px}}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-ia">IA</div>
+    <div><div class="nav-brand">INNOVA<span>AFRIC</span></div><div class="nav-title">Manual Operativo Financiero</div></div>
+  </div>
+  <button class="nav-print" onclick="window.print()">⬇️ Descargar PDF</button>
+</nav>
+
+<div class="cover">
+  <div class="cover-ia">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-badge">Uso Interno · Internal Use · Usage Interne</div>
+  <div class="cover-title">Manual Operativo Financiero</div>
+  <div class="cover-subtitle">Cierre Contable · Conciliación · Gestión de Float · Informes Fiscales<br>Month-End Close · Reconciliation · Float Management · Tax Reports</div>
+  <div class="cover-langs">
+    <div class="cover-lang"><span class="flag">🇪🇸</span><span class="name">Español</span></div>
+    <div class="cover-lang"><span class="flag">🇬🇧</span><span class="name">English</span></div>
+    <div class="cover-lang"><span class="flag">🇫🇷</span><span class="name">Français</span></div>
+  </div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="label">Documento</div><div class="value">11 — Finanzas</div></div>
+    <div class="cover-meta-item"><div class="label">Clasificación</div><div class="value">Confidencial</div></div>
+    <div class="cover-meta-item"><div class="label">Audiencia</div><div class="value">CFO · Contabilidad</div></div>
+    <div class="cover-meta-item"><div class="label">Revisión</div><div class="value">Mensual</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- KPIs FINANCIEROS -->
+<div class="sec-header">
+  <div class="sec-icon">📊</div>
+  <div>
+    <div class="sec-num">Sección 1</div>
+    <div class="sec-title">KPIs Financieros Clave · Key Financial KPIs · KPIs Financiers Clés</div>
+    <div class="sec-sub">Métricas que el equipo financiero debe monitorear diariamente</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">📈</div><div><div class="card-title">Dashboard financiero diario</div><div class="card-langs">🇬🇧 Daily financial dashboard · 🇫🇷 Tableau de bord financier quotidien</div></div></div>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-val" style="color:#06b6d4">GMV</div><div class="kpi-lbl">Volumen total gestionado. Target: crecimiento +10% mensual</div></div>
+    <div class="kpi-card"><div class="kpi-val" style="color:#22c55e">Margen neto</div><div class="kpi-lbl">Ingresos por comisiones menos costes operativos. Target: &gt;35%</div></div>
+    <div class="kpi-card"><div class="kpi-val" style="color:#f59e0b">Float</div><div class="kpi-lbl">Saldo disponible en cuentas de corresponsal. Nunca &lt;€50k</div></div>
+    <div class="kpi-card"><div class="kpi-val" style="color:#8b5cf6">Chargeback</div><div class="kpi-lbl">Tasa de contracargos Stripe. Mantener &lt;0.5% para no perder cuenta</div></div>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>El equipo financiero revisa estos KPIs cada mañana desde el dashboard de Analytics Avanzado. Cualquier desviación significativa (&gt;15%) del target requiere análisis inmediato y reporte al CFO.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>The finance team reviews these KPIs every morning from the Advanced Analytics dashboard. Any significant deviation (&gt;15%) from target requires immediate analysis and report to the CFO.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>L'équipe financière examine ces KPIs chaque matin depuis le tableau de bord Analytique Avancée. Toute déviation significative (&gt;15%) par rapport à l'objectif nécessite une analyse immédiate et un rapport au CFO.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CIERRE MENSUAL -->
+<div class="sec-header">
+  <div class="sec-icon">📅</div>
+  <div>
+    <div class="sec-num">Sección 2</div>
+    <div class="sec-title">Cierre Contable Mensual · Monthly Close · Clôture Comptable Mensuelle</div>
+    <div class="sec-sub">Checklist del proceso de cierre — se ejecuta los días 1-5 de cada mes</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">✅</div><div><div class="card-title">Checklist de cierre mensual</div><div class="card-langs">🇬🇧 Monthly close checklist · 🇫🇷 Liste de contrôle de clôture mensuelle</div></div></div>
+  <div class="timeline-wrap">
+    <div class="t-item">
+      <div class="t-dot"></div>
+      <div class="t-content">
+        <div class="t-title">Día 1 — Congelación de datos del mes anterior</div>
+        <div class="t-text">Exportar todas las transacciones del mes desde el panel (Módulo 68 Analytics Avanzado). Verificar que no hay transacciones en estado "pendiente" sin resolver. Congelar los registros contables del período. // Day 1: Export all month transactions. Verify no unresolved pending transactions. Freeze accounting records. // Jour 1 : Exporter toutes les transactions du mois. Vérifier qu'il n'y a pas de transactions en attente non résolues.</div>
+        <div class="t-time">📁 Archivo: cierre_YYYY_MM.xlsx</div>
+      </div>
+    </div>
+    <div class="t-item">
+      <div class="t-dot amber"></div>
+      <div class="t-content">
+        <div class="t-title">Día 2 — Conciliación bancaria</div>
+        <div class="t-text">Comparar los movimientos de las cuentas de corresponsal bancario con los registros en Railway. Identificar discrepancias y resolverlas antes de continuar. La conciliación debe cuadrar al céntimo. // Day 2: Compare correspondent bank account movements with Railway records. Identify and resolve discrepancies. // Jour 2 : Comparer les mouvements des comptes correspondants bancaires avec les registres Railway.</div>
+        <div class="t-time">📊 Herramienta: Módulo 37 — Panel Contable</div>
+      </div>
+    </div>
+    <div class="t-item">
+      <div class="t-dot amber"></div>
+      <div class="t-content">
+        <div class="t-title">Día 3 — Sincronización con QuickBooks</div>
+        <div class="t-text">Forzar sincronización manual desde Módulo 53 (QuickBooks Sync). Revisar que todas las transacciones del mes se hayan categorizado correctamente. Ajustar manualmente las que QuickBooks haya categorizado en "Sin categoría". // Day 3: Force manual sync from QuickBooks module. Review correct categorization of all transactions. // Jour 3 : Forcer la synchronisation manuelle depuis le module QuickBooks.</div>
+        <div class="t-time">⏱️ Duración estimada: 2-3 horas</div>
+      </div>
+    </div>
+    <div class="t-item">
+      <div class="t-dot amber"></div>
+      <div class="t-content">
+        <div class="t-title">Día 4 — Cálculo de comisiones y margen</div>
+        <div class="t-text">Calcular el total de comisiones cobradas por plataforma (XenderMoney, XenderShop, XenderDelivery). Restar los costes de proveedores (MTN, Orange, Stripe, KYC APIs, SMS). Calcular el margen neto del mes. // Day 4: Calculate total fees collected by platform. Subtract provider costs. Calculate net margin. // Jour 4 : Calculer le total des commissions perçues par plateforme.</div>
+        <div class="t-time">📊 Módulo: 68 Analytics Avanzado → Exportar PDF</div>
+      </div>
+    </div>
+    <div class="t-item">
+      <div class="t-dot green"></div>
+      <div class="t-content">
+        <div class="t-title">Día 5 — Informe ejecutivo y distribución</div>
+        <div class="t-text">Generar el informe financiero mensual con GMV, ingresos, costes, margen y KPIs de crecimiento. Distribuir al CEO, CTO y Board. Archivar en la carpeta de documentación financiera. // Day 5: Generate monthly financial report. Distribute to CEO, CTO and Board. Archive. // Jour 5 : Générer le rapport financier mensuel. Distribuer au PDG, CTO et au Conseil.</div>
+        <div class="t-time">📧 Destinatarios: cfo@, ceo@, board@innovaafric.com</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GESTION FLOAT -->
+<div class="sec-header">
+  <div class="sec-icon">💰</div>
+  <div>
+    <div class="sec-num">Sección 3</div>
+    <div class="sec-title">Gestión del Float · Float Management · Gestion du Float</div>
+    <div class="sec-sub">Control de liquidez en las cuentas de corresponsal bancario</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🏦</div><div><div class="card-title">Estructura del float por región</div><div class="card-langs">🇬🇧 Float structure by region · 🇫🇷 Structure du float par région</div></div></div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="fin-table">
+      <thead>
+        <tr>
+          <th>Región</th>
+          <th>Moneda</th>
+          <th>Cuenta corresponsal</th>
+          <th>Float mínimo</th>
+          <th>Float óptimo</th>
+          <th>Alerta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>🇪🇺 Eurozona</td><td>EUR</td><td>Cuenta SEPA corporativa</td><td>€50,000</td><td>€200,000</td><td><span class="badge red">Si &lt; €50k</span></td></tr>
+        <tr><td>🇨🇲🇸🇳 CEMAC/UEMOA</td><td>XAF</td><td>Cuenta BEAC/BCEAO</td><td>XAF 30,000,000</td><td>XAF 100,000,000</td><td><span class="badge red">Si &lt; XAF 30M</span></td></tr>
+        <tr><td>🇬🇧 Reino Unido</td><td>GBP</td><td>Cuenta FCA</td><td>£30,000</td><td>£100,000</td><td><span class="badge amber">Si &lt; £30k</span></td></tr>
+        <tr><td>🇺🇸 USA</td><td>USD</td><td>Cuenta SWIFT USD</td><td>$50,000</td><td>$150,000</td><td><span class="badge amber">Si &lt; $50k</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>El float es el saldo disponible en las cuentas de corresponsal bancario que permite ejecutar las transferencias de los usuarios sin necesitar aprobación manual para cada operación.</p>
+      <ul>
+        <li>Monitorear diariamente desde el Módulo 37 (Panel Contable)</li>
+        <li>Si el float cae por debajo del mínimo, recargar en &lt;4 horas</li>
+        <li>El sistema genera alerta automática al CFO cuando se alcanza el umbral</li>
+        <li>Las transferencias se ponen en cola automática si no hay float suficiente</li>
+      </ul>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>Float is the available balance in correspondent bank accounts that allows executing user transfers without manual approval for each operation.</p>
+      <ul>
+        <li>Monitor daily from Module 37 (Accounting Panel)</li>
+        <li>If float falls below minimum, top up within &lt;4 hours</li>
+        <li>System generates automatic alert to CFO when threshold is reached</li>
+        <li>Transfers are automatically queued if float is insufficient</li>
+      </ul>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Le float est le solde disponible dans les comptes correspondants bancaires qui permet d'exécuter les transferts des utilisateurs sans approbation manuelle pour chaque opération.</p>
+      <ul>
+        <li>Surveiller quotidiennement depuis le Module 37 (Panneau Comptable)</li>
+        <li>Si le float tombe en dessous du minimum, recharger en &lt;4 heures</li>
+        <li>Le système génère une alerte automatique au CFO quand le seuil est atteint</li>
+        <li>Les transferts sont mis en file d'attente automatiquement si le float est insuffisant</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- COMISIONES -->
+<div class="sec-header">
+  <div class="sec-icon">💳</div>
+  <div>
+    <div class="sec-num">Sección 4</div>
+    <div class="sec-title">Estructura de Comisiones · Fee Structure · Structure des Frais</div>
+    <div class="sec-sub">Modelo de ingresos del ecosistema INNOVAAFRIC</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">📊</div><div><div class="card-title">Tabla de comisiones por plataforma</div><div class="card-langs">🇬🇧 Fee table by platform · 🇫🇷 Tableau des frais par plateforme</div></div></div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="fin-table">
+      <thead><tr><th>Plataforma</th><th>Tipo de operación</th><th>Comisión usuario</th><th>Coste proveedor</th><th>Margen neto</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3"><strong>XenderMoney</strong></td><td>Transferencia Europa→África</td><td>2.5% del monto</td><td>~0.8% (MTN/Orange)</td><td><span class="badge green">~1.7%</span></td></tr>
+        <tr><td>Pago con tarjeta (Stripe)</td><td>1.5% + €0.50</td><td>1.4% + €0.25 (Stripe)</td><td><span class="badge green">~0.1% + €0.25</span></td></tr>
+        <tr><td>Transferencia SWIFT</td><td>€8 fijo</td><td>~€3 (banco)</td><td><span class="badge green">~€5 neto</span></td></tr>
+        <tr><td rowspan="2"><strong>XenderShop</strong></td><td>Comisión vendedor</td><td>5% sobre venta</td><td>—</td><td><span class="badge green">5%</span></td></tr>
+        <tr><td>Pago de factura (Bill)</td><td>1% del importe</td><td>~0.3%</td><td><span class="badge green">~0.7%</span></td></tr>
+        <tr><td rowspan="2"><strong>XenderDelivery</strong></td><td>Comisión por entrega</td><td>10% del pedido</td><td>~5% (rider)</td><td><span class="badge green">~5%</span></td></tr>
+        <tr><td>Tarifa de servicio</td><td>€1.00 fijo</td><td>—</td><td><span class="badge green">€1.00</span></td></tr>
+        <tr><td><strong>XenderBigShop</strong></td><td>Comisión marketplace</td><td>8% sobre venta</td><td>—</td><td><span class="badge green">8%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- INFORMES FISCALES -->
+<div class="sec-header">
+  <div class="sec-icon">🏛️</div>
+  <div>
+    <div class="sec-num">Sección 5</div>
+    <div class="sec-title">Informes Fiscales por País · Tax Reports by Country · Rapports Fiscaux par Pays</div>
+    <div class="sec-sub">Obligaciones fiscales y calendario de presentación por jurisdicción</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">📋</div><div><div class="card-title">Calendario fiscal anual</div><div class="card-langs">🇬🇧 Annual tax calendar · 🇫🇷 Calendrier fiscal annuel</div></div></div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="fin-table">
+      <thead><tr><th>País / Región</th><th>Impuesto</th><th>Periodicidad</th><th>Plazo presentación</th><th>Responsable</th></tr></thead>
+      <tbody>
+        <tr><td>🇪🇸 España</td><td>IVA (21%)</td><td>Trimestral</td><td>20 días tras fin de trimestre</td><td>Gestoría ES</td></tr>
+        <tr><td>🇪🇸 España</td><td>IS (Impuesto Sociedades 25%)</td><td>Anual</td><td>25 días de julio</td><td>Gestoría ES</td></tr>
+        <tr><td>🇫🇷 Francia</td><td>TVA (20%)</td><td>Mensual</td><td>Día 15 del mes siguiente</td><td>Expert-comptable FR</td></tr>
+        <tr><td>🇨🇲 Camerún</td><td>TVA (19.25%)</td><td>Mensual</td><td>Día 15 del mes siguiente</td><td>Comptable CM</td></tr>
+        <tr><td>🇨🇮 Costa de Marfil</td><td>TVA (18%)</td><td>Mensual</td><td>Día 10 del mes siguiente</td><td>Comptable CI</td></tr>
+        <tr><td>🇸🇳 Senegal</td><td>TVA (18%)</td><td>Mensual</td><td>Día 15 del mes siguiente</td><td>Comptable SN</td></tr>
+        <tr><td>🌐 Global</td><td>Retención en fuente (variable)</td><td>Por transacción</td><td>Declaración mensual</td><td>DPO + CFO</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>Cada mes, el equipo financiero exporta los informes de facturación desde el panel de administración (Módulo 37 — Panel Contable) y los envía a los gestores fiscales locales de cada país antes de los plazos indicados.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>Each month, the finance team exports billing reports from the admin panel (Module 37 — Accounting Panel) and sends them to local tax advisors in each country before the indicated deadlines.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Chaque mois, l'équipe financière exporte les rapports de facturation depuis le panneau admin (Module 37 — Panneau Comptable) et les envoie aux conseillers fiscaux locaux de chaque pays avant les délais indiqués.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONCILIACION -->
+<div class="sec-header">
+  <div class="sec-icon">⚖️</div>
+  <div>
+    <div class="sec-num">Sección 6</div>
+    <div class="sec-title">Conciliación de Transacciones · Transaction Reconciliation · Réconciliation des Transactions</div>
+    <div class="sec-sub">Procedimiento diario para detectar y corregir discrepancias</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">🔍</div><div><div class="card-title">Proceso de conciliación diaria</div><div class="card-langs">🇬🇧 Daily reconciliation process · 🇫🇷 Processus de réconciliation quotidienne</div></div></div>
+  <div class="checklist">
+    <div class="check-item"><div class="check-box">1</div><div class="check-text"><strong>Exportar registros de Railway:</strong> Descargar CSV de todas las transacciones del día desde Módulo 68 (Analytics). Incluir estado, monto, comisión y timestamp.</div></div>
+    <div class="check-item"><div class="check-box">2</div><div class="check-text"><strong>Comparar con extractos bancarios:</strong> Descargar el extracto del día de cada cuenta de corresponsal (EUR/XAF/GBP/USD). Cada cargo en Railway debe tener un abono bancario correspondiente.</div></div>
+    <div class="check-item"><div class="check-box">3</div><div class="check-text"><strong>Identificar diferencias:</strong> Transferencias en Railway marcadas como "completed" pero sin abono bancario, o cargos bancarios sin transferencia en el sistema. Estas son las discrepancias a investigar.</div></div>
+    <div class="check-item"><div class="check-box">4</div><div class="check-text"><strong>Resolución:</strong> Contactar al proveedor (MTN/Orange) para confirmación de pago. Si el pago no llegó al destinatario, iniciar proceso de reembolso. Actualizar el estado en el panel (Módulo 15 Soporte).</div></div>
+    <div class="check-item"><div class="check-box">5</div><div class="check-text"><strong>Archivar:</strong> Guardar el informe de conciliación diario firmado por el responsable financiero. Mantener 7 años por obligación legal AML. Cargar en QuickBooks como justificante contable.</div></div>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>La tasa de discrepancia aceptable es &lt;0.01% del volumen diario. Si supera este umbral, se debe escalar al CFO y revisar los procesos de integración con los proveedores de pago.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>The acceptable discrepancy rate is &lt;0.01% of daily volume. If it exceeds this threshold, escalate to the CFO and review payment provider integration processes.</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Le taux d'écart acceptable est &lt;0,01% du volume quotidien. S'il dépasse ce seuil, escaladez au CFO et révisez les processus d'intégration avec les fournisseurs de paiement.</p>
+    </div>
+  </div>
+</div>
+
+<!-- GESTION REEMBOLSOS -->
+<div class="sec-header">
+  <div class="sec-icon">↩️</div>
+  <div>
+    <div class="sec-num">Sección 7</div>
+    <div class="sec-title">Gestión de Reembolsos · Refund Management · Gestion des Remboursements</div>
+    <div class="sec-sub">Política y procedimiento de reembolso para transferencias fallidas</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><div class="card-icon">💸</div><div><div class="card-title">Política de reembolso</div><div class="card-langs">🇬🇧 Refund policy · 🇫🇷 Politique de remboursement</div></div></div>
+  <div style="padding:24px;overflow-x:auto">
+    <table class="fin-table">
+      <thead><tr><th>Motivo</th><th>Plazo reembolso</th><th>¿Se devuelve comisión?</th><th>Proceso</th></tr></thead>
+      <tbody>
+        <tr><td>Transferencia no entregada (error proveedor)</td><td><span class="badge green">24 horas</span></td><td>✅ Sí, completa</td><td>Automático + notificación</td></tr>
+        <tr><td>Número de teléfono incorrecto</td><td><span class="badge amber">3-5 días</span></td><td>⚠️ Parcial (sin comisión proceso)</td><td>Soporte manual</td></tr>
+        <tr><td>Cancelación antes de procesamiento</td><td><span class="badge green">1 hora</span></td><td>✅ Sí, completa</td><td>Automático</td></tr>
+        <tr><td>Fraude confirmado (iniciado por usuario)</td><td><span class="badge amber">5-10 días</span></td><td>❌ No (investigación activa)</td><td>Compliance + Legal</td></tr>
+        <tr><td>Chargeback de tarjeta</td><td><span class="badge red">7-21 días (Stripe)</span></td><td>❌ No (cargo de disputa)</td><td>Contestar evidencia en Stripe</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+<div class="doc-footer">
+  <div class="footer-logo">INNOVA<span>AFRIC</span></div>
+  <p style="margin:8px 0 4px;font-size:14px;color:#9ca3af">Manual Operativo Financiero · Financial Operations Manual · Manuel Opérationnel Financier</p>
+  <p style="color:#6b7280;font-size:12px">© 2025 INNOVAAFRIC · Documento 11 · CONFIDENCIAL — Solo para uso del equipo financiero</p>
+</div>
+</body>
+</html>

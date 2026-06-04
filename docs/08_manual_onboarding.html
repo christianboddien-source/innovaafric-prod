@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual de Onboarding — INNOVAAFRIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;line-height:1.6}
+:root{--cyan:#06b6d4;--navy:#0B0F19;--green:#10b981;--amber:#f59e0b;--red:#ef4444}
+
+.top-nav{position:sticky;top:0;z-index:100;background:#0B0F19;padding:0 32px;height:54px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--cyan)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-ia{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000}
+.nav-brand{font-size:16px;font-weight:700;color:#fff}.nav-brand span{color:var(--cyan)}
+.nav-title{font-size:12px;color:#94a3b8;font-style:italic}
+.nav-print{background:var(--cyan);color:#000;border:none;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}
+.nav-print:hover{opacity:.85}
+
+.cover{min-height:100vh;background:linear-gradient(135deg,#0B0F19 0%,#111827 50%,#0f2a3a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px}
+.cover-ia{width:90px;height:90px;background:var(--cyan);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#000;margin:0 auto 24px;box-shadow:0 0 40px rgba(6,182,212,.4)}
+.cover-logo{font-size:48px;font-weight:800;color:#fff;margin-bottom:8px}.cover-logo span{color:var(--cyan)}
+.cover-badge{display:inline-block;background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.4);color:var(--cyan);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:32px}
+.cover-title{font-size:32px;font-weight:700;color:#fff;margin-bottom:8px}
+.cover-subtitle{font-size:16px;color:#94a3b8;margin-bottom:40px}
+.cover-langs{display:flex;gap:32px;justify-content:center;margin-bottom:40px}
+.cover-lang .flag{font-size:32px;display:block;margin-bottom:4px}
+.cover-lang .name{font-size:12px;color:#64748b}
+.cover-divider{width:60px;height:3px;background:var(--cyan);margin:32px auto}
+.cover-meta{display:flex;gap:32px;justify-content:center}
+.cover-meta-item .label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.1em}
+.cover-meta-item .value{font-size:14px;font-weight:600;color:#94a3b8;margin-top:2px}
+
+.content{max-width:960px;margin:0 auto;padding:60px 40px}
+
+.phase-header{background:linear-gradient(135deg,#0B0F19,#111827);border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;padding:20px 28px;margin:50px 0 28px;display:flex;align-items:center;gap:16px}
+.phase-icon{font-size:32px}
+.phase-num{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em}
+.phase-title{font-size:20px;font-weight:700;color:#fff;margin-top:2px}
+.phase-sub{font-size:13px;color:#64748b;margin-top:2px}
+
+.step-card{border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:32px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.step-head{background:#f8fafc;padding:18px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #e2e8f0}
+.step-num{width:36px;height:36px;background:var(--cyan);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0}
+.step-title-es{font-size:16px;font-weight:700;color:#0f172a}
+.step-title-langs{font-size:12px;color:#64748b;margin-top:2px}
+.step-title-langs strong{color:#0f172a}
+
+.mockup-wrap{padding:20px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0}
+.mockup-label{font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.mockup{background:#0B0F19;border-radius:12px;padding:16px;font-size:13px;color:#e2e8f0;overflow:hidden}
+.mk-phone{width:240px;margin:0 auto;background:#111827;border-radius:24px;padding:12px;border:2px solid #1e293b;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.mk-phone-bar{height:6px;width:60px;background:#374151;border-radius:3px;margin:0 auto 10px}
+.mk-phone-screen{background:#0B0F19;border-radius:16px;padding:12px;min-height:200px}
+.mk-app-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.mk-app-logo{font-size:14px;font-weight:800;color:#fff}.mk-app-logo span{color:var(--cyan)}
+.mk-input-field{background:#1e293b;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:8px}
+.mk-input-field .label{font-size:10px;color:#64748b;margin-bottom:2px}
+.mk-input-field .val{font-size:12px;color:#e2e8f0}
+.mk-btn-full{background:var(--cyan);color:#000;font-weight:700;border-radius:8px;padding:10px;text-align:center;font-size:13px;margin-top:8px;cursor:pointer}
+.mk-progress{height:4px;background:#1e293b;border-radius:2px;margin-bottom:12px}
+.mk-progress-fill{height:100%;background:var(--cyan);border-radius:2px}
+.mk-step-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.mk-dot{width:8px;height:8px;border-radius:50%;background:#374151}
+.mk-dot.active{background:var(--cyan);width:20px;border-radius:4px}
+.mk-dot.done{background:#22c55e}
+.mk-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600}
+.mk-badge.green{background:rgba(34,197,94,.15);color:#22c55e}
+.mk-badge.amber{background:rgba(245,158,11,.15);color:#f59e0b}
+.mk-badge.red{background:rgba(239,68,68,.15);color:#ef4444}
+.mk-badge.cyan{background:rgba(6,182,212,.15);color:#06b6d4}
+
+.trilingual{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.lang-block{padding:20px 24px;border-right:1px solid #f1f5f9}
+.lang-block:last-child{border-right:none}
+.lang-flag{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.lang-block p{font-size:13px;color:#475569;margin-bottom:10px;line-height:1.7}
+.steps{padding-left:18px;margin-top:8px}
+.steps li{font-size:13px;color:#334155;margin-bottom:6px;padding-left:4px;line-height:1.6}
+.steps li strong{color:#0f172a}
+
+.tip-box{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(6,182,212,.04));border:1px solid rgba(6,182,212,.25);border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:12px;align-items:flex-start}
+.tip-icon{font-size:20px;flex-shrink:0}
+.tip-text{font-size:13px;color:#334155;line-height:1.6}
+.tip-text strong{color:var(--cyan)}
+
+.warn-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:12px;padding:16px 20px;margin:20px 0;display:flex;gap:12px}
+.warn-text{font-size:13px;color:#334155}
+
+.flow-wrap{padding:20px 24px;border-bottom:1px solid #e2e8f0}
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.flow-step{text-align:center;min-width:90px}
+.flow-step .circle{width:52px;height:52px;border-radius:50%;background:var(--cyan);color:#000;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px}
+.flow-step .circle.done{background:#22c55e}
+.flow-step .circle.pending{background:#374151;color:#9ca3af}
+.flow-step .txt{font-size:11px;color:#64748b;font-weight:500}
+.flow-arrow{font-size:20px;color:#94a3b8;margin:0 4px;margin-bottom:20px}
+
+.doc-footer{background:#0B0F19;color:#94a3b8;text-align:center;padding:40px;margin-top:60px}
+.footer-logo{font-size:24px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-logo span{color:var(--cyan)}
+
+@media print{
+  .top-nav,.nav-print{display:none}
+  .step-card{break-inside:avoid}
+  .phase-header{break-before:auto}
+}
+@media(max-width:768px){
+  .trilingual{grid-template-columns:1fr}
+  .lang-block{border-right:none;border-bottom:1px solid #f1f5f9}
+  .content{padding:40px 20px}
+  .flow{gap:8px}
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-logo">
+    <div class="nav-ia">IA</div>
+    <div>
+      <div class="nav-brand">INNOVA<span>AFRIC</span></div>
+      <div class="nav-title">Manual de Onboarding</div>
+    </div>
+  </div>
+  <button class="nav-print" onclick="window.print()">⬇️ Descargar PDF</button>
+</nav>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-ia">IA</div>
+  <div class="cover-logo">INNOVA<span>AFRIC</span></div>
+  <div class="cover-badge">Documento Oficial · Official Document · Document Officiel</div>
+  <div class="cover-title">Manual de Onboarding</div>
+  <div class="cover-subtitle">Registro · KYC · Primera Transferencia<br>Registration · First Transfer · Inscription · Premier Virement</div>
+  <div class="cover-langs">
+    <div class="cover-lang"><span class="flag">🇪🇸</span><span class="name">Español</span></div>
+    <div class="cover-lang"><span class="flag">🇬🇧</span><span class="name">English</span></div>
+    <div class="cover-lang"><span class="flag">🇫🇷</span><span class="name">Français</span></div>
+  </div>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><div class="label">Documento</div><div class="value">08 — Onboarding</div></div>
+    <div class="cover-meta-item"><div class="label">Versión</div><div class="value">1.0 — 2025</div></div>
+    <div class="cover-meta-item"><div class="label">Plataformas</div><div class="value">4 Apps Xender</div></div>
+    <div class="cover-meta-item"><div class="label">Pasos</div><div class="value">5 Fases</div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- INTRO FLOW -->
+<div class="phase-header">
+  <div class="phase-icon">🗺️</div>
+  <div>
+    <div class="phase-num">Introducción</div>
+    <div class="phase-title">Flujo de Onboarding INNOVAAFRIC · Onboarding Flow · Parcours d'Intégration</div>
+    <div class="phase-sub">5 fases desde el registro hasta la primera operación exitosa</div>
+  </div>
+</div>
+
+<div class="flow-wrap" style="background:#f8fafc;border-radius:16px;border:1px solid #e2e8f0;margin-bottom:40px">
+  <div class="mockup-label" style="padding:20px 24px 0">🗺️ Mapa del proceso completo</div>
+  <div class="flow" style="padding:20px 24px">
+    <div class="flow-step"><div class="circle">1</div><div class="txt">Descargar<br>la App</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="circle">2</div><div class="txt">Crear<br>cuenta</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="circle">3</div><div class="txt">Verificar<br>teléfono</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="circle">4</div><div class="txt">KYC<br>Nivel 1</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="circle done">5</div><div class="txt">Primera<br>operación ✓</div></div>
+  </div>
+  <div class="trilingual" style="border-top:1px solid #e2e8f0">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>El proceso de onboarding de INNOVAAFRIC está diseñado para ser simple y completarse en menos de <strong>5 minutos</strong>. Los usuarios pueden comenzar a enviar dinero en el mismo día del registro con la verificación básica (Nivel 1).</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>INNOVAAFRIC's onboarding process is designed to be simple and completed in less than <strong>5 minutes</strong>. Users can start sending money on the same day of registration with basic verification (Level 1).</p>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Le processus d'intégration INNOVAAFRIC est conçu pour être simple et se terminer en moins de <strong>5 minutes</strong>. Les utilisateurs peuvent commencer à envoyer de l'argent le jour même de l'inscription avec la vérification de base (Niveau 1).</p>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="phase-header">
+  <div class="phase-icon">📲</div>
+  <div>
+    <div class="phase-num">Fase 1</div>
+    <div class="phase-title">Acceso a la Plataforma · Accessing the Platform · Accès à la Plateforme</div>
+    <div class="phase-sub">Cómo abrir XenderMoney desde cualquier dispositivo</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">1</div>
+    <div>
+      <div class="step-title-es">Abrir XenderMoney en el navegador</div>
+      <div class="step-title-langs">🇬🇧 <strong>Open XenderMoney in the browser</strong> · 🇫🇷 <strong>Ouvrir XenderMoney dans le navigateur</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Pantalla de bienvenida XenderMoney</div>
+    <div class="mockup" style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div class="mk-phone">
+        <div class="mk-phone-bar"></div>
+        <div class="mk-phone-screen">
+          <div class="mk-app-header"><div class="mk-app-logo">Xender<span>Money</span></div><div style="font-size:10px;color:#64748b">🌐 xendermoney</div></div>
+          <div style="text-align:center;padding:20px 0">
+            <div style="font-size:32px;margin-bottom:8px">💸</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Envía dinero<br>a África</div>
+            <div style="font-size:11px;color:#64748b;margin-bottom:16px">Rápido, seguro y sin sorpresas</div>
+          </div>
+          <div class="mk-btn-full">Crear cuenta gratis</div>
+          <div style="text-align:center;margin-top:10px;font-size:11px;color:#64748b">¿Ya tienes cuenta? <span style="color:var(--cyan)">Iniciar sesión</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>XenderMoney es una aplicación web progresiva (PWA) que funciona directamente en el navegador — no requiere descarga desde ninguna tienda de apps.</p>
+      <ol class="steps">
+        <li>Abre tu navegador (Chrome, Safari, Firefox)</li>
+        <li>Escribe la dirección de XenderMoney en la barra de URL</li>
+        <li>La página carga al instante — es compatible con móvil y ordenador</li>
+        <li>Puedes agregarla a la pantalla de inicio de tu móvil para acceso rápido</li>
+        <li>Haz clic en <strong>Crear cuenta gratis</strong> para comenzar</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>XenderMoney is a Progressive Web App (PWA) that works directly in the browser — no app store download required.</p>
+      <ol class="steps">
+        <li>Open your browser (Chrome, Safari, Firefox)</li>
+        <li>Type the XenderMoney address in the URL bar</li>
+        <li>The page loads instantly — compatible with mobile and desktop</li>
+        <li>You can add it to your phone's home screen for quick access</li>
+        <li>Click <strong>Create free account</strong> to get started</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>XenderMoney est une application web progressive (PWA) qui fonctionne directement dans le navigateur — aucun téléchargement depuis une boutique d'applications n'est requis.</p>
+      <ol class="steps">
+        <li>Ouvrez votre navigateur (Chrome, Safari, Firefox)</li>
+        <li>Tapez l'adresse XenderMoney dans la barre d'URL</li>
+        <li>La page se charge instantanément — compatible mobile et ordinateur</li>
+        <li>Vous pouvez l'ajouter à l'écran d'accueil de votre téléphone</li>
+        <li>Cliquez sur <strong>Créer un compte gratuit</strong> pour commencer</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase-header">
+  <div class="phase-icon">✍️</div>
+  <div>
+    <div class="phase-num">Fase 2</div>
+    <div class="phase-title">Crear Cuenta · Create Account · Créer un Compte</div>
+    <div class="phase-sub">Registro con email y número de teléfono</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">2</div>
+    <div>
+      <div class="step-title-es">Formulario de registro</div>
+      <div class="step-title-langs">🇬🇧 <strong>Registration form</strong> · 🇫🇷 <strong>Formulaire d'inscription</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Formulario de registro</div>
+    <div class="mockup" style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div class="mk-phone">
+        <div class="mk-phone-bar"></div>
+        <div class="mk-phone-screen">
+          <div class="mk-app-header"><div style="font-size:12px;font-weight:700;color:#fff">Crear cuenta</div></div>
+          <div class="mk-step-indicator">
+            <div class="mk-dot active"></div>
+            <div class="mk-dot"></div>
+            <div class="mk-dot"></div>
+            <div class="mk-dot"></div>
+          </div>
+          <div class="mk-input-field"><div><div class="label">Nombre completo</div><div class="val">Jean Dupont</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Email</div><div class="val">jean@email.com</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Teléfono</div><div class="val">+237 6XX XXX XXX</div></div></div>
+          <div class="mk-input-field"><div><div class="label">País de residencia</div><div class="val">🇨🇲 Camerún</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Contraseña</div><div class="val">••••••••</div></div></div>
+          <div class="mk-btn-full">Continuar →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>El formulario de registro solicita los datos básicos del nuevo usuario. Todos los campos son obligatorios.</p>
+      <ol class="steps">
+        <li>Introduce tu <strong>nombre completo</strong> tal como aparece en tu documento de identidad</li>
+        <li>Escribe tu <strong>dirección de email</strong> — recibirás un enlace de verificación</li>
+        <li>Añade tu <strong>número de teléfono</strong> con prefijo del país (ej: +237 para Camerún)</li>
+        <li>Selecciona tu <strong>país de residencia</strong> del menú desplegable</li>
+        <li>Crea una <strong>contraseña segura</strong> (mínimo 8 caracteres, 1 número, 1 mayúscula)</li>
+        <li>Acepta los Términos de Servicio y haz clic en <strong>Continuar</strong></li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>The registration form requests the new user's basic information. All fields are mandatory.</p>
+      <ol class="steps">
+        <li>Enter your <strong>full name</strong> as it appears on your identity document</li>
+        <li>Type your <strong>email address</strong> — you'll receive a verification link</li>
+        <li>Add your <strong>phone number</strong> with country prefix (e.g., +237 for Cameroon)</li>
+        <li>Select your <strong>country of residence</strong> from the dropdown</li>
+        <li>Create a <strong>strong password</strong> (minimum 8 characters, 1 number, 1 uppercase)</li>
+        <li>Accept the Terms of Service and click <strong>Continue</strong></li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Le formulaire d'inscription demande les informations de base du nouvel utilisateur. Tous les champs sont obligatoires.</p>
+      <ol class="steps">
+        <li>Entrez votre <strong>nom complet</strong> tel qu'il apparaît sur votre document d'identité</li>
+        <li>Tapez votre <strong>adresse email</strong> — vous recevrez un lien de vérification</li>
+        <li>Ajoutez votre <strong>numéro de téléphone</strong> avec le préfixe du pays (ex : +237 pour le Cameroun)</li>
+        <li>Sélectionnez votre <strong>pays de résidence</strong> dans le menu déroulant</li>
+        <li>Créez un <strong>mot de passe fort</strong> (minimum 8 caractères, 1 chiffre, 1 majuscule)</li>
+        <li>Acceptez les Conditions d'utilisation et cliquez sur <strong>Continuer</strong></li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase-header">
+  <div class="phase-icon">📱</div>
+  <div>
+    <div class="phase-num">Fase 3</div>
+    <div class="phase-title">Verificación de Teléfono · Phone Verification · Vérification du Téléphone</div>
+    <div class="phase-sub">Confirmación mediante código OTP de 6 dígitos</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">3</div>
+    <div>
+      <div class="step-title-es">Código OTP por SMS</div>
+      <div class="step-title-langs">🇬🇧 <strong>OTP Code via SMS</strong> · 🇫🇷 <strong>Code OTP par SMS</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Pantalla de verificación OTP</div>
+    <div class="mockup" style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div class="mk-phone">
+        <div class="mk-phone-bar"></div>
+        <div class="mk-phone-screen">
+          <div class="mk-app-header"><div style="font-size:12px;font-weight:700;color:#fff">Verificar teléfono</div></div>
+          <div class="mk-step-indicator">
+            <div class="mk-dot done"></div>
+            <div class="mk-dot active"></div>
+            <div class="mk-dot"></div>
+            <div class="mk-dot"></div>
+          </div>
+          <div style="text-align:center;padding:12px 0">
+            <div style="font-size:28px;margin-bottom:8px">📱</div>
+            <div style="font-size:12px;color:#94a3b8;margin-bottom:16px">Código enviado a<br><strong style="color:#fff">+237 6XX XXX XXX</strong></div>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:center;margin-bottom:16px">
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--cyan)">4</div>
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--cyan)">8</div>
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--cyan)">3</div>
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:2px solid var(--cyan)">_</div>
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff">_</div>
+            <div style="width:36px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff">_</div>
+          </div>
+          <div class="mk-btn-full">Verificar</div>
+          <div style="text-align:center;margin-top:10px;font-size:11px;color:#64748b">¿No recibiste? <span style="color:var(--cyan)">Reenviar (58s)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>Recibirás un SMS con un código de 6 dígitos en el número de teléfono que registraste. Este código expira en 10 minutos.</p>
+      <ol class="steps">
+        <li>Revisa los mensajes SMS en tu teléfono</li>
+        <li>Busca el mensaje de <strong>INNOVAAFRIC</strong> con el código de 6 dígitos</li>
+        <li>Introduce cada dígito en los campos de la pantalla</li>
+        <li>Haz clic en <strong>Verificar</strong></li>
+        <li>Si no recibes el SMS en 60 segundos, pulsa <strong>Reenviar</strong></li>
+        <li>Tras verificar, también recibirás un email de bienvenida</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>You will receive an SMS with a 6-digit code to the phone number you registered. This code expires in 10 minutes.</p>
+      <ol class="steps">
+        <li>Check SMS messages on your phone</li>
+        <li>Look for the <strong>INNOVAAFRIC</strong> message with the 6-digit code</li>
+        <li>Enter each digit in the fields on the screen</li>
+        <li>Click <strong>Verify</strong></li>
+        <li>If you don't receive the SMS within 60 seconds, tap <strong>Resend</strong></li>
+        <li>After verification you'll also receive a welcome email</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Vous recevrez un SMS avec un code à 6 chiffres au numéro de téléphone que vous avez enregistré. Ce code expire dans 10 minutes.</p>
+      <ol class="steps">
+        <li>Vérifiez les messages SMS sur votre téléphone</li>
+        <li>Cherchez le message <strong>INNOVAAFRIC</strong> avec le code à 6 chiffres</li>
+        <li>Entrez chaque chiffre dans les champs de l'écran</li>
+        <li>Cliquez sur <strong>Vérifier</strong></li>
+        <li>Si vous ne recevez pas le SMS dans les 60 secondes, appuyez sur <strong>Renvoyer</strong></li>
+        <li>Après vérification, vous recevrez également un email de bienvenue</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase-header">
+  <div class="phase-icon">🪪</div>
+  <div>
+    <div class="phase-num">Fase 4</div>
+    <div class="phase-title">Verificación KYC · KYC Verification · Vérification KYC</div>
+    <div class="phase-sub">Niveles de verificación y documentos aceptados</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">4</div>
+    <div>
+      <div class="step-title-es">KYC Nivel 1 — Verificación básica</div>
+      <div class="step-title-langs">🇬🇧 <strong>KYC Level 1 — Basic verification</strong> · 🇫🇷 <strong>KYC Niveau 1 — Vérification de base</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Carga de documento KYC</div>
+    <div class="mockup" style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div class="mk-phone">
+        <div class="mk-phone-bar"></div>
+        <div class="mk-phone-screen">
+          <div class="mk-app-header"><div style="font-size:12px;font-weight:700;color:#fff">Verificar identidad</div></div>
+          <div class="mk-step-indicator">
+            <div class="mk-dot done"></div>
+            <div class="mk-dot done"></div>
+            <div class="mk-dot active"></div>
+            <div class="mk-dot"></div>
+          </div>
+          <div style="font-size:12px;color:#94a3b8;text-align:center;margin:8px 0 12px">Sube una foto de tu documento de identidad</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+            <div style="background:#1e293b;border-radius:10px;padding:12px;text-align:center;border:1px dashed #374151">
+              <div style="font-size:20px;margin-bottom:4px">🪪</div>
+              <div style="font-size:10px;color:#64748b">DNI / Cédula</div>
+            </div>
+            <div style="background:#1e293b;border-radius:10px;padding:12px;text-align:center;border:1px dashed #374151">
+              <div style="font-size:20px;margin-bottom:4px">📘</div>
+              <div style="font-size:10px;color:#64748b">Pasaporte</div>
+            </div>
+          </div>
+          <div style="background:#1e293b;border:2px dashed #374151;border-radius:10px;padding:16px;text-align:center;margin-bottom:12px">
+            <div style="font-size:24px;margin-bottom:4px">📷</div>
+            <div style="font-size:11px;color:#64748b">Toca para tomar foto<br>o subir archivo</div>
+          </div>
+          <div class="mk-btn-full">Subir documento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>El KYC Nivel 1 permite enviar hasta <strong>XAF 500,000 / mes</strong>. Se puede completar en minutos subiendo una foto del documento de identidad.</p>
+      <ol class="steps">
+        <li>Selecciona el tipo de documento: DNI, Cédula de identidad o Pasaporte</li>
+        <li>Toma una foto clara del <strong>anverso</strong> del documento (bien iluminado, sin reflejos)</li>
+        <li>Si se pide, toma también una foto del <strong>reverso</strong></li>
+        <li>Sube los archivos — formatos aceptados: JPG, PNG o PDF</li>
+        <li>El equipo de INNOVAAFRIC revisará tu documento en <strong>máximo 24 horas</strong></li>
+        <li>Recibirás una notificación por email y SMS cuando sea aprobado</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>KYC Level 1 allows sending up to <strong>XAF 500,000 / month</strong>. It can be completed in minutes by uploading a photo of the identity document.</p>
+      <ol class="steps">
+        <li>Select the document type: National ID, Identity card or Passport</li>
+        <li>Take a clear photo of the <strong>front</strong> of the document (well-lit, no reflections)</li>
+        <li>If required, also take a photo of the <strong>back</strong></li>
+        <li>Upload the files — accepted formats: JPG, PNG or PDF</li>
+        <li>The INNOVAAFRIC team will review your document within <strong>24 hours maximum</strong></li>
+        <li>You will receive a notification by email and SMS when approved</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Le KYC Niveau 1 permet d'envoyer jusqu'à <strong>XAF 500 000 / mois</strong>. Il peut être complété en quelques minutes en téléchargeant une photo du document d'identité.</p>
+      <ol class="steps">
+        <li>Sélectionnez le type de document : CNI, Carte d'identité ou Passeport</li>
+        <li>Prenez une photo claire du <strong>recto</strong> du document (bien éclairé, sans reflets)</li>
+        <li>Si demandé, prenez aussi une photo du <strong>verso</strong></li>
+        <li>Téléchargez les fichiers — formats acceptés : JPG, PNG ou PDF</li>
+        <li>L'équipe INNOVAAFRIC examinera votre document dans un <strong>délai maximum de 24 heures</strong></li>
+        <li>Vous recevrez une notification par email et SMS lors de l'approbation</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">4B</div>
+    <div>
+      <div class="step-title-es">Niveles de verificación KYC</div>
+      <div class="step-title-langs">🇬🇧 <strong>KYC verification levels</strong> · 🇫🇷 <strong>Niveaux de vérification KYC</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Tabla de niveles KYC y límites</div>
+    <div class="mockup">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead>
+            <tr style="background:#1e293b">
+              <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600">Nivel</th>
+              <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600">Requisitos</th>
+              <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600">Límite diario</th>
+              <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600">Límite mensual</th>
+              <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-weight:600">Tiempo aprobación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid #1e293b">
+              <td style="padding:10px 12px"><em class="mk-badge amber">Sin KYC</em></td>
+              <td style="padding:10px 12px;color:#94a3b8">Solo email + teléfono</td>
+              <td style="padding:10px 12px;color:#94a3b8">XAF 50,000</td>
+              <td style="padding:10px 12px;color:#94a3b8">XAF 100,000</td>
+              <td style="padding:10px 12px"><em class="mk-badge green">Inmediato</em></td>
+            </tr>
+            <tr style="border-bottom:1px solid #1e293b">
+              <td style="padding:10px 12px"><em class="mk-badge cyan">Nivel 1</em></td>
+              <td style="padding:10px 12px;color:#e2e8f0">DNI / Pasaporte</td>
+              <td style="padding:10px 12px;color:#e2e8f0">XAF 500,000</td>
+              <td style="padding:10px 12px;color:#e2e8f0">XAF 5,000,000</td>
+              <td style="padding:10px 12px"><em class="mk-badge green">≤ 24h</em></td>
+            </tr>
+            <tr style="border-bottom:1px solid #1e293b">
+              <td style="padding:10px 12px"><em class="mk-badge green">Nivel 2</em></td>
+              <td style="padding:10px 12px;color:#e2e8f0">Nivel 1 + Prueba domicilio</td>
+              <td style="padding:10px 12px;color:#e2e8f0">XAF 2,000,000</td>
+              <td style="padding:10px 12px;color:#e2e8f0">XAF 20,000,000</td>
+              <td style="padding:10px 12px"><em class="mk-badge amber">≤ 48h</em></td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px"><em class="mk-badge" style="background:rgba(139,92,246,.15);color:#8b5cf6">Nivel 3</em></td>
+              <td style="padding:10px 12px;color:#e2e8f0">Nivel 2 + Videollamada</td>
+              <td style="padding:10px 12px;color:#e2e8f0">Sin límite</td>
+              <td style="padding:10px 12px;color:#e2e8f0">Sin límite</td>
+              <td style="padding:10px 12px"><em class="mk-badge" style="background:rgba(239,68,68,.15);color:#ef4444">≤ 72h</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>INNOVAAFRIC usa un sistema de verificación progresiva. Cuanto mayor sea tu nivel KYC, más alto es tu límite de transacción y más funciones tienes disponibles.</p>
+      <ol class="steps">
+        <li><strong>Sin KYC:</strong> puedes explorar la app y hacer transferencias pequeñas</li>
+        <li><strong>Nivel 1:</strong> sube tu documento de identidad — aprobación en 24h</li>
+        <li><strong>Nivel 2:</strong> añade comprobante de domicilio (factura, contrato alquiler)</li>
+        <li><strong>Nivel 3:</strong> reserva una videollamada de verificación con el equipo de KYC</li>
+        <li>Tu nivel actual siempre es visible en el perfil de la app</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>INNOVAAFRIC uses a progressive verification system. The higher your KYC level, the higher your transaction limit and the more features are available to you.</p>
+      <ol class="steps">
+        <li><strong>No KYC:</strong> explore the app and make small transfers</li>
+        <li><strong>Level 1:</strong> upload your identity document — approval in 24h</li>
+        <li><strong>Level 2:</strong> add proof of address (utility bill, rental contract)</li>
+        <li><strong>Level 3:</strong> book a verification video call with the KYC team</li>
+        <li>Your current level is always visible in the app profile</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>INNOVAAFRIC utilise un système de vérification progressive. Plus votre niveau KYC est élevé, plus votre limite de transaction est haute et plus vous avez de fonctionnalités disponibles.</p>
+      <ol class="steps">
+        <li><strong>Sans KYC :</strong> explorez l'app et effectuez de petits virements</li>
+        <li><strong>Niveau 1 :</strong> téléchargez votre document d'identité — approbation en 24h</li>
+        <li><strong>Niveau 2 :</strong> ajoutez un justificatif de domicile (facture, contrat de location)</li>
+        <li><strong>Niveau 3 :</strong> réservez un appel vidéo de vérification avec l'équipe KYC</li>
+        <li>Votre niveau actuel est toujours visible dans le profil de l'app</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase-header">
+  <div class="phase-icon">💸</div>
+  <div>
+    <div class="phase-num">Fase 5</div>
+    <div class="phase-title">Primera Transferencia · First Transfer · Premier Virement</div>
+    <div class="phase-sub">Cómo enviar dinero por primera vez en 3 pasos</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-head">
+    <div class="step-num">5</div>
+    <div>
+      <div class="step-title-es">Enviar tu primera transferencia</div>
+      <div class="step-title-langs">🇬🇧 <strong>Send your first transfer</strong> · 🇫🇷 <strong>Envoyer votre premier virement</strong></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="mockup-label">📸 Vista — Formulario de envío de dinero</div>
+    <div class="mockup" style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+      <div class="mk-phone">
+        <div class="mk-phone-bar"></div>
+        <div class="mk-phone-screen">
+          <div class="mk-app-header"><div style="font-size:12px;font-weight:700;color:#fff">Enviar dinero</div></div>
+          <div class="mk-input-field"><div><div class="label">Envías (EUR)</div><div class="val" style="font-size:16px;font-weight:700;color:#fff">€ 100.00</div></div></div>
+          <div style="text-align:center;padding:4px 0;font-size:10px;color:#64748b">1 EUR = 655.957 XAF · Comisión: €2.50</div>
+          <div class="mk-input-field"><div><div class="label">Recibirá (XAF)</div><div class="val" style="font-size:16px;font-weight:700;color:#06b6d4">XAF 63,947</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Destinatario</div><div class="val">Jean-Paul Mbeki</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Método de entrega</div><div class="val">📱 MTN Mobile Money</div></div></div>
+          <div class="mk-input-field"><div><div class="label">Teléfono destino</div><div class="val">+237 6XX XXX XXX</div></div></div>
+          <div class="mk-btn-full" style="margin-top:12px">Enviar ahora 🚀</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trilingual">
+    <div class="lang-block">
+      <div class="lang-flag">🇪🇸 Español</div>
+      <p>Con la cuenta verificada puedes hacer tu primera transferencia internacional en pocos pasos. El dinero llega en minutos a través de Mobile Money.</p>
+      <ol class="steps">
+        <li>Desde el menú principal, pulsa <strong>Enviar dinero</strong></li>
+        <li>Introduce el monto en euros (o tu moneda de origen)</li>
+        <li>El simulador muestra al instante cuánto recibirá el destinatario en XAF</li>
+        <li>Introduce el nombre y número de teléfono del destinatario</li>
+        <li>Selecciona el método de entrega: <strong>MTN MoMo</strong>, <strong>Orange Money</strong> o cuenta bancaria</li>
+        <li>Revisa el resumen, confirma con tu contraseña y pulsa <strong>Enviar ahora 🚀</strong></li>
+        <li>Recibirás confirmación por SMS y email — el dinero llega en minutos</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇬🇧 English</div>
+      <p>With a verified account you can make your first international transfer in a few steps. Money arrives in minutes via Mobile Money.</p>
+      <ol class="steps">
+        <li>From the main menu, tap <strong>Send money</strong></li>
+        <li>Enter the amount in euros (or your source currency)</li>
+        <li>The simulator instantly shows how much the recipient will receive in XAF</li>
+        <li>Enter the recipient's name and phone number</li>
+        <li>Select delivery method: <strong>MTN MoMo</strong>, <strong>Orange Money</strong> or bank account</li>
+        <li>Review the summary, confirm with your password and tap <strong>Send now 🚀</strong></li>
+        <li>You'll receive confirmation by SMS and email — money arrives in minutes</li>
+      </ol>
+    </div>
+    <div class="lang-block">
+      <div class="lang-flag">🇫🇷 Français</div>
+      <p>Avec un compte vérifié, vous pouvez effectuer votre premier virement international en quelques étapes. L'argent arrive en quelques minutes via Mobile Money.</p>
+      <ol class="steps">
+        <li>Depuis le menu principal, appuyez sur <strong>Envoyer de l'argent</strong></li>
+        <li>Entrez le montant en euros (ou votre devise d'origine)</li>
+        <li>Le simulateur affiche instantanément combien le destinataire recevra en XAF</li>
+        <li>Entrez le nom et le numéro de téléphone du destinataire</li>
+        <li>Sélectionnez le mode de livraison : <strong>MTN MoMo</strong>, <strong>Orange Money</strong> ou compte bancaire</li>
+        <li>Vérifiez le résumé, confirmez avec votre mot de passe et appuyez sur <strong>Envoyer maintenant 🚀</strong></li>
+        <li>Vous recevrez une confirmation par SMS et email — l'argent arrive en quelques minutes</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS BOX -->
+<div class="tip-box">
+  <div class="tip-icon">💡</div>
+  <div class="tip-text">
+    <strong>Consejo / Tip / Conseil:</strong> Para las primeras transferencias, te recomendamos empezar con un monto pequeño para familiarizarte con el proceso. Una vez verificado el recibo, puedes aumentar el monto con confianza. // We recommend starting with a small amount to get familiar with the process. // Nous recommandons de commencer par un petit montant pour vous familiariser avec le processus.
+  </div>
+</div>
+
+<div class="warn-box">
+  <div class="tip-icon">⚠️</div>
+  <div class="warn-text">
+    <strong>Importante / Important:</strong> Nunca compartas tu contraseña ni códigos OTP con nadie. INNOVAAFRIC nunca te pedirá estos datos por teléfono o email. // Never share your password or OTP codes with anyone. // Ne partagez jamais votre mot de passe ou vos codes OTP avec qui que ce soit.
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="phase-header">
+  <div class="phase-icon">❓</div>
+  <div>
+    <div class="phase-num">Preguntas frecuentes</div>
+    <div class="phase-title">FAQ · FAQ · Questions Fréquentes</div>
+    <div class="phase-sub">Dudas comunes durante el onboarding</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div style="padding:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇪🇸 ¿Qué pasa si mi KYC es rechazado?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">Recibirás un email explicando el motivo. Los motivos más comunes son: imagen borrosa, documento expirado o nombre incompleto. Puedes resubir el documento las veces necesarias.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇬🇧 What if my KYC is rejected?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">You'll receive an email explaining the reason. Most common reasons: blurry image, expired document or incomplete name. You can resubmit the document as many times as needed.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇪🇸 ¿Puedo usar XenderShop sin verificar?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">Sí, puedes explorar el catálogo y añadir al carrito sin KYC. Para comprar necesitas al menos Nivel 1 de verificación.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇫🇷 Puis-je utiliser XenderShop sans vérification ?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">Oui, vous pouvez explorer le catalogue et ajouter au panier sans KYC. Pour acheter, vous avez besoin d'au moins le Niveau 1 de vérification.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇪🇸 ¿El registro es gratuito?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">Sí, crear una cuenta en INNOVAAFRIC es completamente gratuito. Solo se aplican comisiones sobre las transferencias realizadas.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;color:#0f172a;margin-bottom:6px">🇬🇧 Is registration free?</div>
+        <p style="font-size:13px;color:#475569;margin-bottom:0">Yes, creating an INNOVAAFRIC account is completely free. Fees only apply to transfers made.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<div class="doc-footer">
+  <div class="footer-logo">INNOVA<span>AFRIC</span></div>
+  <p style="margin:8px 0 4px;font-size:14px;color:#9ca3af">Manual de Onboarding · Onboarding Manual · Manuel d'Intégration</p>
+  <p style="color:#6b7280;font-size:12px">© 2025 INNOVAAFRIC · Documento 08 · Versión 1.0</p>
+</div>
+
+</body>
+</html>
