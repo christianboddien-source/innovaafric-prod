@@ -63,6 +63,23 @@
     if(btn){btn.textContent='Enviar solicitud →';btn.disabled=false;}
   }
 
+  // ── Shared session ──
+  var XB_SESSION = null;
+  try { XB_SESSION = JSON.parse(localStorage.getItem('xm_session')||'null'); } catch(e){}
+
+  function xbShowSession(){
+    if(!XB_SESSION) return;
+    var nav = document.querySelector('.nav-actions') || document.querySelector('nav');
+    if(!nav) return;
+    var badge = document.createElement('a');
+    badge.href = '../xendermoney/index.html';
+    badge.style.cssText = 'background:rgba(224,146,26,0.15);border:1px solid rgba(224,146,26,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#E0921A;text-decoration:none;margin-left:8px;';
+    badge.textContent = '👤 '+XB_SESSION.name.split(' ')[0];
+    nav.appendChild(badge);
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){ xbShowSession(); });
+
   function xbToast(msg, type){
     var t=document.createElement('div');
     t.textContent=msg;

@@ -94,6 +94,51 @@
     if(btn){ btn.textContent='Registrar mi tienda →'; btn.disabled=false; }
   }
 
+  // ── Shared session (from XenderMoney) ──
+  var XS_SESSION = null;
+  try { XS_SESSION = JSON.parse(localStorage.getItem('xm_session')||'null'); } catch(e){}
+
+  // ── Load products from Supabase ──
+  async function loadProducts(){
+    try {
+      var {data} = await SB.from('products').select('*').limit(20);
+      if(!data||!data.length) return;
+      var grid = document.getElementById('xs-product-grid');
+      if(!grid) return;
+      var html = data.map(function(p){
+        var price = p.price_eur ? '€'+parseFloat(p.price_eur).toFixed(2)
+          : (p.priceEur ? '€'+parseFloat(p.priceEur).toFixed(2) : '—');
+        var name = (p.name||'Producto').replace(/'/g,'&#39;');
+        return '<div class="pcard" style="border:2px solid rgba(255,64,16,0.2);" onclick="xsToast(\'🛒 '+name+' añadido\',\'success\')">'
+          +'<div class="pcard-img" style="font-size:28px;">🛍️</div>'
+          +'<div class="pcard-body">'
+          +'<div class="pcard-price"><span class="sym">€</span>'+price.replace('€','')+'</div>'
+          +'<div class="pcard-title">'+p.name+'</div>'
+          +'<div class="pcard-meta" style="font-size:11px;color:#FF4010;font-weight:700;">'+(p.category||'General')+'</div>'
+          +'<div class="pcard-ship">✈ Envío gratis</div>'
+          +'</div></div>';
+      }).join('');
+      grid.insertAdjacentHTML('afterbegin', html);
+    } catch(e){}
+  }
+
+  // ── Session nav badge ──
+  function xsShowSession(){
+    if(!XS_SESSION) return;
+    var nav = document.querySelector('.nav-actions');
+    if(!nav) return;
+    var badge = document.createElement('a');
+    badge.href = '../xendermoney/index.html';
+    badge.style.cssText = 'background:rgba(255,64,16,0.15);border:1px solid rgba(255,64,16,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF4010;text-decoration:none;';
+    badge.textContent = '👤 '+XS_SESSION.name.split(' ')[0];
+    nav.insertBefore(badge, nav.firstChild);
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){
+    xsShowSession();
+    loadProducts();
+  });
+
   // ── Toast helper ──
   function xsToast(msg, type){
     var t = document.createElement('div');
@@ -674,7 +719,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     <div class="sec-title-red" data-i18n="jfy_h">✨ Solo Para Ti</div>
     <a href="#" class="see-more">Ver más →</a>
   </div>
-  <div class="jfy-grid">
+  <div class="jfy-grid" id="xs-product-grid">
     <div class="pcard"><div class="pcard-img">🖥️<span class="pcard-discount">-33%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>159.00</div><div class="pcard-orig">€237.00</div><div class="pcard-title">Monitor gaming 27" 165Hz IPS 2K QHD, 1ms, FreeSync, HDMI+DP</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">2,800 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
     <div class="pcard"><div class="pcard-img">👟<span class="pcard-discount">-57%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>24.99</div><div class="pcard-orig">€58.00</div><div class="pcard-title">Zapatillas running hombre ligeras transpirables, tallas 39–47, 8 colores</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">18,400 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
     <div class="pcard"><div class="pcard-img">🏋️<span class="pcard-discount">-49%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>39.99</div><div class="pcard-orig">€78.40</div><div class="pcard-title">Set mancuernas ajustables 2–24kg, con soporte, para hogar, unisex</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">7,600 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>

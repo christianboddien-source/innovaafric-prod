@@ -32,7 +32,7 @@
 
     // ── Init on load ──
     window.addEventListener('DOMContentLoaded', async function(){
-      calcXM();
+      loadLiveRates();
       var s = xmGetSession();
       if(s) await xmShowDashboard(s);
     });
@@ -118,6 +118,23 @@
         document.getElementById('xm-dash-bal-eur').textContent = '€0.00';
         document.getElementById('xm-dash-bal-usd').textContent = '$0.00';
       }
+      // Load KYC status
+      try {
+        var {data: kyc} = await SB.from('kyc_requests').select('status').eq('user_id', session.id).order('submitted_at',{ascending:false}).limit(1).maybeSingle();
+        var {data: userData} = await SB.from('users').select('kyc_status').eq('id', session.id).maybeSingle();
+        var kycStatus = (kyc && kyc.status) || (userData && userData.kyc_status) || 'none';
+        var kycBadge = document.getElementById('xm-kyc-status-badge');
+        if(kycBadge){
+          var labels = {verified:'✅ Verificado', approved:'✅ Verificado', pending:'⏳ En revisión', rejected:'❌ Rechazado', none:'⚪ Sin verificar'};
+          var colors = {verified:'#22C55E', approved:'#22C55E', pending:'#F5A623', rejected:'#e53e3e', none:'#8A9AB8'};
+          kycBadge.textContent = labels[kycStatus]||labels.none;
+          kycBadge.style.color = colors[kycStatus]||colors.none;
+          if(kycStatus==='verified'||kycStatus==='approved'){
+            document.getElementById('xm-kyc-btn') && (document.getElementById('xm-kyc-btn').textContent='✅ Ya verificado');
+            document.getElementById('xm-kyc-btn') && (document.getElementById('xm-kyc-btn').disabled=true);
+          }
+        }
+      } catch(e){}
       // Load last 5 transactions
       try {
         var {data: txns} = await SB.from('transactions').select('*').eq('user_id', session.id).order('created_at',{ascending:false}).limit(5);
@@ -140,6 +157,52 @@
       }
       // Scroll to dashboard
       dash.scrollIntoView({behavior:'smooth'});
+    }
+
+    // ── KYC upload ──
+    async function xmSubmitKYC(e){
+      e.preventDefault();
+      var session = xmGetSession();
+      if(!session){ alert('Inicia sesión primero'); return; }
+      var fileInput = document.getElementById('xm-kyc-file');
+      var docType = document.getElementById('xm-kyc-type').value;
+      var btn = document.getElementById('xm-kyc-btn');
+      if(!fileInput.files.length){ xmKycToast('Selecciona un documento','error'); return; }
+      var file = fileInput.files[0];
+      if(file.size > 5*1024*1024){ xmKycToast('El archivo debe pesar menos de 5MB','error'); return; }
+      btn.textContent = 'Enviando…'; btn.disabled = true;
+      try {
+        // Upload file to Supabase Storage (bucket: kyc-docs)
+        var fileName = session.id + '_' + docType + '_' + Date.now() + '.' + file.name.split('.').pop();
+        var {data: uploadData, error: uploadErr} = await SB.storage.from('kyc-docs').upload(fileName, file, {upsert: true});
+        var fileUrl = uploadErr ? null : (SB_URL + '/storage/v1/object/public/kyc-docs/' + fileName);
+        // Insert kyc_request record
+        await SB.from('kyc_requests').insert({
+          user_id: session.id,
+          document_type: docType,
+          document_url: fileUrl || 'pending_upload',
+          status: 'pending',
+          submitted_at: new Date().toISOString()
+        });
+        // Update user kyc_status
+        await SB.from('users').update({ kyc_status: 'pending' }).eq('id', session.id);
+        document.getElementById('xm-kyc-status-badge').textContent = '⏳ En revisión';
+        document.getElementById('xm-kyc-status-badge').style.color = '#F5A623';
+        xmKycToast('✅ Documento enviado — revisión en 24–48h','success');
+        e.target.reset();
+      } catch(err){
+        xmKycToast('❌ Error al enviar: ' + (err.message||'inténtalo de nuevo'),'error');
+      }
+      btn.textContent = 'Enviar documento →'; btn.disabled = false;
+    }
+
+    function xmKycToast(msg, type){
+      var t = document.createElement('div');
+      t.textContent = msg;
+      t.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:99999;max-width:90vw;text-align:center;'
+        + (type==='error' ? 'background:#e53e3e;color:#fff;' : 'background:#22C55E;color:#fff;');
+      document.body.appendChild(t);
+      setTimeout(function(){ t.remove(); }, 4000);
     }
 
     function xmLogout(){
@@ -1760,8 +1823,20 @@ function cookieDecline(){localStorage.setItem('cookie_xm','essential');document.
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 function nlXm(e){e.preventDefault();alert('✅ ¡Suscrito en XenderMoney! Recibirás novedades en '+document.getElementById('nl-xm').value);document.getElementById('nl-xm').value='';}
 function toggleHamXm(){var o=document.getElementById('ham-xm');var b=document.getElementById('ham-btn-xm');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
+var _XM_RATES={'EUR-XAF':655.957,'EUR-XOF':655.957,'EUR-GNF':9800,'EUR-USD':1.08,'USD-XAF':607,'USD-XOF':607,'USD-GNF':8600};
+
+async function loadLiveRates(){
+  try{
+    var {data}=await SB.from('exchange_rates').select('pair,rate');
+    if(data&&data.length){
+      data.forEach(function(r){if(r.pair&&r.rate)_XM_RATES[r.pair]=r.rate;});
+    }
+  }catch(e){}
+  calcXM();
+}
+
 function calcXM(){
-  var rates={'EUR-XAF':655.957,'EUR-XOF':655.957,'EUR-GNF':9800,'EUR-USD':1.08,'USD-XAF':607,'USD-XOF':607,'USD-GNF':8600};
+  var rates=_XM_RATES;
   var amt=parseFloat(document.getElementById('xm-amount').value)||0;
   var pair=document.getElementById('xm-from').value+'-'+document.getElementById('xm-to').value;
   var rate=rates[pair]||rates[document.getElementById('xm-to').value+'-'+document.getElementById('xm-from').value];
@@ -1912,11 +1987,41 @@ function calcXM(){
       </div>
     </div>
     <!-- Transactions -->
-    <div class="dash-card">
+    <div class="dash-card" style="margin-bottom:20px;">
       <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:16px;">Últimas transacciones</div>
       <div id="xm-dash-txns">
         <p style="color:#8A9AB8;font-size:13px;text-align:center;padding:20px 0;">Cargando…</p>
       </div>
+    </div>
+
+    <!-- KYC Upload -->
+    <div class="dash-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-size:14px;font-weight:800;color:#fff;">Verificación KYC</div>
+        <span id="xm-kyc-status-badge" style="font-size:12px;font-weight:700;color:#8A9AB8;">⚪ Sin verificar</span>
+      </div>
+      <p style="font-size:13px;color:#8A9AB8;margin-bottom:20px;">Sube un documento de identidad para desbloquear límites más altos y funciones premium.</p>
+      <form onsubmit="xmSubmitKYC(event)">
+        <div style="margin-bottom:14px;">
+          <label style="font-size:11px;font-weight:700;color:#F5A623;display:block;margin-bottom:8px;letter-spacing:1px;">TIPO DE DOCUMENTO</label>
+          <select id="xm-kyc-type" required style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;outline:none;font-family:inherit;">
+            <option value="passport">Pasaporte</option>
+            <option value="id_card">DNI / Cédula nacional</option>
+            <option value="residence_permit">Permiso de residencia</option>
+            <option value="driving_license">Carnet de conducir</option>
+          </select>
+        </div>
+        <div style="margin-bottom:18px;">
+          <label style="font-size:11px;font-weight:700;color:#F5A623;display:block;margin-bottom:8px;letter-spacing:1px;">ARCHIVO (JPG, PNG o PDF · máx. 5MB)</label>
+          <input id="xm-kyc-file" type="file" accept=".jpg,.jpeg,.png,.pdf" required
+            style="width:100%;padding:11px 14px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:13px;outline:none;font-family:inherit;">
+        </div>
+        <button id="xm-kyc-btn" type="submit"
+          style="width:100%;padding:13px;background:rgba(245,166,35,0.15);border:1.5px solid rgba(245,166,35,0.35);color:#F5A623;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;"
+          onmouseenter="this.style.background='rgba(245,166,35,0.25)'" onmouseleave="this.style.background='rgba(245,166,35,0.15)'">
+          Enviar documento →
+        </button>
+      </form>
     </div>
   </div>
 </section>
