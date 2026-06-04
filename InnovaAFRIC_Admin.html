@@ -2386,6 +2386,84 @@ select.form-input option{background:var(--s2)}
       <div><label class="form-label">🔢 Número</label><input class="form-input" id="m-edit-streetnum" placeholder="Nº"></div>
       <div><label class="form-label">🏢 Piso / Puerta</label><input class="form-input" id="m-edit-floor" placeholder="2ºA (opcional)"></div>
     </div>
+    <!-- ── CUENTA BANCARIA DEL USUARIO ───────────────────── -->
+    <div class="form-section" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between" onclick="var s=document.getElementById('ub-bank-section');s.style.display=s.style.display==='none'?'block':'none';this.querySelector('span.tog').textContent=s.style.display==='none'?'▶':'▼'">
+      🏦 Cuenta bancaria personal <span class="tog" style="font-size:10px;color:var(--cyan)">▼</span>
+    </div>
+    <div id="ub-bank-section">
+      <div style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--cyan)">
+        💡 Esta cuenta se usará para transferencias directas desde wallet del usuario a su banco.
+      </div>
+      <div class="form-group"><label class="form-label">Nombre del banco</label>
+        <input class="form-input" id="m-edit-bank-name" placeholder="Ej: BGFI Bank, Santander, Ecobank...">
+      </div>
+      <div class="form-row">
+        <div><label class="form-label" style="color:var(--cyan)">IBAN / Nº de cuenta *</label>
+          <input class="form-input" id="m-edit-bank-iban" placeholder="ES91 0049 0001 59..." style="font-family:var(--mono);letter-spacing:0.5px">
+        </div>
+        <div><label class="form-label">SWIFT / BIC</label>
+          <input class="form-input" id="m-edit-bank-swift" placeholder="BSCHESMMXXX" style="font-family:var(--mono)">
+        </div>
+      </div>
+      <div class="form-row">
+        <div><label class="form-label">Titular de la cuenta</label>
+          <input class="form-input" id="m-edit-bank-titular" placeholder="Nombre completo titular">
+        </div>
+        <div><label class="form-label">Tipo de cuenta</label>
+          <select class="form-input" id="m-edit-bank-type">
+            <option value="corriente">💳 Cuenta corriente</option>
+            <option value="ahorro">🏦 Cuenta ahorro</option>
+            <option value="empresarial">🏢 Cuenta empresarial</option>
+            <option value="mobile_money">📱 Mobile Money</option>
+            <option value="crypto">₿ Cripto / USDT</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div><label class="form-label">Moneda de la cuenta</label>
+          <select class="form-input" id="m-edit-bank-currency">
+            <option value="EUR">€ EUR — Euro</option>
+            <option value="XAF">XAF — Franco CFA CEMAC</option>
+            <option value="XOF">XOF — Franco CFA UEMOA</option>
+            <option value="USD">$ USD — Dólar</option>
+            <option value="GHS">GHS — Cedi ghanés</option>
+            <option value="NGN">NGN — Naira nigeriana</option>
+            <option value="GBP">£ GBP — Libra esterlina</option>
+            <option value="MAD">MAD — Dírham marroquí</option>
+          </select>
+        </div>
+        <div><label class="form-label">País del banco</label>
+          <select class="form-input" id="m-edit-bank-country">
+            <option value="">— Selecciona —</option>
+            <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+            <option value="CM">🇨🇲 Camerún</option>
+            <option value="GA">🇬🇦 Gabón</option>
+            <option value="CG">🇨🇬 Congo</option>
+            <option value="CD">🇨🇩 R.D. Congo</option>
+            <option value="SN">🇸🇳 Senegal</option>
+            <option value="CI">🇨🇮 Côte d'Ivoire</option>
+            <option value="GH">🇬🇭 Ghana</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="ML">🇲🇱 Mali</option>
+            <option value="BF">🇧🇫 Burkina Faso</option>
+            <option value="TG">🇹🇬 Togo</option>
+            <option value="BJ">🇧🇯 Bénin</option>
+            <option value="MA">🇲🇦 Marruecos</option>
+            <option value="ES">🇪🇸 España</option>
+            <option value="FR">🇫🇷 Francia</option>
+            <option value="DE">🇩🇪 Alemania</option>
+            <option value="IT">🇮🇹 Italia</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="BE">🇧🇪 Bélgica</option>
+            <option value="GB">🇬🇧 Reino Unido</option>
+            <option value="US">🇺🇸 EE.UU.</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Referencia / Concepto por defecto</label>
+        <input class="form-input" id="m-edit-bank-ref" placeholder="Ej: Comisiones InnovaAFRIC, Pago mensual...">
+      </div>
+    </div>
     <div class="form-section">Cuenta</div>
     <div class="form-row">
       <div><label class="form-label">Rol</label>
@@ -6712,6 +6790,16 @@ function openEdit(id,name,role,email,country){
   document.getElementById('m-edit-street').value=u.street||'';
   document.getElementById('m-edit-streetnum').value=u.street_number||'';
   document.getElementById('m-edit-floor').value=u.floor||'';
+  document.getElementById('m-edit-bank-name').value=u.bank_name||'';
+  document.getElementById('m-edit-bank-iban').value=u.bank_iban||'';
+  document.getElementById('m-edit-bank-swift').value=u.bank_swift||'';
+  document.getElementById('m-edit-bank-titular').value=u.bank_titular||u.full_name||name||'';
+  const btEl=document.getElementById('m-edit-bank-type');if(btEl&&u.bank_type)btEl.value=u.bank_type;
+  const bcEl=document.getElementById('m-edit-bank-currency');if(bcEl&&u.bank_currency)bcEl.value=u.bank_currency;
+  const bcoEl=document.getElementById('m-edit-bank-country');if(bcoEl&&u.bank_country)bcoEl.value=u.bank_country;
+  document.getElementById('m-edit-bank-ref').value=u.bank_ref||'';
+  const bankSec=document.getElementById('ub-bank-section');
+  if(bankSec)bankSec.style.display=u.bank_iban?'block':'none';
   openModal('m-edit-user');
 }
 async function saveEdit(){
@@ -6727,7 +6815,15 @@ async function saveEdit(){
     postal_code:document.getElementById('m-edit-postal')?.value||null,
     street:document.getElementById('m-edit-street')?.value||null,
     street_number:document.getElementById('m-edit-streetnum')?.value||null,
-    floor:document.getElementById('m-edit-floor')?.value||null
+    floor:document.getElementById('m-edit-floor')?.value||null,
+    bank_name:document.getElementById('m-edit-bank-name')?.value||null,
+    bank_iban:document.getElementById('m-edit-bank-iban')?.value||null,
+    bank_swift:document.getElementById('m-edit-bank-swift')?.value||null,
+    bank_titular:document.getElementById('m-edit-bank-titular')?.value||null,
+    bank_type:document.getElementById('m-edit-bank-type')?.value||null,
+    bank_currency:document.getElementById('m-edit-bank-currency')?.value||null,
+    bank_country:document.getElementById('m-edit-bank-country')?.value||null,
+    bank_ref:document.getElementById('m-edit-bank-ref')?.value||null
   };
   const{error}=await SB.from('users').update(updates).eq('id',id);
   if(error){toast('Error: '+error.message,'error');return;}
@@ -10613,9 +10709,19 @@ function loadBancoPayUsers(){
 }
 function loadUserBankAccounts(){
   var sel=document.getElementById('banco-pay-account');if(!sel)return;
-  sel.innerHTML='<option value="">— Sin cuentas —</option>'+ALL_BANCOS.map(function(b){
-    return'<option value="'+b.id+'">'+b.name+' · '+b.iban.substring(0,22)+'...</option>';
-  }).join('');
+  var uid=document.getElementById('banco-pay-user').value;
+  if(!uid){sel.innerHTML='<option value="">— Selecciona usuario primero —</option>';return;}
+  var user=ALL_USERS&&ALL_USERS.find(function(u){return u.id===uid;});
+  var opts='';
+  if(user&&user.bank_iban){
+    opts+='<option value="personal" selected>🏦 '+(user.bank_name||'Banco personal')+' · '+(user.bank_iban||'').substring(0,22)+'...</option>';
+    opts+='<option disabled>── Otras cuentas del sistema ──</option>';
+  }else{
+    opts+='<option value="">— Usuario sin cuenta bancaria registrada —</option>';
+    opts+='<option disabled>── Cuentas del sistema ──</option>';
+  }
+  opts+=ALL_BANCOS.map(function(b){return'<option value="'+b.id+'">'+b.emoji+' '+b.name+' · '+b.iban.substring(0,18)+'...</option>';}).join('');
+  sel.innerHTML=opts;
 }
 async function pagarComisionBanco(){
   var uid=document.getElementById('banco-pay-user').value;
@@ -10625,9 +10731,19 @@ async function pagarComisionBanco(){
   var concept=document.getElementById('banco-pay-concept').value.trim();
   if(!uid||!bankId||!amount||!concept){toast('Completa todos los campos','error');return;}
   var user=ALL_USERS&&ALL_USERS.find(function(u){return u.id===uid;});
-  var bank=ALL_BANCOS.find(function(b){return b.id===bankId;});
-  if(!confirm('¿Enviar '+amount.toLocaleString('es')+' '+currency+' a '+bank.name+'?\n'+concept))return;
-  var t={id:'bt_'+Date.now(),userId:uid,userName:user?user.full_name||user.email:'—',bankName:bank.name,iban:bank.iban,amount,currency,concept,date:new Date().toISOString(),status:'completed'};
+  var bank;
+  var bankName,bankIban;
+  if(bankId==='personal'){
+    bankName=(user&&user.bank_name)||'Banco personal';
+    bankIban=(user&&user.bank_iban)||'—';
+    bank={name:bankName,iban:bankIban};
+  }else{
+    bank=ALL_BANCOS.find(function(b){return b.id===bankId;});
+    if(!bank){toast('Cuenta no encontrada','error');return;}
+    bankName=bank.name;bankIban=bank.iban;
+  }
+  if(!confirm('¿Enviar '+amount.toLocaleString('es')+' '+currency+' a '+bankName+'?\n'+concept))return;
+  var t={id:'bt_'+Date.now(),userId:uid,userName:user?user.full_name||user.email:'—',bankName:bankName,iban:bankIban,amount,currency,concept,date:new Date().toISOString(),status:'completed'};
   var transfers=JSON.parse(localStorage.getItem('ia_bank_transfers')||'[]');
   transfers.unshift(t);
   localStorage.setItem('ia_bank_transfers',JSON.stringify(transfers));
