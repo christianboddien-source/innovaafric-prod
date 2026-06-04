@@ -279,9 +279,17 @@
       <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
     </div>
     <button onclick="toggleDarkInnova()" id="dark-ia" title="Modo oscuro" style="background:none;border:1.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:#fff;font-weight:700;margin-right:4px;">🌙</button>
-    <a href="#products" class="btn-nav" data-i18n="nav_cta">Get Started</a>
+    <a href="#registro" class="btn-nav" data-i18n="nav_cta">Get Started</a>
   </div>
+  <button class="ham-btn" id="ham-btn-ia" onclick="toggleHam('ia')">☰</button>
 </nav>
+<div class="ham-overlay" id="ham-ia">
+  <button onclick="toggleHam('ia')" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
+  <a href="#products" onclick="toggleHam('ia')">🛒 Products</a>
+  <a href="#how" onclick="toggleHam('ia')">⚙️ How it works</a>
+  <a href="#continents" onclick="toggleHam('ia')">🌍 Our Presence</a>
+  <a href="#registro" onclick="toggleHam('ia')" style="background:var(--orange);color:#fff;padding:14px 32px;border-radius:12px;">🚀 Get Started</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1727,7 +1735,81 @@ if(!localStorage.getItem('cookie_choice')){document.getElementById('cookie-banne
 function cookieAccept(){localStorage.setItem('cookie_choice','all');document.getElementById('cookie-banner').style.display='none';}
 function cookieDecline(){localStorage.setItem('cookie_choice','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
+function toggleHam(id){var o=document.getElementById('ham-'+id);var b=document.getElementById('ham-btn-'+id);var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
+function showRegTab(tab){['cliente','comercio','rider'].forEach(function(t){document.getElementById('reg-'+t).style.display=t===tab?'block':'none';var btn=document.getElementById('tab-'+t);if(btn){btn.style.background=t===tab?'var(--navy)':'#edf2f7';btn.style.color=t===tab?'#fff':'var(--navy)';}});}
+function submitReg(e,type){e.preventDefault();var msgs={cliente:'✅ ¡Cuenta creada! Revisa tu email para verificar.',comercio:'✅ ¡Negocio registrado! Te contactamos en 24h.',rider:'✅ ¡Solicitud enviada! Te contactamos en 48h.'};alert(msgs[type]||'✅ Registro completado');}
 </script>
+
+<!-- ═══ SECCIÓN REGISTRO ═══ -->
+<section id="registro" style="padding:90px 6%;background:#F8FAFF;">
+  <div style="max-width:720px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--orange);text-transform:uppercase;margin-bottom:12px;">ÚNETE AL ECOSISTEMA</div>
+    <h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:12px;color:var(--navy);">Crea tu cuenta gratis</h2>
+    <p style="color:var(--grey);font-size:16px;margin-bottom:32px;">Elige tu tipo de cuenta y empieza en minutos.</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
+      <button onclick="showRegTab('cliente')" id="tab-cliente" style="padding:10px 24px;border-radius:20px;background:var(--navy);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;">👤 Cliente</button>
+      <button onclick="showRegTab('comercio')" id="tab-comercio" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🏪 Comercio</button>
+      <button onclick="showRegTab('rider')" id="tab-rider" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🚴 Rider</button>
+    </div>
+    <!-- CLIENTE -->
+    <div id="reg-cliente" style="background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <form onsubmit="submitReg(event,'cliente')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre *</label><input type="text" placeholder="Tu nombre" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Apellidos *</label><input type="text" placeholder="Tus apellidos" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>Burkina Faso</option><option>Niger</option><option>Chad</option><option>Gabón</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--navy);"> Acepto los <a href="#" style="color:var(--orange);">Términos de servicio</a> y la <a href="#" style="color:var(--orange);">Política de privacidad</a></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Crear cuenta gratuita →</button></div>
+      </form>
+    </div>
+    <!-- COMERCIO -->
+    <div id="reg-comercio" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <form onsubmit="submitReg(event,'comercio')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre del negocio *</label><input type="text" placeholder="Nombre de tu empresa" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Tipo de negocio *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona tipo</option><option>Restaurante</option><option>Tienda / Boutique</option><option>Farmacia</option><option>Supermercado</option><option>Proveedor mayorista</option><option>Artesano</option><option>Servicio profesional</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email del negocio *</label><input type="email" placeholder="negocio@empresa.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Ciudad *</label><input type="text" placeholder="Tu ciudad" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">NIF / Registro mercantil</label><input type="text" placeholder="Número de registro (opcional)" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--orange);"> Acepto los <a href="#" style="color:var(--orange);">Términos para comercios</a></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Registrar mi negocio →</button></div>
+      </form>
+    </div>
+    <!-- RIDER -->
+    <div id="reg-rider" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <form onsubmit="submitReg(event,'rider')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre completo *</label><input type="text" placeholder="Tu nombre completo" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Ciudad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona ciudad</option><option>Yaundé</option><option>Douala</option><option>Dakar</option><option>Abidján</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>París</option><option>Barcelona</option><option>Otra</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Vehículo *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Tipo de vehículo</option><option>🛵 Moto</option><option>🚲 Bicicleta</option><option>🚗 Coche</option><option>🚐 Furgoneta</option><option>🚚 Camión ligero</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Disponibilidad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Tiempo completo</option><option>Media jornada</option><option>Fines de semana</option><option>Flexible</option></select></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#10B981;"> Tengo carné de conducir vigente y acepto las <a href="#" style="color:var(--orange);">Condiciones de rider</a></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#10B981;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Quiero ser Rider →</button></div>
+      </form>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--grey);">¿Ya tienes cuenta? <a href="#" style="color:var(--orange);font-weight:700;">Inicia sesión →</a></p>
+  </div>
+</section>
+
+<!-- ═══ HAMBURGER CSS ═══ -->
+<style>
+.ham-btn{display:none;background:none;border:1.5px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 13px;font-size:20px;cursor:pointer;color:#fff;margin-left:8px;}
+.ham-overlay{display:none;position:fixed;inset:0;background:rgba(13,43,78,0.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.ham-overlay.open{display:flex;}
+.ham-overlay a{color:#fff;font-size:20px;font-weight:800;text-decoration:none;padding:8px 0;}
+@media(max-width:900px){
+  .ham-btn{display:block;}
+  nav .nav-links{display:none!important;}
+}
+@media(max-width:600px){
+  #reg-cliente form,#reg-comercio form,#reg-rider form{grid-template-columns:1fr!important;}
+}
+</style>
 </body>
 </html>
 

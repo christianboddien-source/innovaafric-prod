@@ -237,10 +237,18 @@
         <button onclick="setLang('en')" id="lb-en">EN</button>
         <button onclick="setLang('fr')" id="lb-fr">FR</button>
       </div>
-      <a href="#riders" class="btn-nav" data-i18n="nav_join">Ser Rider</a>
+      <a href="#registro-rider" class="btn-nav" data-i18n="nav_join">Ser Rider</a>
+      <button class="ham-btn-xd" id="ham-btn-xd" onclick="toggleHamXd()">☰</button>
     </div>
   </div>
 </nav>
+<div class="ham-overlay-xd" id="ham-xd">
+  <button onclick="toggleHamXd()" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
+  <a href="#features" onclick="toggleHamXd()">⚡ Servicios</a>
+  <a href="#zones" onclick="toggleHamXd()">🗺️ Zonas</a>
+  <a href="#rastrear" onclick="toggleHamXd()">📍 Rastrear pedido</a>
+  <a href="#registro-rider" onclick="toggleHamXd()" style="background:#F59E0B;color:#0B1525;padding:14px 32px;border-radius:12px;">🚴 Ser Rider</a>
+</div>
 
 <section class="hero">
   <div class="hero-inner">
@@ -1005,7 +1013,77 @@ function cookieAccept(){localStorage.setItem('cookie_xd','all');document.getElem
 function cookieDecline(){localStorage.setItem('cookie_xd','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 function nlXd(e){e.preventDefault();alert('✅ ¡Suscrito en XenderDelivery! Novedades en '+document.getElementById('nl-xd').value);document.getElementById('nl-xd').value='';}
+function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.getElementById('ham-btn-xd');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
+function trackOrder(){
+  var code=document.getElementById('track-code').value.trim().toUpperCase();
+  var demo={
+    'DLV-2026-CM-004821':{status:'En camino',icon:'🛵',pct:75,steps:['✅ Pedido recibido','✅ Recogido en origen','✅ En tránsito','🔄 En reparto','⏳ Entregado'],rider:'Jean-Baptiste M.',phone:'+237 655 432 XXX',eta:'Hoy 14:30'},
+    'DLV-2026-SN-001234':{status:'Entregado',icon:'✅',pct:100,steps:['✅ Pedido recibido','✅ Recogido en origen','✅ En tránsito','✅ En reparto','✅ Entregado'],rider:'Moussa D.',phone:'+221 77 XXX XX XX',eta:'Entregado hoy 10:15'},
+    'DLV-2026-CI-009876':{status:'Recogido',icon:'📦',pct:40,steps:['✅ Pedido recibido','✅ Recogido en origen','⏳ En tránsito','⏳ En reparto','⏳ Entregado'],rider:'Kofi A.',phone:'+225 07 XXX XX XX',eta:'Hoy entre 16:00–18:00'}
+  };
+  var res=document.getElementById('track-result');
+  if(!code){res.innerHTML='<p style="color:#e53e3e;padding:20px;">Introduce un número de seguimiento.</p>';return;}
+  var d=demo[code];
+  if(!d){res.innerHTML='<div style="padding:24px;text-align:center;"><div style="font-size:40px;margin-bottom:12px;">🔍</div><p style="color:rgba(255,255,255,0.6);">Pedido no encontrado. Prueba: <strong style="color:#F59E0B;cursor:pointer;" onclick="document.getElementById(\'track-code\').value=\'DLV-2026-CM-004821\';trackOrder()">DLV-2026-CM-004821</strong></p></div>';return;}
+  var stepsHtml=d.steps.map(function(s){return '<div style="font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">'+s+'</div>';}).join('');
+  res.innerHTML='<div style="text-align:left;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="font-size:36px;">'+d.icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+d.status+'</div><div style="font-size:13px;color:#F59E0B;">ETA: '+d.eta+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:20px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+d.pct+'%;border-radius:12px;transition:width 1s;"></div></div>'+stepsHtml+'<div style="margin-top:20px;padding:16px;background:rgba(245,158,11,0.1);border-radius:12px;border:1px solid rgba(245,158,11,0.2);"><div style="font-size:12px;color:#F59E0B;font-weight:700;margin-bottom:4px;">🚴 TU RIDER</div><div style="font-size:15px;font-weight:800;color:#fff;">'+d.rider+'</div><div style="font-size:13px;color:rgba(255,255,255,0.5);">'+d.phone+'</div></div></div>';
+}
+function submitRiderReg(e){e.preventDefault();alert('✅ ¡Solicitud de rider enviada! Te contactamos en 48h para la entrevista y formación.');}
 </script>
+
+<!-- ═══ RASTREADOR DE PEDIDO ═══ -->
+<section id="rastrear" style="padding:90px 5%;background:#0B1525;">
+  <div style="max-width:620px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#F59E0B;text-transform:uppercase;margin-bottom:12px;">SEGUIMIENTO EN TIEMPO REAL</div>
+    <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#fff;margin-bottom:8px;">¿Dónde está mi pedido?</h2>
+    <p style="color:rgba(255,255,255,0.5);margin-bottom:32px;">Introduce tu número de seguimiento</p>
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <input id="track-code" type="text" placeholder="Ej: DLV-2026-CM-004821" style="flex:1;min-width:200px;padding:15px 20px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(245,158,11,0.3);border-radius:12px;color:#fff;font-size:15px;outline:none;font-family:inherit;" onkeydown="if(event.key==='Enter')trackOrder()">
+      <button onclick="trackOrder()" style="padding:15px 28px;background:#F59E0B;color:#0B1525;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;">🔍 Rastrear</button>
+    </div>
+    <div id="track-result" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;min-height:80px;text-align:left;">
+      <p style="text-align:center;color:rgba(255,255,255,0.3);padding:10px 0;">Introduce tu número de seguimiento para ver el estado.</p>
+    </div>
+    <p style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);">Prueba con: DLV-2026-CM-004821 · DLV-2026-SN-001234 · DLV-2026-CI-009876</p>
+  </div>
+</section>
+
+<!-- ═══ REGISTRO RIDER ═══ -->
+<section id="registro-rider" style="padding:90px 5%;background:#F8FAFF;">
+  <div style="max-width:680px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#F59E0B;text-transform:uppercase;margin-bottom:12px;">ÚNETE A LA FLOTA</div>
+    <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#0B1525;margin-bottom:8px;">Hazte Rider XenderDelivery</h2>
+    <p style="color:#64748b;margin-bottom:32px;">Gana hasta 200.000 XAF/mes. Horario flexible. Tú decides cuándo trabajas.</p>
+    <div style="background:#fff;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(0,0,0,0.07);text-align:left;">
+      <form onsubmit="submitRiderReg(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Nombre completo *</label><input type="text" placeholder="Tu nombre completo" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Fecha de nacimiento *</label><input type="date" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Teléfono / WhatsApp *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Ciudad de operación *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona ciudad</option><option>Yaundé</option><option>Douala</option><option>Bafoussam</option><option>Dakar</option><option>Abidján</option><option>Bamako</option><option>Conakry</option><option>Ouagadougou</option><option>Madrid</option><option>París</option><option>Barcelona</option><option>Otra</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Tipo de vehículo *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona vehículo</option><option>🛵 Moto (< 125cc)</option><option>🛵 Moto (> 125cc)</option><option>🚲 Bicicleta eléctrica</option><option>🚲 Bicicleta</option><option>🚗 Coche</option><option>🚐 Furgoneta</option><option>🚚 Camión ligero</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Disponibilidad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Tiempo completo (8h+/día)</option><option>Media jornada (4-6h/día)</option><option>Solo fines de semana</option><option>Horario flexible</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#0B1525;display:block;margin-bottom:6px;">Cobro preferido *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>MTN MoMo</option><option>Orange Money</option><option>Wave</option><option>Transferencia bancaria</option></select></div>
+        <div style="grid-column:1/-1;background:#fffbeb;border-radius:12px;padding:14px;font-size:13px;color:#92400e;">⚡ <strong>Ganancias estimadas:</strong> 150.000 – 250.000 XAF/mes trabajando 6h/día · Pagos cada semana</div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#64748b;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#F59E0B;"> Tengo carné de conducir vigente y acepto las <a href="#" style="color:#F59E0B;">Condiciones de rider</a></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#F59E0B;color:#0B1525;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Solicitar unirme a la flota →</button></div>
+      </form>
+      <p style="text-align:center;margin-top:20px;font-size:13px;color:#64748b;">¿Ya eres rider? <a href="#" style="color:#F59E0B;font-weight:700;">Accede a tu app →</a></p>
+    </div>
+  </div>
+</section>
+
+<style>
+.ham-btn-xd{display:none;background:none;border:1.5px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 13px;font-size:20px;cursor:pointer;color:#fff;margin-left:8px;}
+.ham-overlay-xd{display:none;position:fixed;inset:0;background:rgba(11,21,37,0.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.ham-overlay-xd.open{display:flex;}
+.ham-overlay-xd a{color:#fff;font-size:20px;font-weight:800;text-decoration:none;padding:8px 0;}
+@media(max-width:900px){
+  .ham-btn-xd{display:block;}
+  #registro-rider form{grid-template-columns:1fr!important;}
+  #rastrear [style*="display:flex;gap:12px"]{flex-direction:column!important;}
+}
+</style>
 </body>
 </html>
 

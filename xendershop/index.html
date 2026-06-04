@@ -1004,6 +1004,66 @@ if(!localStorage.getItem('cookie_xs')){document.getElementById('cookie-banner').
 function cookieAccept(){localStorage.setItem('cookie_xs','all');document.getElementById('cookie-banner').style.display='none';}
 function cookieDecline(){localStorage.setItem('cookie_xs','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
+function showVendorTab(t){['personal','tienda','docs'].forEach(function(x){document.getElementById('vt-'+x).style.display=x===t?'block':'none';document.getElementById('vtb-'+x).style.background=x===t?'#c2410c':'#fff7ed';document.getElementById('vtb-'+x).style.color=x===t?'#fff':'#c2410c';});}
+function submitVendor(e){e.preventDefault();alert('✅ ¡Tienda registrada! Nuestro equipo revisará tu solicitud en 24h y te enviará las credenciales.');}
 </script>
+
+<!-- ═══ REGISTRO VENDEDOR ═══ -->
+<section id="vender" style="padding:90px 5%;background:#fff7ed;">
+  <div style="max-width:720px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#c2410c;text-transform:uppercase;margin-bottom:12px;">VENDE EN XENDERSHOP</div>
+    <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#1a1a1a;margin-bottom:8px;">Abre tu tienda hoy</h2>
+    <p style="color:#666;font-size:15px;margin-bottom:32px;">Llega a millones de compradores en África, Europa y Asia. Gratis los primeros 3 meses.</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
+      <button id="vtb-personal" onclick="showVendorTab('personal')" style="padding:10px 22px;border-radius:20px;background:#c2410c;color:#fff;border:2px solid #c2410c;font-weight:700;font-size:14px;cursor:pointer;">1. Datos personales</button>
+      <button id="vtb-tienda" onclick="showVendorTab('tienda')" style="padding:10px 22px;border-radius:20px;background:#fff7ed;color:#c2410c;border:2px solid #c2410c;font-weight:700;font-size:14px;cursor:pointer;">2. Tu tienda</button>
+      <button id="vtb-docs" onclick="showVendorTab('docs')" style="padding:10px 22px;border-radius:20px;background:#fff7ed;color:#c2410c;border:2px solid #c2410c;font-weight:700;font-size:14px;cursor:pointer;">3. Finalizar</button>
+    </div>
+    <!-- PASO 1 -->
+    <div id="vt-personal" style="background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <h3 style="font-size:16px;font-weight:800;color:#1a1a1a;margin-bottom:20px;">👤 Datos del vendedor</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Nombre *</label><input type="text" placeholder="Tu nombre" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Apellidos *</label><input type="text" placeholder="Tus apellidos" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País *</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Ciudad *</label><input type="text" placeholder="Tu ciudad" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><button onclick="showVendorTab('tienda')" type="button" style="width:100%;padding:14px;background:#c2410c;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;">Siguiente → Datos de tienda</button></div>
+      </div>
+    </div>
+    <!-- PASO 2 -->
+    <div id="vt-tienda" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <h3 style="font-size:16px;font-weight:800;color:#1a1a1a;margin-bottom:20px;">🏪 Tu tienda en XenderShop</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Nombre de la tienda *</label><input type="text" placeholder="Mi Tienda Africa" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Categoría principal *</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona categoría</option><option>📱 Electrónica</option><option>👗 Moda Mujer</option><option>👔 Moda Hombre</option><option>🏠 Hogar & Jardín</option><option>💄 Belleza & Salud</option><option>⚽ Deportes</option><option>🧸 Bebé & Mamá</option><option>🍎 Alimentación</option><option>🚗 Automóvil</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Número de productos estimados</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>1 - 10</option><option>11 - 50</option><option>51 - 200</option><option>200+</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>MTN MoMo</option><option>Orange Money</option><option>Wave</option><option>Transferencia bancaria</option><option>Todos los anteriores</option></select></div>
+        <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Descripción de la tienda</label><textarea placeholder="Describe tus productos y servicios..." rows="3" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;"></textarea></div>
+        <div style="grid-column:1/-1;"><button onclick="showVendorTab('docs')" type="button" style="width:100%;padding:14px;background:#c2410c;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;">Siguiente → Finalizar registro</button></div>
+      </div>
+    </div>
+    <!-- PASO 3 -->
+    <div id="vt-docs" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
+      <h3 style="font-size:16px;font-weight:800;color:#1a1a1a;margin-bottom:20px;">✅ Finalizar registro</h3>
+      <form onsubmit="submitVendor(event)" style="display:grid;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">NIF / Registro mercantil (opcional)</label><input type="text" placeholder="Número de registro (si tienes)" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="background:#fff7ed;border-radius:12px;padding:16px;font-size:13px;color:#92400e;">✅ <strong>Plan Gratuito 3 meses</strong> — Luego 2.5% de comisión por venta. Sin cuota mensual.</div>
+        <div><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#c2410c;"> Acepto las <a href="#" style="color:#c2410c;">Condiciones para vendedores</a> de XenderShop</label></div>
+        <button type="submit" style="width:100%;padding:15px;background:#c2410c;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Abrir mi tienda gratis →</button>
+      </form>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:#666;">¿Ya eres vendedor? <a href="#" style="color:#c2410c;font-weight:700;">Accede a tu panel →</a></p>
+  </div>
+</section>
+
+<style>
+.ham-btn-xs{display:none;}
+@media(max-width:900px){
+  #vt-personal [style*="grid-template-columns:1fr 1fr"],#vt-tienda [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+}
+</style>
 </body>
 </html>

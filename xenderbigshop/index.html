@@ -238,10 +238,19 @@
         <button onclick="setLang('en')" id="lb-en" class="active">EN</button>
         <button onclick="setLang('fr')" id="lb-fr">FR</button>
       </div>
-      <a href="#plans" class="btn-nav" data-i18n="nav_start">Open My Store</a>
+      <a href="#registro-bs" class="btn-nav" data-i18n="nav_start">Open My Store</a>
+      <button class="ham-btn-xb" id="ham-btn-xb" onclick="toggleHamXb()">☰</button>
     </div>
   </div>
 </nav>
+<div class="ham-overlay-xb" id="ham-xb">
+  <button onclick="toggleHamXb()" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
+  <a href="#business-types" onclick="toggleHamXb()">🏪 Business Types</a>
+  <a href="#how" onclick="toggleHamXb()">⚙️ How it works</a>
+  <a href="#calculadora-bs" onclick="toggleHamXb()">🧮 Calculadora</a>
+  <a href="#plans" onclick="toggleHamXb()">💲 Plans</a>
+  <a href="#registro-bs" onclick="toggleHamXb()" style="background:#E0921A;color:#fff;padding:14px 32px;border-radius:12px;">🚀 Open My Store</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1532,6 +1541,95 @@ function cookieAccept(){localStorage.setItem('cookie_xb','all');document.getElem
 function cookieDecline(){localStorage.setItem('cookie_xb','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 function nlXb(e){e.preventDefault();alert('✅ ¡Suscrito en XenderBigShop! Novedades en '+document.getElementById('nl-xb').value);document.getElementById('nl-xb').value='';}
+function toggleHamXb(){var o=document.getElementById('ham-xb');var b=document.getElementById('ham-btn-xb');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
+function calcLote(){
+  var qty=parseFloat(document.getElementById('lb-qty').value)||0;
+  var price=parseFloat(document.getElementById('lb-price').value)||0;
+  var cur=document.getElementById('lb-cur').value;
+  var ship=parseFloat(document.getElementById('lb-ship').value)||0;
+  var total=qty*price+ship;
+  var perUnit=qty>0?total/qty:0;
+  var sym={'EUR':'€','USD':'$','XAF':'XAF','XOF':'XOF'};
+  document.getElementById('lb-result').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;"><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">TOTAL LOTE</div><div style="font-size:26px;font-weight:900;color:#E0921A;">'+sym[cur]+(total.toFixed(2))+'</div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">PRECIO/UNIDAD</div><div style="font-size:26px;font-weight:900;color:#10B981;">'+sym[cur]+(perUnit.toFixed(3))+'</div></div></div>';
+}
+function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.getElementById('bs-'+x).style.display=x===t?'block':'none';document.getElementById('bst-'+x).style.background=x===t?'#E0921A':'rgba(255,255,255,0.07)';document.getElementById('bst-'+x).style.color=x===t?'#fff':'rgba(255,255,255,0.6)';});}
+function submitBS(e,t){e.preventDefault();var m={comprador:'✅ ¡Cuenta de comprador B2B creada! Acceso al catálogo mayorista en 24h.',proveedor:'✅ ¡Solicitud de proveedor enviada! Nuestro equipo verificará tu negocio en 48h.'};alert(m[t]||'✅ Registro completado');}
 </script>
+
+<!-- ═══ CALCULADORA DE LOTE ═══ -->
+<section id="calculadora-bs" style="padding:90px 5%;background:#0a0e1a;">
+  <div style="max-width:680px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#E0921A;text-transform:uppercase;margin-bottom:12px;">HERRAMIENTA B2B</div>
+    <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#fff;margin-bottom:8px;">Calcula el coste de tu lote</h2>
+    <p style="color:rgba(255,255,255,0.5);margin-bottom:36px;">Precio total, coste por unidad y margen estimado al instante.</p>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px;text-align:left;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+        <div><label style="font-size:11px;font-weight:700;color:#E0921A;letter-spacing:1.5px;display:block;margin-bottom:8px;">CANTIDAD (unidades)</label><input id="lb-qty" type="number" value="100" min="1" oninput="calcLote()" style="width:100%;padding:13px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(224,146,26,0.3);border-radius:10px;font-size:18px;font-weight:800;color:#fff;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:11px;font-weight:700;color:#E0921A;letter-spacing:1.5px;display:block;margin-bottom:8px;">PRECIO UNITARIO</label><input id="lb-price" type="number" value="5" min="0" step="0.01" oninput="calcLote()" style="width:100%;padding:13px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(224,146,26,0.3);border-radius:10px;font-size:18px;font-weight:800;color:#fff;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:11px;font-weight:700;color:#E0921A;letter-spacing:1.5px;display:block;margin-bottom:8px;">MONEDA</label><select id="lb-cur" onchange="calcLote()" style="width:100%;padding:13px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;font-weight:700;outline:none;font-family:inherit;"><option value="EUR">EUR — Euro</option><option value="USD">USD — Dólar</option><option value="XAF">XAF — Franco CFA</option><option value="XOF">XOF — Franco CFA</option></select></div>
+        <div><label style="font-size:11px;font-weight:700;color:#E0921A;letter-spacing:1.5px;display:block;margin-bottom:8px;">COSTE ENVÍO (total)</label><input id="lb-ship" type="number" value="0" min="0" step="0.01" oninput="calcLote()" style="width:100%;padding:13px;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;font-size:18px;font-weight:800;color:#fff;outline:none;font-family:inherit;"></div>
+      </div>
+      <div id="lb-result" style="margin-bottom:20px;"></div>
+      <a href="#registro-bs" style="display:block;text-align:center;padding:14px;background:#E0921A;color:#fff;border-radius:12px;font-size:15px;font-weight:900;text-decoration:none;">Solicitar este lote con escrow →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REGISTRO B2B ═══ -->
+<section id="registro-bs" style="padding:90px 5%;background:#f8f4ee;">
+  <div style="max-width:720px;margin:0 auto;text-align:center;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#E0921A;text-transform:uppercase;margin-bottom:12px;">ÚNETE AL MAYOR PORTAL B2B</div>
+    <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#1a1a1a;margin-bottom:8px;">Crea tu cuenta B2B</h2>
+    <p style="color:#666;margin-bottom:28px;">Elige tu perfil: comprador o proveedor</p>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;">
+      <button id="bst-comprador" onclick="showBSTab('comprador')" style="padding:12px 28px;border-radius:20px;background:#E0921A;color:#fff;border:none;font-weight:800;font-size:15px;cursor:pointer;">🛒 Soy Comprador</button>
+      <button id="bst-proveedor" onclick="showBSTab('proveedor')" style="padding:12px 28px;border-radius:20px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);border:none;font-weight:800;font-size:15px;cursor:pointer;background:#edf2f7;color:#666;">🏭 Soy Proveedor</button>
+    </div>
+    <!-- COMPRADOR -->
+    <div id="bs-comprador" style="background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.07);text-align:left;">
+      <form onsubmit="submitBS(event,'comprador')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Empresa / Negocio *</label><input type="text" placeholder="Nombre de tu empresa" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Sector *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona sector</option><option>Alimentación</option><option>Farmacia</option><option>Textil / Moda</option><option>Electrónica</option><option>Construcción</option><option>Artesanía</option><option>Hogar</option><option>Salud</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="empresa@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select></div>
+        <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#E0921A;"> Acepto las <a href="#" style="color:#E0921A;">Condiciones B2B</a> y la política de escrow</label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#E0921A;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Acceder al catálogo mayorista →</button></div>
+      </form>
+    </div>
+    <!-- PROVEEDOR -->
+    <div id="bs-proveedor" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.07);text-align:left;">
+      <form onsubmit="submitBS(event,'proveedor')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Nombre de la empresa *</label><input type="text" placeholder="Nombre de tu fábrica / empresa" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Tipo de proveedor *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona tipo</option><option>Fabricante</option><option>Distribuidor</option><option>Importador</option><option>Artesano</option><option>Agricultor / Productor</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="empresa@proveedor.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono / WhatsApp *</label><input type="tel" placeholder="+86 / +237 / +33..." required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País de origen *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>China</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>España</option><option>Francia</option><option>Turquía</option><option>India</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">MOQ mínimo</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>50 unidades</option><option>100 unidades</option><option>500 unidades</option><option>1.000+ unidades</option></select></div>
+        <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Descripción de productos</label><textarea placeholder="Describe tu catálogo de productos..." rows="3" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;"></textarea></div>
+        <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#E0921A;"> Acepto ser verificado y las <a href="#" style="color:#E0921A;">Condiciones para proveedores</a></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#1a1a1a;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Publicar mi catálogo →</button></div>
+      </form>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:#666;">¿Ya tienes cuenta? <a href="#" style="color:#E0921A;font-weight:700;">Inicia sesión →</a></p>
+  </div>
+</section>
+
+<style>
+.ham-btn-xb{display:none;background:none;border:1.5px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 13px;font-size:20px;cursor:pointer;color:#fff;margin-left:8px;}
+.ham-overlay-xb{display:none;position:fixed;inset:0;background:rgba(10,14,26,0.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.ham-overlay-xb.open{display:flex;}
+.ham-overlay-xb a{color:#fff;font-size:20px;font-weight:800;text-decoration:none;padding:8px 0;}
+@media(max-width:900px){
+  .ham-btn-xb{display:block;}
+  .nav-links{display:none!important;}
+  #lb-result [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  #bs-comprador form,#bs-proveedor form{grid-template-columns:1fr!important;}
+}
+</style>
+<script>window.addEventListener('DOMContentLoaded',function(){calcLote();});</script>
 </body>
 </html>
