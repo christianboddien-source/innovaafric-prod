@@ -210,6 +210,43 @@ select.form-input option{background:var(--s2)}
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
   .kpi-today-grid{grid-template-columns:repeat(2,1fr)}
   .ficha-grid{grid-template-columns:1fr}
+  /* Tables: horizontal scroll */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Multi-column grids → single column */
+  div[style*="grid-template-columns:1fr 1fr"],
+  div[style*="grid-template-columns:1.5fr 1fr"],
+  div[style*="grid-template-columns:1fr 1fr 1fr"],
+  div[style*="grid-template-columns:2fr 1fr"]{
+    grid-template-columns:1fr!important
+  }
+  /* Cards: full width */
+  .kpi-card{min-width:0}
+  /* Topbar: hide less important items */
+  #last-update{display:none}
+  .search-wrap input{width:120px}
+  /* Modals: full screen on mobile */
+  .modal-box{width:100vw!important;max-width:100vw!important;margin:0!important;border-radius:0!important;min-height:60vh;max-height:92vh;overflow-y:auto}
+  /* Buttons: smaller padding */
+  .topbar-btn{padding:6px 10px;font-size:11px}
+  /* Bulk bars: wrap */
+  #kyc-bulk-bar,#users-bulk-bar{flex-wrap:wrap;gap:6px}
+  /* Detail panel: full width */
+  #_detail-panel{width:100vw!important}
+}
+@media(max-width:540px){
+  .kpi-grid{grid-template-columns:1fr}
+  .kpi-today-grid{grid-template-columns:1fr}
+  .kpi-val{font-size:22px}
+  .topbar-right .lang-btn{display:none}
+  .search-wrap{display:none}
+  .card-head{flex-direction:column;align-items:flex-start;gap:8px}
+  .card-actions{flex-wrap:wrap;gap:6px}
+  .filter-bar{flex-direction:column}
+  .filter-input,.filter-select{width:100%!important}
+  /* KPI monthly strip → 1 col */
+  #dash-monthly-strip{grid-template-columns:1fr!important}
+  /* Audit stats strip → 2 col */
+  #audit-stats-strip{grid-template-columns:repeat(2,1fr)!important}
 }
 
 /* PROVEEDORES */
@@ -455,6 +492,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('roles',this)"><span class="ic">🎭</span><span data-i18n="nav:roles">Roles</span></div>
     <div class="sb-link" onclick="nav('apikeys',this)"><span class="ic">🔑</span><span data-i18n="nav:apikeys">API Keys</span></div>
     <div class="sb-link" onclick="nav('alerts',this)"><span class="ic">🔔</span><span data-i18n="nav:alerts">Alertas</span></div>
+    <div class="sb-link" onclick="nav('analytics-adv',this)"><span class="ic">📈</span><span data-i18n="nav:analytics-adv">Analytics Avanzado</span></div>
     <div class="sb-link" onclick="nav('auditlog',this)"><span class="ic">📋</span><span data-i18n="nav:auditlog">Auditoría</span></div>
     <div class="sb-link" onclick="nav('sync',this)"><span class="ic">🔄</span><span data-i18n="nav:sync">Sincronización</span></div>
     <div class="sb-link" onclick="nav('aichat',this)"><span class="ic">🤖</span><span data-i18n="nav:aichat">Admin AI Chat</span></div>
@@ -582,6 +620,7 @@ select.form-input option{background:var(--s2)}
     </div>
     <div class="topbar-right">
       <span id="last-update" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
+      <span id="role-badge" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.18);color:#818cf8;border:1px solid rgba(99,102,241,.3)"></span>
       <div style="display:flex;gap:4px;align-items:center">
         <button class="lang-btn on" id="admin-lb-es" onclick="setAdminLang('es',this)" title="Español">🇪🇸</button>
         <button class="lang-btn" id="admin-lb-en" onclick="setAdminLang('en',this)" title="English">🇬🇧</button>
@@ -1237,6 +1276,42 @@ select.form-input option{background:var(--s2)}
       </div>
     </div>
 
+    <!-- ANALYTICS AVANZADO -->
+    <div id="pg-analytics-adv" style="display:none">
+      <!-- Stats strip -->
+      <div id="analytics-kpi-strip" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px"></div>
+      <!-- Funnel de conversión -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div><div class="card-title">🎯 Funnel de conversión</div><div class="card-sub">Registro → KYC → Txn → Recurrente</div></div></div>
+          <div style="padding:16px 20px;height:220px"><canvas id="chart-funnel"></canvas></div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div><div class="card-title">🌍 Revenue por país</div><div class="card-sub">Comisiones totales por mercado</div></div></div>
+          <div style="padding:16px 20px;height:220px"><canvas id="chart-rev-country"></canvas></div>
+        </div>
+      </div>
+      <!-- Retención + tipo txn -->
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div><div class="card-title">📅 Cohortes de retención</div><div class="card-sub">% usuarios activos por semana de registro</div></div></div>
+          <div style="padding:16px 20px;height:240px"><canvas id="chart-cohort"></canvas></div>
+        </div>
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><div><div class="card-title">💸 Distribución por tipo</div><div class="card-sub">Volumen por tipo de transacción</div></div></div>
+          <div style="padding:16px 20px;height:240px;display:flex;align-items:center;justify-content:center"><canvas id="chart-txn-type-dist"></canvas></div>
+        </div>
+      </div>
+      <!-- Tabla de cohortes detallada -->
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">📊 Tabla de cohortes</div><div class="card-sub">Semana de registro vs semanas activas</div></div>
+          <button class="topbar-btn btn-ghost" onclick="loadAdvancedAnalytics()">↻ Actualizar</button>
+        </div>
+        <div class="table-wrap"><table><thead id="cohort-table-head"></thead><tbody id="cohort-table-body"></tbody></table></div>
+      </div>
+    </div>
+
     <!-- SETTINGS -->
     <div id="pg-settings" style="display:none">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -1261,6 +1336,23 @@ select.form-input option{background:var(--s2)}
             <button class="btn-block" onclick="confirmMaintenance()" style="background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25)">⚠️ Modo mantenimiento</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ROL ADMIN SELECTOR -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-head"><div class="card-title">🎭 Rol de administrador activo</div><div class="card-sub">Controla qué secciones del panel son visibles</div></div>
+      <div style="padding:20px">
+        <div class="form-group"><label class="form-label">Mi rol actual</label>
+          <select class="form-input" id="admin-role-select" onchange="setAdminRole(this.value)">
+            <option value="superadmin">🔑 Super Admin — acceso total</option>
+            <option value="kyc_agent">🪪 Agente KYC — usuarios y verificación</option>
+            <option value="compliance">⚖️ Compliance — AML, SAR, CTR, casos</option>
+            <option value="support">🎧 Soporte — usuarios, transacciones (lectura)</option>
+            <option value="finance">💰 Finanzas — préstamos, facturas, contable</option>
+          </select>
+        </div>
+        <p id="admin-role-desc" style="font-size:12px;color:var(--muted);margin:0"></p>
       </div>
     </div>
 
@@ -15619,6 +15711,7 @@ function exportSLAPDF(){
     if(page==='reviews')loadReviews();
     if(page==='promo-codes')loadPromoCodes();
     if(page==='pos-analytics')loadPOSAnalytics();
+    if(page==='analytics-adv')loadAdvancedAnalytics();
   };
 })();
 
@@ -20198,6 +20291,259 @@ function refreshSidebarBadges(){
 }
 setTimeout(refreshSidebarBadges,3000);
 setInterval(refreshSidebarBadges,60000);
+
+// ── B17 ADVANCED ANALYTICS ────────────────────────────────────
+async function loadAdvancedAnalytics(){
+  var strip=document.getElementById('analytics-kpi-strip');
+  if(strip)strip.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
+  try{
+    var now=new Date();
+    var m1=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+    var[totalUsersR,kycOkR,txMonthR,revMonthR]=await Promise.all([
+      SB.from('users').select('id',{count:'exact',head:true}),
+      SB.from('kyc_requests').select('id',{count:'exact',head:true}).eq('status','approved'),
+      SB.from('transactions').select('id',{count:'exact',head:true}).gte('created_at',m1),
+      SB.from('transactions').select('amount').gte('created_at',m1).eq('status','completed')
+    ]);
+    var totalU=totalUsersR.count||0;
+    var kycU=kycOkR.count||0;
+    var txM=txMonthR.count||0;
+    var revM=(revMonthR.data||[]).reduce(function(s,r){return s+(parseFloat(r.amount)||0);},0);
+    // KPI strip
+    var kpis=[
+      {ic:'👥',label:'Usuarios totales',val:totalU.toLocaleString()},
+      {ic:'🪪',label:'KYC aprobados',val:kycU.toLocaleString()+' ('+Math.round(kycU/Math.max(totalU,1)*100)+'%)'},
+      {ic:'💳',label:'Txns este mes',val:txM.toLocaleString()},
+      {ic:'💰',label:'Revenue este mes',val:'€'+revM.toFixed(0)}
+    ];
+    if(strip)strip.innerHTML=kpis.map(function(k){
+      return '<div class="kpi-card" style="padding:14px 18px"><div class="kpi-ic">'+k.ic+'</div><div class="kpi-val" style="font-size:22px">'+k.val+'</div><div class="kpi-label">'+k.label+'</div></div>';
+    }).join('');
+    // Funnel chart
+    var funnelR=await SB.from('transactions').select('user_id').limit(5000);
+    var txUsers=new Set((funnelR.data||[]).map(function(t){return t.user_id;}));
+    var userCountsMap={};
+    (funnelR.data||[]).forEach(function(t){userCountsMap[t.user_id]=(userCountsMap[t.user_id]||0)+1;});
+    var repeatUsers=Object.values(userCountsMap).filter(function(c){return c>1;}).length;
+    var funnelCtx=document.getElementById('chart-funnel');
+    if(funnelCtx&&typeof Chart!=='undefined'){
+      if(funnelCtx._chartInst)funnelCtx._chartInst.destroy();
+      funnelCtx._chartInst=new Chart(funnelCtx,{type:'bar',data:{
+        labels:['Registrados','KYC OK','1ª Txn','Recurrentes'],
+        datasets:[{label:'Usuarios',data:[totalU,kycU,txUsers.size,repeatUsers],
+          backgroundColor:['#6366f1','#22c55e','#f59e0b','#06b6d4'],borderRadius:6}]
+      },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+    }
+    // Revenue by country
+    var revCountryR=await SB.from('transactions').select('country,amount').eq('status','completed').limit(3000);
+    var byCountry={};
+    (revCountryR.data||[]).forEach(function(t){
+      var c=t.country||'Otro';
+      byCountry[c]=(byCountry[c]||0)+(parseFloat(t.amount)||0);
+    });
+    var sortedCountries=Object.entries(byCountry).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+    var rcCtx=document.getElementById('chart-rev-country');
+    if(rcCtx&&typeof Chart!=='undefined'){
+      if(rcCtx._chartInst)rcCtx._chartInst.destroy();
+      rcCtx._chartInst=new Chart(rcCtx,{type:'bar',data:{
+        labels:sortedCountries.map(function(x){return x[0];}),
+        datasets:[{label:'Revenue (€)',data:sortedCountries.map(function(x){return x[1].toFixed(2);}),
+          backgroundColor:'#6366f1',borderRadius:4}]
+      },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});
+    }
+    // Txn type doughnut
+    var typeR=await SB.from('transactions').select('type,amount').eq('status','completed').limit(3000);
+    var byType={};
+    (typeR.data||[]).forEach(function(t){
+      var tp=t.type||'otro';
+      byType[tp]=(byType[tp]||0)+(parseFloat(t.amount)||0);
+    });
+    var typeEntries=Object.entries(byType).sort(function(a,b){return b[1]-a[1];}).slice(0,6);
+    var tdCtx=document.getElementById('chart-txn-type-dist');
+    if(tdCtx&&typeof Chart!=='undefined'){
+      if(tdCtx._chartInst)tdCtx._chartInst.destroy();
+      tdCtx._chartInst=new Chart(tdCtx,{type:'doughnut',data:{
+        labels:typeEntries.map(function(x){return x[0];}),
+        datasets:[{data:typeEntries.map(function(x){return x[1].toFixed(2);}),
+          backgroundColor:['#6366f1','#22c55e','#f59e0b','#06b6d4','#f43f5e','#a855f7']}]
+      },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:10}}}}}});
+    }
+    // Cohort retention (by registration week, % active in subsequent weeks)
+    await _renderCohortTable();
+  }catch(e){
+    console.error('Analytics error',e);
+    if(strip)strip.innerHTML='<div style="color:var(--red);padding:12px">Error cargando analytics: '+e.message+'</div>';
+  }
+}
+
+async function _renderCohortTable(){
+  try{
+    var usersR=await SB.from('users').select('id,created_at').order('created_at',{ascending:true}).limit(2000);
+    var txnsR=await SB.from('transactions').select('user_id,created_at').limit(5000);
+    var users=usersR.data||[];
+    var txns=txnsR.data||[];
+    // Group users by registration week
+    function weekKey(d){var dt=new Date(d);var jan=new Date(dt.getFullYear(),0,1);return dt.getFullYear()+'-W'+String(Math.ceil(((dt-jan)/86400000+jan.getDay()+1)/7)).padStart(2,'0');}
+    var cohorts={};
+    users.forEach(function(u){var w=weekKey(u.created_at);if(!cohorts[w])cohorts[w]=[];cohorts[w].push(u.id);});
+    // For each user find weeks they transacted
+    var userTxWeeks={};
+    txns.forEach(function(t){if(!userTxWeeks[t.user_id])userTxWeeks[t.user_id]=new Set();userTxWeeks[t.user_id].add(weekKey(t.created_at));});
+    var weeks=Object.keys(cohorts).sort().slice(-8);
+    var maxW=4;
+    // Table header
+    var thead=document.getElementById('cohort-table-head');
+    var tbody=document.getElementById('cohort-table-body');
+    if(!thead||!tbody)return;
+    var hcols='<tr><th>Semana registro</th><th>Usuarios</th>';
+    for(var w=0;w<maxW;w++)hcols+='<th>Sem +'+(w+1)+'</th>';
+    hcols+='</tr>';
+    thead.innerHTML=hcols;
+    // Rows
+    var rows='';
+    weeks.forEach(function(wk){
+      var uids=cohorts[wk];
+      var sz=uids.length;
+      rows+='<tr><td>'+wk+'</td><td>'+sz+'</td>';
+      // Find the week index for this cohort
+      var allWeeksSorted=Object.keys(cohorts).sort();
+      var wkIdx=allWeeksSorted.indexOf(wk);
+      for(var d=1;d<=maxW;d++){
+        var targetWk=allWeeksSorted[wkIdx+d];
+        if(!targetWk){rows+='<td style="color:var(--muted)">—</td>';continue;}
+        var active=uids.filter(function(uid){return userTxWeeks[uid]&&userTxWeeks[uid].has(targetWk);}).length;
+        var pct=Math.round(active/Math.max(sz,1)*100);
+        var bg=pct>50?'rgba(34,197,94,.15)':pct>20?'rgba(245,158,11,.12)':'rgba(244,63,94,.1)';
+        rows+='<td style="background:'+bg+';text-align:center">'+pct+'%</td>';
+      }
+      rows+='</tr>';
+    });
+    tbody.innerHTML=rows||'<tr><td colspan="6" style="text-align:center;color:var(--muted)">Sin datos suficientes</td></tr>';
+    // Cohort chart (heatmap-style as line chart)
+    var cohCtx=document.getElementById('chart-cohort');
+    if(cohCtx&&typeof Chart!=='undefined'){
+      if(cohCtx._chartInst)cohCtx._chartInst.destroy();
+      var datasets=weeks.slice(-5).map(function(wk,i){
+        var uids=cohorts[wk];
+        var allWeeksSorted2=Object.keys(cohorts).sort();
+        var wkIdx2=allWeeksSorted2.indexOf(wk);
+        var pts=[];
+        for(var d=1;d<=maxW;d++){
+          var tw=allWeeksSorted2[wkIdx2+d];
+          if(!tw){pts.push(null);continue;}
+          var ac=uids.filter(function(uid){return userTxWeeks[uid]&&userTxWeeks[uid].has(tw);}).length;
+          pts.push(Math.round(ac/Math.max(uids.length,1)*100));
+        }
+        var colors=['#6366f1','#22c55e','#f59e0b','#06b6d4','#f43f5e'];
+        return{label:wk,data:pts,borderColor:colors[i%colors.length],backgroundColor:'transparent',tension:.3,spanGaps:true};
+      });
+      cohCtx._chartInst=new Chart(cohCtx,{type:'line',data:{labels:['Sem+1','Sem+2','Sem+3','Sem+4'],datasets:datasets},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:10}}}},scales:{y:{min:0,max:100,ticks:{callback:function(v){return v+'%';}}}}}});
+    }
+  }catch(e){console.warn('Cohort error',e);}
+}
+
+// ── B16 LIVE POLLING ──────────────────────────────────────────
+var _pollState={kycPending:0,suspTxns:0,overdueLoans:0};
+var _pollInterval=null;
+
+async function _livePoll(){
+  try{
+    var[kycR,suspR,loanR]=await Promise.all([
+      SB.from('kyc_requests').select('id',{count:'exact',head:true}).eq('status','pending'),
+      SB.from('transactions').select('id',{count:'exact',head:true}).eq('flag','suspicious'),
+      SB.from('loans').select('id',{count:'exact',head:true}).eq('status','overdue')
+    ]);
+    var kyc=kycR.count||0;
+    var susp=suspR.count||0;
+    var loans=loanR.count||0;
+    // Notify on increases
+    if(kyc>_pollState.kycPending&&_pollState.kycPending!==0){
+      var diff=kyc-_pollState.kycPending;
+      addNotif('🪪 KYC pendientes','+'+(diff)+' solicitudes nuevas — total '+kyc,'warn');
+    }
+    if(susp>_pollState.suspTxns&&_pollState.suspTxns!==0){
+      var diffS=susp-_pollState.suspTxns;
+      addNotif('🚨 Transacciones sospechosas','+'+(diffS)+' nuevas — total '+susp,'danger');
+    }
+    if(loans>_pollState.overdueLoans&&_pollState.overdueLoans!==0){
+      var diffL=loans-_pollState.overdueLoans;
+      addNotif('⚠️ Préstamos vencidos','+'+(diffL)+' nuevos — total '+loans,'warn');
+    }
+    _pollState={kycPending:kyc,suspTxns:susp,overdueLoans:loans};
+    // Topbar live dot
+    var dot=document.getElementById('notif-dot');
+    if(dot){
+      var critical=susp>5||loans>10;
+      dot.style.background=critical?'#f43f5e':'#6366f1';
+    }
+    // Update last-update stamp
+    var lu=document.getElementById('last-update');
+    if(lu)lu.textContent='↺ '+new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){/* silent — network may be down */}
+}
+
+function _startLivePoll(){
+  if(_pollInterval)return;
+  _livePoll();
+  _pollInterval=setInterval(_livePoll,30000);
+}
+setTimeout(_startLivePoll,6000);
+
+// ── B19 ROLE-BASED ACCESS ─────────────────────────────────────
+var ADMIN_ROLE_CFG={
+  superadmin:{label:'Super Admin',desc:'Acceso completo a todas las secciones.',sections:null},
+  kyc_agent:{label:'KYC Agent',desc:'Puede gestionar usuarios, KYC y documentos. Sin acceso a finanzas ni compliance.',
+    sections:['dashboard','users','kyc','documents','crear','settings']},
+  compliance:{label:'Compliance',desc:'Acceso a AML, SAR, CTR, casos legales y auditoría. Sin edición de usuarios.',
+    sections:['dashboard','aml','sar','ctr','casos','auditlog','audit-legal','alerts','analytics-adv']},
+  support:{label:'Soporte',desc:'Vista de usuarios y transacciones en modo lectura. Sin operaciones financieras.',
+    sections:['dashboard','users','transactions','kyc','aichat']},
+  finance:{label:'Finanzas',desc:'Acceso a préstamos, facturas B2B, contable, refunds y partners.',
+    sections:['dashboard','loans','b2b-billing','contable','banco','partners','refunds','analytics-adv']}
+};
+
+function setAdminRole(role){
+  localStorage.setItem('ia_admin_role',role);
+  _applyAdminRole(role);
+  var cfg=ADMIN_ROLE_CFG[role]||ADMIN_ROLE_CFG.superadmin;
+  showToast('✅ Rol cambiado: '+cfg.label,'success');
+  logAdminAction('role_change','Cambio de rol a '+role);
+}
+
+function _applyAdminRole(role){
+  var cfg=ADMIN_ROLE_CFG[role]||ADMIN_ROLE_CFG.superadmin;
+  // Badge in topbar
+  var badge=document.getElementById('role-badge');
+  if(badge){badge.textContent=cfg.label;badge.style.display='inline';}
+  // Update selector
+  var sel=document.getElementById('admin-role-select');
+  if(sel)sel.value=role;
+  // Description
+  var desc=document.getElementById('admin-role-desc');
+  if(desc)desc.textContent=cfg.desc;
+  // Sidebar links: hide/show
+  if(cfg.sections===null){
+    // superadmin — show everything
+    document.querySelectorAll('.sb-link').forEach(function(el){el.style.display='';});
+    document.querySelectorAll('.sb-group').forEach(function(el){el.style.display='';});
+  }else{
+    document.querySelectorAll('.sb-link').forEach(function(el){
+      // Extract page from onclick="nav('XXX',this)"
+      var m=el.getAttribute('onclick')||'';
+      var match=m.match(/nav\('([^']+)'/);
+      if(!match){el.style.display='';return;}
+      var page=match[1];
+      el.style.display=cfg.sections.indexOf(page)!==-1?'':'none';
+    });
+  }
+}
+
+// Init role on load
+(function(){
+  var savedRole=localStorage.getItem('ia_admin_role')||'superadmin';
+  setTimeout(function(){_applyAdminRole(savedRole);},500);
+})();
 </script>
 </body>
 </html>
