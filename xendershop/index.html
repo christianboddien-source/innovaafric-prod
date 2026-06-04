@@ -215,7 +215,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <body>
 
 <!-- TOP BAR -->
-<div class="top-bar">
+<div class="top-bar" data-i18n="topbar">
   Bienvenido a XenderShop — Compra global, paga en Africa 🌍 &nbsp;|&nbsp; Envío gratis en pedidos +€30 &nbsp;|&nbsp; <a href="#">Descarga la app</a>
 </div>
 
@@ -238,14 +238,20 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <button class="search-btn">🔍</button>
     </div>
     <div class="nav-actions">
-      <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span>Cuenta</span></a>
-      <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span>Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
-      <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span>Deseos</span></a>
+      <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span data-i18n="nav_account">Cuenta</span></a>
+      <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span data-i18n="nav_cart">Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
+      <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span></a>
       <div class="lang-row">
-        <button class="lb active" onclick="setLang('es')">ES</button>
-        <button class="lb" onclick="setLang('en')">EN</button>
-        <button class="lb" onclick="setLang('fr')">FR</button>
+        <button id="lb-es" class="lb active" onclick="setLang('es')">ES</button>
+        <button id="lb-en" class="lb" onclick="setLang('en')">EN</button>
+        <button id="lb-fr" class="lb" onclick="setLang('fr')">FR</button>
       </div>
+      <select id="xs-cur" onchange="setCurrency(this.value)" style="background:rgba(255,255,255,.2);border:none;border-radius:3px;padding:3px 7px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;outline:none;margin-left:4px;" title="Moneda / Currency / Devise">
+        <option value="EUR">€ EUR</option>
+        <option value="USD">$ USD</option>
+        <option value="XAF">F XAF</option>
+        <option value="XOF">F XOF</option>
+      </select>
     </div>
   </div>
   <div class="cat-bar">
@@ -298,30 +304,30 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   <div class="hero-banner" id="mainBanner">
     <div class="banner-slide bs-1 on">
       <div class="banner-txt">
-        <div class="banner-tag">Oferta Especial · Africa</div>
-        <div class="banner-h">Compra Global,<br/>Paga con Mobile Money</div>
-        <div class="banner-p">Millones de productos. Entrega en tu puerta en Africa.</div>
-        <a href="#flash" class="btn-banner">Ver Ofertas →</a>
+        <div class="banner-tag" data-i18n="banner1_tag">Oferta Especial · Africa</div>
+        <div class="banner-h" data-i18n="banner1_h">Compra Global,<br/>Paga con Mobile Money</div>
+        <div class="banner-p" data-i18n="banner1_p">Millones de productos. Entrega en tu puerta en Africa.</div>
+        <a href="#flash" class="btn-banner" data-i18n="banner1_btn">Ver Ofertas →</a>
       </div>
-      <div class="banner-badge"><div class="badge-n">-50%</div><div class="badge-t">OFF HOY</div></div>
+      <div class="banner-badge"><div class="badge-n">-50%</div><div class="badge-t" data-i18n="badge1_t">OFF HOY</div></div>
     </div>
     <div class="banner-slide bs-2">
       <div class="banner-txt">
-        <div class="banner-tag">Flash Deals · Solo 24h</div>
-        <div class="banner-h">Ofertas Flash<br/>Hasta 70% Descuento</div>
-        <div class="banner-p">Electrónica, moda, belleza. Stock limitado.</div>
-        <a href="#flash" class="btn-banner">Ver Flash Deals →</a>
+        <div class="banner-tag" data-i18n="banner2_tag">Flash Deals · Solo 24h</div>
+        <div class="banner-h" data-i18n="banner2_h">Ofertas Flash<br/>Hasta 70% Descuento</div>
+        <div class="banner-p" data-i18n="banner2_p">Electrónica, moda, belleza. Stock limitado.</div>
+        <a href="#flash" class="btn-banner" data-i18n="banner2_btn">Ver Flash Deals →</a>
       </div>
       <div class="banner-badge"><div class="badge-n">-70%</div><div class="badge-t">FLASH</div></div>
     </div>
     <div class="banner-slide bs-3">
       <div class="banner-txt">
-        <div class="banner-tag">Nuevo · Pago XenderMoney</div>
-        <div class="banner-h">Paga en FCFA, EUR,<br/>USD o Mobile Money</div>
-        <div class="banner-p">Sin comisiones extras. Tipo de cambio real en tiempo real.</div>
-        <a href="../xendermoney/" class="btn-banner">Saber más →</a>
+        <div class="banner-tag" data-i18n="banner3_tag">Nuevo · Pago XenderMoney</div>
+        <div class="banner-h" data-i18n="banner3_h">Paga en FCFA, EUR,<br/>USD o Mobile Money</div>
+        <div class="banner-p" data-i18n="banner3_p">Sin comisiones extras. Tipo de cambio real en tiempo real.</div>
+        <a href="../xendermoney/" class="btn-banner" data-i18n="banner3_btn">Saber más →</a>
       </div>
-      <div class="banner-badge"><div class="badge-n">0%</div><div class="badge-t">COMISIÓN</div></div>
+      <div class="banner-badge"><div class="badge-n">0%</div><div class="badge-t" data-i18n="badge3_t">COMISIÓN</div></div>
     </div>
     <div class="banner-dots">
       <div class="bdot on" onclick="goSlide(0)"></div>
@@ -333,15 +339,15 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   <!-- Right promo cards -->
   <div class="hero-promos">
     <div class="promo-mini pm-1">
-      <div class="pm-tag">Nuevo Usuario</div>
-      <div class="pm-h">Cupón Bienvenida<br/>€5 de descuento</div>
-      <div class="pm-p">En tu 1er pedido</div>
+      <div class="pm-tag" data-i18n="pm1_tag">Nuevo Usuario</div>
+      <div class="pm-h" data-i18n="pm1_h">Cupón Bienvenida<br/>€5 de descuento</div>
+      <div class="pm-p" data-i18n="pm1_p">En tu 1er pedido</div>
       <div class="pm-big">🎁</div>
     </div>
     <div class="promo-mini pm-2">
-      <div class="pm-tag">XenderDelivery</div>
-      <div class="pm-h">Entrega Express<br/>24–72 horas</div>
-      <div class="pm-p">Ciudades principales</div>
+      <div class="pm-tag" data-i18n="pm2_tag">XenderDelivery</div>
+      <div class="pm-h" data-i18n="pm2_h">Entrega Express<br/>24–72 horas</div>
+      <div class="pm-p" data-i18n="pm2_p">Ciudades principales</div>
       <div class="pm-big">🚚</div>
     </div>
   </div>
@@ -349,17 +355,17 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 
 <!-- ═══════════ PROMO STRIP ═══════════ -->
 <div class="promo-strip">
-  <div class="ps-item"><div class="ps-icon">🚚</div><div class="ps-text"><strong>Envío Gratis</strong><span>Pedidos +€30</span></div></div>
-  <div class="ps-item"><div class="ps-icon">🔒</div><div class="ps-text"><strong>Pago Seguro</strong><span>Mobile Money / Card</span></div></div>
-  <div class="ps-item"><div class="ps-icon">↩️</div><div class="ps-text"><strong>Devolución 30 días</strong><span>Sin preguntas</span></div></div>
-  <div class="ps-item"><div class="ps-icon">💬</div><div class="ps-text"><strong>Soporte 24/7</strong><span>Chat en la app</span></div></div>
-  <div class="ps-item"><div class="ps-icon">🌍</div><div class="ps-text"><strong>Entrega en Africa</strong><span>30+ países</span></div></div>
+  <div class="ps-item"><div class="ps-icon">🚚</div><div class="ps-text"><strong data-i18n="ps_ship">Envío Gratis</strong><span data-i18n="ps_ship_sub">Pedidos +€30</span></div></div>
+  <div class="ps-item"><div class="ps-icon">🔒</div><div class="ps-text"><strong data-i18n="ps_pay">Pago Seguro</strong><span data-i18n="ps_pay_sub">Mobile Money / Card</span></div></div>
+  <div class="ps-item"><div class="ps-icon">↩️</div><div class="ps-text"><strong data-i18n="ps_ret">Devolución 30 días</strong><span data-i18n="ps_ret_sub">Sin preguntas</span></div></div>
+  <div class="ps-item"><div class="ps-icon">💬</div><div class="ps-text"><strong data-i18n="ps_sup">Soporte 24/7</strong><span data-i18n="ps_sup_sub">Chat en la app</span></div></div>
+  <div class="ps-item"><div class="ps-icon">🌍</div><div class="ps-text"><strong data-i18n="ps_del">Entrega en Africa</strong><span data-i18n="ps_del_sub">30+ países</span></div></div>
 </div>
 
 <!-- ═══════════ FLASH DEALS ═══════════ -->
 <div class="section" id="flash">
   <div class="sec-head">
-    <div class="sec-title-red"><span class="flame">🔥</span> Flash Deals <div class="countdown" style="margin-left:12px;"><div class="cd-box" id="cdH">08</div><span class="cd-sep">:</span><div class="cd-box" id="cdM">34</div><span class="cd-sep">:</span><div class="cd-box" id="cdS">17</div></div></div>
+    <div class="sec-title-red"><span class="flame">🔥</span> <span data-i18n="flash_h">Flash Deals</span> <div class="countdown" style="margin-left:12px;"><div class="cd-box" id="cdH">08</div><span class="cd-sep">:</span><div class="cd-box" id="cdM">34</div><span class="cd-sep">:</span><div class="cd-box" id="cdS">17</div></div></div>
     <a href="#" class="see-more">Ver todos →</a>
   </div>
   <div class="products-row cols5">
@@ -577,7 +583,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- ═══════════ JUST FOR YOU ═══════════ -->
 <div class="section">
   <div class="sec-head">
-    <div class="sec-title-red">✨ Solo Para Ti</div>
+    <div class="sec-title-red" data-i18n="jfy_h">✨ Solo Para Ti</div>
     <a href="#" class="see-more">Ver más →</a>
   </div>
   <div class="jfy-grid">
@@ -601,7 +607,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div id="cart-sidebar" style="position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100vh;background:#fff;z-index:1000;box-shadow:-4px 0 40px rgba(0,0,0,.15);display:flex;flex-direction:column;transition:right .3s ease;">
   <!-- Header -->
   <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f0f0f0;">
-    <div style="font-size:16px;font-weight:900;color:#1a1a1a;">🛒 Mi Carrito <span id="cart-header-count" style="font-size:12px;color:#999;font-weight:500;">(3 artículos)</span></div>
+    <div style="font-size:16px;font-weight:900;color:#1a1a1a;">🛒 <span data-i18n="cart_title_txt">Mi Carrito</span> <span id="cart-header-count" style="font-size:12px;color:#999;font-weight:500;">(3 artículos)</span></div>
     <button onclick="closeCart()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#666;padding:4px;">✕</button>
   </div>
   <!-- Items -->
@@ -656,11 +662,11 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   <div style="padding:0 24px 12px;"><div style="display:flex;gap:8px;"><input id="promo-input" type="text" placeholder="Código promocional" style="flex:1;border:1px solid #e8e8e8;border-radius:8px;padding:10px 12px;font-size:13px;outline:none;"><button onclick="applyPromo()" style="background:#FF4010;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aplicar</button></div></div>
   <!-- Summary -->
   <div style="padding:16px 24px;border-top:1px solid #f0f0f0;background:#fafafa;">
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;"><span>Subtotal</span><span>€137.48</span></div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:6px;"><span>Envío</span><span>Gratis ✈️</span></div>
-    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:16px;padding-top:10px;border-top:1px solid #e8e8e8;"><span>Total</span><span style="color:#FF4010;">€137.48</span></div>
-    <button onclick="alert('Procediendo al pago con XenderMoney…')" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;">Pagar con XenderMoney →</button>
-    <button onclick="closeCart()" style="width:100%;background:none;border:none;padding:10px;font-size:13px;color:#999;cursor:pointer;margin-top:4px;">Seguir comprando</button>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;"><span data-i18n="cart_subtotal">Subtotal</span><span>€137.48</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:6px;"><span data-i18n="cart_ship_lbl">Envío</span><span data-i18n="cart_ship_free">Gratis ✈️</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:16px;padding-top:10px;border-top:1px solid #e8e8e8;"><span data-i18n="cart_total_lbl">Total</span><span style="color:#FF4010;">€137.48</span></div>
+    <button onclick="alert('Procediendo al pago con XenderMoney…')" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;" data-i18n="cart_pay_btn">Pagar con XenderMoney →</button>
+    <button onclick="closeCart()" style="width:100%;background:none;border:none;padding:10px;font-size:13px;color:#999;cursor:pointer;margin-top:4px;" data-i18n="cart_continue">Seguir comprando</button>
   </div>
 </div>
 <script>
@@ -674,7 +680,7 @@ function applyPromo(){var v=document.getElementById('promo-input').value.trim().
 <div style="background:#fff;padding:48px 20px 0;">
   <div style="max-width:1200px;margin:0 auto;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <div style="font-size:18px;font-weight:900;color:#1a1a1a;">🏆 Vendedores Destacados</div>
+      <div style="font-size:18px;font-weight:900;color:#1a1a1a;" data-i18n="sellers_h">🏆 Vendedores Destacados</div>
       <a href="#" style="font-size:12px;color:var(--red);font-weight:700;text-decoration:none;">Ver todos →</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px;">
@@ -725,9 +731,9 @@ function applyPromo(){var v=document.getElementById('promo-input').value.trim().
   <p style="font-size:14px;color:rgba(255,255,255,0.85);margin-bottom:20px;" data-i18n="nl_sub">Suscríbete y recibe descuentos de hasta 70% antes que nadie</p>
   <form onsubmit="nlSubmit(event)" style="display:flex;gap:8px;max-width:480px;margin:0 auto;">
     <input id="nl-email" type="email" placeholder="tu@email.com" required style="flex:1;padding:12px 16px;border-radius:8px;border:none;font-size:14px;outline:none;"/>
-    <button type="submit" style="background:#fff;color:#FF4010;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">Suscribirme →</button>
+    <button type="submit" style="background:#fff;color:#FF4010;border:none;border-radius:8px;padding:12px 20px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;" data-i18n="nl_btn">Suscribirme →</button>
   </form>
-  <p style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:10px;">Sin spam. Puedes cancelar en cualquier momento.</p>
+  <p style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:10px;" data-i18n="nl_foot">Sin spam. Puedes cancelar en cualquier momento.</p>
 </div>
 
 <!-- ═══════════ FOOTER ═══════════ -->
@@ -735,55 +741,58 @@ function applyPromo(){var v=document.getElementById('promo-input').value.trim().
   <div class="footer-inner">
     <div class="footer-grid">
       <div class="footer-col">
-        <h4>XenderShop</h4>
-        <a href="#">Sobre Nosotros</a>
-        <a href="#">Prensa & Media</a>
-        <a href="#">Inversores</a>
-        <a href="#">Trabaja con Nosotros</a>
+        <h4 data-i18n="foot_col1">XenderShop</h4>
+        <a href="#" data-i18n="foot_about">Sobre Nosotros</a>
+        <a href="#" data-i18n="foot_press">Prensa & Media</a>
+        <a href="#" data-i18n="foot_investors">Inversores</a>
+        <a href="#" data-i18n="foot_jobs">Trabaja con Nosotros</a>
         <a href="#">Blog</a>
       </div>
       <div class="footer-col">
-        <h4>Comprar</h4>
-        <a href="#">Mis Pedidos</a>
-        <a href="#">Lista de Deseos</a>
-        <a href="#">Devoluciones</a>
-        <a href="#">Seguimiento de Envío</a>
-        <a href="#">Programa de Puntos</a>
+        <h4 data-i18n="foot_col2">Comprar</h4>
+        <a href="#" data-i18n="foot_orders">Mis Pedidos</a>
+        <a href="#" data-i18n="foot_wishlist">Lista de Deseos</a>
+        <a href="#" data-i18n="foot_returns">Devoluciones</a>
+        <a href="#" data-i18n="foot_tracking">Seguimiento de Envío</a>
+        <a href="#" data-i18n="foot_points">Programa de Puntos</a>
       </div>
       <div class="footer-col">
-        <h4>Vender</h4>
-        <a href="../xenderbigshop/">Abrir Tienda</a>
-        <a href="#">Guía del Vendedor</a>
-        <a href="#">Planes & Precios</a>
-        <a href="#">Centro de Ayuda Vendor</a>
-        <a href="#">API para Vendedores</a>
+        <h4 data-i18n="foot_col3">Vender</h4>
+        <a href="../xenderbigshop/" data-i18n="foot_open_store">Abrir Tienda</a>
+        <a href="#" data-i18n="foot_seller_guide">Guía del Vendedor</a>
+        <a href="#" data-i18n="foot_plans">Planes & Precios</a>
+        <a href="#" data-i18n="foot_seller_help">Centro de Ayuda Vendor</a>
+        <a href="#">API</a>
       </div>
       <div class="footer-col">
-        <h4>Pagar con</h4>
-        <a href="../xendermoney/">XenderMoney</a>
-        <a href="#">Mobile Money</a>
+        <h4 data-i18n="foot_col4">Pagar con</h4>
+        <a href="../xendermoney/" style="color:#FF6B35;font-weight:700;">💰 XenderMoney</a>
+        <a href="#" data-i18n="foot_momo">Mobile Money</a>
         <a href="#">Orange Money</a>
         <a href="#">MTN MoMo</a>
-        <a href="#">Tarjeta Bancaria</a>
+        <a href="#" data-i18n="foot_card">Tarjeta Bancaria</a>
       </div>
       <div class="footer-col">
-        <h4>Ayuda</h4>
-        <a href="#">Centro de Ayuda</a>
+        <h4 data-i18n="foot_col5">Ayuda</h4>
+        <a href="#" data-i18n="foot_help">Centro de Ayuda</a>
         <a href="#">Chat 24/7</a>
-        <a href="#">Política de Privacidad</a>
-        <a href="#">Términos de Uso</a>
-        <a href="#">Contacto</a>
+        <a href="#" data-i18n="foot_privacy">Política de Privacidad</a>
+        <a href="#" data-i18n="foot_terms">Términos de Uso</a>
+        <a href="#" data-i18n="foot_contact">Contacto</a>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 XenderShop by INNOVAAFRIC · Todos los derechos reservados</span>
       <div class="pay-icons">
+        <div class="pay-chip" style="background:#FF4010;color:#fff;font-weight:800;">💰 XenderMoney</div>
         <div class="pay-chip">Mobile Money</div>
         <div class="pay-chip">Orange Money</div>
         <div class="pay-chip">MTN MoMo</div>
+        <div class="pay-chip">Wave</div>
         <div class="pay-chip">VISA</div>
         <div class="pay-chip">Mastercard</div>
-        <div class="pay-chip">FCFA</div>
+        <div class="pay-chip">FCFA · XAF</div>
+        <div class="pay-chip">XOF</div>
         <div class="pay-chip">EUR</div>
         <div class="pay-chip">USD</div>
       </div>
@@ -804,45 +813,155 @@ var t=8*3600+34*60+17;
 function tick(){if(t<=0)return;t--;var h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;document.getElementById('cdH').textContent=String(h).padStart(2,'0');document.getElementById('cdM').textContent=String(m).padStart(2,'0');document.getElementById('cdS').textContent=String(s).padStart(2,'0');}
 setInterval(tick,1000);
 
-// Language
+// ── LANGUAGE ──
 var XS_TR={
   es:{
-    search_ph:'Buscar productos...',
-    filter_lbl:'Filtros', sort_lbl:'Ordenar por', sort_low:'Precio: menor a mayor', sort_high:'Precio: mayor a menor', sort_top:'Mejor valorados ★★★★+', sort_pop:'Más vendidos',
-    f_free:'Envío gratis', f_sale:'En oferta', f_count:'Mostrando todos los productos', f_clear:'Limpiar',
-    nl_h:'📬 Ofertas Exclusivas en tu Email', nl_sub:'Suscríbete y recibe descuentos de hasta 70% antes que nadie', nl_btn:'Suscribirme →', nl_foot:'Sin spam. Puedes cancelar en cualquier momento.',
+    topbar:'Bienvenido a XenderShop — Compra global, paga en Africa 🌍 &nbsp;|&nbsp; Envío gratis en pedidos +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Descarga la app</a>',
+    nav_account:'Cuenta', nav_cart:'Carrito', nav_wishlist:'Deseos',
+    search_ph:'Buscar en millones de productos…',
+    filter_lbl:'🔽 Filtros:', f_free:'Envío gratis', f_sale:'En oferta', f_count:'Mostrando todos los productos', f_clear:'✕ Limpiar',
+    sort_lbl:'Ordenar por', sort_low:'Precio: menor a mayor', sort_high:'Precio: mayor a menor', sort_top:'Mejor valorados ★★★★+', sort_pop:'Más vendidos',
+    banner1_tag:'Oferta Especial · Africa', banner1_h:'Compra Global,<br/>Paga con Mobile Money', banner1_p:'Millones de productos. Entrega en tu puerta en Africa.', banner1_btn:'Ver Ofertas →', badge1_t:'HOY',
+    banner2_tag:'Flash Deals · Solo 24h', banner2_h:'Ofertas Flash<br/>Hasta 70% Descuento', banner2_p:'Electrónica, moda, belleza. Stock limitado.', banner2_btn:'Ver Flash Deals →',
+    banner3_tag:'Nuevo · Pago XenderMoney', banner3_h:'Paga en FCFA, EUR,<br/>USD o Mobile Money', banner3_p:'Sin comisiones extras. Tipo de cambio real.', banner3_btn:'Saber más →', badge3_t:'COMISIÓN',
+    pm1_tag:'Nuevo Usuario', pm1_h:'Cupón Bienvenida<br/>€5 de descuento', pm1_p:'En tu 1er pedido',
+    pm2_tag:'XenderDelivery', pm2_h:'Entrega Express<br/>24–72 horas', pm2_p:'Ciudades principales',
+    ps_ship:'Envío Gratis', ps_ship_sub:'Pedidos +€30', ps_pay:'Pago Seguro', ps_pay_sub:'Mobile Money / Card',
+    ps_ret:'Devolución 30 días', ps_ret_sub:'Sin preguntas', ps_sup:'Soporte 24/7', ps_sup_sub:'Chat en la app',
+    ps_del:'Entrega en Africa', ps_del_sub:'30+ países',
+    flash_h:'Flash Deals',
     allcat_h:'🗂 Todas las Categorías', see_more:'Ver todo →',
-    trust1:'Pago Seguro', trust2:'Envío Global', trust3:'Compra Protegida', trust4:'Devolución Fácil',
-    sellers_h:'⭐ Vendedores Destacados'
+    jfy_h:'✨ Solo Para Ti',
+    sellers_h:'🏆 Vendedores Destacados',
+    trust1:'Compra Protegida', trust2:'Envío Global', trust3:'Pago Seguro', trust4:'Devolución Fácil',
+    nl_h:'📬 Ofertas Exclusivas en tu Email', nl_sub:'Suscríbete y recibe descuentos de hasta 70% antes que nadie', nl_btn:'Suscribirme →', nl_foot:'Sin spam. Puedes cancelar en cualquier momento.',
+    foot_col1:'XenderShop', foot_col2:'Comprar', foot_col3:'Vender', foot_col4:'Pagar con', foot_col5:'Ayuda',
+    foot_about:'Sobre Nosotros', foot_press:'Prensa & Media', foot_investors:'Inversores', foot_jobs:'Trabaja con Nosotros',
+    foot_orders:'Mis Pedidos', foot_wishlist:'Lista de Deseos', foot_returns:'Devoluciones', foot_tracking:'Seguimiento de Envío', foot_points:'Programa de Puntos',
+    foot_open_store:'Abrir Tienda', foot_seller_guide:'Guía del Vendedor', foot_plans:'Planes & Precios', foot_seller_help:'Centro de Ayuda Vendor',
+    foot_momo:'Mobile Money', foot_card:'Tarjeta Bancaria',
+    foot_help:'Centro de Ayuda', foot_privacy:'Política de Privacidad', foot_terms:'Términos de Uso', foot_contact:'Contacto',
+    cart_title_txt:'Mi Carrito', cart_subtotal:'Subtotal', cart_ship_lbl:'Envío', cart_ship_free:'Gratis ✈️', cart_total_lbl:'Total',
+    cart_pay_btn:'Pagar con XenderMoney →', cart_continue:'Seguir comprando', cart_promo_ph:'Código promocional', cart_promo_btn:'Aplicar'
   },
   en:{
-    search_ph:'Search products...',
-    filter_lbl:'Filters', sort_lbl:'Sort by', sort_low:'Price: low to high', sort_high:'Price: high to low', sort_top:'Top rated ★★★★+', sort_pop:'Best sellers',
-    f_free:'Free shipping', f_sale:'On sale', f_count:'Showing all products', f_clear:'Clear',
-    nl_h:'📬 Exclusive Deals in Your Email', nl_sub:'Subscribe and get up to 70% discounts before everyone else', nl_btn:'Subscribe →', nl_foot:'No spam. Cancel anytime.',
+    topbar:'Welcome to XenderShop — Shop globally, pay in Africa 🌍 &nbsp;|&nbsp; Free shipping on orders +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Download the app</a>',
+    nav_account:'Account', nav_cart:'Cart', nav_wishlist:'Wishlist',
+    search_ph:'Search in millions of products…',
+    filter_lbl:'🔽 Filters:', f_free:'Free shipping', f_sale:'On sale', f_count:'Showing all products', f_clear:'✕ Clear',
+    sort_lbl:'Sort by', sort_low:'Price: low to high', sort_high:'Price: high to low', sort_top:'Top rated ★★★★+', sort_pop:'Best sellers',
+    banner1_tag:'Special Offer · Africa', banner1_h:'Shop Global,<br/>Pay with Mobile Money', banner1_p:'Millions of products. Delivered to your door in Africa.', banner1_btn:'See Deals →', badge1_t:'TODAY',
+    banner2_tag:'Flash Deals · 24h Only', banner2_h:'Flash Deals<br/>Up to 70% Off', banner2_p:'Electronics, fashion, beauty. Limited stock.', banner2_btn:'See Flash Deals →',
+    banner3_tag:'New · XenderMoney Payment', banner3_h:'Pay in FCFA, EUR,<br/>USD or Mobile Money', banner3_p:'No extra fees. Real exchange rate.', banner3_btn:'Learn more →', badge3_t:'COMMISSION',
+    pm1_tag:'New User', pm1_h:'Welcome Coupon<br/>€5 off', pm1_p:'On your 1st order',
+    pm2_tag:'XenderDelivery', pm2_h:'Express Delivery<br/>24–72 hours', pm2_p:'Main cities',
+    ps_ship:'Free Shipping', ps_ship_sub:'Orders +€30', ps_pay:'Secure Payment', ps_pay_sub:'Mobile Money / Card',
+    ps_ret:'30-day Returns', ps_ret_sub:'No questions asked', ps_sup:'24/7 Support', ps_sup_sub:'Chat in the app',
+    ps_del:'Delivery in Africa', ps_del_sub:'30+ countries',
+    flash_h:'Flash Deals',
     allcat_h:'🗂 All Categories', see_more:'See all →',
-    trust1:'Secure Payment', trust2:'Global Shipping', trust3:'Buyer Protection', trust4:'Easy Returns',
-    sellers_h:'⭐ Featured Sellers'
+    jfy_h:'✨ Just For You',
+    sellers_h:'🏆 Featured Sellers',
+    trust1:'Buyer Protection', trust2:'Global Shipping', trust3:'Secure Payment', trust4:'Easy Returns',
+    nl_h:'📬 Exclusive Deals in Your Email', nl_sub:'Subscribe and get up to 70% discounts before everyone else', nl_btn:'Subscribe →', nl_foot:'No spam. Cancel anytime.',
+    foot_col1:'XenderShop', foot_col2:'Shopping', foot_col3:'Sell', foot_col4:'Pay with', foot_col5:'Help',
+    foot_about:'About Us', foot_press:'Press & Media', foot_investors:'Investors', foot_jobs:'Work With Us',
+    foot_orders:'My Orders', foot_wishlist:'Wishlist', foot_returns:'Returns', foot_tracking:'Track Shipment', foot_points:'Rewards Program',
+    foot_open_store:'Open a Store', foot_seller_guide:'Seller Guide', foot_plans:'Plans & Pricing', foot_seller_help:'Vendor Help Center',
+    foot_momo:'Mobile Money', foot_card:'Bank Card',
+    foot_help:'Help Center', foot_privacy:'Privacy Policy', foot_terms:'Terms of Use', foot_contact:'Contact',
+    cart_title_txt:'My Cart', cart_subtotal:'Subtotal', cart_ship_lbl:'Shipping', cart_ship_free:'Free ✈️', cart_total_lbl:'Total',
+    cart_pay_btn:'Pay with XenderMoney →', cart_continue:'Continue shopping', cart_promo_ph:'Promo code', cart_promo_btn:'Apply'
   },
   fr:{
-    search_ph:'Rechercher des produits...',
-    filter_lbl:'Filtres', sort_lbl:'Trier par', sort_low:'Prix: croissant', sort_high:'Prix: décroissant', sort_top:'Mieux notés ★★★★+', sort_pop:'Meilleures ventes',
-    f_free:'Livraison gratuite', f_sale:'En promotion', f_count:'Affichage de tous les produits', f_clear:'Effacer',
-    nl_h:'📬 Offres Exclusives par Email', nl_sub:'Abonnez-vous et recevez jusqu\'à 70% de réductions en avant-première', nl_btn:'S\'abonner →', nl_foot:'Pas de spam. Annulez à tout moment.',
+    topbar:'Bienvenue sur XenderShop — Achetez global, payez en Afrique 🌍 &nbsp;|&nbsp; Livraison gratuite dès +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Télécharger l\'app</a>',
+    nav_account:'Compte', nav_cart:'Panier', nav_wishlist:'Favoris',
+    search_ph:'Rechercher dans des millions de produits…',
+    filter_lbl:'🔽 Filtres:', f_free:'Livraison gratuite', f_sale:'En promotion', f_count:'Affichage de tous les produits', f_clear:'✕ Effacer',
+    sort_lbl:'Trier par', sort_low:'Prix: croissant', sort_high:'Prix: décroissant', sort_top:'Mieux notés ★★★★+', sort_pop:'Meilleures ventes',
+    banner1_tag:'Offre Spéciale · Afrique', banner1_h:'Achetez Global,<br/>Payez avec Mobile Money', banner1_p:'Des millions de produits. Livraison à votre porte en Afrique.', banner1_btn:'Voir les Offres →', badge1_t:"AUJOURD'HUI",
+    banner2_tag:'Flash Deals · 24h Seulement', banner2_h:'Ventes Flash<br/>Jusqu\'à 70% de Remise', banner2_p:'Électronique, mode, beauté. Stock limité.', banner2_btn:'Voir les Flash Deals →',
+    banner3_tag:'Nouveau · Paiement XenderMoney', banner3_h:'Payez en FCFA, EUR,<br/>USD ou Mobile Money', banner3_p:'Sans frais supplémentaires. Taux de change en temps réel.', banner3_btn:'En savoir plus →', badge3_t:'COMMISSION',
+    pm1_tag:'Nouvel Utilisateur', pm1_h:'Coupon Bienvenue<br/>€5 de remise', pm1_p:'Sur votre 1ère commande',
+    pm2_tag:'XenderDelivery', pm2_h:'Livraison Express<br/>24–72 heures', pm2_p:'Grandes villes',
+    ps_ship:'Livraison Gratuite', ps_ship_sub:'Commandes +€30', ps_pay:'Paiement Sécurisé', ps_pay_sub:'Mobile Money / Carte',
+    ps_ret:'Retour 30 jours', ps_ret_sub:'Sans questions', ps_sup:'Support 24/7', ps_sup_sub:"Chat dans l'app",
+    ps_del:'Livraison en Afrique', ps_del_sub:'30+ pays',
+    flash_h:'Flash Deals',
     allcat_h:'🗂 Toutes les Catégories', see_more:'Tout voir →',
-    trust1:'Paiement Sécurisé', trust2:'Livraison Mondiale', trust3:'Achat Protégé', trust4:'Retour Facile',
-    sellers_h:'⭐ Vendeurs Vedettes'
+    jfy_h:'✨ Rien que pour Vous',
+    sellers_h:'🏆 Vendeurs Vedettes',
+    trust1:'Achat Protégé', trust2:'Livraison Mondiale', trust3:'Paiement Sécurisé', trust4:'Retour Facile',
+    nl_h:'📬 Offres Exclusives par Email', nl_sub:"Abonnez-vous et recevez jusqu'à 70% de réductions en avant-première", nl_btn:"S'abonner →", nl_foot:'Pas de spam. Annulez à tout moment.',
+    foot_col1:'XenderShop', foot_col2:'Acheter', foot_col3:'Vendre', foot_col4:'Payer avec', foot_col5:'Aide',
+    foot_about:'À Propos', foot_press:'Presse & Médias', foot_investors:'Investisseurs', foot_jobs:'Rejoignez-nous',
+    foot_orders:'Mes Commandes', foot_wishlist:'Favoris', foot_returns:'Retours', foot_tracking:'Suivi de Livraison', foot_points:'Programme de Points',
+    foot_open_store:'Ouvrir une Boutique', foot_seller_guide:'Guide Vendeur', foot_plans:'Plans & Tarifs', foot_seller_help:'Centre d\'Aide Vendeur',
+    foot_momo:'Mobile Money', foot_card:'Carte Bancaire',
+    foot_help:"Centre d'Aide", foot_privacy:'Politique de Confidentialité', foot_terms:"Conditions d'Utilisation", foot_contact:'Contact',
+    cart_title_txt:'Mon Panier', cart_subtotal:'Sous-total', cart_ship_lbl:'Livraison', cart_ship_free:'Gratuit ✈️', cart_total_lbl:'Total',
+    cart_pay_btn:'Payer avec XenderMoney →', cart_continue:'Continuer les achats', cart_promo_ph:'Code promo', cart_promo_btn:'Appliquer'
   }
 };
 var XS_LANG=localStorage.getItem('xs_lang')||'es';
 function setLang(l){
   XS_LANG=l; localStorage.setItem('xs_lang',l);
-  ['es','en','fr'].forEach(function(id){var b=document.getElementById('lb-'+id);if(b)b.className='lb'+(id===l?' active':'');});
+  document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('active');});
+  var lb=document.getElementById('lb-'+l);if(lb)lb.classList.add('active');
   var T=XS_TR[l]||XS_TR.es;
+  // search placeholder
   var sp=document.querySelector('.search-input');if(sp)sp.placeholder=T.search_ph;
-  document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');if(T[k]!==undefined){el.innerHTML=T[k];el.classList.remove('xs-fade');void el.offsetWidth;el.classList.add('xs-fade');}});
+  // promo input placeholder
+  var pi=document.getElementById('promo-input');if(pi&&T.cart_promo_ph)pi.placeholder=T.cart_promo_ph;
+  // sort options
+  var fs=document.getElementById('f-sort');
+  if(fs&&T.sort_lbl){var o=fs.options;if(o[0])o[0].textContent=T.sort_lbl;if(o[1])o[1].textContent=T.sort_low;if(o[2])o[2].textContent=T.sort_high;if(o[3])o[3].textContent=T.sort_top;if(o[4])o[4].textContent=T.sort_pop;}
+  // all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n');
+    if(T[k]!==undefined){el.innerHTML=T[k];el.classList.remove('xs-fade');void el.offsetWidth;el.classList.add('xs-fade');}
+  });
 }
 setLang(XS_LANG);
+
+// ── CURRENCY ──
+var XS_CUR=localStorage.getItem('xs_cur')||'EUR';
+var XS_RATES={EUR:1,USD:1.08,XAF:655.957,XOF:655.957};
+var XS_SYMS={EUR:'€',USD:'$',XAF:'F ',XOF:'F '};
+function initPrices(){
+  document.querySelectorAll('.pcard-price').forEach(function(el){
+    var sym=el.querySelector('.sym');
+    var raw=el.textContent.replace(sym?sym.textContent:'','').replace(/[, ]/g,'').trim();
+    var v=parseFloat(raw);if(!isNaN(v))el.setAttribute('data-eur',v);
+  });
+  document.querySelectorAll('.pcard-orig').forEach(function(el){
+    var raw=el.textContent.replace(/[€$F,\s]/g,'').trim();
+    var v=parseFloat(raw);if(!isNaN(v))el.setAttribute('data-eur',v);
+  });
+}
+function setCurrency(cur){
+  XS_CUR=cur;localStorage.setItem('xs_cur',cur);
+  var sel=document.getElementById('xs-cur');if(sel)sel.value=cur;
+  var rate=XS_RATES[cur]||1;var sym=XS_SYMS[cur]||'€';
+  var isDecimal=(cur==='EUR'||cur==='USD');
+  document.querySelectorAll('.pcard-price').forEach(function(el){
+    var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
+    var val=base*rate;
+    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('fr-FR');
+    el.innerHTML='<span class="sym">'+sym+'</span>'+disp;
+  });
+  document.querySelectorAll('.pcard-orig').forEach(function(el){
+    var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
+    var val=base*rate;
+    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('fr-FR');
+    el.textContent=sym+disp;
+  });
+}
+window.addEventListener('DOMContentLoaded',function(){
+  initPrices();
+  if(XS_CUR!=='EUR')setCurrency(XS_CUR);
+  var sel=document.getElementById('xs-cur');if(sel)sel.value=XS_CUR;
+});
 
 // Cat bar active
 document.querySelectorAll('.cat-link').forEach(function(a){a.addEventListener('click',function(){document.querySelectorAll('.cat-link').forEach(l=>l.classList.remove('active'));this.classList.add('active');});});
