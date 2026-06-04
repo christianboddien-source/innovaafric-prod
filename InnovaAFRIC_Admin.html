@@ -932,7 +932,7 @@ select.form-input option{background:var(--s2)}
       <div class="card" style="margin-bottom:16px">
         <div class="card-head">
           <div><div class="card-title">📈 Tasas y comisiones globales</div><div class="card-sub">Valores base · Supabase config table</div></div>
-          <button class="topbar-btn btn-primary" onclick="saveRates()">💾 Guardar en Supabase</button>
+          <button class="topbar-btn btn-primary" onclick="saveRates()" data-i18n="btn:save-supabase">💾 Guardar en Supabase</button>
         </div>
         <div style="padding:20px">
           <div style="font-size:13px;font-weight:600;margin-bottom:12px" data-pg-heading>Tasas de cambio</div>
@@ -947,13 +947,13 @@ select.form-input option{background:var(--s2)}
           <div><div class="card-title">🌍 Tasas y comisiones por país</div><div class="card-sub">Reglas específicas por país, moneda y tipo de operación</div></div>
           <div style="display:flex;gap:8px">
             <select class="filter-select" id="cr-filter-type" onchange="loadCountryRates()">
-              <option value="">Todos los tipos</option>
-              <option value="tasa">Tasas de cambio</option>
-              <option value="comision">Comisiones</option>
-              <option value="limite">Límites</option>
+              <option value="" data-i18n="filter:all-types">Todos los tipos</option>
+              <option value="tasa" data-i18n="filter:exchange-rates">Tasas de cambio</option>
+              <option value="comision" data-i18n="filter:commissions">Comisiones</option>
+              <option value="limite" data-i18n="filter:limits">Límites</option>
             </select>
             <select class="filter-select" id="cr-filter-country" onchange="loadCountryRates()">
-              <option value="">Todos los países</option>
+              <option value="" data-i18n="filter:all-countries">Todos los países</option>
               <option value="CM">🇨🇲 Camerún</option>
               <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
               <option value="SN">🇸🇳 Senegal</option>
@@ -970,7 +970,7 @@ select.form-input option{background:var(--s2)}
               <option value="DE">🇩🇪 Alemania</option>
               <option value="ALL">🌐 Global</option>
             </select>
-            <button class="topbar-btn btn-primary" onclick="openNewCountryRate()">+ Nueva tasa</button>
+            <button class="topbar-btn btn-primary" onclick="openNewCountryRate()" data-i18n="btn:new-rate">+ Nueva tasa</button>
           </div>
         </div>
         <div style="padding:16px 20px" id="country-rates-list"><div class="loading-cell"><div class="spin"></div></div></div>
@@ -981,14 +981,14 @@ select.form-input option{background:var(--s2)}
     <div class="modal-overlay" id="m-new-country-rate" style="display:none" onclick="if(event.target===this)closeModal('m-new-country-rate')">
       <div class="modal" style="max-width:520px;width:95%">
         <div class="modal-head">
-          <div class="modal-title" id="cr-modal-title">➕ Nueva tasa / comisión</div>
+          <div class="modal-title" id="cr-modal-title" data-i18n="lbl:new-country-rate">➕ Nueva tasa / comisión</div>
           <button class="modal-close" onclick="closeModal('m-new-country-rate')">✕</button>
         </div>
         <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
           <input type="hidden" id="cr-edit-id">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group" style="margin:0">
-              <label class="form-label">País *</label>
+              <label class="form-label" data-i18n="lbl:country">País *</label>
               <select class="form-input" id="cr-country">
                 <option value="ALL">🌐 Global (todos)</option>
                 <option value="CM">🇨🇲 Camerún</option>
@@ -1016,7 +1016,7 @@ select.form-input option{background:var(--s2)}
               </select>
             </div>
             <div class="form-group" style="margin:0">
-              <label class="form-label">Tipo *</label>
+              <label class="form-label" data-i18n="lbl:type">Tipo *</label>
               <select class="form-input" id="cr-type" onchange="toggleCrFields()">
                 <option value="comision">💸 Comisión</option>
                 <option value="tasa">💱 Tasa de cambio</option>
@@ -1025,18 +1025,18 @@ select.form-input option{background:var(--s2)}
             </div>
           </div>
           <div class="form-group" style="margin:0">
-            <label class="form-label">Concepto / Nombre *</label>
-            <input class="form-input" id="cr-name" placeholder="Ej: MTN Mobile Money, Envío EUR→XAF, Límite diario...">
+            <label class="form-label" data-i18n="lbl:concept">Concepto / Nombre *</label>
+            <input class="form-input" id="cr-name" data-i18n-ph="lbl:concept-ph" placeholder="Ej: MTN Mobile Money, Envío EUR→XAF, Límite diario...">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group" style="margin:0">
-              <label class="form-label" id="cr-val-label">Valor (%)</label>
+              <label class="form-label" id="cr-val-label" data-i18n="lbl:value">Valor (%)</label>
               <input class="form-input" id="cr-value" type="number" step="0.001" placeholder="0.00">
             </div>
             <div class="form-group" style="margin:0">
-              <label class="form-label">Moneda / Par</label>
+              <label class="form-label" data-i18n="lbl:currency-pair">Moneda / Par</label>
               <select class="form-input" id="cr-currency">
-                <option value="">— Ninguna —</option>
+                <option value="" data-i18n="lbl:all-currency">— Ninguna —</option>
                 <option value="EUR">EUR — Euro</option>
                 <option value="XAF">XAF — Franco CFA CEMAC</option>
                 <option value="XOF">XOF — Franco CFA UEMOA</option>
@@ -1056,19 +1056,19 @@ select.form-input option{background:var(--s2)}
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="cr-limit-fields" style="display:none">
             <div class="form-group" style="margin:0">
-              <label class="form-label">Mín. por operación</label>
+              <label class="form-label" data-i18n="lbl:min">Mín. por operación</label>
               <input class="form-input" id="cr-min" type="number" step="0.01" placeholder="0">
             </div>
             <div class="form-group" style="margin:0">
-              <label class="form-label">Máx. por operación</label>
+              <label class="form-label" data-i18n="lbl:max">Máx. por operación</label>
               <input class="form-input" id="cr-max" type="number" step="0.01" placeholder="Sin límite">
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div class="form-group" style="margin:0">
-              <label class="form-label">Método de pago</label>
+              <label class="form-label" data-i18n="lbl:payment-method">Método de pago</label>
               <select class="form-input" id="cr-method">
-                <option value="">— Todos —</option>
+                <option value="" data-i18n="lbl:all-payment">— Todos —</option>
                 <option value="mtn">MTN Mobile Money</option>
                 <option value="orange">Orange Money</option>
                 <option value="banco">Transferencia bancaria</option>
@@ -1079,21 +1079,21 @@ select.form-input option{background:var(--s2)}
               </select>
             </div>
             <div class="form-group" style="margin:0">
-              <label class="form-label">Estado</label>
+              <label class="form-label" data-i18n="lbl:status">Estado</label>
               <select class="form-input" id="cr-active">
-                <option value="1">✅ Activo</option>
-                <option value="0">❌ Inactivo</option>
+                <option value="1" data-i18n="lbl:active">✅ Activo</option>
+                <option value="0" data-i18n="lbl:inactive">❌ Inactivo</option>
               </select>
             </div>
           </div>
           <div class="form-group" style="margin:0">
-            <label class="form-label">Notas internas</label>
-            <input class="form-input" id="cr-notes" placeholder="Descripción interna, condiciones especiales...">
+            <label class="form-label" data-i18n="lbl:internal-notes">Notas internas</label>
+            <input class="form-input" id="cr-notes" data-i18n-ph="lbl:notes-ph" placeholder="Descripción interna, condiciones especiales...">
           </div>
         </div>
         <div style="padding:0 20px 20px;display:flex;justify-content:flex-end;gap:8px">
-          <button class="topbar-btn btn-ghost" onclick="closeModal('m-new-country-rate')">Cancelar</button>
-          <button class="topbar-btn btn-primary" onclick="saveCountryRate()">💾 Guardar</button>
+          <button class="topbar-btn btn-ghost" onclick="closeModal('m-new-country-rate')" data-i18n="btn:cancel">Cancelar</button>
+          <button class="topbar-btn btn-primary" onclick="saveCountryRate()" data-i18n="btn:save">💾 Guardar</button>
         </div>
       </div>
     </div>
@@ -6360,6 +6360,10 @@ function nav(page,el){
   if(page==='mapa')loadMapa();
   if(page==='cargos')loadCargos();
   if(page==='proveedores')loadProveedores();
+  // Re-apply translations after page content loads (async content needs delay)
+  if(typeof ADMIN_LANG!=='undefined'&&ADMIN_LANG!=='es'){
+    setTimeout(function(){_applyPageContentTranslation(ADMIN_LANG);},700);
+  }
 }
 function refreshCurrent(){
   if(CURRENT_PAGE==='dashboard')loadDashboard();
@@ -7081,15 +7085,15 @@ async function loadCountryRates(){
   }
   list.innerHTML='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">'
     +'<thead><tr style="border-bottom:1px solid var(--b1);color:var(--muted);font-size:11px;font-weight:600">'
-    +'<th style="padding:8px 10px;text-align:left">PAÍS</th>'
-    +'<th style="padding:8px 10px;text-align:left">TIPO</th>'
-    +'<th style="padding:8px 10px;text-align:left">CONCEPTO</th>'
-    +'<th style="padding:8px 10px;text-align:left">MÉTODO</th>'
-    +'<th style="padding:8px 10px;text-align:left">MONEDA</th>'
-    +'<th style="padding:8px 10px;text-align:right">VALOR</th>'
-    +'<th style="padding:8px 10px;text-align:right">MÍN/MÁX</th>'
-    +'<th style="padding:8px 10px;text-align:center">ESTADO</th>'
-    +'<th style="padding:8px 10px;text-align:center">ACCIONES</th>'
+    +'<th style="padding:8px 10px;text-align:left">'+_i18n('th:country')+'</th>'
+    +'<th style="padding:8px 10px;text-align:left">'+_i18n('th:type')+'</th>'
+    +'<th style="padding:8px 10px;text-align:left">'+_i18n('th:concept')+'</th>'
+    +'<th style="padding:8px 10px;text-align:left">'+_i18n('th:method')+'</th>'
+    +'<th style="padding:8px 10px;text-align:left">'+_i18n('th:currency')+'</th>'
+    +'<th style="padding:8px 10px;text-align:right">'+_i18n('th:value')+'</th>'
+    +'<th style="padding:8px 10px;text-align:right">'+_i18n('th:min-max')+'</th>'
+    +'<th style="padding:8px 10px;text-align:center">'+_i18n('th:status')+'</th>'
+    +'<th style="padding:8px 10px;text-align:center">'+_i18n('th:actions')+'</th>'
     +'</tr></thead><tbody>'
     +rows.map(function(r,i){
       var idx=COUNTRY_RATES.indexOf(r);
@@ -7117,9 +7121,9 @@ function toggleCrFields(){
   var lbl=document.getElementById('cr-val-label');
   var lf=document.getElementById('cr-limit-fields');
   if(lbl){
-    if(type==='tasa')lbl.textContent='Valor (tasa directa)';
-    else if(type==='limite')lbl.textContent='Valor referencia';
-    else lbl.textContent='Valor (%)';
+    if(type==='tasa'){lbl.textContent=_i18n('lbl:value-rate');lbl.setAttribute('data-i18n','lbl:value-rate');}
+    else if(type==='limite'){lbl.textContent=_i18n('lbl:value-limit');lbl.setAttribute('data-i18n','lbl:value-limit');}
+    else{lbl.textContent=_i18n('lbl:value');lbl.setAttribute('data-i18n','lbl:value');}
   }
   if(lf)lf.style.display=type==='limite'?'grid':'none';
 }
@@ -9624,7 +9628,42 @@ var ADMIN_TR={
     'msg:send':'Enviar ➤',
     'btn:back':'← Volver','btn:save':'Guardar','btn:cancel':'Cancelar',
     'btn:create':'Crear','btn:delete':'Eliminar','btn:edit':'Editar',
-    'btn:send':'Enviar','btn:apply':'Aplicar','btn:export':'Exportar'
+    'btn:send':'Enviar','btn:apply':'Aplicar','btn:export':'Exportar',
+    'btn:new-user':'+ Nuevo usuario','btn:export-all':'📥 Exportar todo','btn:export-csv':'📥 CSV','btn:export-pdf':'📄 PDF',
+    'btn:save-supabase':'💾 Guardar en Supabase','btn:new-rate':'+ Nueva tasa','btn:new':'+ Nuevo',
+    'btn:scan':'🔍 Escanear','btn:refresh':'↻ Actualizar','btn:search-ai':'🔍 Buscar IA',
+    'btn:verify':'↻ Verificar','btn:add-ip':'+ Añadir IP','btn:new-admin':'+ Nuevo admin',
+    'btn:generate-pdf':'📄 Exportar PDF','btn:full-pdf':'📄 PDF completo',
+    'filter:all-types':'Todos los tipos','filter:exchange-rates':'Tasas de cambio',
+    'filter:commissions':'Comisiones','filter:limits':'Límites','filter:all-countries':'Todos los países',
+    'filter:all-roles':'Todos los roles','filter:all-status':'Todos los estados',
+    'filter:active':'Activo','filter:inactive':'Inactivo','filter:pending':'Pendiente',
+    'filter:completed':'Completado','filter:failed':'Fallido','filter:all':'Todos',
+    'th:country':'PAÍS','th:type':'TIPO','th:concept':'CONCEPTO','th:method':'MÉTODO',
+    'th:currency':'MONEDA','th:value':'VALOR','th:min-max':'MÍN/MÁX','th:status':'ESTADO',
+    'th:actions':'ACCIONES','th:user':'USUARIO','th:email':'EMAIL','th:role':'ROL',
+    'th:date':'FECHA','th:amount':'MONTO','th:name':'NOMBRE','th:description':'DESCRIPCIÓN',
+    'th:id':'ID','th:balance':'SALDO','th:country-full':'PAÍS','th:phone':'TELÉFONO',
+    'th:created':'FECHA REG.','th:ticket':'TICKET','th:priority':'PRIORIDAD',
+    'th:assigned':'ASIGNADO','th:category':'CATEGORÍA','th:rate':'TASA','th:fee':'COMISIÓN',
+    'lbl:country':'País *','lbl:type':'Tipo *','lbl:concept':'Concepto / Nombre *',
+    'lbl:value':'Valor (%)','lbl:value-rate':'Valor (tasa directa)','lbl:value-limit':'Valor referencia',
+    'lbl:currency-pair':'Moneda / Par','lbl:payment-method':'Método de pago',
+    'lbl:status':'Estado','lbl:internal-notes':'Notas internas',
+    'lbl:min':'Mín. por operación','lbl:max':'Máx. por operación',
+    'lbl:new-country-rate':'➕ Nueva tasa / comisión','lbl:edit-country-rate':'✏️ Editar tasa / comisión',
+    'lbl:active':'✅ Activo','lbl:inactive':'❌ Inactivo',
+    'lbl:all-payment':'— Todos —','lbl:all-currency':'— Ninguna —',
+    'lbl:concept-ph':'Ej: MTN Mobile Money, Envío EUR→XAF, Límite diario...',
+    'lbl:notes-ph':'Descripción interna, condiciones especiales...',
+    'lbl:fullname':'Nombre completo','lbl:email':'Email','lbl:phone':'Teléfono',
+    'lbl:password':'Contraseña','lbl:country-sel':'País','lbl:role':'Rol',
+    'lbl:city':'Ciudad','lbl:address':'Dirección',
+    'msg:empty-rates':'Sin entradas — Usa "+ Nueva tasa" para añadir',
+    'msg:no-filter':'Sin contactos con este filtro',
+    'msg:confirm-delete':'¿Eliminar esta entrada?',
+    'msg:rate-saved':'✅ Tasa guardada','msg:rate-deleted':'🗑️ Entrada eliminada',
+    'pg:new-user-title':'Crear nuevo usuario','pg:rates-title':'Tasas y comisiones'
   },
   en:{
     'grp:Principal':'Main','grp:Operaciones':'Operations','grp:Config':'Config',
@@ -9712,7 +9751,41 @@ var ADMIN_TR={
     'msg:send':'Send ➤',
     'btn:back':'← Back','btn:save':'Save','btn:cancel':'Cancel',
     'btn:create':'Create','btn:delete':'Delete','btn:edit':'Edit',
-    'btn:send':'Send','btn:apply':'Apply','btn:export':'Export'
+    'btn:send':'Send','btn:apply':'Apply','btn:export':'Export',
+    'btn:new-user':'+ New user','btn:export-all':'📥 Export all','btn:export-csv':'📥 CSV','btn:export-pdf':'📄 PDF',
+    'btn:save-supabase':'💾 Save to Supabase','btn:new-rate':'+ New rate','btn:new':'+ New',
+    'btn:scan':'🔍 Scan','btn:refresh':'↻ Refresh','btn:search-ai':'🔍 AI Search',
+    'btn:verify':'↻ Verify','btn:add-ip':'+ Add IP','btn:new-admin':'+ New admin',
+    'btn:generate-pdf':'📄 Export PDF','btn:full-pdf':'📄 Full PDF',
+    'filter:all-types':'All types','filter:exchange-rates':'Exchange rates',
+    'filter:commissions':'Commissions','filter:limits':'Limits','filter:all-countries':'All countries',
+    'filter:all-roles':'All roles','filter:all-status':'All statuses',
+    'filter:active':'Active','filter:inactive':'Inactive','filter:pending':'Pending',
+    'filter:completed':'Completed','filter:failed':'Failed','filter:all':'All',
+    'th:country':'COUNTRY','th:type':'TYPE','th:concept':'CONCEPT','th:method':'METHOD',
+    'th:currency':'CURRENCY','th:value':'VALUE','th:min-max':'MIN/MAX','th:status':'STATUS',
+    'th:actions':'ACTIONS','th:user':'USER','th:email':'EMAIL','th:role':'ROLE',
+    'th:date':'DATE','th:amount':'AMOUNT','th:name':'NAME','th:description':'DESCRIPTION',
+    'th:id':'ID','th:balance':'BALANCE','th:country-full':'COUNTRY','th:phone':'PHONE',
+    'th:created':'REG. DATE','th:ticket':'TICKET','th:priority':'PRIORITY',
+    'th:assigned':'ASSIGNED','th:category':'CATEGORY','th:rate':'RATE','th:fee':'FEE',
+    'lbl:country':'Country *','lbl:type':'Type *','lbl:concept':'Concept / Name *',
+    'lbl:value':'Value (%)','lbl:value-rate':'Value (direct rate)','lbl:value-limit':'Reference value',
+    'lbl:currency-pair':'Currency / Pair','lbl:payment-method':'Payment method',
+    'lbl:status':'Status','lbl:internal-notes':'Internal notes',
+    'lbl:min':'Min. per operation','lbl:max':'Max. per operation',
+    'lbl:new-country-rate':'➕ New rate / commission','lbl:edit-country-rate':'✏️ Edit rate / commission',
+    'lbl:active':'✅ Active','lbl:inactive':'❌ Inactive',
+    'lbl:all-payment':'— All —','lbl:all-currency':'— None —',
+    'lbl:concept-ph':'e.g. MTN Mobile Money, EUR→XAF transfer, Daily limit...',
+    'lbl:notes-ph':'Internal description, special conditions...',
+    'lbl:fullname':'Full name','lbl:email':'Email','lbl:phone':'Phone',
+    'lbl:password':'Password','lbl:country-sel':'Country','lbl:role':'Role',
+    'lbl:city':'City','lbl:address':'Address',
+    'msg:empty-rates':'No entries — Use "+ New rate" to add','msg:no-filter':'No contacts with this filter',
+    'msg:confirm-delete':'Delete this entry?',
+    'msg:rate-saved':'✅ Rate saved','msg:rate-deleted':'🗑️ Entry deleted',
+    'pg:new-user-title':'Create new user','pg:rates-title':'Rates & commissions'
   },
   fr:{
     'grp:Principal':'Principal','grp:Operaciones':'Opérations','grp:Config':'Config',
@@ -9800,7 +9873,42 @@ var ADMIN_TR={
     'msg:send':'Envoyer ➤',
     'btn:back':'← Retour','btn:save':'Enregistrer','btn:cancel':'Annuler',
     'btn:create':'Créer','btn:delete':'Supprimer','btn:edit':'Modifier',
-    'btn:send':'Envoyer','btn:apply':'Appliquer','btn:export':'Exporter'
+    'btn:send':'Envoyer','btn:apply':'Appliquer','btn:export':'Exporter',
+    'btn:new-user':'+ Nouvel utilisateur','btn:export-all':'📥 Tout exporter','btn:export-csv':'📥 CSV','btn:export-pdf':'📄 PDF',
+    'btn:save-supabase':'💾 Enregistrer dans Supabase','btn:new-rate':'+ Nouveau taux','btn:new':'+ Nouveau',
+    'btn:scan':'🔍 Scanner','btn:refresh':'↻ Actualiser','btn:search-ai':'🔍 Recherche IA',
+    'btn:verify':'↻ Vérifier','btn:add-ip':'+ Ajouter IP','btn:new-admin':'+ Nouvel admin',
+    'btn:generate-pdf':'📄 Exporter PDF','btn:full-pdf':'📄 PDF complet',
+    'filter:all-types':'Tous les types','filter:exchange-rates':'Taux de change',
+    'filter:commissions':'Commissions','filter:limits':'Limites','filter:all-countries':'Tous les pays',
+    'filter:all-roles':'Tous les rôles','filter:all-status':'Tous les statuts',
+    'filter:active':'Actif','filter:inactive':'Inactif','filter:pending':'En attente',
+    'filter:completed':'Complété','filter:failed':'Échoué','filter:all':'Tous',
+    'th:country':'PAYS','th:type':'TYPE','th:concept':'CONCEPT','th:method':'MÉTHODE',
+    'th:currency':'DEVISE','th:value':'VALEUR','th:min-max':'MIN/MAX','th:status':'ÉTAT',
+    'th:actions':'ACTIONS','th:user':'UTILISATEUR','th:email':'EMAIL','th:role':'RÔLE',
+    'th:date':'DATE','th:amount':'MONTANT','th:name':'NOM','th:description':'DESCRIPTION',
+    'th:id':'ID','th:balance':'SOLDE','th:country-full':'PAYS','th:phone':'TÉLÉPHONE',
+    'th:created':'DATE INSCR.','th:ticket':'TICKET','th:priority':'PRIORITÉ',
+    'th:assigned':'ASSIGNÉ','th:category':'CATÉGORIE','th:rate':'TAUX','th:fee':'COMMISSION',
+    'lbl:country':'Pays *','lbl:type':'Type *','lbl:concept':'Concept / Nom *',
+    'lbl:value':'Valeur (%)','lbl:value-rate':'Valeur (taux direct)','lbl:value-limit':'Valeur de référence',
+    'lbl:currency-pair':'Devise / Paire','lbl:payment-method':'Méthode de paiement',
+    'lbl:status':'État','lbl:internal-notes':'Notes internes',
+    'lbl:min':'Min. par opération','lbl:max':'Max. par opération',
+    'lbl:new-country-rate':'➕ Nouveau taux / commission','lbl:edit-country-rate':'✏️ Modifier taux / commission',
+    'lbl:active':'✅ Actif','lbl:inactive':'❌ Inactif',
+    'lbl:all-payment':'— Tous —','lbl:all-currency':'— Aucune —',
+    'lbl:concept-ph':'Ex. MTN Mobile Money, Envoi EUR→XAF, Limite journalière...',
+    'lbl:notes-ph':'Description interne, conditions spéciales...',
+    'lbl:fullname':'Nom complet','lbl:email':'Email','lbl:phone':'Téléphone',
+    'lbl:password':'Mot de passe','lbl:country-sel':'Pays','lbl:role':'Rôle',
+    'lbl:city':'Ville','lbl:address':'Adresse',
+    'msg:empty-rates':'Aucune entrée — Utilisez "+ Nouveau taux" pour ajouter',
+    'msg:no-filter':'Aucun contact avec ce filtre',
+    'msg:confirm-delete':'Supprimer cette entrée ?',
+    'msg:rate-saved':'✅ Taux enregistré','msg:rate-deleted':'🗑️ Entrée supprimée',
+    'pg:new-user-title':'Créer un nouvel utilisateur','pg:rates-title':'Taux et commissions'
   }
 };
 
@@ -10167,6 +10275,11 @@ function applyAdminLang(){
     var k=el.getAttribute('data-i18n');
     if(T[k]!==undefined&&typeof T[k]==='string'){el.textContent=T[k];}
   });
+  // ── Placeholders con data-i18n-ph ──
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    var k=el.getAttribute('data-i18n-ph');
+    if(T[k]!==undefined&&typeof T[k]==='string'){el.placeholder=T[k];}
+  });
   // ── Search placeholder ──
   var gs=document.getElementById('global-search');if(gs)gs.placeholder=T['search:ph']||gs.placeholder;
   // ── Notif panel ──
@@ -10256,6 +10369,9 @@ nav=function(page,el){
   if(page==='calendario')renderCalendar();
   if(page==='email'){loadEmailFolder('inbox');loadEmailUsers();}
   if(page==='mensajeria')loadMsgContacts();
+  if(typeof ADMIN_LANG!=='undefined'&&ADMIN_LANG!=='es'){
+    setTimeout(function(){_applyPageContentTranslation(ADMIN_LANG);},700);
+  }
 };
 
 // ── DASHBOARD 4 MONEDAS ──────────────────────────────
