@@ -8434,8 +8434,34 @@ async function loadLoans(){
 
   const r=await rwAPI('GET','/loans');
   if(!r.success){
-    // Fallback — show empty state with instruction
-    document.getElementById('tb-loans').innerHTML='<tr><td colspan="8" class="td-empty">Conecta Railway para ver préstamos</td></tr>';
+    // Fallback: query Supabase loans table directly
+    try{
+      const sbL=await SB.from('loans').select('id,user_id,amount,currency,purpose,status,due_date,created_at,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(200);
+      if(sbL.data&&sbL.data.length){
+        ALL_LOANS=sbL.data.map(function(l){
+          return{id:l.id,userId:l.user_id,user:{name:(l.user&&l.user.full_name)||l.user_id,email:(l.user&&l.user.email)||''},
+            amount:Number(l.amount||0),currency:l.currency||'XAF',purpose:l.purpose||'personal',
+            status:l.status||'pending',dueDate:l.due_date};
+        });
+      }else{
+        document.getElementById('tb-loans').innerHTML='<tr><td colspan="8" class="td-empty">Sin préstamos registrados</td></tr>';
+        return;
+      }
+    }catch(sbErr){
+      document.getElementById('tb-loans').innerHTML='<tr><td colspan="8" class="td-empty">Sin datos disponibles — Railway y Supabase inaccesibles</td></tr>';
+      return;
+    }
+    // Update KPI cards from Supabase data
+    document.getElementById('loans-total').textContent=ALL_LOANS.length;
+    ['pending','approved','disbursed','repaid','rejected'].forEach(function(st){
+      var el=document.getElementById('loans-'+st);
+      if(el)el.textContent=ALL_LOANS.filter(function(l){return l.status===st;}).length;
+    });
+    var loansPending=ALL_LOANS.filter(function(l){return l.status==='pending';}).length;
+    var loansBadge=document.getElementById('sb-loans-count');
+    if(loansBadge){loansBadge.textContent=loansPending;loansBadge.style.display=loansPending>0?'inline':'none';}
+    renderLoansTable(ALL_LOANS);
+    toast('Préstamos cargados desde Supabase','info');
     return;
   }
   ALL_LOANS=r.data.loans||r.data.items||[];
@@ -8513,7 +8539,32 @@ async function loadTontinas(){
   try{
 
   const r=await rwAPI('GET','/admin/tontines');
-  if(!r.success){document.getElementById('tb-tontinas').innerHTML='<tr><td colspan="9" class="td-empty">Railway no disponible</td></tr>';return;}
+  if(!r.success){
+    try{
+      const sbT=await SB.from('tontinas').select('id,name,contribution_amount,currency,frequency,max_members,current_round,status,created_at').order('created_at',{ascending:false}).limit(100);
+      if(sbT.data&&sbT.data.length){
+        // Count members per tontina
+        const sbMem=await SB.from('tontina_members').select('tontina_id,status').limit(2000).catch(function(){return{data:[]};});
+        const memMap={};
+        (sbMem.data||[]).forEach(function(m){if(!memMap[m.tontina_id])memMap[m.tontina_id]=0;memMap[m.tontina_id]++;});
+        ALL_TONTINAS=sbT.data.map(function(t){
+          return{id:t.id,name:t.name,contributionAmount:Number(t.contribution_amount||0),currency:t.currency||'XAF',
+            frequency:t.frequency||'monthly',maxMembers:Number(t.max_members||0),
+            currentRound:Number(t.current_round||1),status:t.status||'open',
+            _count:{members:memMap[t.id]||0}};
+        });
+      }else{
+        document.getElementById('tb-tontinas').innerHTML='<tr><td colspan="9" class="td-empty">Sin tontinas registradas</td></tr>';return;
+      }
+    }catch(e){document.getElementById('tb-tontinas').innerHTML='<tr><td colspan="9" class="td-empty">Sin datos disponibles</td></tr>';return;}
+    document.getElementById('tontines-total').textContent=ALL_TONTINAS.length;
+    ['open','active','closed'].forEach(function(st){
+      var el=document.getElementById('tontines-'+st);
+      if(el)el.textContent=ALL_TONTINAS.filter(function(t){return t.status===st;}).length;
+    });
+    renderTontinasTable(ALL_TONTINAS);
+    toast('Tontinas cargadas desde Supabase','info');return;
+  }
   ALL_TONTINAS=r.data.tontines||r.data.items||[];
   const s=r.data.stats||{};
   document.getElementById('tontines-total').textContent=s.total||ALL_TONTINAS.length||0;
@@ -8547,7 +8598,27 @@ async function loadVCards(){
   try{
 
   const r=await rwAPI('GET','/admin/cards');
-  if(!r.success){document.getElementById('tb-vcards').innerHTML='<tr><td colspan="9" class="td-empty">Railway no disponible</td></tr>';return;}
+  if(!r.success){
+    try{
+      const sbVC=await SB.from('virtual_cards').select('id,user_id,label,card_number,currency,balance,spent_total,is_frozen,status,created_at,user:user_id(full_name)').order('created_at',{ascending:false}).limit(200);
+      if(sbVC.data&&sbVC.data.length){
+        ALL_VCARDS=sbVC.data.map(function(c){
+          return{id:c.id,userId:c.user_id,user:{name:(c.user&&c.user.full_name)||c.user_id},
+            label:c.label||'Tarjeta virtual',number:c.card_number||'••••',currency:c.currency||'XAF',
+            balance:Number(c.balance||0),spentTotal:Number(c.spent_total||0),
+            frozen:c.is_frozen||false,status:c.status||'active',createdAt:c.created_at};
+        });
+      }else{
+        document.getElementById('tb-vcards').innerHTML='<tr><td colspan="9" class="td-empty">Sin tarjetas virtuales registradas</td></tr>';return;
+      }
+    }catch(e){document.getElementById('tb-vcards').innerHTML='<tr><td colspan="9" class="td-empty">Sin datos disponibles</td></tr>';return;}
+    document.getElementById('vcards-total').textContent=ALL_VCARDS.length;
+    document.getElementById('vcards-active').textContent=ALL_VCARDS.filter(function(c){return c.status==='active'&&!c.frozen;}).length;
+    document.getElementById('vcards-frozen').textContent=ALL_VCARDS.filter(function(c){return c.frozen;}).length;
+    document.getElementById('vcards-cancelled').textContent=ALL_VCARDS.filter(function(c){return c.status==='cancelled';}).length;
+    renderVCardsTable(ALL_VCARDS);
+    toast('Tarjetas virtuales cargadas desde Supabase','info');return;
+  }
   ALL_VCARDS=r.data.cards||r.data.items||[];
   const s=r.data.stats||{};
   document.getElementById('vcards-total').textContent=s.total||ALL_VCARDS.length||0;
@@ -8588,7 +8659,9 @@ async function loadAccounting(){
   try{
 
   const[rSum,rEnt]=await Promise.all([rwAPI('GET','/accounting/summary'),rwAPI('GET','/accounting?limit=100')]);
-  if(rSum.success){
+  const summaryOk=rSum&&rSum.success;
+  const entriesOk=rEnt&&rEnt.success;
+  if(summaryOk){
     const d=rSum.data;
     document.getElementById('acc-income').textContent=Number(d.total_income||0).toLocaleString('es');
     document.getElementById('acc-expenses').textContent=Number(d.total_expenses||0).toLocaleString('es');
@@ -8598,11 +8671,43 @@ async function loadAccounting(){
     profEl.style.color=profit>=0?'var(--green)':'var(--red)';
     document.getElementById('acc-entries').textContent=d.entries_count||0;
   }
-  if(rEnt.success){
+  if(entriesOk){
     ALL_ACCOUNTING=rEnt.data.items||rEnt.data||[];
     renderAccountingTable(ALL_ACCOUNTING);
   }else{
-    document.getElementById('tb-accounting').innerHTML='<tr><td colspan="7" class="td-empty">Railway no disponible</td></tr>';
+    // Fallback: Supabase accounting_entries table
+    try{
+      const sbAcc=await SB.from('accounting_entries').select('id,type,category,description,amount,currency,date,created_at').order('created_at',{ascending:false}).limit(200);
+      if(sbAcc.data&&sbAcc.data.length){
+        ALL_ACCOUNTING=sbAcc.data.map(function(e){
+          return{id:e.id,type:e.type||'income',category:e.category||'—',description:e.description||'—',
+            amount:Number(e.amount||0),currency:e.currency||'XAF',date:e.date||e.created_at};
+        });
+        if(!summaryOk){
+          const income=ALL_ACCOUNTING.filter(function(e){return e.type==='income';}).reduce(function(s,e){return s+e.amount;},0);
+          const expenses=ALL_ACCOUNTING.filter(function(e){return e.type==='expense';}).reduce(function(s,e){return s+e.amount;},0);
+          const profit=income-expenses;
+          document.getElementById('acc-income').textContent=income.toLocaleString('es');
+          document.getElementById('acc-expenses').textContent=expenses.toLocaleString('es');
+          const profEl=document.getElementById('acc-profit');
+          if(profEl){profEl.textContent=profit.toLocaleString('es');profEl.style.color=profit>=0?'var(--green)':'var(--red)';}
+          document.getElementById('acc-entries').textContent=ALL_ACCOUNTING.length;
+        }
+        renderAccountingTable(ALL_ACCOUNTING);
+        toast('Contabilidad cargada desde Supabase','info');
+      }else{
+        // If no accounting table, derive income from transactions
+        const sbTx=await SB.from('transactions').select('amount,fee,status,type,created_at').limit(500);
+        const txOk=(sbTx.data||[]).filter(function(t){return t.status!=='failed';});
+        const income=txOk.reduce(function(s,t){return s+(Number(t.fee)||Number(t.amount||0)*0.022);},0);
+        document.getElementById('acc-income').textContent=Math.round(income).toLocaleString('es');
+        document.getElementById('acc-expenses').textContent='—';
+        document.getElementById('acc-entries').textContent=txOk.length;
+        document.getElementById('tb-accounting').innerHTML='<tr><td colspan="7" class="td-empty">Sin entradas contables — ingresos calculados desde transacciones</td></tr>';
+      }
+    }catch(e2){
+      document.getElementById('tb-accounting').innerHTML='<tr><td colspan="7" class="td-empty">Sin datos disponibles</td></tr>';
+    }
   }
 
   }catch(e){console.warn("loadAccounting:",e);try{var el=document.querySelector("[id^='tb-']");if(el)el.innerHTML='<tr><td colspan="10" class="td-empty">Error cargando datos</td></tr>';}catch(_){}}
