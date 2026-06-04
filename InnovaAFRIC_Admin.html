@@ -10904,6 +10904,32 @@ loadProveedores=async function(){
 };
 
 // ── CONTACTOS FILTROS ──────────────────────────────────────────
+function _doContactFilter(role){
+  _CONTACT_ROLE=(role==='Todos'||!role)?'':role;
+  var list=document.getElementById('contactos-list');
+  if(!list)return;
+  var filtered=(ALL_USERS||[]).slice();
+  if(_CONTACT_ROLE)filtered=filtered.filter(function(u){return u.role===_CONTACT_ROLE;});
+  var qi=document.getElementById('contact-search');
+  var q=qi?qi.value.toLowerCase():'';
+  if(q)filtered=filtered.filter(function(u){return(u.full_name||'').toLowerCase().indexOf(q)>=0||(u.email||'').toLowerCase().indexOf(q)>=0;});
+  if(!filtered.length){list.innerHTML='<div class="td-empty">Sin contactos con este filtro</div>';return;}
+  list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">'+filtered.map(function(u){
+    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var nm=(u.full_name||u.email||'').replace(/'/g,'');
+    return'<div class="contact-card">'
+      +'<div class="uc-av" style="width:40px;height:40px;font-size:14px;background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:13px;font-weight:600">'+(u.full_name||'—')+'</div>'
+      +'<div style="font-size:11px;color:var(--muted)">'+(u.email||'')+'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:4px">'+pill(u.role)+'<span style="font-family:var(--mono);font-size:10px;color:var(--cyan)">'+ia+'</span></div>'
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:4px">'
+      +'<button onclick="openMsgWith(\''+u.id+'\',\''+nm+'\');nav(\'mensajeria\',null)" style="background:var(--cyan-d);border:none;border-radius:6px;padding:4px 8px;color:var(--cyan);cursor:pointer;font-size:11px">💬</button>'
+      +'<button onclick="prefillEmail(\''+u.id+'\');openModal(\'m-new-email\')" style="background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:4px 8px;color:var(--muted);cursor:pointer;font-size:11px">📧</button>'
+      +'</div></div>';
+  }).join('')+'</div>';
+}
 var _origLoadContactos_v21=loadContactos;
 loadContactos=function(){
   _origLoadContactos_v21();
@@ -10922,10 +10948,9 @@ loadContactos=function(){
     btn.onclick=function(){
       document.querySelectorAll('#contact-tabs button').forEach(function(b){b.style.background='var(--s2)';b.style.color='var(--muted)';});
       btn.style.background='var(--cyan-d)';btn.style.color='var(--cyan)';
-      _CONTACT_ROLE=role==='Todos'?'':role;
       var sel=document.getElementById('contact-role-filter');
-      if(sel)sel.value=_CONTACT_ROLE;
-      filterContactos();
+      if(sel)sel.value=(role==='Todos'?'':role);
+      _doContactFilter(role);
     };
     tabs.appendChild(btn);
   });
