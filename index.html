@@ -941,31 +941,158 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div style="padding:0 14px">
         <div class="section-title">Mi cuenta</div>
         <div class="card" style="border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer" onclick="goScreen('s-datos-personales')">
             <span style="font-size:18px">👤</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Datos personales</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer" onclick="goScreen('s-seguridad')">
             <span style="font-size:18px">🔐</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Seguridad y contraseña</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer" onclick="goScreen('s-cuentas-bancarias')">
             <span style="font-size:18px">🏦</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Cuentas bancarias</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer" onclick="goScreen('s-notificaciones')">
             <span style="font-size:18px">🔔</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Notificaciones</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
         </div>
         <div class="section-title">Soporte</div>
         <div class="card" style="border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer" onclick="goScreen('s-innovabot')">
             <span style="font-size:18px">🤖</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">InnovaBot · Asistente</div><span class="pill pill-blue" style="font-size:8px">24/7</span>
           </div>
-          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer" onclick="goScreen('s-soporte')">
             <span style="font-size:18px">💬</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Chat con soporte</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
         </div>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red)">🚪 Cerrar sesión</button>
       </div>
       <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: DATOS PERSONALES -->
+    <div class="screen" id="s-datos-personales">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Datos personales</div><div style="width:36px"></div></div>
+      <div style="padding:20px 16px">
+        <div class="card" style="border-radius:16px;padding:20px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px">Información de cuenta</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">NOMBRE COMPLETO</div><div id="dp-name" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">EMAIL</div><div id="dp-email" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">TELÉFONO</div><div id="dp-phone" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">PAÍS</div><div id="dp-country" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">CIUDAD</div><div id="dp-city" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">ROL</div><div id="dp-role" style="font-size:15px;font-weight:700;color:var(--txt)">—</div></div>
+            <div><div style="font-size:10px;color:var(--txt3);margin-bottom:4px">CÓDIGO IA INTERNO</div><div id="dp-iacode" style="font-size:15px;font-weight:900;color:var(--blue);letter-spacing:2px">—</div></div>
+          </div>
+        </div>
+        <div class="card" style="border-radius:16px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:var(--txt3);margin-bottom:8px">Estado KYC</div>
+          <span id="dp-kyc" class="pill pill-gold">⏳ Pendiente</span>
+          <div style="font-size:11px;color:var(--txt3);margin-top:10px">Para modificar tus datos, contacta a soporte.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: SEGURIDAD -->
+    <div class="screen" id="s-seguridad">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Seguridad y contraseña</div><div style="width:36px"></div></div>
+      <div style="padding:20px 16px">
+        <div class="card" style="border-radius:16px;padding:20px;margin-bottom:16px">
+          <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:16px">Cambiar contraseña</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input id="seg-pass-actual" type="password" placeholder="Contraseña actual" class="input-field" style="width:100%">
+            <input id="seg-pass-nueva" type="password" placeholder="Nueva contraseña" class="input-field" style="width:100%">
+            <input id="seg-pass-confirm" type="password" placeholder="Confirmar nueva contraseña" class="input-field" style="width:100%">
+            <div id="seg-err" style="font-size:12px;color:var(--red);min-height:16px"></div>
+            <button class="btn-primary" onclick="doChangePassword()">🔐 Actualizar contraseña</button>
+          </div>
+        </div>
+        <div class="card" style="border-radius:16px;padding:16px">
+          <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:12px">Sesiones activas</div>
+          <div style="font-size:12px;color:var(--txt3)">Sesión actual — Este dispositivo</div>
+          <div style="margin-top:12px"><button class="btn-outline" style="border-color:rgba(239,68,68,.3);color:var(--red);width:100%" onclick="doLogout()">🚪 Cerrar todas las sesiones</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: CUENTAS BANCARIAS -->
+    <div class="screen" id="s-cuentas-bancarias">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Cuentas bancarias</div><div style="width:36px"></div></div>
+      <div style="padding:20px 16px">
+        <div id="bancos-list"><div style="text-align:center;padding:40px 0;color:var(--txt3);font-size:12px">Cargando cuentas…</div></div>
+        <div class="card" style="border-radius:16px;padding:20px;margin-top:16px">
+          <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:4px">Añadir cuenta bancaria</div>
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">Para retiros y transferencias SWIFT</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <input id="banco-nombre" type="text" placeholder="Nombre del banco" class="input-field" style="width:100%">
+            <input id="banco-iban" type="text" placeholder="IBAN / Número de cuenta" class="input-field" style="width:100%">
+            <input id="banco-swift" type="text" placeholder="Código BIC/SWIFT" class="input-field" style="width:100%">
+            <div id="banco-err" style="font-size:12px;color:var(--red);min-height:14px"></div>
+            <button class="btn-primary" onclick="doAddBanco()">🏦 Añadir cuenta</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: NOTIFICACIONES -->
+    <div class="screen" id="s-notificaciones">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Notificaciones</div><div style="width:36px"></div></div>
+      <div style="padding:20px 16px">
+        <div class="card" style="border-radius:16px;padding:0;overflow:hidden;margin-bottom:16px">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Transacciones</div><div style="font-size:11px;color:var(--txt3)">Envíos, pagos y recibos</div></div>
+            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+          </div>
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Seguridad</div><div style="font-size:11px;color:var(--txt3)">Inicios de sesión y alertas</div></div>
+            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+          </div>
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Tontinas</div><div style="font-size:11px;color:var(--txt3)">Recordatorios de cuota</div></div>
+            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+          </div>
+          <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Promociones</div><div style="font-size:11px;color:var(--txt3)">Ofertas y novedades</div></div>
+            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--bg3);border-radius:24px;cursor:pointer;border:1px solid var(--border)"></span></label>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--txt3)">Las notificaciones push requieren permisos del navegador.</div>
+      </div>
+    </div>
+
+    <!-- SCREEN: INNOVABOT -->
+    <div class="screen" id="s-innovabot" style="display:flex;flex-direction:column">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">🤖 InnovaBot</div><div style="width:36px"></div></div>
+      <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px" id="bot-messages">
+        <div style="background:var(--bg2);border-radius:16px;padding:14px;max-width:85%">
+          <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px">🤖 InnovaBot</div>
+          <div style="font-size:13px;color:var(--txt);line-height:1.5">¡Hola! Soy InnovaBot, tu asistente 24/7. Puedo ayudarte con:<br><br>💸 Tasas de cambio<br>📊 Estado de transacciones<br>🏦 Cuentas bancarias<br>❓ Preguntas frecuentes<br><br>¿En qué te puedo ayudar?</div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg)">
+        <input id="bot-input" type="text" placeholder="Escribe tu pregunta…" class="input-field" style="flex:1" onkeydown="if(event.key==='Enter')sendBotMsg()">
+        <button class="btn-primary" style="padding:12px 16px;border-radius:12px" onclick="sendBotMsg()">→</button>
+      </div>
+    </div>
+
+    <!-- SCREEN: SOPORTE -->
+    <div class="screen" id="s-soporte">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Chat con soporte</div><div style="width:36px"></div></div>
+      <div style="padding:20px 16px">
+        <div style="text-align:center;padding:30px 0">
+          <div style="font-size:48px;margin-bottom:16px">💬</div>
+          <div style="font-size:18px;font-weight:800;color:var(--txt);margin-bottom:8px">Soporte humano</div>
+          <div style="font-size:13px;color:var(--txt3);margin-bottom:24px">Nuestro equipo te responde en menos de 2 horas en horario laboral (Lun–Vie 8:00–18:00 WAT).</div>
+        </div>
+        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px">📧 Soporte por email</div>
+          <div style="font-size:12px;color:var(--blue)">soporte@innovaafric.com</div>
+        </div>
+        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px">📱 WhatsApp Business</div>
+          <div style="font-size:12px;color:var(--blue)">+237 6XX XXX XXX</div>
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="goScreen('s-innovabot')">🤖 Hablar con InnovaBot ahora</button>
+      </div>
     </div>
 
     <!-- SCREEN: TONTINAS -->
@@ -1730,8 +1857,36 @@ function populateUser() {
       pkyc.textContent = '⏳ Pendiente KYC'; pkyc.className = 'pill pill-gold';
     }
   }
-  if (pcode) pcode.textContent = _user.ia_code || '—';
+  // IA code: usar el valor del servidor, o generar uno a partir del ID
+  var iaCode = _user.ia_code;
+  if (!iaCode && _user.id) {
+    // Generar código IA a partir del ID (ej: usr_6401c9ab → IA-6401C9)
+    var rawId = (_user.id || '').replace('usr_', '').slice(0, 6).toUpperCase();
+    if (rawId.length >= 4) iaCode = 'IA-' + rawId;
+  }
+  if (pcode) pcode.textContent = iaCode || '—';
   if (pcountry) pcountry.textContent = (_user.city ? _user.city + ', ' : '') + (_user.country || '—');
+  // Rellenar también pantalla datos personales
+  var roleLabels2 = { customer:'Cliente', rider:'Rider', supplier:'Proveedor', circular_autorizada:'Circular', admin:'Admin', ceo:'CEO', employee:'Empleado', agent:'Agente' };
+  var dpName = document.getElementById('dp-name');
+  var dpEmail = document.getElementById('dp-email');
+  var dpPhone = document.getElementById('dp-phone');
+  var dpCountry = document.getElementById('dp-country');
+  var dpCity = document.getElementById('dp-city');
+  var dpRole = document.getElementById('dp-role');
+  var dpIacode = document.getElementById('dp-iacode');
+  var dpKyc = document.getElementById('dp-kyc');
+  if (dpName)   dpName.textContent   = display;
+  if (dpEmail)  dpEmail.textContent  = _user.email || '—';
+  if (dpPhone)  dpPhone.textContent  = _user.phone || '—';
+  if (dpCountry) dpCountry.textContent = _user.country || '—';
+  if (dpCity)   dpCity.textContent   = _user.city || '—';
+  if (dpRole)   dpRole.textContent   = roleLabels2[_user.role] || _user.role || 'Cliente';
+  if (dpIacode) dpIacode.textContent = iaCode || '—';
+  if (dpKyc) {
+    if (_user.kyc === 'verified') { dpKyc.textContent = '✓ Verificado'; dpKyc.className = 'pill pill-green'; }
+    else { dpKyc.textContent = '⏳ Pendiente KYC'; dpKyc.className = 'pill pill-gold'; }
+  }
 }
 
 function loadBalance() {
@@ -1898,6 +2053,119 @@ updateClock();
 setInterval(updateClock, 30000);
 
 // ── TONTINAS ────────────────────────────────────────────
+function doChangePassword() {
+  var actual  = document.getElementById('seg-pass-actual').value;
+  var nueva   = document.getElementById('seg-pass-nueva').value;
+  var confirm = document.getElementById('seg-pass-confirm').value;
+  var err     = document.getElementById('seg-err');
+  if (!actual || !nueva || !confirm) { err.textContent = 'Completa todos los campos'; return; }
+  if (nueva !== confirm) { err.textContent = 'Las contraseñas no coinciden'; return; }
+  if (nueva.length < 8) { err.textContent = 'Mínimo 8 caracteres'; return; }
+  err.textContent = '';
+  fetch(RAIL_API + '/auth/change-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ current_password: actual, new_password: nueva })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    if (resp && resp.success) {
+      err.style.color = 'var(--green)';
+      err.textContent = '✓ Contraseña actualizada correctamente';
+      document.getElementById('seg-pass-actual').value = '';
+      document.getElementById('seg-pass-nueva').value = '';
+      document.getElementById('seg-pass-confirm').value = '';
+      setTimeout(function(){ err.textContent = ''; err.style.color = 'var(--red)'; }, 3000);
+    } else {
+      err.textContent = (resp && resp.message) || 'Contraseña actual incorrecta';
+    }
+  }).catch(function(){ err.textContent = 'Error de conexión'; });
+}
+
+function doAddBanco() {
+  var nombre = document.getElementById('banco-nombre').value.trim();
+  var iban   = document.getElementById('banco-iban').value.trim();
+  var swift  = document.getElementById('banco-swift').value.trim();
+  var err    = document.getElementById('banco-err');
+  if (!nombre || !iban) { err.textContent = 'Nombre e IBAN son obligatorios'; return; }
+  err.textContent = '';
+  fetch(RAIL_API + '/banks/accounts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ bank_name: nombre, account_number: iban, bic: swift })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    if (resp && resp.success) {
+      err.style.color = 'var(--green)';
+      err.textContent = '✓ Cuenta añadida correctamente';
+      document.getElementById('banco-nombre').value = '';
+      document.getElementById('banco-iban').value = '';
+      document.getElementById('banco-swift').value = '';
+      loadBancosLista();
+      setTimeout(function(){ err.textContent = ''; err.style.color = 'var(--red)'; }, 3000);
+    } else {
+      err.textContent = (resp && resp.message) || 'Error al añadir cuenta';
+    }
+  }).catch(function(){ err.textContent = 'Error de conexión'; });
+}
+
+function loadBancosLista() {
+  var el = document.getElementById('bancos-list');
+  if (!el || !_token) return;
+  railGet('/banks/accounts').then(function(resp) {
+    var items = (resp && resp.data && resp.data.accounts) || [];
+    if (!items.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--txt3)">No tienes cuentas bancarias añadidas aún.</div>';
+      return;
+    }
+    el.innerHTML = items.map(function(b) {
+      return '<div class="card" style="border-radius:14px;margin-bottom:10px;padding:14px">' +
+        '<div style="font-size:13px;font-weight:800;color:var(--txt)">' + b.bank_name + '</div>' +
+        '<div style="font-size:11px;color:var(--txt3);margin-top:4px">' + (b.account_number || b.iban || '—') + '</div>' +
+        (b.bic ? '<div style="font-size:10px;color:var(--txt3)">BIC: ' + b.bic + '</div>' : '') +
+        '</div>';
+    }).join('');
+  }).catch(function(){
+    el.innerHTML = '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--txt3)">No tienes cuentas bancarias añadidas aún.</div>';
+  });
+}
+
+var _BOT_ANSWERS = {
+  'tasa': '💱 Hoy: 1 EUR = 655.96 XAF · 1 USD = 607 XAF · 1 EUR = 1.08 USD. Tasas de referencia actualizadas.',
+  'cambio': '💱 Hoy: 1 EUR = 655.96 XAF · 1 USD = 607 XAF · 1 EUR = 1.08 USD.',
+  'balance': '💰 Tu saldo aparece en la pantalla principal. Si no carga, cierra sesión y vuelve a entrar.',
+  'saldo': '💰 Tu saldo aparece en la pantalla principal. Si no carga, cierra sesión y vuelve a entrar.',
+  'kyc': '📋 KYC pendiente: ve a Perfil → Datos personales. El proceso tarda 24-48h.',
+  'enviar': '💸 Para enviar dinero: Inicio → botón Enviar. Introduce email del destinatario y monto.',
+  'recibir': '📲 Para recibir: Inicio → Recibir. Comparte tu QR o enlace de pago.',
+  'tontina': '🤝 Las tontinas son grupos de ahorro rotativo. Ve a Servicios → Tontinas para crear o unirte.',
+  'error': '⚠️ Si tienes un error, intenta: 1) Cierra y abre la app, 2) Cierra sesión y vuelve a entrar, 3) Contacta soporte.',
+  'contrasena': '🔐 Para cambiar contraseña: Perfil → Seguridad y contraseña.',
+  'contraseña': '🔐 Para cambiar contraseña: Perfil → Seguridad y contraseña.',
+  'soporte': '💬 Puedes contactar al equipo en soporte@innovaafric.com o por WhatsApp Business.',
+  'default': '🤖 No tengo una respuesta específica para eso. Escribe "soporte" para hablar con un agente humano, o consulta nuestra web.'
+};
+
+function sendBotMsg() {
+  var input = document.getElementById('bot-input');
+  var msgs  = document.getElementById('bot-messages');
+  var text  = (input.value || '').trim();
+  if (!text) return;
+  input.value = '';
+  // Mensaje usuario
+  msgs.innerHTML += '<div style="align-self:flex-end;background:var(--blue);border-radius:16px 16px 4px 16px;padding:10px 14px;max-width:80%;font-size:13px;color:#fff">' + text + '</div>';
+  msgs.scrollTop = msgs.scrollHeight;
+  // Respuesta bot
+  setTimeout(function() {
+    var lower = text.toLowerCase();
+    var answer = _BOT_ANSWERS['default'];
+    Object.keys(_BOT_ANSWERS).forEach(function(k) {
+      if (k !== 'default' && lower.includes(k)) answer = _BOT_ANSWERS[k];
+    });
+    msgs.innerHTML += '<div style="background:var(--bg2);border-radius:16px 16px 16px 4px;padding:10px 14px;max-width:85%">' +
+      '<div style="font-size:10px;font-weight:700;color:var(--blue);margin-bottom:4px">🤖 InnovaBot</div>' +
+      '<div style="font-size:13px;color:var(--txt);line-height:1.5">' + answer + '</div></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 600);
+}
+
 function loadTontinas() {
   if (!_token) return;
   railGet('/tontines').then(function(resp) {
@@ -2448,6 +2716,7 @@ goScreen = function(id) {
   if (id === 's-recibir')       populateRecibir();
   if (id === 's-retirar')       refreshBalanceInScreens();
   if (id === 's-cambiar')       refreshBalanceInScreens();
+  if (id === 's-cuentas-bancarias') loadBancosLista();
   if (id === 's-tontinas')      loadTontinas();
   if (id === 's-bills')         loadBills();
   if (id === 's-seguros')       loadSeguros();
