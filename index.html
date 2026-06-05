@@ -402,15 +402,16 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <!-- Services -->
       <div style="padding:0 14px;margin-bottom:8px"><div class="section-title">Servicios</div></div>
       <div class="svc-scroll">
-        <div class="svc-item" onclick="showToast('InnovaBot','Tu asistente IA 24/7 — próximamente')"><div style="font-size:20px">🤖</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">InnovaBot</div></div>
-        <div class="svc-item" onclick="showToast('Tontinas','Ahorro colectivo africano — próximamente')"><div style="font-size:20px">🤝</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Tontinas</div></div>
-        <div class="svc-item" onclick="showToast('Pago QR','Paga escaneando — próximamente')"><div style="font-size:20px">📱</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Pago QR</div></div>
+        <div class="svc-item" onclick="goScreen('s-chat')"><div style="font-size:20px">🤖</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">InnovaBot</div></div>
+        <div class="svc-item" onclick="goScreen('s-tontinas')"><div style="font-size:20px">🤝</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Tontinas</div></div>
+        <div class="svc-item" onclick="goScreen('s-qrpay')"><div style="font-size:20px">📱</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Pago QR</div></div>
         <div class="svc-item" onclick="goScreen('s-track')"><div style="font-size:20px">🗺️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Mapa live</div></div>
-        <div class="svc-item" onclick="showToast('Facturas','Gestión de facturas — próximamente')"><div style="font-size:20px">🧾</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Facturas</div></div>
-        <div class="svc-item" onclick="showToast('POS','Terminal de punto de venta — próximamente')"><div style="font-size:20px">🏪</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">POS</div></div>
-        <div class="svc-item" onclick="showToast('Seguro','Seguros tricontinentales — próximamente')"><div style="font-size:20px">🛡️</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Seguro</div></div>
-        <div class="svc-item" onclick="showToast('Gift Card','Tarjetas regalo — próximamente')"><div style="font-size:20px">🎁</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Gift Card</div></div>
-        <div class="svc-item" onclick="showToast('Inversión','Inversión tricontinental — próximamente')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Inversión</div></div>
+        <div class="svc-item" onclick="goScreen('s-bills')"><div style="font-size:20px">🧾</div><div style="font-size:8px;font-weight:700;color:var(--txt2);margin-top:3px">Facturas</div></div>
+        <div class="svc-item" onclick="goScreen('s-pos')"><div style="font-size:20px">🏪</div><div style="font-size:8px;font-weight:700;color:var(--txt2);margin-top:3px">POS</div></div>
+        <div class="svc-item" onclick="goScreen('s-seguros')"><div style="font-size:20px">🛡️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Seguro</div></div>
+        <div class="svc-item" onclick="goScreen('s-giftcard')"><div style="font-size:20px">💳</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">Tarjetas</div></div>
+        <div class="svc-item" onclick="goScreen('s-invest')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Inversión</div></div>
+        <div class="svc-item" onclick="goScreen('s-ahorro')"><div style="font-size:20px">🎯</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Ahorro</div></div>
       </div>
       <!-- Movimientos recientes -->
       <div style="padding:0 14px;margin-bottom:14px">
@@ -963,6 +964,339 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           </div>
         </div>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red)">🚪 Cerrar sesión</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: TONTINAS -->
+    <div class="screen" id="s-tontinas">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Tontinas</div>
+        <div class="icon-btn" onclick="goScreen('s-tontina-crear')" style="font-size:20px;font-weight:900;color:var(--blue)">+</div>
+      </div>
+      <div style="padding:0 14px 6px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.18);font-size:11px;color:var(--green);margin-bottom:14px">🤝 Ahorro colectivo africano — contribuye cada semana o mes con tu grupo y recibe el pozo cuando te toca</div>
+        <div id="tontinas-list"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando tontinas…</div></div>
+        <button class="btn-green" onclick="goScreen('s-tontina-crear')" style="margin-top:14px">🤝 Crear nueva tontina</button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: CREAR TONTINA -->
+    <div class="screen" id="s-tontina-crear">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Nueva tontina</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title">Nombre del grupo</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="ton-name" type="text" placeholder="Ej: Amigos de Madrid" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Aportación por turno</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input id="ton-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <select id="ton-cur" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:4px 8px;color:var(--txt);font-size:12px;outline:none">
+            <option value="XAF">XAF</option><option value="EUR">EUR</option>
+          </select>
+        </div>
+        <div class="section-title">Frecuencia</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div id="tf-weekly" class="role-card on" onclick="selFreq('weekly')" style="flex:1;font-size:11px;font-weight:700">Semanal</div>
+          <div id="tf-biweekly" class="role-card" onclick="selFreq('biweekly')" style="flex:1;font-size:11px;font-weight:700">Quincenal</div>
+          <div id="tf-monthly" class="role-card" onclick="selFreq('monthly')" style="flex:1;font-size:11px;font-weight:700">Mensual</div>
+        </div>
+        <input id="ton-freq" type="hidden" value="weekly">
+        <div class="section-title">Número máximo de miembros (2-50)</div>
+        <div class="card-sm" style="margin-bottom:14px"><input id="ton-members" type="number" min="2" max="50" value="10" style="width:100%;background:none;border:none;outline:none;font-size:16px;font-weight:700;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div id="ton-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="ton-btn" class="btn-green" onclick="doCrearTontina()">🤝 Crear tontina</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: FACTURAS / PAGOS DE SERVICIOS -->
+    <div class="screen" id="s-bills">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Pagar servicios</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div id="bills-cats" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px"></div>
+        <div id="bills-providers"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando servicios…</div></div>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: PAGAR FACTURA (detalle) -->
+    <div class="screen" id="s-bill-pay">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div id="bill-pay-title" class="page-title" style="font-size:15px">Pagar factura</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div id="bill-pay-info" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+          <div id="bill-pay-icon" style="font-size:32px">🧾</div>
+          <div><div id="bill-pay-name" style="font-size:14px;font-weight:800;color:var(--txt)">—</div><div id="bill-pay-cat" style="font-size:11px;color:var(--txt3)">—</div></div>
+        </div>
+        <div class="section-title">Número de referencia / cuenta</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="bill-ref" type="text" placeholder="Nº de contrato, teléfono, etc." style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Importe</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+          <input id="bill-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <span id="bill-currency" style="font-size:12px;font-weight:700;color:var(--txt3)">XAF</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:14px">
+          <span style="font-size:11px;color:var(--txt3)">Saldo disponible</span>
+          <span id="bill-saldo" style="font-size:12px;font-weight:800;color:var(--txt)">— XAF</span>
+        </div>
+        <div id="bill-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="bill-btn" class="btn-primary" onclick="doPagarFactura()">🧾 Pagar ahora</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: SEGUROS -->
+    <div class="screen" id="s-seguros">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Seguros</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.18);font-size:11px;color:var(--purple);margin-bottom:14px">🛡️ Cobertura tricontinental — salud, viaje, móvil y más. Activa al instante, sin papeleo.</div>
+        <div class="section-title">Planes disponibles</div>
+        <div id="seguros-list"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando planes…</div></div>
+        <div class="section-title" style="margin-top:16px">¿Ya tienes un seguro?</div>
+        <button class="btn-outline" onclick="goScreen('s-seguro-siniestro')">📋 Declarar siniestro</button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: DECLARAR SINIESTRO -->
+    <div class="screen" id="s-seguro-siniestro">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Declarar siniestro</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title">Tipo de seguro</div>
+        <div class="card-sm" style="margin-bottom:10px">
+          <select id="sin-plan-id" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
+            <option value="">— Seleccionar —</option>
+          </select>
+        </div>
+        <div class="section-title">Descripción del incidente</div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:14px">
+          <textarea id="sin-desc" rows="4" placeholder="Describe lo que ocurrió..." style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif;resize:none"></textarea>
+        </div>
+        <div class="section-title">Importe reclamado</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+          <input id="sin-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:700;color:var(--txt);font-family:'Inter',sans-serif">
+          <span style="font-size:12px;color:var(--txt3)">XAF</span>
+        </div>
+        <div id="sin-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="sin-btn" class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#7c3aed)" onclick="doSiniestro()">🛡️ Enviar declaración</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: INVERSIÓN -->
+    <div class="screen" id="s-invest">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Inversión</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);font-size:11px;color:var(--gold);margin-bottom:14px">📊 Fondos tricontinentales — invierte desde 5 000 XAF y obtén rentabilidad en tus tres continentes</div>
+        <!-- Mi cartera -->
+        <div id="invest-my" style="margin-bottom:14px"></div>
+        <div class="section-title">Fondos disponibles</div>
+        <div id="invest-funds"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando fondos…</div></div>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: INVERTIR EN FONDO -->
+    <div class="screen" id="s-invest-detail">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div id="invest-detail-title" class="page-title" style="font-size:15px">Fondo</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div id="invest-detail-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:18px;margin-bottom:14px"></div>
+        <div class="section-title">¿Cuánto quieres invertir?</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
+          <input id="invest-amount" type="number" placeholder="5000" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <span id="invest-cur-label" style="font-size:12px;font-weight:700;color:var(--txt3)">XAF</span>
+        </div>
+        <div id="invest-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="invest-btn" class="btn-primary" style="background:linear-gradient(135deg,var(--gold),#e05a00)" onclick="doInvertir()">📊 Invertir ahora</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: AHORRO -->
+    <div class="screen" id="s-ahorro">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Mis ahorros</div>
+        <div class="icon-btn" onclick="goScreen('s-ahorro-crear')" style="font-size:20px;font-weight:900;color:var(--green)">+</div>
+      </div>
+      <div style="padding:0 14px">
+        <div id="ahorro-list"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando metas…</div></div>
+        <button class="btn-green" onclick="goScreen('s-ahorro-crear')" style="margin-top:14px">🎯 Nueva meta de ahorro</button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: CREAR META DE AHORRO -->
+    <div class="screen" id="s-ahorro-crear">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Nueva meta</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title">Nombre de la meta</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="aho-name" type="text" placeholder="Ej: Vacaciones en Ghana" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Objetivo</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input id="aho-target" type="number" placeholder="500000" style="flex:1;background:none;border:none;outline:none;font-size:20px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <select id="aho-cur" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:4px 8px;color:var(--txt);font-size:12px;outline:none">
+            <option value="XAF">XAF</option><option value="EUR">EUR</option>
+          </select>
+        </div>
+        <div class="section-title">Fecha límite (opcional)</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="aho-date" type="date" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Ahorro automático por mes (opcional)</div>
+        <div class="card-sm" style="margin-bottom:14px"><input id="aho-auto" type="number" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div id="aho-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="aho-btn" class="btn-green" onclick="doCrearAhorro()">🎯 Crear meta</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: PAGO QR -->
+    <div class="screen" id="s-qrpay">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Pago QR</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <div id="qr-tab-scan" onclick="qrTab('scan')" style="flex:1;text-align:center;padding:10px;border-radius:12px;background:var(--blue);color:#fff;font-size:12px;font-weight:800;cursor:pointer">📷 Escanear</div>
+          <div id="qr-tab-gen" onclick="qrTab('gen')" style="flex:1;text-align:center;padding:10px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);color:var(--txt3);font-size:12px;font-weight:800;cursor:pointer">📱 Mostrar mi QR</div>
+        </div>
+        <!-- Scan panel -->
+        <div id="qr-panel-scan">
+          <div style="background:var(--bg2);border:2px dashed var(--border);border-radius:20px;padding:30px;text-align:center;margin-bottom:14px">
+            <div style="font-size:48px;margin-bottom:10px">📷</div>
+            <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:6px">Escanear QR de pago</div>
+            <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">Apunta la cámara al código QR del destinatario</div>
+            <button class="btn-primary" onclick="showToast('Cámara QR','El escáner QR estará disponible en la versión nativa. Por ahora introduce el email del destinatario.')">Abrir cámara</button>
+          </div>
+          <div class="section-title">O introduce el email del destinatario</div>
+          <div class="card-sm" style="margin-bottom:14px"><input id="qr-email" type="email" placeholder="email@ejemplo.com" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+          <div class="section-title">Importe (XAF)</div>
+          <div class="card-sm" style="margin-bottom:14px"><input id="qr-amount" type="number" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:20px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif"></div>
+          <div id="qr-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+          <button class="btn-primary" onclick="doQRPay()">💳 Pagar con QR</button>
+        </div>
+        <!-- Generate panel -->
+        <div id="qr-panel-gen" style="display:none;text-align:center">
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">Tu QR personal para recibir pagos</div>
+          <div id="qrpay-qr-img" style="width:180px;height:180px;background:white;border-radius:16px;margin:0 auto 14px;overflow:hidden;display:flex;align-items:center;justify-content:center">
+            <div style="font-size:11px;color:#666">Inicia sesión</div>
+          </div>
+          <div id="qrpay-handle" style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:6px">—</div>
+          <button class="btn-green" onclick="copiarEnlace()">📋 Copiar enlace de cobro</button>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: POS (Terminal de venta) -->
+    <div class="screen" id="s-pos">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Terminal POS</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.07);border:1px solid rgba(0,137,123,.2);font-size:11px;color:var(--green);margin-bottom:14px">🏪 Acepta pagos en tu negocio — genera QR de cobro al instante para cualquier importe</div>
+        <div class="section-title">Importe a cobrar</div>
+        <div style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15);border-radius:22px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+            <input id="pos-amount" type="number" placeholder="0" oninput="genPosQR()" style="font-size:38px;font-weight:900;color:#fff;background:none;border:none;outline:none;text-align:center;width:200px;font-family:'Inter',sans-serif">
+          </div>
+          <div style="display:flex;justify-content:center;gap:8px">
+            <div id="pos-cur-xaf" class="pill pill-blue" onclick="selPosCur('XAF')" style="cursor:pointer">XAF</div>
+            <div id="pos-cur-eur" class="pill pill-off" onclick="selPosCur('EUR')" style="cursor:pointer">EUR</div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-bottom:14px">
+          <div id="pos-qr-wrap" style="width:180px;height:180px;background:white;border-radius:16px;margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center">
+            <div style="font-size:11px;color:#888;text-align:center;padding:10px">Introduce un importe<br>para generar el QR</div>
+          </div>
+          <div id="pos-qr-label" style="font-size:11px;color:var(--txt3)">—</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-green" style="flex:1" onclick="compartirPosQR()">📤 Compartir QR</button>
+          <button class="btn-outline" style="flex:1" onclick="copiarPosLink()">📋 Copiar enlace</button>
+        </div>
+        <div style="margin-top:14px">
+          <div class="section-title">Últimos cobros</div>
+          <div id="pos-history"><div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Sin cobros aún</div></div>
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- SCREEN: GIFT CARD / TARJETAS VIRTUALES -->
+    <div class="screen" id="s-giftcard">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Tarjetas virtuales</div>
+        <div class="icon-btn" onclick="goScreen('s-card-crear')" style="font-size:20px;font-weight:900;color:var(--blue)">+</div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(41,171,226,.07);border:1px solid rgba(41,171,226,.18);font-size:11px;color:var(--blue);margin-bottom:14px">💳 Tarjeta Visa/Mastercard virtual — úsala online en cualquier tienda del mundo</div>
+        <div id="cards-list"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando tarjetas…</div></div>
+        <button class="btn-primary" onclick="goScreen('s-card-crear')" style="margin-top:14px">💳 Crear tarjeta virtual</button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: CREAR TARJETA VIRTUAL -->
+    <div class="screen" id="s-card-crear">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Nueva tarjeta</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title">Nombre de la tarjeta</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="card-label" type="text" placeholder="Ej: Compras online" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Divisa</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div id="cc-eur" class="role-card on" onclick="selCardCur('EUR')" style="flex:1;font-size:12px;font-weight:700">EUR €</div>
+          <div id="cc-usd" class="role-card" onclick="selCardCur('USD')" style="flex:1;font-size:12px;font-weight:700">USD $</div>
+          <div id="cc-xaf" class="role-card" onclick="selCardCur('XAF')" style="flex:1;font-size:12px;font-weight:700">XAF</div>
+        </div>
+        <input id="card-cur" type="hidden" value="EUR">
+        <div class="section-title">Límite de gasto (opcional)</div>
+        <div class="card-sm" style="margin-bottom:10px"><input id="card-limit" type="number" placeholder="Sin límite" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div class="section-title">Carga inicial</div>
+        <div class="card-sm" style="margin-bottom:14px"><input id="card-topup" type="number" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:18px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div id="card-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="card-btn" class="btn-primary" onclick="doCrearTarjeta()">💳 Crear tarjeta</button>
       </div>
       <div style="height:20px"></div>
     </div>
@@ -1527,6 +1861,476 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 30000);
 
+// ── TONTINAS ────────────────────────────────────────────
+function loadTontinas() {
+  if (!_token) return;
+  railGet('/tontines').then(function(resp) {
+    var el = document.getElementById('tontinas-list');
+    if (!el) return;
+    var items = (resp && resp.success && resp.data) ? (resp.data.items || resp.data) : [];
+    if (!Array.isArray(items) || !items.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No tienes tontinas aún.<br>¡Crea una o únete a una!</div>';
+      return;
+    }
+    var freqLabel = { weekly:'Semanal', biweekly:'Quincenal', monthly:'Mensual' };
+    el.innerHTML = items.map(function(t) {
+      var pct = t.members_count && t.max_members ? Math.round(t.members_count/t.max_members*100) : 0;
+      return '<div class="card" style="border-radius:16px;margin-bottom:10px;cursor:pointer" onclick="showToast(\''+t.name+'\',\''+t.members_count+' miembros · '+freqLabel[t.frequency]+' · '+(t.contribution_amount||0).toLocaleString(\'fr-FR\')+\' \'+t.currency+'\')">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt)">'+t.name+'</div>' +
+        '<span class="pill '+(t.status==='open'?'pill-green':'pill-off')+'" style="font-size:9px">'+(t.status==='open'?'Abierta':'Cerrada')+'</span></div>' +
+        '<div style="font-size:11px;color:var(--txt3);margin-bottom:8px">'+freqLabel[t.frequency]+' · '+(t.contribution_amount||0).toLocaleString('fr-FR')+' '+t.currency+' · '+t.members_count+'/'+t.max_members+' miembros</div>' +
+        '<div style="height:4px;background:var(--bg3);border-radius:4px"><div style="height:4px;background:var(--green);border-radius:4px;width:'+pct+'%"></div></div>' +
+        '<div style="font-size:9px;color:var(--txt3);margin-top:4px;text-align:right">'+pct+'% lleno</div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function selFreq(f) {
+  document.getElementById('ton-freq').value = f;
+  ['weekly','biweekly','monthly'].forEach(function(x){
+    var el = document.getElementById('tf-'+x);
+    if (el) el.className = x === f ? 'role-card on' : 'role-card';
+  });
+}
+
+function doCrearTontina() {
+  var name    = document.getElementById('ton-name').value.trim();
+  var amount  = parseFloat(document.getElementById('ton-amount').value);
+  var cur     = document.getElementById('ton-cur').value;
+  var freq    = document.getElementById('ton-freq').value;
+  var members = parseInt(document.getElementById('ton-members').value);
+  var err = document.getElementById('ton-err');
+  var btn = document.getElementById('ton-btn');
+  if (!name) { err.textContent = 'Introduce un nombre'; return; }
+  if (!amount || amount <= 0) { err.textContent = 'Introduce la aportación'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Creando…';
+  btn.disabled = true;
+  fetch(RAIL_API + '/tontines', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ name: name, contribution_amount: amount, currency: cur, frequency: freq, max_members: members })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '🤝 Crear tontina'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    showToast('Tontina creada', 'Código de invitación: ' + resp.data.invite_code);
+    document.getElementById('ton-name').value = '';
+    document.getElementById('ton-amount').value = '';
+    loadTontinas();
+    goScreen('s-tontinas');
+  }).catch(function(){ btn.innerHTML = '🤝 Crear tontina'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
+// ── FACTURAS ─────────────────────────────────────────────
+var _billProviders = [];
+var _selectedProvider = null;
+
+function loadBills() {
+  fetch(RAIL_API + '/bills/providers', { headers: { 'apikey': SB_ANON } })
+  .then(function(r){ return r.json(); }).then(function(resp) {
+    if (!resp || !resp.success) return;
+    _billProviders = resp.data.providers || [];
+    var cats = resp.data.categories || [];
+    // Render categories
+    var catEl = document.getElementById('bills-cats');
+    if (catEl) {
+      catEl.innerHTML = ['Todos'].concat(cats).map(function(c, i) {
+        return '<div onclick="filterBills(\''+(i===0?'':c)+'\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;'+(i===0?'background:var(--blue);color:#fff':'background:var(--bg2);border:1px solid var(--border);color:var(--txt3)')+'">'+c+'</div>';
+      }).join('');
+    }
+    filterBills('');
+  }).catch(function(){});
+}
+
+function filterBills(cat) {
+  var el = document.getElementById('bills-providers');
+  if (!el) return;
+  var list = cat ? _billProviders.filter(function(p){ return p.category === cat; }) : _billProviders;
+  if (!list.length) { el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Sin proveedores</div>'; return; }
+  var catIcons = { electricity:'⚡', water:'💧', internet:'📶', phone:'📱', tv:'📺', gas:'🔥', transport:'🚌', rent:'🏠' };
+  el.innerHTML = list.map(function(p) {
+    return '<div class="card" style="border-radius:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="openBillPay(\''+p.id+'\')">' +
+      '<div style="font-size:28px;width:44px;text-align:center">'+(catIcons[p.category]||'🧾')+'</div>' +
+      '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--txt)">'+p.name+'</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">'+p.category+' · '+(p.country||'Internacional')+'</div></div>' +
+      '<span style="color:var(--txt3);font-size:16px">›</span></div>';
+  }).join('');
+}
+
+function openBillPay(providerId) {
+  _selectedProvider = _billProviders.find(function(p){ return p.id === providerId; });
+  if (!_selectedProvider) return;
+  var catIcons = { electricity:'⚡', water:'💧', internet:'📶', phone:'📱', tv:'📺', gas:'🔥', transport:'🚌', rent:'🏠' };
+  document.getElementById('bill-pay-title').textContent = _selectedProvider.name;
+  document.getElementById('bill-pay-name').textContent  = _selectedProvider.name;
+  document.getElementById('bill-pay-cat').textContent   = _selectedProvider.category + ' · ' + (_selectedProvider.country||'Internacional');
+  document.getElementById('bill-pay-icon').textContent  = catIcons[_selectedProvider.category] || '🧾';
+  document.getElementById('bill-currency').textContent  = _selectedProvider.currency || 'XAF';
+  var sEl = document.getElementById('bill-saldo');
+  var cur = _selectedProvider.currency || 'XAF';
+  if (sEl) sEl.textContent = cur === 'XAF' ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : _balances.EUR.toFixed(2) + ' EUR';
+  document.getElementById('bill-ref').value    = '';
+  document.getElementById('bill-amount').value = '';
+  document.getElementById('bill-err').textContent = '';
+  goScreen('s-bill-pay');
+}
+
+function doPagarFactura() {
+  if (!_selectedProvider) return;
+  var ref    = document.getElementById('bill-ref').value.trim();
+  var amount = parseFloat(document.getElementById('bill-amount').value);
+  var err    = document.getElementById('bill-err');
+  var btn    = document.getElementById('bill-btn');
+  if (!ref) { err.textContent = 'Introduce el número de referencia'; return; }
+  if (!amount || amount <= 0) { err.textContent = 'Introduce un importe válido'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Pagando…'; btn.disabled = true;
+  fetch(RAIL_API + '/bills/pay', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ provider_id: _selectedProvider.id, amount: amount, reference_number: ref })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '🧾 Pagar ahora'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al pagar'; return; }
+    showToast('Pago realizado', _selectedProvider.name + ' — ' + amount.toLocaleString('fr-FR') + ' ' + (_selectedProvider.currency||'XAF'));
+    loadTransactions();
+    goBack();
+  }).catch(function(){ btn.innerHTML = '🧾 Pagar ahora'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
+// ── SEGUROS ──────────────────────────────────────────────
+var _seguroPlans = [];
+
+function loadSeguros() {
+  railGet('/insurance/plans').then(function(resp) {
+    var el = document.getElementById('seguros-list');
+    if (!el) return;
+    _seguroPlans = (resp && resp.success && resp.data) ? (resp.data.plans || resp.data) : [];
+    if (!Array.isArray(_seguroPlans) || !_seguroPlans.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No hay planes disponibles aún</div>';
+      return;
+    }
+    // Populate siniestro selector
+    var sel = document.getElementById('sin-plan-id');
+    if (sel) {
+      sel.innerHTML = '<option value="">— Seleccionar —</option>' +
+        _seguroPlans.map(function(p){ return '<option value="'+p.id+'">'+p.name+'</option>'; }).join('');
+    }
+    el.innerHTML = _seguroPlans.map(function(p) {
+      return '<div class="card" style="border-radius:16px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt)">'+p.name+'</div>' +
+        '<span class="pill pill-purple" style="font-size:9px;background:rgba(168,85,247,.12);color:var(--purple);border-color:rgba(168,85,247,.2)">'+p.category+'</span></div>' +
+        '<div style="font-size:11px;color:var(--txt3);margin-bottom:10px">'+(p.description||'Cobertura disponible en tu región')+'</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<div style="font-size:15px;font-weight:900;color:var(--purple)">'+(p.premium||0).toLocaleString('fr-FR')+' '+(p.currency||'XAF')+'<span style="font-size:9px;font-weight:400;color:var(--txt3)">/mes</span></div>' +
+        '<button onclick="showToast(\''+p.name+'\',\'Contratación disponible próximamente\')" style="background:var(--purple);color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">Contratar</button></div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function doSiniestro() {
+  var planId = document.getElementById('sin-plan-id').value;
+  var desc   = document.getElementById('sin-desc').value.trim();
+  var amount = parseFloat(document.getElementById('sin-amount').value);
+  var err = document.getElementById('sin-err');
+  var btn = document.getElementById('sin-btn');
+  if (!planId) { err.textContent = 'Selecciona el tipo de seguro'; return; }
+  if (!desc || desc.length < 10) { err.textContent = 'Describe el incidente (mín. 10 caracteres)'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Enviando…'; btn.disabled = true;
+  fetch(RAIL_API + '/insurance/claims', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ plan_id: planId, description: desc, amount_claimed: amount || 0 })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '🛡️ Enviar declaración'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al enviar'; return; }
+    showToast('Siniestro enviado', 'Tu declaración está en revisión');
+    document.getElementById('sin-desc').value = ''; document.getElementById('sin-amount').value = '';
+    goBack();
+  }).catch(function(){ btn.innerHTML = '🛡️ Enviar declaración'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
+// ── INVERSIÓN ────────────────────────────────────────────
+var _investFundSelected = null;
+
+function loadInvest() {
+  // Mis inversiones
+  if (_token) {
+    railGet('/invest/my').then(function(resp) {
+      var el = document.getElementById('invest-my');
+      if (!el) return;
+      var items = (resp && resp.success && resp.data) ? (resp.data.investments || resp.data) : [];
+      if (!Array.isArray(items) || !items.length) { el.innerHTML = ''; return; }
+      var total = items.reduce(function(s,i){ return s + (i.amount||0); }, 0);
+      el.innerHTML = '<div style="background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.05));border:1px solid rgba(245,166,35,.2);border-radius:16px;padding:14px;margin-bottom:14px">' +
+        '<div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Mi cartera</div>' +
+        '<div style="font-size:24px;font-weight:900;color:var(--gold)">'+total.toLocaleString('fr-FR')+' XAF</div>' +
+        '<div style="font-size:10px;color:var(--txt3);margin-top:2px">'+items.length+' inversión'+(items.length>1?'es':'')+'</div></div>';
+    }).catch(function(){});
+  }
+  // Fondos disponibles
+  railGet('/invest/funds').then(function(resp) {
+    var el = document.getElementById('invest-funds');
+    if (!el) return;
+    var funds = (resp && resp.success && resp.data) ? (resp.data.funds || resp.data) : [];
+    if (!Array.isArray(funds) || !funds.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No hay fondos disponibles</div>';
+      return;
+    }
+    el.innerHTML = funds.map(function(f) {
+      return '<div class="card" style="border-radius:16px;margin-bottom:10px;cursor:pointer" onclick="openInvestDetail(\''+f.id+'\')">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt)">'+f.name+'</div>' +
+        '<span style="font-size:15px;font-weight:900;color:var(--gold)">'+(f.returnRate||0)+'%</span></div>' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:8px">'+(f.category||'General')+' · Mín '+(f.minInvest||5000).toLocaleString('fr-FR')+' '+(f.currency||'XAF')+'</div>' +
+        '<div style="height:4px;background:var(--bg3);border-radius:4px"><div style="height:4px;background:var(--gold);border-radius:4px;width:'+Math.min(f.progress||0,100)+'%"></div></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--txt3);margin-top:4px">' +
+        '<span>'+(f.investors||0)+' inversores</span><span>'+Math.min(f.progress||0,100)+'% financiado</span></div></div>';
+    }).join('');
+  }).catch(function(){
+    var el = document.getElementById('invest-funds');
+    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">No se pudieron cargar los fondos</div>';
+  });
+}
+
+function openInvestDetail(fundId) {
+  railGet('/invest/funds').then(function(resp) {
+    var funds = (resp && resp.success && resp.data) ? (resp.data.funds || resp.data) : [];
+    _investFundSelected = Array.isArray(funds) ? funds.find(function(f){ return f.id === fundId; }) : null;
+    if (!_investFundSelected) return;
+    var f = _investFundSelected;
+    document.getElementById('invest-detail-title').textContent = f.name;
+    document.getElementById('invest-cur-label').textContent = f.currency || 'XAF';
+    document.getElementById('invest-amount').placeholder = (f.minInvest||5000).toString();
+    document.getElementById('invest-detail-card').innerHTML =
+      '<div style="font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">'+f.category+'</div>' +
+      '<div style="font-size:20px;font-weight:900;color:var(--txt);margin-bottom:4px">'+f.name+'</div>' +
+      '<div style="font-size:11px;color:var(--txt3);margin-bottom:14px">'+(f.description||'Fondo de inversión tricontinental')+'</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:8px"><div style="font-size:15px;font-weight:900;color:var(--gold)">'+(f.returnRate||0)+'%</div><div style="font-size:9px;color:var(--txt3)">Rentabilidad</div></div>' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:8px"><div style="font-size:15px;font-weight:900;color:var(--txt)">'+(f.durationMonths||12)+'m</div><div style="font-size:9px;color:var(--txt3)">Duración</div></div>' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:8px"><div style="font-size:15px;font-weight:900;color:var(--blue)">'+(f.investors||0)+'</div><div style="font-size:9px;color:var(--txt3)">Inversores</div></div></div>';
+    document.getElementById('invest-err').textContent = '';
+    goScreen('s-invest-detail');
+  }).catch(function(){});
+}
+
+function doInvertir() {
+  if (!_investFundSelected) return;
+  var amount = parseFloat(document.getElementById('invest-amount').value);
+  var err = document.getElementById('invest-err');
+  var btn = document.getElementById('invest-btn');
+  if (!amount || amount < (_investFundSelected.minInvest||5000)) {
+    err.textContent = 'Mínimo: '+(_investFundSelected.minInvest||5000).toLocaleString('fr-FR')+' '+(_investFundSelected.currency||'XAF'); return;
+  }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Invirtiendo…'; btn.disabled = true;
+  fetch(RAIL_API + '/invest/funds/' + _investFundSelected.id + '/invest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amount })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '📊 Invertir ahora'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al invertir'; return; }
+    showToast('Inversión realizada', amount.toLocaleString('fr-FR')+' '+(_investFundSelected.currency||'XAF')+' invertidos');
+    document.getElementById('invest-amount').value = '';
+    loadInvest(); goScreen('s-invest');
+  }).catch(function(){ btn.innerHTML = '📊 Invertir ahora'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
+// ── AHORRO ───────────────────────────────────────────────
+function loadAhorro() {
+  if (!_token) return;
+  railGet('/savings/goals').then(function(resp) {
+    var el = document.getElementById('ahorro-list');
+    if (!el) return;
+    var goals = (resp && resp.success && resp.data) ? (Array.isArray(resp.data) ? resp.data : resp.data.goals || []) : [];
+    if (!goals.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No tienes metas de ahorro.<br>¡Crea la primera!</div>';
+      return;
+    }
+    el.innerHTML = goals.map(function(g) {
+      var pct = Math.min(g.progress || 0, 100);
+      var deadline = g.deadline ? new Date(g.deadline).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : 'Sin fecha';
+      return '<div class="card" style="border-radius:16px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+        '<div style="font-size:14px;font-weight:800;color:var(--txt)">'+g.name+'</div>' +
+        '<span style="font-size:13px;font-weight:900;color:var(--green)">'+pct+'%</span></div>' +
+        '<div style="height:6px;background:var(--bg3);border-radius:6px;margin-bottom:6px">' +
+        '<div style="height:6px;background:var(--green);border-radius:6px;width:'+pct+'%"></div></div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3)">' +
+        '<span>'+(g.current||0).toLocaleString('fr-FR')+' / '+(g.target||0).toLocaleString('fr-FR')+' '+(g.currency||'XAF')+'</span>' +
+        '<span>'+deadline+'</span></div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function doCrearAhorro() {
+  var name   = document.getElementById('aho-name').value.trim();
+  var target = parseFloat(document.getElementById('aho-target').value);
+  var cur    = document.getElementById('aho-cur').value;
+  var date   = document.getElementById('aho-date').value;
+  var auto   = parseFloat(document.getElementById('aho-auto').value) || 0;
+  var err = document.getElementById('aho-err');
+  var btn = document.getElementById('aho-btn');
+  if (!name) { err.textContent = 'Introduce un nombre'; return; }
+  if (!target || target <= 0) { err.textContent = 'Introduce el objetivo de ahorro'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Creando…'; btn.disabled = true;
+  fetch(RAIL_API + '/savings/goals', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ name: name, target: target, currency: cur, deadline: date || undefined, autoSave: auto })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '🎯 Crear meta'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    showToast('Meta creada', name + ' · ' + target.toLocaleString('fr-FR') + ' ' + cur);
+    document.getElementById('aho-name').value = ''; document.getElementById('aho-target').value = '';
+    loadAhorro(); goScreen('s-ahorro');
+  }).catch(function(){ btn.innerHTML = '🎯 Crear meta'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
+// ── PAGO QR ──────────────────────────────────────────────
+function qrTab(tab) {
+  document.getElementById('qr-panel-scan').style.display = tab === 'scan' ? 'block' : 'none';
+  document.getElementById('qr-panel-gen').style.display  = tab === 'gen'  ? 'block' : 'none';
+  document.getElementById('qr-tab-scan').style.background = tab === 'scan' ? 'var(--blue)' : 'var(--bg2)';
+  document.getElementById('qr-tab-scan').style.color = tab === 'scan' ? '#fff' : 'var(--txt3)';
+  document.getElementById('qr-tab-gen').style.background  = tab === 'gen'  ? 'var(--blue)' : 'var(--bg2)';
+  document.getElementById('qr-tab-gen').style.color  = tab === 'gen' ? '#fff' : 'var(--txt3)';
+  document.getElementById('qr-tab-scan').style.border = 'none';
+  document.getElementById('qr-tab-gen').style.border  = tab === 'gen' ? 'none' : '1px solid var(--border)';
+  if (tab === 'gen') populateQRGen();
+}
+
+function populateQRGen() {
+  if (!_user) return;
+  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email);
+  var img = document.getElementById('qrpay-qr-img');
+  var hdl = document.getElementById('qrpay-handle');
+  if (img) { img.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(link)+'" style="width:100%;height:100%">'; }
+  if (hdl) hdl.textContent = _user.name || _user.email;
+}
+
+function doQRPay() {
+  var email  = document.getElementById('qr-email').value.trim();
+  var amount = parseFloat(document.getElementById('qr-amount').value);
+  var err    = document.getElementById('qr-err');
+  if (!email) { err.textContent = 'Introduce el email del destinatario'; return; }
+  if (!amount || amount <= 0) { err.textContent = 'Introduce un importe válido'; return; }
+  if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
+  err.textContent = '';
+  fetch(RAIL_API + '/money/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amount, currency: 'XAF', recipient_email: email, dest_currency: 'XAF' })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al pagar'; return; }
+    showToast('Pago enviado', amount.toLocaleString('fr-FR') + ' XAF a ' + email);
+    document.getElementById('qr-email').value = ''; document.getElementById('qr-amount').value = '';
+    loadTransactions(); goScreen('s-wallet');
+  }).catch(function(){ err.textContent = 'Error de conexión'; });
+}
+
+// ── POS ──────────────────────────────────────────────────
+var _posCur = 'XAF';
+
+function selPosCur(cur) {
+  _posCur = cur;
+  document.getElementById('pos-cur-xaf').className = cur === 'XAF' ? 'pill pill-blue' : 'pill pill-off';
+  document.getElementById('pos-cur-eur').className = cur === 'EUR' ? 'pill pill-blue' : 'pill pill-off';
+  genPosQR();
+}
+
+function genPosQR() {
+  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  var qr = document.getElementById('pos-qr-wrap');
+  var lbl = document.getElementById('pos-qr-label');
+  if (!qr) return;
+  if (!amount || !_user) {
+    qr.innerHTML = '<div style="font-size:11px;color:#888;text-align:center;padding:10px">Introduce un importe<br>para generar el QR</div>';
+    if (lbl) lbl.textContent = '—';
+    return;
+  }
+  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
+  qr.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(link)+'" style="width:100%;height:100%">';
+  if (lbl) lbl.textContent = amount.toLocaleString('fr-FR') + ' ' + _posCur + ' · ' + (_user.name || _user.email);
+}
+
+function compartirPosQR() {
+  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  if (!amount || !_user) { showToast('POS','Introduce un importe primero'); return; }
+  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
+  if (navigator.share) navigator.share({ title: 'Cobrar '+amount+' '+_posCur, url: link }).catch(function(){});
+  else navigator.clipboard.writeText(link).then(function(){ showToast('Enlace copiado','Comparte con tu cliente'); });
+}
+
+function copiarPosLink() {
+  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  if (!_user) return;
+  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
+  navigator.clipboard.writeText(link).then(function(){ showToast('Enlace copiado','Comparte con tu cliente'); }).catch(function(){});
+}
+
+// ── TARJETAS VIRTUALES ───────────────────────────────────
+function loadCards() {
+  if (!_token) return;
+  railGet('/cards').then(function(resp) {
+    var el = document.getElementById('cards-list');
+    if (!el) return;
+    var cards = (resp && resp.success && resp.data) ? (resp.data.cards || resp.data) : [];
+    if (!Array.isArray(cards) || !cards.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No tienes tarjetas virtuales aún</div>';
+      return;
+    }
+    el.innerHTML = cards.map(function(c) {
+      var masked = c.number ? '**** **** **** ' + c.number.slice(-4) : '**** **** **** ****';
+      return '<div style="background:linear-gradient(135deg,#1a2744,#0f3460);border:1px solid rgba(41,171,226,.2);border-radius:18px;padding:18px;margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">' +
+        '<div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6)">'+c.label+'</div>' +
+        '<span class="pill '+(c.frozen?'pill-off':'pill-blue')+'" style="font-size:9px">'+(c.frozen?'Congelada':'Activa')+'</span></div>' +
+        '<div style="font-size:16px;font-weight:700;color:#fff;letter-spacing:2px;margin-bottom:12px">'+masked+'</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+        '<div><div style="font-size:9px;color:rgba(255,255,255,.4)">CADUCIDAD</div><div style="font-size:12px;font-weight:700;color:#fff">'+(c.expiry||'--/--')+'</div></div>' +
+        '<div style="text-align:right"><div style="font-size:9px;color:rgba(255,255,255,.4)">SALDO</div><div style="font-size:14px;font-weight:900;color:var(--blue)">'+(c.balance||0).toFixed(2)+' '+(c.currency||'EUR')+'</div></div></div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function selCardCur(cur) {
+  document.getElementById('card-cur').value = cur;
+  ['EUR','USD','XAF'].forEach(function(c){
+    var el = document.getElementById('cc-'+c.toLowerCase());
+    if (el) el.className = c === cur ? 'role-card on' : 'role-card';
+  });
+}
+
+function doCrearTarjeta() {
+  var label  = document.getElementById('card-label').value.trim();
+  var cur    = document.getElementById('card-cur').value;
+  var limit  = parseFloat(document.getElementById('card-limit').value) || null;
+  var topup  = parseFloat(document.getElementById('card-topup').value) || 0;
+  var err = document.getElementById('card-err');
+  var btn = document.getElementById('card-btn');
+  if (!label) { err.textContent = 'Introduce un nombre para la tarjeta'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Creando…'; btn.disabled = true;
+  fetch(RAIL_API + '/cards', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ label: label, currency: cur, spending_limit: limit, initial_topup: topup })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '💳 Crear tarjeta'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    showToast('Tarjeta creada', label + ' · ' + cur);
+    document.getElementById('card-label').value = ''; document.getElementById('card-topup').value = '';
+    loadCards(); goScreen('s-giftcard');
+  }).catch(function(){ btn.innerHTML = '💳 Crear tarjeta'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
 // ── SEND MONEY ──────────────────────────────────────────
 var _rates = { EUR_XAF: 655.957, USD_XAF: 608.5, XAF_EUR: 1/655.957, XAF_USD: 1/608.5, EUR_USD: 1.08, USD_EUR: 0.926 };
 
@@ -1593,18 +2397,22 @@ function doSend() {
   });
 }
 
-// Init send screen when opened
+// Screen entry data loader
 var _origGoScreen = goScreen;
 goScreen = function(id) {
   _origGoScreen(id);
-  if (id === 's-send') {
-    var sEl = document.getElementById('send-saldo');
-    if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : '— XAF';
-    calcSend();
-  }
-  if (id === 's-recibir') populateRecibir();
-  if (id === 's-retirar') refreshBalanceInScreens();
-  if (id === 's-cambiar') refreshBalanceInScreens();
+  if (id === 's-send')          { var sEl = document.getElementById('send-saldo'); if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : '— XAF'; calcSend(); }
+  if (id === 's-recibir')       populateRecibir();
+  if (id === 's-retirar')       refreshBalanceInScreens();
+  if (id === 's-cambiar')       refreshBalanceInScreens();
+  if (id === 's-tontinas')      loadTontinas();
+  if (id === 's-bills')         loadBills();
+  if (id === 's-seguros')       loadSeguros();
+  if (id === 's-invest')        loadInvest();
+  if (id === 's-ahorro')        loadAhorro();
+  if (id === 's-giftcard')      loadCards();
+  if (id === 's-qrpay')         populateQRGen();
+  if (id === 's-pos')           genPosQR();
 };
 
 // ── RECIBIR ─────────────────────────────────────────────
