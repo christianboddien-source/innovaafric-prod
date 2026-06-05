@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -510,7 +510,7 @@
   <div class="section-inner" style="text-align:center">
     <div class="section-tag">COTIZADOR</div>
     <h2 class="section-title reveal">Calcula el precio de tu envío</h2>
-    <p class="section-sub reveal" style="margin:0 auto">Precio al instante. Sin sorpresas. Paga con Mobile Money, FCFA, EUR o USD.</p>
+    <p class="section-sub reveal" style="margin:0 auto">Precio al instante. Sin sorpresas. Paga con XenderMoney, Mobile Money, FCFA, EUR o USD.</p>
     <div class="calc-box">
       <div class="calc-grid">
         <div>
@@ -553,6 +553,17 @@
             <option value="eur">EUR (€)</option>
             <option value="usd">USD ($)</option>
           </select>
+        </div>
+        <div>
+          <div class="calc-label">Método de pago</div>
+          <select class="calc-input" id="calc-pay">
+            <option value="xendermoney">⭐ XenderMoney</option>
+            <option value="mtn">MTN MoMo</option>
+            <option value="orange">Orange Money</option>
+            <option value="wave">Wave</option>
+            <option value="card">Visa / Mastercard</option>
+            <option value="cash">Efectivo</option>
+          </select
         </div>
       </div>
       <button onclick="calcPrice()" style="background:var(--amber);color:#000;border:none;border-radius:12px;padding:14px 40px;font-size:15px;font-weight:800;cursor:pointer;width:100%;transition:all .2s;font-family:inherit" onmouseover="this.style.background='#FBC02D'" onmouseout="this.style.background='#F59E0B'">
@@ -1187,6 +1198,8 @@ function closeModal(id){document.getElementById(id).style.display='none';documen
 </style>
 </body>
 </html>
+
+
 
 
 
