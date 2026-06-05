@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -736,159 +736,115 @@
     </div>
 
     <!-- VENDOR CARDS GRID -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
+<style>
+.country-section{margin-bottom:40px;}
+.country-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #f0f0f0;}
+.country-header h3{font-size:20px;font-weight:800;color:#1a2744;margin:0;}
+.country-header span{font-size:28px;}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.vcard{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);opacity:0;transform:translateY(24px);animation:vfadein .5s forwards;}
+.vcard:nth-child(1){animation-delay:.05s}.vcard:nth-child(2){animation-delay:.15s}.vcard:nth-child(3){animation-delay:.25s}
+@keyframes vfadein{to{opacity:1;transform:translateY(0)}}
+.vcard-cover{position:relative;height:160px;overflow:hidden;}
+.vcard-cover img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.vcard:hover .vcard-cover img{transform:scale(1.06);}
+.vcard-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;}
+.vcard-body{padding:14px 16px;}
+.vcard-owner{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.vcard-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #F5A623;}
+.vcard-info h4{font-size:14px;font-weight:700;color:#1a2744;margin:0 0 2px;}
+.vcard-info p{font-size:11px;color:#888;margin:0;}
+.vcard-stats{display:flex;gap:14px;border-top:1px solid #f0f0f0;padding-top:10px;margin-top:6px;}
+.vcard-stats span{font-size:11px;color:#555;}
+.vcard-stats strong{color:#1a2744;}
+.vstat-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;margin-right:4px;animation:pulse-green 1.5s infinite;}
+@keyframes pulse-green{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}50%{box-shadow:0 0 0 5px rgba(34,197,94,0)}}
+</style>
 
-      <!-- Vendor 1 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#0D2B22,#1a5a3e);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">🍽️</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">Chez Aminata</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">African Cuisine Restaurant</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.9 (312 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 48 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Dakar, Senegal</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">ORDERS</span>📦 2,840 total</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
+<!-- 🇨🇲 Cameroun -->
+<div class="country-section">
+<div class="country-header"><span>🇨🇲</span><h3>Cameroun</h3></div>
+<div class="vgrid">
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=200&fit=crop" alt="Restaurant"><span class="vcard-badge">🍽 Restaurant</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Chez Mama Africa</h4><p>Yaoundé, Bastos</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.8</strong></span><span>🛒 <strong>230</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=400&h=200&fit=crop" alt="Pharmacie"><span class="vcard-badge">💊 Pharmacie</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Pharmacie Centrale</h4><p>Douala, Akwa</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.9</strong></span><span>🛒 <strong>415</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=200&fit=crop" alt="Mode"><span class="vcard-badge">👗 Mode</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Boutique Élégance</h4><p>Douala, Bonanjo</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.7</strong></span><span>🛒 <strong>178</strong> commandes</span></div>
+    </div>
+  </div>
+</div>
+</div>
 
-      <!-- Vendor 2 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#0a2040,#1a4080);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">💊</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">Pharmacie Ondoa</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">Certified Pharmacy</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.8 (198 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 1,240 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Yaoundé, Cameroon</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">ORDERS</span>📦 5,670 total</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
+<!-- 🇸🇳 Sénégal -->
+<div class="country-section">
+<div class="country-header"><span>🇸🇳</span><h3>Sénégal</h3></div>
+<div class="vgrid">
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=200&fit=crop" alt="Restaurant"><span class="vcard-badge">🍽 Restaurant</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Le Thiéboudienne</h4><p>Dakar, Plateau</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.9</strong></span><span>🛒 <strong>302</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?w=400&h=200&fit=crop" alt="Supermarché"><span class="vcard-badge">🛒 Supermarché</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Super Keur Serigne</h4><p>Dakar, Parcelles</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.6</strong></span><span>🛒 <strong>520</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=200&fit=crop" alt="Pharmacie"><span class="vcard-badge">💊 Pharmacie</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Pharmacie Yoff</h4><p>Dakar, Yoff</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.8</strong></span><span>🛒 <strong>289</strong> commandes</span></div>
+    </div>
+  </div>
+</div>
+</div>
 
-      <!-- Vendor 3 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#4a0040,#9a2080);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">👗</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">Grace Ayuk Fashion</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">African Prints & Boutique</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.7 (421 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 186 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Douala, Cameroon</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">SHIPS TO</span>🌍 12 countries</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Vendor 4 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#1a3a00,#3a7000);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">🛒</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">SuperMarché Mbaye</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">Grocery & Supermarket</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.6 (875 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 3,800 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Abidjan, Côte d'Ivoire</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">ORDERS</span>📦 18,200 total</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Vendor 5 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#3a1a00,#7a3a00);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">📱</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">TechZone Malabo</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">Electronics & Accessories</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.5 (234 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 620 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Malabo, Eq. Guinea</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">ORDERS</span>📦 4,100 total</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Vendor 6 -->
-      <div style="background:white;border-radius:16px;border:1px solid rgba(224,146,26,0.12);box-shadow:0 2px 16px rgba(0,0,0,0.05);overflow:hidden;transition:all .25s;" onmouseover="this.style.boxShadow='0 8px 32px rgba(224,146,26,0.18)';this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.05)';this.style.transform='';">
-        <div style="height:90px;background:linear-gradient(135deg,#1a0a3a,#40107a);display:flex;align-items:center;padding:0 20px;gap:14px;">
-          <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,0.2);">💄</div>
-          <div>
-            <div style="font-size:15px;font-weight:800;color:white;">Beauté Naturelle</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7);">Cosmetics & Skincare</div>
-          </div>
-          <div style="margin-left:auto;background:rgba(34,197,94,0.2);border:1px solid #22C55E;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;color:#22C55E;">● Active</div>
-        </div>
-        <div style="padding:16px 20px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">RATING</span>⭐ 4.9 (1,102 reviews)</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">PRODUCTS</span>🛍️ 340 items</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">LOCATION</span>📍 Libreville, Gabon</div>
-            <div style="font-size:12px;color:#8B6A3A;"><span style="font-size:10px;display:block;color:#B89060;margin-bottom:2px;">ORDERS</span>📦 9,800 total</div>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <a href="#" style="flex:1;background:#E0921A;color:white;text-align:center;border-radius:8px;padding:9px;font-size:12px;font-weight:700;text-decoration:none;">Visit Store</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">📞</a>
-            <a href="#" style="padding:9px 14px;border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;font-size:13px;text-decoration:none;color:#3D2800;">💬</a>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /vendor grid -->
+<!-- 🇨🇮 Côte d'Ivoire -->
+<div class="country-section">
+<div class="country-header"><span>🇨🇮</span><h3>Côte d'Ivoire</h3></div>
+<div class="vgrid">
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=200&fit=crop" alt="Restaurant"><span class="vcard-badge">🍽 Restaurant</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Maquis du Plateau</h4><p>Abidjan, Plateau</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.7</strong></span><span>🛒 <strong>195</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400&h=200&fit=crop" alt="Mode"><span class="vcard-badge">👗 Mode & Beauté</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Maison Koné Fashion</h4><p>Abidjan, Cocody</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.9</strong></span><span>🛒 <strong>341</strong> commandes</span></div>
+    </div>
+  </div>
+  <div class="vcard">
+    <div class="vcard-cover"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=200&fit=crop" alt="Supermarché"><span class="vcard-badge">🛒 Supermarché</span></div>
+    <div class="vcard-body">
+      <div class="vcard-owner"><img class="vcard-avatar" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&h=80&fit=crop" alt="owner"><div class="vcard-info"><h4>Marché Cocody Fresh</h4><p>Abidjan, Cocody</p></div></div>
+      <div class="vcard-stats"><span><span class="vstat-dot"></span>Ouvert</span><span>⭐ <strong>4.6</strong></span><span>🛒 <strong>467</strong> commandes</span></div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /vendor grid -->
 
     <!-- Pagination -->
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:40px;">
@@ -1706,6 +1662,8 @@ function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.get
 <script>window.addEventListener('DOMContentLoaded',function(){calcLote();});</script>
 </body>
 </html>
+
+
 
 
 
