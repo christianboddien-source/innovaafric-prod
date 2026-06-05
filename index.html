@@ -193,6 +193,29 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 .photo-wrap{position:relative;display:inline-block;margin:0 auto 10px}
 .photo-wrap img.profile-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid rgba(245,166,35,.4)}
 .photo-edit-btn{position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;border:2px solid var(--bg)}
+
+/* NOTIFICATION PANEL */
+#notif-panel{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-110%);width:100%;max-width:430px;background:var(--bg2);border-bottom:1px solid var(--border);border-radius:0 0 22px 22px;z-index:500;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 12px 40px rgba(0,0,0,.5);max-height:70vh;overflow-y:auto}
+#notif-panel.open{transform:translateX(-50%) translateY(0)}
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border2);cursor:pointer}
+.notif-item.unread{background:rgba(41,171,226,.04)}
+.notif-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+#notif-badge{position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--red);border-radius:8px;border:1.5px solid var(--bg);display:none;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;padding:0 3px}
+
+/* LIGHT MODE */
+body.light-mode{
+  --bg:#f0f2f8; --bg2:#ffffff; --bg3:#e4e8f0;
+  --border:rgba(0,0,0,.09); --border2:rgba(0,0,0,.05);
+  --txt:#111827; --txt2:#374151; --txt3:#6b7280;
+}
+body.light-mode .balance-card{background:linear-gradient(145deg,#1a3a6e,#1a5a8a,#0d3a6e) !important}
+body.light-mode #notif-panel{background:#fff}
+body.light-mode .screen{background:var(--bg)}
+body.light-mode .statusbar{background:var(--bg)}
+body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
+
+/* SHARE BUTTON */
+.btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:16px;padding:13px;font-size:13px;font-weight:800;width:100%;cursor:pointer;font-family:'Inter',sans-serif}
 </style>
 </head>
 <body ontouchstart="">
@@ -354,7 +377,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <div class="icon-btn" style="font-size:16px;position:relative">🔔<div class="badge"></div></div>
+          <div class="icon-btn" id="bell-btn" onclick="toggleNotifPanel()" style="font-size:16px;position:relative">🔔<div id="notif-badge" style="position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--red);border-radius:8px;border:1.5px solid var(--bg);display:none;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;padding:0 3px"></div></div>
           <div class="icon-btn user-initial" onclick="goScreen('s-perfil')" style="background:linear-gradient(135deg,var(--gold),#e05a00);font-size:14px;font-weight:900;color:#fff;font-style:normal">?</div>
         </div>
       </div>
@@ -530,8 +553,9 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div id="txn-list" style="padding:0 14px">
         <div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando movimientos…</div>
       </div>
-      <div style="padding:0 14px 16px">
+      <div style="padding:0 14px 16px;display:flex;flex-direction:column;gap:8px">
         <button class="btn-outline" style="width:100%" onclick="printReport('transactions')">🖨️ Imprimir extracto (PDF)</button>
+        <button class="btn-whatsapp" onclick="shareWalletReport()">📲 Compartir extracto por WhatsApp</button>
       </div>
     </div>
 
@@ -1024,6 +1048,21 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <button class="btn-outline" onclick="printReport('wallet')">📊 Extracto PDF</button>
         </div>
         <button class="btn-outline" style="width:100%;margin-bottom:10px;border-color:rgba(245,166,35,.3);color:var(--gold)" onclick="goScreen('s-fiscal')">📋 Fiscal &amp; Comisiones</button>
+        <!-- COMPARTIR APP -->
+        <button class="btn-whatsapp" style="margin-bottom:10px" onclick="shareApp()">📲 Compartir app por WhatsApp</button>
+        <!-- MODO CLARO/OSCURO -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;cursor:pointer" onclick="toggleLightMode()">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span id="theme-icon" style="font-size:20px">🌙</span>
+            <div>
+              <div id="theme-label" style="font-size:13px;font-weight:700;color:var(--txt)">Modo oscuro</div>
+              <div style="font-size:10px;color:var(--txt3)">Toca para cambiar el tema</div>
+            </div>
+          </div>
+          <div id="theme-toggle" style="width:44px;height:24px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);position:relative;transition:background .25s">
+            <div id="theme-knob" style="position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .25s;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>
+          </div>
+        </div>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red);width:100%">🚪 Cerrar sesión</button>
       </div>
       <div style="height:20px"></div>
@@ -1115,8 +1154,9 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Cuentas bancarias</div><button onclick="goScreen('s-nuevo-banco')" style="background:var(--blue);color:#fff;border:none;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">+ Nueva</button></div>
       <div style="padding:16px">
         <div id="bancos-list"><div style="text-align:center;padding:40px 0;color:var(--txt3);font-size:12px">Cargando cuentas…</div></div>
-        <div style="text-align:center;margin-top:8px">
-          <button class="btn-outline" style="width:100%;margin-top:4px" onclick="printReport('banks')">🖨️ Imprimir cuentas (PDF)</button>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <button class="btn-outline" style="width:100%" onclick="printReport('banks')">🖨️ Imprimir cuentas (PDF)</button>
+          <button class="btn-whatsapp" onclick="shareBanksReport()">📲 Compartir cuentas por WhatsApp</button>
         </div>
       </div>
     </div>
@@ -1226,24 +1266,41 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Notificaciones</div><div style="width:36px"></div></div>
       <div style="padding:20px 16px">
         <div class="card" style="border-radius:16px;padding:0;overflow:hidden;margin-bottom:16px">
+          <!-- PUSH PERMISSION CARD -->
+          <div id="notif-perm-card" style="padding:14px 16px;border-bottom:1px solid var(--border2)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+              <span style="font-size:22px">🔔</span>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:700;color:var(--txt)">Notificaciones push</div>
+                <div id="notif-perm-txt" style="font-size:10px;color:var(--txt3);margin-top:2px">Activa los avisos en tu móvil</div>
+              </div>
+              <div id="notif-perm-badge" style="font-size:10px;padding:3px 8px;border-radius:10px;background:rgba(239,68,68,.12);color:var(--red);font-weight:700">Inactivo</div>
+            </div>
+            <button id="notif-perm-btn" class="btn-primary" onclick="requestPushPermission()">🔔 Activar notificaciones</button>
+          </div>
+          <!-- CATEGORIES -->
           <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
-            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Transacciones</div><div style="font-size:11px;color:var(--txt3)">Envíos, pagos y recibos</div></div>
-            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">💸 Transacciones</div><div style="font-size:11px;color:var(--txt3)">Envíos, pagos y recibos</div></div>
+            <div id="ntog-txn" onclick="toggleNotifCat('txn')" style="width:44px;height:24px;border-radius:12px;background:var(--blue);position:relative;cursor:pointer;transition:background .2s"><div id="nknob-txn" style="position:absolute;top:3px;left:22px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div></div>
           </div>
           <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
-            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Seguridad</div><div style="font-size:11px;color:var(--txt3)">Inicios de sesión y alertas</div></div>
-            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🔐 Seguridad</div><div style="font-size:11px;color:var(--txt3)">Inicios de sesión y alertas</div></div>
+            <div id="ntog-sec" onclick="toggleNotifCat('sec')" style="width:44px;height:24px;border-radius:12px;background:var(--blue);position:relative;cursor:pointer;transition:background .2s"><div id="nknob-sec" style="position:absolute;top:3px;left:22px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div></div>
           </div>
           <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
-            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Tontinas</div><div style="font-size:11px;color:var(--txt3)">Recordatorios de cuota</div></div>
-            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" checked style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--blue);border-radius:24px;cursor:pointer"></span></label>
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🤝 Tontinas</div><div style="font-size:11px;color:var(--txt3)">Recordatorios de cuota</div></div>
+            <div id="ntog-ton" onclick="toggleNotifCat('ton')" style="width:44px;height:24px;border-radius:12px;background:var(--blue);position:relative;cursor:pointer;transition:background .2s"><div id="nknob-ton" style="position:absolute;top:3px;left:22px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div></div>
+          </div>
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">📢 Publicidad &amp; ofertas</div><div style="font-size:11px;color:var(--txt3)">Promociones de socios</div></div>
+            <div id="ntog-promo" onclick="toggleNotifCat('promo')" style="width:44px;height:24px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);position:relative;cursor:pointer;transition:background .2s"><div id="nknob-promo" style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div></div>
           </div>
           <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
-            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">Promociones</div><div style="font-size:11px;color:var(--txt3)">Ofertas y novedades</div></div>
-            <label style="position:relative;display:inline-block;width:44px;height:24px"><input type="checkbox" style="opacity:0;width:0;height:0"><span style="position:absolute;inset:0;background:var(--bg3);border-radius:24px;cursor:pointer;border:1px solid var(--border)"></span></label>
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🤖 InnovaBot</div><div style="font-size:11px;color:var(--txt3)">Respuestas del asistente</div></div>
+            <div id="ntog-bot" onclick="toggleNotifCat('bot')" style="width:44px;height:24px;border-radius:12px;background:var(--blue);position:relative;cursor:pointer;transition:background .2s"><div id="nknob-bot" style="position:absolute;top:3px;left:22px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div></div>
           </div>
         </div>
-        <div style="text-align:center;font-size:11px;color:var(--txt3)">Las notificaciones push requieren permisos del navegador.</div>
+        <button class="btn-outline" style="width:100%;margin-top:4px" onclick="sendTestNotification()">🧪 Enviar notificación de prueba</button>
       </div>
     </div>
 
@@ -1387,7 +1444,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <div style="font-size:12px;color:var(--txt3);text-align:center">Cargando resumen…</div>
         </div>
 
-        <button class="btn-outline" style="width:100%" onclick="printFiscalReport()">🖨️ Informe fiscal completo (PDF)</button>
+        <button class="btn-outline" style="width:100%;margin-bottom:8px" onclick="printFiscalReport()">🖨️ Informe fiscal completo (PDF)</button>
+        <button class="btn-whatsapp" onclick="shareFiscalReport()">📲 Compartir informe fiscal por WhatsApp</button>
       </div>
     </div>
 
@@ -1755,6 +1813,27 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
     </button>
   </nav>
 </div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notif-panel">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px">
+    <div style="font-size:15px;font-weight:900;color:var(--txt)">🔔 Notificaciones</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="mark-all-read" style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer" onclick="markAllRead()">Marcar todo leído</span>
+      <div class="icon-btn" style="width:28px;height:28px;font-size:14px" onclick="toggleNotifPanel()">✕</div>
+    </div>
+  </div>
+  <div id="notif-list" style="padding:0 0 8px">
+    <div style="text-align:center;padding:24px 16px;color:var(--txt3);font-size:12px">Sin notificaciones nuevas</div>
+  </div>
+  <div style="padding:10px 16px 16px">
+    <button class="btn-primary" onclick="requestPushPermission()">🔔 Activar notificaciones push</button>
+    <div id="push-status" style="font-size:10px;color:var(--txt3);text-align:center;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- OVERLAY para cerrar panel al tocar fuera -->
+<div id="notif-overlay" onclick="toggleNotifPanel()" style="display:none;position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.35)"></div>
 
 <!-- Install toast -->
 <div id="install-toast">📲 Toca "Añadir a pantalla de inicio" para instalar la app</div>
@@ -3948,11 +4027,298 @@ afterLogin = function() {
   initAds();
 };
 
+// ── NOTIFICACIONES PUSH ──────────────────────────────────
+var _notifList = JSON.parse(localStorage.getItem('inn_notifs') || '[]');
+var _notifCats = JSON.parse(localStorage.getItem('inn_notif_cats') || '{"txn":true,"sec":true,"ton":true,"promo":false,"bot":true}');
+
+function requestPushPermission() {
+  if (!('Notification' in window)) {
+    showToast('Notificaciones', 'Tu navegador no soporta notificaciones push. Usa Chrome o Firefox en Android.');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    showToast('Notificaciones', '✓ Ya están activadas');
+    updatePushPermUI();
+    sendTestNotification();
+    return;
+  }
+  Notification.requestPermission().then(function(perm) {
+    updatePushPermUI();
+    if (perm === 'granted') {
+      localStorage.setItem('inn_notif', '1');
+      showToast('✓ Notificaciones activadas', 'Recibirás alertas de transacciones y seguridad');
+      setTimeout(function() {
+        new Notification('INNOVAAFRIC', {
+          body: '✓ Notificaciones configuradas correctamente',
+          icon: './icon.svg',
+          tag: 'test'
+        });
+      }, 500);
+    } else {
+      showToast('Permiso denegado', 'Ve a Configuración del navegador → Permisos → Notificaciones para activarlas');
+    }
+  });
+}
+
+function updatePushPermUI() {
+  var perm = ('Notification' in window) ? Notification.permission : 'unsupported';
+  var txt    = document.getElementById('notif-perm-txt');
+  var badge  = document.getElementById('notif-perm-badge');
+  var btn    = document.getElementById('notif-perm-btn');
+  var pstatus = document.getElementById('push-status');
+
+  if (perm === 'granted') {
+    if (txt)   txt.textContent = '✓ Notificaciones push activadas';
+    if (badge) { badge.textContent = 'Activo'; badge.style.background = 'rgba(34,197,94,.12)'; badge.style.color = '#22c55e'; }
+    if (btn)   { btn.textContent = '✓ Activadas — Enviar notif. de prueba'; btn.onclick = sendTestNotification; }
+    if (pstatus) pstatus.textContent = '✓ Permiso concedido — el sistema enviará alertas automáticamente';
+  } else if (perm === 'denied') {
+    if (txt)   txt.textContent = 'Permisos denegados por el usuario';
+    if (badge) { badge.textContent = 'Bloqueado'; badge.style.background = 'rgba(239,68,68,.12)'; badge.style.color = '#ef4444'; }
+    if (btn)   btn.textContent = '⚙️ Activar en configuración del navegador';
+    if (pstatus) pstatus.textContent = 'Ve a Configuración → Privacidad → Notificaciones para desbloquear';
+  } else {
+    if (pstatus) pstatus.textContent = '';
+  }
+}
+
+function sendTestNotification() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') {
+    requestPushPermission();
+    return;
+  }
+  new Notification('INNOVAAFRIC · Prueba', {
+    body: '🧪 Notificación de prueba — todo funciona correctamente',
+    icon: './icon.svg',
+    tag: 'test-' + Date.now()
+  });
+  showToast('Notificación enviada', 'Comprueba la barra de tu móvil');
+}
+
+function pushNotify(title, body, tag) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  new Notification('INNOVAAFRIC · ' + title, { body: body, icon: './icon.svg', tag: tag || 'inn-' + Date.now() });
+}
+
+function addInAppNotif(icon, title, body, color) {
+  var n = { id: Date.now(), icon: icon, title: title, body: body, color: color || 'rgba(41,171,226,.12)', read: false, ts: new Date().toISOString() };
+  _notifList.unshift(n);
+  if (_notifList.length > 50) _notifList.pop();
+  localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
+  renderNotifBadge();
+  renderNotifPanel();
+}
+
+function renderNotifBadge() {
+  var unread = _notifList.filter(function(n){ return !n.read; }).length;
+  var badge  = document.getElementById('notif-badge');
+  if (!badge) return;
+  if (unread > 0) { badge.style.display = 'flex'; badge.textContent = unread > 9 ? '9+' : unread; }
+  else             { badge.style.display = 'none'; }
+}
+
+function renderNotifPanel() {
+  var el = document.getElementById('notif-list');
+  if (!el) return;
+  if (!_notifList.length) {
+    el.innerHTML = '<div style="text-align:center;padding:24px 16px;color:var(--txt3);font-size:12px">Sin notificaciones</div>';
+    return;
+  }
+  el.innerHTML = _notifList.slice(0, 20).map(function(n) {
+    var d = new Date(n.ts);
+    var ago = Math.round((Date.now() - d.getTime()) / 60000);
+    var agoStr = ago < 1 ? 'ahora' : ago < 60 ? ago + ' min' : (Math.round(ago/60)) + 'h';
+    return '<div class="notif-item' + (n.read ? '' : ' unread') + '" onclick="readNotif(' + n.id + ')">' +
+      '<div class="notif-icon" style="background:' + n.color + '">' + n.icon + '</div>' +
+      '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + n.title + '</div>' +
+      '<div style="font-size:11px;color:var(--txt3);margin-top:2px;line-height:1.4">' + n.body + '</div></div>' +
+      '<div style="font-size:9px;color:var(--txt3);flex-shrink:0">' + agoStr + '</div></div>';
+  }).join('');
+}
+
+function readNotif(id) {
+  _notifList.forEach(function(n){ if (n.id === id) n.read = true; });
+  localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
+  renderNotifBadge();
+  renderNotifPanel();
+}
+
+function markAllRead() {
+  _notifList.forEach(function(n){ n.read = true; });
+  localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
+  renderNotifBadge();
+  renderNotifPanel();
+}
+
+var _notifPanelOpen = false;
+function toggleNotifPanel() {
+  _notifPanelOpen = !_notifPanelOpen;
+  var panel   = document.getElementById('notif-panel');
+  var overlay = document.getElementById('notif-overlay');
+  if (panel)   panel.classList.toggle('open', _notifPanelOpen);
+  if (overlay) overlay.style.display = _notifPanelOpen ? 'block' : 'none';
+  if (_notifPanelOpen) { renderNotifPanel(); updatePushPermUI(); }
+}
+
+function toggleNotifCat(cat) {
+  _notifCats[cat] = !_notifCats[cat];
+  localStorage.setItem('inn_notif_cats', JSON.stringify(_notifCats));
+  var tog  = document.getElementById('ntog-' + cat);
+  var knob = document.getElementById('nknob-' + cat);
+  if (tog)  tog.style.background  = _notifCats[cat] ? 'var(--blue)' : 'var(--bg3)';
+  if (knob) knob.style.left = _notifCats[cat] ? '22px' : '3px';
+}
+
+function initNotifCatUI() {
+  Object.keys(_notifCats).forEach(function(cat) {
+    var tog  = document.getElementById('ntog-' + cat);
+    var knob = document.getElementById('nknob-' + cat);
+    if (tog)  tog.style.background  = _notifCats[cat] ? 'var(--blue)' : 'var(--bg3)';
+    if (knob) knob.style.left = _notifCats[cat] ? '22px' : '3px';
+  });
+}
+
+// ── MODO CLARO / OSCURO ──────────────────────────────────
+var _lightMode = localStorage.getItem('inn_theme') === 'light';
+
+function applyTheme() {
+  if (_lightMode) {
+    document.body.classList.add('light-mode');
+    var icon  = document.getElementById('theme-icon');
+    var label = document.getElementById('theme-label');
+    var tog   = document.getElementById('theme-toggle');
+    var knob  = document.getElementById('theme-knob');
+    if (icon)  icon.textContent  = '☀️';
+    if (label) label.textContent = 'Modo claro';
+    if (tog)   tog.style.background = 'var(--blue)';
+    if (knob)  knob.style.left = '22px';
+  } else {
+    document.body.classList.remove('light-mode');
+    var icon  = document.getElementById('theme-icon');
+    var label = document.getElementById('theme-label');
+    var tog   = document.getElementById('theme-toggle');
+    var knob  = document.getElementById('theme-knob');
+    if (icon)  icon.textContent  = '🌙';
+    if (label) label.textContent = 'Modo oscuro';
+    if (tog)   tog.style.background = 'var(--bg3)';
+    if (knob)  knob.style.left = '2px';
+  }
+}
+
+function toggleLightMode() {
+  _lightMode = !_lightMode;
+  localStorage.setItem('inn_theme', _lightMode ? 'light' : 'dark');
+  applyTheme();
+  showToast(_lightMode ? '☀️ Modo claro' : '🌙 Modo oscuro', 'Tema cambiado correctamente');
+}
+
+// ── COMPARTIR POR WHATSAPP ────────────────────────────────
+function shareViaWhatsApp(text) {
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+function shareApp() {
+  var code = (_user && (_user.ia_code || (_user.id ? 'IA-' + (_user.id||'').replace('usr_','').slice(0,6).toUpperCase() : ''))) || '';
+  var text = '🌍 *INNOVAAFRIC* — Tu fintech tricontinental\n\n' +
+    '✅ Envía dinero entre África y Europa en segundos\n' +
+    '✅ Compras online en XenderShop y BigShop\n' +
+    '✅ Delivery, tontinas, seguros y más\n' +
+    '✅ Sin comisión en tu primer envío\n\n' +
+    '📲 Descarga la app gratis:\nhttps://christianboddien-source.github.io/innovaafric-prod/' +
+    (code ? '\n\n🎁 Usa mi código de referido: *' + code + '*' : '');
+  shareViaWhatsApp(text);
+}
+
+function shareWalletReport() {
+  var xaf  = _balances.XAF || 0;
+  var eur  = (_balances.EUR > 0 ? _balances.EUR : xaf * _FX.EUR);
+  var name = (_user && _user.name) || 'Usuario';
+  var date = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+  var text = '💰 *Extracto INNOVAAFRIC*\n' +
+    '👤 ' + name + '\n' +
+    '📅 ' + date + '\n\n' +
+    '💵 Saldo: *' + Math.round(xaf).toLocaleString('fr-FR') + ' XAF*\n' +
+    '≈ € ' + eur.toFixed(2) + '\n\n' +
+    (_allTxns.length > 0 ? '📊 Últimas transacciones:\n' + _allTxns.slice(0,5).map(function(t){
+      var isIn = t.recipientId === (_user && _user.id);
+      return (isIn ? '• ✅ +' : '• 🔴 -') + (t.amountSent||t.amount||0) + ' ' + (t.currencySent||'XAF') + ' — ' + (t.note||t.type||'Transacción');
+    }).join('\n') + '\n\n' : '') +
+    '🔗 _Generado desde INNOVAAFRIC_\nhttps://christianboddien-source.github.io/innovaafric-prod/';
+  shareViaWhatsApp(text);
+}
+
+function shareFiscalReport() {
+  var user = _user || {};
+  var name = user.name || '—';
+  var country = user.country || '—';
+  var date = new Date().toLocaleDateString('es-ES', {month:'long', year:'numeric'});
+  var calc = _fiscalCalcResult || null;
+  var text = '📋 *Informe Fiscal INNOVAAFRIC*\n' +
+    '👤 ' + name + ' · ' + country + '\n' +
+    '📅 Período: ' + date + '\n\n';
+  if (calc) {
+    text += '💰 Base gravable: ' + (calc.base||0).toLocaleString('fr-FR') + ' ' + (calc.currency||'XAF') + '\n' +
+      '💼 Comisión (' + ((calc.feeRate||0)*100).toFixed(1) + '%): ' + (calc.fee||0).toLocaleString('fr-FR') + '\n' +
+      '🏛️ Impuestos: ' + (calc.totalTax||0).toLocaleString('fr-FR') + '\n' +
+      '✅ Neto: *' + (calc.net||0).toLocaleString('fr-FR') + ' ' + (calc.currency||'XAF') + '*\n\n';
+  }
+  text += '_Documento generado por INNOVAAFRIC_\nhttps://christianboddien-source.github.io/innovaafric-prod/';
+  shareViaWhatsApp(text);
+}
+
+function shareBanksReport() {
+  var name = (_user && _user.name) || 'Usuario';
+  var date = new Date().toLocaleDateString('es-ES');
+  var banks = _bancosLista || [];
+  var text = '🏦 *Cuentas bancarias INNOVAAFRIC*\n' +
+    '👤 ' + name + ' · ' + date + '\n\n';
+  if (banks.length) {
+    text += banks.map(function(b) {
+      return '• ' + (b.emoji||'🏦') + ' *' + b.bankName + '*\n  IBAN: ' + (b.iban||'—') + '\n  ' + (b.currency||'—') + ' · ' + (b.country||'—');
+    }).join('\n') + '\n\n';
+  } else {
+    text += 'Sin cuentas registradas\n\n';
+  }
+  text += '_Generado desde INNOVAAFRIC_';
+  shareViaWhatsApp(text);
+}
+
+// ── INIT ON LOAD ─────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    applyTheme();
+    renderNotifBadge();
+    initNotifCatUI();
+    updatePushPermUI();
+    // Welcome notification on first login
+    if (_user && _notifList.length === 0) {
+      addInAppNotif('🎉', 'Bienvenido a INNOVAAFRIC', 'Tu cuenta está lista. Completa el KYC para activar todos los servicios.', 'rgba(41,171,226,.12)');
+    }
+  }, 400);
+});
+
+// Patch afterLogin to trigger welcome notification
+var _origAfterLogin2 = afterLogin;
+afterLogin = function() {
+  _origAfterLogin2();
+  applyTheme();
+  initNotifCatUI();
+  updatePushPermUI();
+  renderNotifBadge();
+  if (_notifList.length === 0) {
+    addInAppNotif('🎉', '¡Bienvenido!', 'Sesión iniciada correctamente en INNOVAAFRIC.', 'rgba(34,197,94,.12)');
+  }
+};
+
+// Notify on successful send (hook into doSend success path)
+var _origDoSendOK = null; // patched via toast override
+
 // Patch goScreen for new screens
 var _origGoScreen2 = goScreen;
 goScreen = function(id) {
   _origGoScreen2(id);
   if (id === 's-publicidad') renderFullAds();
+  if (id === 's-notificaciones') { updatePushPermUI(); initNotifCatUI(); }
   if (id === 's-seguridad') {
     updateBioUI();
     var saved = localStorage.getItem('inn_photo');
