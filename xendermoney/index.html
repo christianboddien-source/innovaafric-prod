@@ -1935,12 +1935,24 @@ async function loadLiveRates(){
 function calcXM(){
   var rates=_XM_RATES;
   var amt=parseFloat(document.getElementById('xm-amount').value)||0;
-  var pair=document.getElementById('xm-from').value+'-'+document.getElementById('xm-to').value;
-  var rate=rates[pair]||rates[document.getElementById('xm-to').value+'-'+document.getElementById('xm-from').value];
-  if(!rate||document.getElementById('xm-from').value===document.getElementById('xm-to').value){document.getElementById('xm-result').innerHTML='<span style="color:#e53e3e">Selecciona monedas distintas</span>';return;}
-  var converted=document.getElementById('xm-from').value===Object.keys(rates).find(k=>k.startsWith(document.getElementById('xm-from').value))?.split('-')[0]?amt*rate:amt/rate;
+  var fromCur=document.getElementById('xm-from').value;
+  var toCur=document.getElementById('xm-to').value;
+  if(!amt||fromCur===toCur){document.getElementById('xm-result').innerHTML='<span style="color:#e53e3e">Selecciona monedas distintas</span>';return;}
+  var pair=fromCur+'-'+toCur;
+  var invPair=toCur+'-'+fromCur;
+  var converted,displayRate;
+  if(rates[pair]){
+    converted=amt*rates[pair];
+    displayRate=rates[pair];
+  } else if(rates[invPair]){
+    converted=amt/rates[invPair];
+    displayRate=(1/rates[invPair]);
+  } else {
+    document.getElementById('xm-result').innerHTML='<span style="color:#e53e3e">Par no disponible</span>';return;
+  }
   var fee=amt*0.01;
-  document.getElementById('xm-result').innerHTML='<div style="font-size:28px;font-weight:900;color:#F5A623;margin-bottom:8px;">'+converted.toFixed(0)+' '+document.getElementById('xm-to').value+'</div><div style="font-size:13px;color:#8A9AB8;">Comisión estimada: '+fee.toFixed(2)+' '+document.getElementById('xm-from').value+' · Tipo: 1 '+document.getElementById('xm-from').value+' = '+rate+' '+document.getElementById('xm-to').value+'</div>';
+  var rateStr=displayRate>=1?displayRate.toFixed(2):displayRate.toFixed(6);
+  document.getElementById('xm-result').innerHTML='<div style="font-size:28px;font-weight:900;color:#F5A623;margin-bottom:8px;">'+converted.toFixed(toCur==='XAF'||toCur==='XOF'||toCur==='GNF'?0:2)+' '+toCur+'</div><div style="font-size:13px;color:#8A9AB8;">Comisión estimada: '+fee.toFixed(2)+' '+fromCur+' · Tipo: 1 '+fromCur+' = '+rateStr+' '+toCur+'</div>';
 }
 </script>
 
