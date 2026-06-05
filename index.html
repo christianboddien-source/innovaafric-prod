@@ -175,6 +175,24 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 /* SVC TOAST */
 #svc-toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a2235;border:1px solid rgba(41,171,226,.35);border-radius:16px;padding:10px 18px;font-size:11px;font-weight:700;color:var(--txt);z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.6);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 #svc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ADS BANNER */
+.ad-banner{margin:0 14px 14px;border-radius:18px;overflow:hidden;position:relative;height:110px;background:var(--bg2)}
+.ad-slides{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.ad-slide{flex-shrink:0;width:100%;height:100%;position:relative;overflow:hidden;cursor:pointer}
+.ad-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:5}
+.ad-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .3s,width .3s}
+.ad-dot.on{width:14px;border-radius:3px;background:#fff}
+
+/* BIOMETRIC LOCK SCREEN */
+#biometric-lock{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:40px}
+.bio-ring{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,rgba(41,171,226,.15),rgba(41,171,226,.05));border:2px solid rgba(41,171,226,.3);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 20px;animation:biopulse 2s ease-in-out infinite}
+@keyframes biopulse{0%,100%{box-shadow:0 0 0 0 rgba(41,171,226,.3)}50%{box-shadow:0 0 0 12px rgba(41,171,226,0)}}
+
+/* PHOTO AVATAR */
+.photo-wrap{position:relative;display:inline-block;margin:0 auto 10px}
+.photo-wrap img.profile-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid rgba(245,166,35,.4)}
+.photo-edit-btn{position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;border:2px solid var(--bg)}
 </style>
 </head>
 <body ontouchstart="">
@@ -414,6 +432,20 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="svc-item" onclick="goScreen('s-invest')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Inversión</div></div>
         <div class="svc-item" onclick="goScreen('s-ahorro')"><div style="font-size:20px">🎯</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Ahorro</div></div>
       </div>
+      <!-- ADS BANNER -->
+      <div style="padding:0 14px;margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="section-title" style="margin:0">Ofertas y publicidad</div>
+          <span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer" onclick="goScreen('s-publicidad')">Ver todas →</span>
+        </div>
+      </div>
+      <div class="ad-banner" id="ad-banner-wrap">
+        <div class="ad-slides" id="ad-slides">
+          <!-- slides inserted by JS -->
+        </div>
+        <div class="ad-dots" id="ad-dots"></div>
+      </div>
+
       <!-- Movimientos recientes -->
       <div style="padding:0 14px;margin-bottom:14px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -932,7 +964,13 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="icon-btn">⚙️</div>
       </div>
       <div style="padding:10px 14px 14px;text-align:center">
-        <div id="perfil-initial" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">?</div>
+        <div class="photo-wrap" style="display:block;text-align:center">
+          <div id="perfil-photo-wrap" style="width:72px;height:72px;margin:0 auto;position:relative">
+            <div id="perfil-initial" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">?</div>
+            <img id="perfil-photo" src="" alt="" style="display:none;width:72px;height:72px;border-radius:50%;object-fit:cover;position:absolute;top:0;left:0;border:3px solid rgba(245,166,35,.4)">
+            <div class="photo-edit-btn" onclick="triggerPhotoUpload()" title="Cambiar foto">📷</div>
+          </div>
+        </div>
         <div id="perfil-name" style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:2px">—</div>
         <div id="perfil-email" style="font-size:11px;color:var(--txt3);margin-bottom:10px">—</div>
         <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
@@ -1029,10 +1067,45 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <button class="btn-primary" onclick="doChangePassword()">🔐 Actualizar contraseña</button>
           </div>
         </div>
-        <div class="card" style="border-radius:16px;padding:16px">
+        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:16px">
           <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:12px">Sesiones activas</div>
           <div style="font-size:12px;color:var(--txt3)">Sesión actual — Este dispositivo</div>
           <div style="margin-top:12px"><button class="btn-outline" style="border-color:rgba(239,68,68,.3);color:var(--red);width:100%" onclick="doLogout()">🚪 Cerrar todas las sesiones</button></div>
+        </div>
+        <!-- BIOMETRIC SECTION -->
+        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:24px">🔒</span>
+              <div>
+                <div style="font-size:13px;font-weight:800;color:var(--txt)">Bloqueo biométrico</div>
+                <div style="font-size:10px;color:var(--txt3);margin-top:2px">Huella dactilar · Face ID</div>
+              </div>
+            </div>
+            <!-- Toggle -->
+            <div id="bio-toggle-wrap" onclick="toggleBiometric()" style="cursor:pointer">
+              <div id="bio-toggle" style="width:44px;height:24px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);position:relative;transition:background .25s">
+                <div id="bio-knob" style="position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .25s;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>
+              </div>
+            </div>
+          </div>
+          <div id="bio-status" style="font-size:11px;color:var(--txt3);padding:8px 10px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid var(--border2)">
+            Desactivado — La app no requiere biométrico al abrir
+          </div>
+          <div id="bio-btn-row" style="margin-top:10px;display:none">
+            <button class="btn-outline" style="width:100%" onclick="testBiometric()">🔍 Probar biométrico ahora</button>
+          </div>
+        </div>
+        <!-- PHOTO SECTION -->
+        <div class="card" style="border-radius:16px;padding:16px">
+          <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:10px">Foto de perfil</div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div id="seg-photo-preview" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;overflow:hidden;flex-shrink:0">?</div>
+            <div style="flex:1">
+              <button class="btn-primary" style="margin-bottom:8px" onclick="triggerPhotoUpload()">📷 Cambiar foto</button>
+              <button id="del-photo-btn" class="btn-outline" style="display:none;border-color:rgba(239,68,68,.3);color:var(--red)" onclick="deleteProfilePhoto()">🗑️ Eliminar foto</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1208,6 +1281,20 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         </div>
         <button class="btn-primary" style="width:100%" onclick="goScreen('s-innovabot')">🤖 Hablar con InnovaBot ahora</button>
       </div>
+    </div>
+
+    <!-- SCREEN: PUBLICIDAD -->
+    <div class="screen" id="s-publicidad">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Publicidad &amp; Ofertas</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px 14px">
+        <div style="padding:10px 14px;border-radius:12px;background:rgba(41,171,226,.07);border:1px solid rgba(41,171,226,.15);font-size:11px;color:var(--blue);margin-bottom:14px">📢 Descubre las mejores ofertas de nuestros socios — negocios africanos y europeos en tu comunidad</div>
+        <div id="pub-full-list"></div>
+      </div>
+      <div style="height:10px"></div>
     </div>
 
     <!-- SCREEN: FISCAL / IMPUESTOS & COMISIONES -->
@@ -1672,6 +1759,21 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 <!-- Install toast -->
 <div id="install-toast">📲 Toca "Añadir a pantalla de inicio" para instalar la app</div>
 <div id="svc-toast"></div>
+
+<!-- BIOMETRIC LOCK SCREEN -->
+<div id="biometric-lock" style="display:none">
+  <div style="text-align:center">
+    <div style="font-size:28px;font-weight:900;color:var(--txt);margin-bottom:6px">INNOVAAFRIC</div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:32px">La app está bloqueada</div>
+    <div class="bio-ring" id="bio-lock-icon">🔒</div>
+    <div style="font-size:16px;font-weight:800;color:var(--txt);margin-bottom:8px">Desbloquear con biométrico</div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:28px">Usa tu huella dactilar o Face ID</div>
+    <button class="btn-primary" style="max-width:260px" onclick="requestBiometricUnlock()">🔓 Desbloquear ahora</button>
+    <div style="margin-top:14px">
+      <span style="font-size:11px;color:var(--txt3);cursor:pointer;text-decoration:underline" onclick="doLogout()">Cerrar sesión</span>
+    </div>
+  </div>
+</div>
 
 <script>
 var history_stack = ['s-home'];
@@ -3567,6 +3669,305 @@ function renderTxnList(containerId, items, maxItems) {
   });
   el.innerHTML = html;
 }
+
+// ── FOTO DE PERFIL ───────────────────────────────────────
+function triggerPhotoUpload() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('Foto', 'La imagen debe ser menor de 5 MB'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      var base64 = ev.target.result;
+      localStorage.setItem('inn_photo', base64);
+      applyProfilePhoto(base64);
+      showToast('Foto actualizada', '✓ Tu foto de perfil se ha guardado');
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function applyProfilePhoto(src) {
+  if (!src) return;
+  // Profile avatar
+  var initial = document.getElementById('perfil-initial');
+  var photo   = document.getElementById('perfil-photo');
+  if (initial) initial.style.display = 'none';
+  if (photo)   { photo.src = src; photo.style.display = 'block'; }
+  // Security screen preview
+  var seg = document.getElementById('seg-photo-preview');
+  if (seg) { seg.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; }
+  // Header icon
+  document.querySelectorAll('.user-initial').forEach(function(el) {
+    el.innerHTML = '<img src="'+src+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover">';
+  });
+  // Show delete button
+  var delBtn = document.getElementById('del-photo-btn');
+  if (delBtn) delBtn.style.display = 'block';
+}
+
+function deleteProfilePhoto() {
+  localStorage.removeItem('inn_photo');
+  var initial = document.getElementById('perfil-initial');
+  var photo   = document.getElementById('perfil-photo');
+  if (initial) initial.style.display = 'flex';
+  if (photo)   { photo.src = ''; photo.style.display = 'none'; }
+  var seg = document.getElementById('seg-photo-preview');
+  if (seg && _user) { seg.innerHTML = (_user.name||'?').charAt(0).toUpperCase(); seg.style.fontSize = '24px'; }
+  // Restore header initials
+  populateUser();
+  var delBtn = document.getElementById('del-photo-btn');
+  if (delBtn) delBtn.style.display = 'none';
+  showToast('Foto eliminada', 'Se ha restaurado el avatar predeterminado');
+}
+
+function loadSavedPhoto() {
+  var saved = localStorage.getItem('inn_photo');
+  if (saved) applyProfilePhoto(saved);
+}
+
+// ── BLOQUEO BIOMÉTRICO ───────────────────────────────────
+var _bioEnabled = localStorage.getItem('inn_bio') === '1';
+var _bioCredId  = localStorage.getItem('inn_bio_cid') || null;
+var _appLocked  = false;
+var _bioLockTimer = null;
+
+function updateBioUI() {
+  var toggle   = document.getElementById('bio-toggle');
+  var knob     = document.getElementById('bio-knob');
+  var status   = document.getElementById('bio-status');
+  var btnRow   = document.getElementById('bio-btn-row');
+  if (!toggle) return;
+  if (_bioEnabled) {
+    toggle.style.background = 'var(--blue)';
+    knob.style.left = '22px';
+    if (status) status.textContent = '✓ Activado — La app pedirá biométrico al abrir o tras 5 min en segundo plano';
+    if (btnRow) btnRow.style.display = 'block';
+  } else {
+    toggle.style.background = 'var(--bg3)';
+    knob.style.left = '2px';
+    if (status) status.textContent = 'Desactivado — La app no requiere biométrico al abrir';
+    if (btnRow) btnRow.style.display = 'none';
+  }
+}
+
+function toggleBiometric() {
+  if (_bioEnabled) {
+    // Disable
+    _bioEnabled = false;
+    localStorage.setItem('inn_bio', '0');
+    localStorage.removeItem('inn_bio_cid');
+    _bioCredId = null;
+    updateBioUI();
+    showToast('Biométrico', 'Bloqueo biométrico desactivado');
+  } else {
+    // Enable — register credential
+    if (!window.PublicKeyCredential) {
+      showToast('No disponible', 'Tu dispositivo o navegador no soporta WebAuthn. Prueba en el móvil.');
+      return;
+    }
+    var challenge = new Uint8Array(32);
+    window.crypto.getRandomValues(challenge);
+    var userId8 = new TextEncoder().encode((_user && _user.id) || 'innovaafric_user').slice(0, 64);
+    navigator.credentials.create({
+      publicKey: {
+        challenge: challenge,
+        rp: { name: 'InnovaAFRIC', id: location.hostname },
+        user: { id: userId8, name: (_user && _user.email) || 'user', displayName: (_user && _user.name) || 'Usuario' },
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
+        authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', residentKey: 'preferred' },
+        timeout: 60000
+      }
+    }).then(function(credential) {
+      var credArr = new Uint8Array(credential.rawId);
+      var credB64 = btoa(String.fromCharCode.apply(null, credArr));
+      _bioCredId = credB64;
+      _bioEnabled = true;
+      localStorage.setItem('inn_bio', '1');
+      localStorage.setItem('inn_bio_cid', credB64);
+      updateBioUI();
+      showToast('Biométrico activado', '🔒 La app quedará bloqueada en segundo plano');
+    }).catch(function(err) {
+      showToast('Error biométrico', err.name === 'NotAllowedError' ? 'Cancelado o no permitido' : (err.message || 'No disponible en este dispositivo'));
+    });
+  }
+}
+
+function testBiometric() {
+  if (!_bioCredId) { showToast('Biométrico', 'Primero activa el bloqueo biométrico'); return; }
+  requestBiometricUnlock(true);
+}
+
+function requestBiometricUnlock(isTest) {
+  if (!window.PublicKeyCredential || !_bioCredId) {
+    if (isTest) showToast('Biométrico', 'No configurado');
+    hideBioLock();
+    return;
+  }
+  var challenge = new Uint8Array(32);
+  window.crypto.getRandomValues(challenge);
+  var credBytes;
+  try { credBytes = Uint8Array.from(atob(_bioCredId), function(c){ return c.charCodeAt(0); }); }
+  catch(e) { hideBioLock(); return; }
+
+  navigator.credentials.get({
+    publicKey: {
+      challenge: challenge,
+      allowCredentials: [{ type: 'public-key', id: credBytes }],
+      userVerification: 'required',
+      timeout: 60000
+    }
+  }).then(function() {
+    hideBioLock();
+    var icon = document.getElementById('bio-lock-icon');
+    if (icon) { icon.textContent = '✓'; icon.style.background = 'linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05))'; icon.style.borderColor = 'rgba(34,197,94,.4)'; }
+    if (isTest) showToast('Biométrico OK', '✓ Autenticación biométrica correcta');
+  }).catch(function(err) {
+    showToast('Autenticación fallida', err.name === 'NotAllowedError' ? 'Cancelado' : 'Inténtalo de nuevo');
+  });
+}
+
+function showBioLock() {
+  if (!_bioEnabled || !_user) return;
+  _appLocked = true;
+  var lock = document.getElementById('biometric-lock');
+  if (lock) lock.style.display = 'flex';
+  // Reset icon
+  var icon = document.getElementById('bio-lock-icon');
+  if (icon) { icon.textContent = '🔒'; icon.style.background = ''; icon.style.borderColor = ''; }
+}
+
+function hideBioLock() {
+  _appLocked = false;
+  var lock = document.getElementById('biometric-lock');
+  if (lock) lock.style.display = 'none';
+}
+
+// Lock after 5 min in background
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    if (_bioEnabled) {
+      _bioLockTimer = setTimeout(function() { showBioLock(); }, 5 * 60 * 1000);
+    }
+  } else {
+    clearTimeout(_bioLockTimer);
+  }
+});
+
+// ── PUBLICIDAD / ADS ─────────────────────────────────────
+var _ADS = [
+  { id:1, brand:'XenderMoney',   emoji:'💸', title:'Envía sin comisión',    body:'Primeras 3 transferencias sin comisión este mes',       color:'linear-gradient(135deg,#00897B,#004D40)', tag:'Promo', link:'s-send' },
+  { id:2, brand:'AfroMarket',    emoji:'🛒', title:'Mercado africano online', body:'Productos auténticos de África directo a tu puerta',  color:'linear-gradient(135deg,#1a3a6e,#0d2147)', tag:'Tienda', link:'s-shop' },
+  { id:3, brand:'InnovaBot IA',  emoji:'🤖', title:'Asistente financiero 24/7', body:'Pregunta sobre envíos, tasas y cambio de divisas', color:'linear-gradient(135deg,#1a1a4e,#2d1b69)', tag:'Gratis', link:'s-chat' },
+  { id:4, brand:'Tontina PLUS',  emoji:'🤝', title:'Ahorra en comunidad',    body:'Únete a una tontina y multiplica tus ahorros',          color:'linear-gradient(135deg,#1a3020,#0d2015)', tag:'Nuevo', link:'s-tontinas' },
+  { id:5, brand:'Seguro África', emoji:'🛡️', title:'Protege lo que amas',   body:'Seguro de vida y salud desde 3 500 XAF/mes',            color:'linear-gradient(135deg,#2d1a1a,#4a0d0d)', tag:'Oferta', link:'s-seguros' }
+];
+
+var _adIndex = 0;
+var _adTimer = null;
+
+function initAds() {
+  var slides = document.getElementById('ad-slides');
+  var dots   = document.getElementById('ad-dots');
+  if (!slides || !dots) return;
+
+  slides.innerHTML = _ADS.map(function(ad) {
+    return '<div class="ad-slide" style="background:' + ad.color + '" onclick="goScreen(\'' + ad.link + '\')">' +
+      '<div style="position:absolute;inset:0;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+      '<div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.6);letter-spacing:1px">' + ad.brand.toUpperCase() + '</div>' +
+      '<span style="background:rgba(255,255,255,.2);color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px">' + ad.tag + '</span></div>' +
+      '<div>' +
+      '<div style="font-size:24px;margin-bottom:4px">' + ad.emoji + '</div>' +
+      '<div style="font-size:14px;font-weight:900;color:#fff;margin-bottom:3px">' + ad.title + '</div>' +
+      '<div style="font-size:10px;color:rgba(255,255,255,.65);line-height:1.4">' + ad.body + '</div>' +
+      '</div></div></div>';
+  }).join('');
+
+  dots.innerHTML = _ADS.map(function(_, i) {
+    return '<div class="ad-dot' + (i===0?' on':'') + '" onclick="goToAd(' + i + ')"></div>';
+  }).join('');
+
+  startAdCarousel();
+}
+
+function goToAd(index) {
+  _adIndex = index;
+  var slides = document.getElementById('ad-slides');
+  if (slides) slides.style.transform = 'translateX(-' + (index * 100) + '%)';
+  document.querySelectorAll('.ad-dot').forEach(function(d, i){ d.className = 'ad-dot' + (i===index?' on':''); });
+}
+
+function startAdCarousel() {
+  clearInterval(_adTimer);
+  _adTimer = setInterval(function() {
+    _adIndex = (_adIndex + 1) % _ADS.length;
+    goToAd(_adIndex);
+  }, 4000);
+}
+
+function renderFullAds() {
+  var el = document.getElementById('pub-full-list');
+  if (!el) return;
+  el.innerHTML = _ADS.map(function(ad) {
+    return '<div style="border-radius:18px;overflow:hidden;margin-bottom:12px;cursor:pointer" onclick="goScreen(\'' + ad.link + '\')">' +
+      '<div style="background:' + ad.color + ';padding:18px 16px;position:relative">' +
+      '<span style="position:absolute;top:12px;right:12px;background:rgba(255,255,255,.2);color:#fff;font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px">' + ad.tag + '</span>' +
+      '<div style="font-size:28px;margin-bottom:8px">' + ad.emoji + '</div>' +
+      '<div style="font-size:16px;font-weight:900;color:#fff;margin-bottom:4px">' + ad.title + '</div>' +
+      '<div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.5">' + ad.body + '</div>' +
+      '<div style="margin-top:12px;font-size:10px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:1px">' + ad.brand.toUpperCase() + ' ›</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ── INIT ON LOAD ─────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  // Delay so other DOMContentLoaded handlers run first
+  setTimeout(function() {
+    loadSavedPhoto();
+    updateBioUI();
+    initAds();
+    // Load photo into security screen
+    var saved = localStorage.getItem('inn_photo');
+    var seg = document.getElementById('seg-photo-preview');
+    if (saved && seg) { seg.innerHTML = '<img src="'+saved+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'; document.getElementById('del-photo-btn') && (document.getElementById('del-photo-btn').style.display='block'); }
+  }, 300);
+});
+
+// Patch afterLogin to apply photo + bio UI
+var _origAfterLogin = afterLogin;
+afterLogin = function() {
+  _origAfterLogin();
+  loadSavedPhoto();
+  updateBioUI();
+  initAds();
+};
+
+// Patch goScreen for new screens
+var _origGoScreen2 = goScreen;
+goScreen = function(id) {
+  _origGoScreen2(id);
+  if (id === 's-publicidad') renderFullAds();
+  if (id === 's-seguridad') {
+    updateBioUI();
+    var saved = localStorage.getItem('inn_photo');
+    var seg = document.getElementById('seg-photo-preview');
+    if (seg) {
+      if (saved) {
+        seg.innerHTML = '<img src="'+saved+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+        var db = document.getElementById('del-photo-btn');
+        if (db) db.style.display = 'block';
+      } else if (_user) {
+        seg.textContent = (_user.name||'?').charAt(0).toUpperCase();
+      }
+    }
+  }
+};
 </script>
 </body>
 </html>
