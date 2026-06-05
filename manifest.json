@@ -1,59 +1,20 @@
 {
-  "name": "InnovaAFRIC",
+  "name": "INNOVAAFRIC",
   "short_name": "InnovaAFRIC",
-  "description": "The super-app for Asia, Europe and Africa — money transfers, shopping, B2B wholesale, delivery and more.",
-  "start_url": "/innovaafric-prod/innovaafric/",
+  "description": "Pagos, comercio y entregas — ecosistema tricontinental",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#050B18",
-  "theme_color": "#050B18",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "categories": ["finance", "shopping", "productivity"],
+  "background_color": "#0A0E1A",
+  "theme_color": "#0A0E1A",
+  "orientation": "portrait-primary",
   "lang": "es",
-  "dir": "ltr",
-  "scope": "/innovaafric-prod/",
-  "screenshots": [],
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
   "shortcuts": [
-    {
-      "name": "XenderMoney",
-      "short_name": "Money",
-      "url": "/innovaafric-prod/xendermoney/",
-      "description": "Envía dinero al mundo",
-      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "XenderShop",
-      "short_name": "Shop",
-      "url": "/innovaafric-prod/xendershop/",
-      "description": "Marketplace tricontinental",
-      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "XenderBigShop",
-      "short_name": "BigShop",
-      "url": "/innovaafric-prod/xenderbigshop/",
-      "description": "Compras B2B al por mayor",
-      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "XenderDelivery",
-      "short_name": "Delivery",
-      "url": "/innovaafric-prod/xenderdelivery/",
-      "description": "Entregas en toda África",
-      "icons": [{ "src": "https://christianboddien-source.github.io/innovaafric-prod/icon-192.png", "sizes": "192x192" }]
-    }
-  ]
+    { "name": "Enviar dinero", "url": "./#send" },
+    { "name": "Pedidos y tracking", "url": "./#pedidos" }
+  ],
+  "categories": ["finance","shopping","productivity"]
 }
