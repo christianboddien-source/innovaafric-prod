@@ -2392,7 +2392,6 @@ var _balanceRefreshTimer = null;
 
 function loadBalance() {
   if (!_token) return;
-  // Usa /money/wallet — sin bloqueo KYC, siempre devuelve saldo real
   railGet('/money/wallet').then(function(resp) {
     if (!resp || !resp.success || !resp.data) return;
     var w = resp.data;
@@ -2400,14 +2399,23 @@ function loadBalance() {
       XAF: Math.round(w.balanceXaf || 0),
       EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
       USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-      GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+      GHS: parseFloat((w.balanceXof || 0).toFixed(2))  // XOF mostrado como GHS slot
     };
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
+    // Auto-seleccionar la moneda con más saldo si XAF es 0
+    autoSelectCurrency();
     updateBalanceDisplay();
     refreshBalanceInScreens();
     updateBalanceTime();
   }).catch(function(){});
+}
+
+function autoSelectCurrency() {
+  if (_balances.XAF > 0) { switchCurrency('XAF'); return; }
+  if (_balances.EUR > 0) { switchCurrency('EUR'); return; }
+  if (_balances.USD > 0) { switchCurrency('USD'); return; }
+  if (_balances.GHS > 0) { switchCurrency('GHS'); return; }
 }
 
 // Refresca el saldo automáticamente cada 60 segundos mientras la app está activa
