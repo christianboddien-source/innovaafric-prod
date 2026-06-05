@@ -197,7 +197,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);overf
 
 /* ── NAV ── */
 nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.nav-main{display:flex;align-items:center;gap:12px;padding:8px 16px;max-width:1300px;margin:0 auto;}
+.nav-main{display:flex;align-items:center;gap:12px;padding:6px 16px;max-width:1300px;margin:0 auto;}
 .logo{font-size:20px;font-weight:900;color:#fff;text-decoration:none;flex-shrink:0;letter-spacing:-1px;}
 .logo span{color:#FFD700;}
 .search-wrap{flex:1;display:flex;max-width:680px;border-radius:2px;overflow:hidden;border:2px solid #FF7A00;}
@@ -374,6 +374,17 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   .nav-main{flex-wrap:wrap;}
   .footer-grid{grid-template-columns:1fr;}
 }
+/* ── PRODUCT TICKER ── */
+.prod-ticker-wrap{display:flex;align-items:center;gap:0;background:#fff;border-bottom:2px solid var(--border);overflow:hidden;height:100px;}
+.prod-ticker-label{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;letter-spacing:1px;flex-shrink:0;}
+.prod-ticker{flex:1;overflow:hidden;position:relative;}
+.prod-ticker-track{display:flex;gap:0;animation:ticker-scroll 35s linear infinite;}
+.prod-ticker-track:hover{animation-play-state:paused;}
+.ptick{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px;border-right:1px solid var(--border);cursor:pointer;transition:background .2s;min-width:100px;flex-shrink:0;}
+.ptick:hover{background:#fff5f2;}
+.ptick img{width:56px;height:56px;object-fit:cover;border-radius:6px;}
+.ptick span{font-size:10px;font-weight:700;color:var(--red);text-align:center;white-space:nowrap;}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 </style>
 </head>
 <body>
@@ -386,7 +397,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- NAV -->
 <nav>
   <div class="nav-main">
-    <a href="../" class="logo"><img src="assets/logo.svg" alt="XenderShop" height="48" style="display:block;"></a>
+    <a href="../" class="logo" style="background:white;border-radius:10px;padding:4px 10px;display:flex;align-items:center;"><img src="assets/logo.svg" alt="XenderShop" height="38" style="display:block;"></a>
     <div class="search-wrap">
       <select class="search-cats">
         <option>Todas</option>
@@ -541,33 +552,31 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   </div>
 </div>
 
-<!-- ═══════════ MEGA CATEGORY GRID ═══════════ -->
-<div class="section" style="padding:12px 16px;">
-  <div class="sec-head" style="margin-bottom:10px;">
-    <div class="sec-title-red">🗂️ Todas las Categorías</div>
-    <a href="#" class="see-more">Ver todas →</a>
-  </div>
-  <div class="mega-cats">
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">📱</div><div class="mci-name">Electrónica</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">👗</div><div class="mci-name">Moda Mujer</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">👔</div><div class="mci-name">Moda Hombre</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🏠</div><div class="mci-name">Hogar & Jardín</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">💄</div><div class="mci-name">Belleza & Salud</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">⚽</div><div class="mci-name">Deportes</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🧸</div><div class="mci-name">Bebé & Mamá</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🚗</div><div class="mci-name">Automóvil</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🎮</div><div class="mci-name">Juguetes</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">💎</div><div class="mci-name">Joyería</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">👜</div><div class="mci-name">Bolsos</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">💻</div><div class="mci-name">Computadoras</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">👟</div><div class="mci-name">Zapatos</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🔒</div><div class="mci-name">Seguridad</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">💡</div><div class="mci-name">Iluminación</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🍵</div><div class="mci-name">Alimentos</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">📷</div><div class="mci-name">Cámaras</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🎸</div><div class="mci-name">Instrumentos</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🌿</div><div class="mci-name">Jardín</div></a>
-    <a href="#" class="mega-cat-item"><div class="mci-emoji">🏗️</div><div class="mci-name">Construcción</div></a>
+<!-- ═══════════ ANIMATED PRODUCT TICKER ═══════════ -->
+<div class="prod-ticker-wrap">
+  <div class="prod-ticker-label">🔥 Tendencias</div>
+  <div class="prod-ticker">
+    <div class="prod-ticker-track">
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=80&h=80&fit=crop" alt=""><span>Smartphone -62%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop" alt=""><span>Reloj Smart -55%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=80&h=80&fit=crop" alt=""><span>Vestido -70%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop" alt=""><span>Auriculares -55%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=80&h=80&fit=crop" alt=""><span>Laptop -28%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=80&h=80&fit=crop" alt=""><span>Zapatillas -57%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=80&h=80&fit=crop" alt=""><span>Cámara -40%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&h=80&fit=crop" alt=""><span>Anillo -72%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=80&h=80&fit=crop" alt=""><span>Mochila -44%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=80&h=80&fit=crop" alt=""><span>Fitness -49%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=80&h=80&fit=crop" alt=""><span>Mando -38%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=80&h=80&fit=crop" alt=""><span>Panel Solar -50%</span></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=80&h=80&fit=crop" alt=""><span>Smartphone -62%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop" alt=""><span>Reloj Smart -55%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=80&h=80&fit=crop" alt=""><span>Vestido -70%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop" alt=""><span>Auriculares -55%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=80&h=80&fit=crop" alt=""><span>Laptop -28%</span></div>
+      <div class="ptick"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=80&h=80&fit=crop" alt=""><span>Zapatillas -57%</span></div>
+    </div>
   </div>
 </div>
 
@@ -1281,6 +1290,17 @@ async function nlSubmit(e){e.preventDefault();var em=document.getElementById('nl
   .flash-grid{grid-template-columns:1fr 1fr!important;}
   #cart-sidebar{width:100vw!important;right:-100vw!important;}
 }
+/* ── PRODUCT TICKER ── */
+.prod-ticker-wrap{display:flex;align-items:center;gap:0;background:#fff;border-bottom:2px solid var(--border);overflow:hidden;height:100px;}
+.prod-ticker-label{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;letter-spacing:1px;flex-shrink:0;}
+.prod-ticker{flex:1;overflow:hidden;position:relative;}
+.prod-ticker-track{display:flex;gap:0;animation:ticker-scroll 35s linear infinite;}
+.prod-ticker-track:hover{animation-play-state:paused;}
+.ptick{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px;border-right:1px solid var(--border);cursor:pointer;transition:background .2s;min-width:100px;flex-shrink:0;}
+.ptick:hover{background:#fff5f2;}
+.ptick img{width:56px;height:56px;object-fit:cover;border-radius:6px;}
+.ptick span{font-size:10px;font-weight:700;color:var(--red);text-align:center;white-space:nowrap;}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 </style>
 <script>
 if(!localStorage.getItem('cookie_xs')){document.getElementById('cookie-banner').style.display='flex';}
@@ -1347,9 +1367,23 @@ function submitVendor(e){e.preventDefault();alert('✅ ¡Tienda registrada! Nues
 @media(max-width:900px){
   #vt-personal [style*="grid-template-columns:1fr 1fr"],#vt-tienda [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
 }
+/* ── PRODUCT TICKER ── */
+.prod-ticker-wrap{display:flex;align-items:center;gap:0;background:#fff;border-bottom:2px solid var(--border);overflow:hidden;height:100px;}
+.prod-ticker-label{background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;letter-spacing:1px;flex-shrink:0;}
+.prod-ticker{flex:1;overflow:hidden;position:relative;}
+.prod-ticker-track{display:flex;gap:0;animation:ticker-scroll 35s linear infinite;}
+.prod-ticker-track:hover{animation-play-state:paused;}
+.ptick{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 18px;border-right:1px solid var(--border);cursor:pointer;transition:background .2s;min-width:100px;flex-shrink:0;}
+.ptick:hover{background:#fff5f2;}
+.ptick img{width:56px;height:56px;object-fit:cover;border-radius:6px;}
+.ptick span{font-size:10px;font-weight:700;color:var(--red);text-align:center;white-space:nowrap;}
+@keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 </style>
 </body>
 </html>
+
+
+
 
 
 
