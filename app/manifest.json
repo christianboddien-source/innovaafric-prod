@@ -1,0 +1,20 @@
+{
+  "name": "INNOVAAFRIC",
+  "short_name": "InnovaAFRIC",
+  "description": "Pagos, comercio y entregas — ecosistema tricontinental",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0A0E1A",
+  "theme_color": "#0A0E1A",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Enviar dinero", "url": "./#send" },
+    { "name": "Pedidos", "url": "./#pedidos" }
+  ],
+  "categories": ["finance","shopping","productivity"]
+}
