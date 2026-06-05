@@ -166,6 +166,11 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 .login-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ROLE CARDS */
+.role-card{background:var(--bg2);border:2px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.role-card.on{border-color:var(--blue);background:rgba(41,171,226,.08)}
+.role-card:active{background:var(--bg3)}
+
 /* SVC TOAST */
 #svc-toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a2235;border:1px solid rgba(41,171,226,.35);border-radius:16px;padding:10px 18px;font-size:11px;font-weight:700;color:var(--txt);z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.6);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 #svc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -204,11 +209,70 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 
       <!-- REGISTER FORM -->
       <div id="form-register" style="width:100%;display:none">
+
+        <!-- Tipo de cuenta — cards seleccionables -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Tipo de cuenta *</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="role-card on" id="rc-customer" onclick="selectRole('customer')">
+            <div style="font-size:22px;margin-bottom:4px">👤</div>
+            <div style="font-size:11px;font-weight:800;color:var(--txt)">Cliente</div>
+            <div style="font-size:9px;color:var(--txt3);margin-top:2px">Enviar y recibir dinero</div>
+          </div>
+          <div class="role-card" id="rc-rider" onclick="selectRole('rider')">
+            <div style="font-size:22px;margin-bottom:4px">🛵</div>
+            <div style="font-size:11px;font-weight:800;color:var(--txt)">Rider</div>
+            <div style="font-size:9px;color:var(--txt3);margin-top:2px">Hacer entregas</div>
+          </div>
+          <div class="role-card" id="rc-supplier" onclick="selectRole('supplier')">
+            <div style="font-size:22px;margin-bottom:4px">🏪</div>
+            <div style="font-size:11px;font-weight:800;color:var(--txt)">Proveedor</div>
+            <div style="font-size:9px;color:var(--txt3);margin-top:2px">Vender en XenderShop</div>
+          </div>
+          <div class="role-card" id="rc-circular_autorizada" onclick="selectRole('circular_autorizada')">
+            <div style="font-size:22px;margin-bottom:4px">🔄</div>
+            <div style="font-size:11px;font-weight:800;color:var(--txt)">Circular</div>
+            <div style="font-size:9px;color:var(--txt3);margin-top:2px">Circular autorizada</div>
+          </div>
+        </div>
+        <input type="hidden" id="reg-role" value="customer">
+
+        <!-- Datos personales -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Datos personales *</div>
         <input id="reg-name" class="login-input" type="text" placeholder="Nombre completo" autocomplete="name">
-        <input id="reg-email" class="login-input" type="email" placeholder="Correo electrónico" autocomplete="email">
-        <input id="reg-phone" class="login-input" type="tel" placeholder="Teléfono (ej: +34612345678)" autocomplete="tel">
+        <input id="reg-email" class="login-input" type="email" placeholder="Email" autocomplete="email">
         <input id="reg-pass" class="login-input" type="password" placeholder="Contraseña (mín. 8 caracteres)">
-        <select id="reg-country" class="login-input" style="appearance:none">
+
+        <!-- Teléfono con prefijo -->
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <select id="reg-prefix" class="login-input" style="appearance:none;width:100px;flex-shrink:0;margin-bottom:0" onchange="updatePrefix()">
+            <option value="+34">🇪🇸 +34</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+237">🇨🇲 +237</option>
+            <option value="+221">🇸🇳 +221</option>
+            <option value="+225">🇨🇮 +225</option>
+            <option value="+233">🇬🇭 +233</option>
+            <option value="+234">🇳🇬 +234</option>
+            <option value="+223">🇲🇱 +223</option>
+            <option value="+226">🇧🇫 +226</option>
+            <option value="+228">🇹🇬 +228</option>
+            <option value="+229">🇧🇯 +229</option>
+            <option value="+224">🇬🇳 +224</option>
+            <option value="+241">🇬🇦 +241</option>
+            <option value="+243">🇨🇩 +243</option>
+            <option value="+240">🇬🇶 +240</option>
+            <option value="+212">🇲🇦 +212</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+49">🇩🇪 +49</option>
+            <option value="+32">🇧🇪 +32</option>
+            <option value="+351">🇵🇹 +351</option>
+            <option value="+39">🇮🇹 +39</option>
+          </select>
+          <input id="reg-phone-num" class="login-input" type="tel" placeholder="Número de teléfono" style="flex:1;margin-bottom:0">
+        </div>
+
+        <!-- País y ciudad -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Ubicación *</div>
+        <select id="reg-country" class="login-input" style="appearance:none" onchange="updateCities()">
           <option value="">— País —</option>
           <option value="ES">🇪🇸 España</option>
           <option value="FR">🇫🇷 Francia</option>
@@ -224,20 +288,25 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <option value="GN">🇬🇳 Guinea</option>
           <option value="GA">🇬🇦 Gabón</option>
           <option value="CD">🇨🇩 Congo RDC</option>
-          <option value="IT">🇮🇹 Italia</option>
+          <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+          <option value="MA">🇲🇦 Marruecos</option>
+          <option value="GB">🇬🇧 Reino Unido</option>
           <option value="DE">🇩🇪 Alemania</option>
           <option value="BE">🇧🇪 Bélgica</option>
           <option value="PT">🇵🇹 Portugal</option>
-          <option value="GB">🇬🇧 Reino Unido</option>
-          <option value="MA">🇲🇦 Marruecos</option>
+          <option value="IT">🇮🇹 Italia</option>
         </select>
-        <select id="reg-role" class="login-input" style="appearance:none">
-          <option value="customer">👤 Cliente — enviar y recibir dinero</option>
-          <option value="rider">🛵 Rider — hacer entregas</option>
-          <option value="supplier">🏪 Proveedor — vender en XenderShop</option>
+        <select id="reg-city" class="login-input" style="appearance:none">
+          <option value="">— Ciudad —</option>
         </select>
+
+        <!-- Moneda asignada -->
+        <div id="reg-currency-info" style="display:none;padding:10px 14px;border-radius:10px;background:rgba(41,171,226,.08);border:1px solid rgba(41,171,226,.15);font-size:10px;font-weight:700;color:var(--blue);margin-bottom:10px">
+          💱 Moneda asignada: <span id="reg-currency-label">—</span> (automático por país)
+        </div>
+
         <div class="login-err" id="reg-err"></div>
-        <button class="btn-primary" id="reg-btn" onclick="doRegister()" style="margin-bottom:10px">Crear cuenta</button>
+        <button class="btn-primary" id="reg-btn" onclick="doRegister()" style="margin-bottom:10px">✓ Crear cuenta</button>
         <div style="font-size:11px;color:var(--txt3);text-align:center">
           ¿Ya tienes cuenta? <span style="color:var(--blue);cursor:pointer;font-weight:700" onclick="showLogin()">← Iniciar sesión</span>
         </div>
@@ -1073,6 +1142,76 @@ function afterLogin() {
   document.getElementById('login-btn').disabled = false;
 }
 
+// -- Register helpers --------------------
+var _CITIES = {
+  ES:['Madrid','Barcelona','Valencia','Sevilla','Bilbao','Málaga','Zaragoza'],
+  FR:['París','Lyon','Marsella','Toulouse','Nantes','Burdeos','Lille'],
+  CM:['Yaoundé','Douala','Bafoussam','Garoua','Bamenda','Maroua','Ngaoundéré'],
+  SN:['Dakar','Touba','Thiès','Saint-Louis','Ziguinchor','Kaolack'],
+  CI:['Abidjan','Bouaké','Daloa','Korhogo','San-Pédro','Yamoussoukro'],
+  GH:['Accra','Kumasi','Tamale','Sekondi-Takoradi','Ashaiman'],
+  NG:['Lagos','Abuja','Kano','Ibadan','Port Harcourt','Benin City'],
+  ML:['Bamako','Sikasso','Mopti','Koutiala','Kayes'],
+  BF:['Uagadugú','Bobo-Dioulasso','Koudougou','Ouahigouya'],
+  TG:['Lomé','Sokodé','Kara','Atakpamé','Bassar'],
+  BJ:['Cotonú','Porto-Novo','Parakou','Djougou','Bohicon'],
+  GN:['Conakri','Nzérékoré','Kindia','Kankan','Labé'],
+  GA:['Libreville','Port-Gentil','Franceville','Oyem'],
+  CD:['Kinshasa','Lubumbashi','Mbuji-Mayi','Goma','Bukavu'],
+  GQ:['Malabo','Bata','Ebebiyín','Aconibe'],
+  MA:['Casablanca','Rabat','Fez','Marrakech','Tánger','Agadir'],
+  GB:['Londres','Birmingham','Manchester','Leeds','Glasgow'],
+  DE:['Berlín','Hamburgo','Múnich','Colonia','Fráncfort'],
+  BE:['Bruselas','Amberes','Gante','Lieja','Brujas'],
+  PT:['Lisboa','Oporto','Braga','Setúbal','Coímbra'],
+  IT:['Roma','Milán','Nápoles','Turín','Palermo']
+};
+var _CURRENCY_BY_COUNTRY = {
+  ES:'EUR',FR:'EUR',GB:'GBP',DE:'EUR',BE:'EUR',PT:'EUR',IT:'EUR',
+  CM:'XAF',GQ:'XAF',GA:'XAF',CD:'XAF',
+  SN:'XOF',CI:'XOF',ML:'XOF',BF:'XOF',TG:'XOF',BJ:'XOF',GN:'GNF',
+  GH:'GHS',NG:'NGN',MA:'MAD'
+};
+var _PREFIX_BY_COUNTRY = {
+  ES:'+34',FR:'+33',CM:'+237',SN:'+221',CI:'+225',GH:'+233',NG:'+234',
+  ML:'+223',BF:'+226',TG:'+228',BJ:'+229',GN:'+224',GA:'+241',CD:'+243',
+  GQ:'+240',MA:'+212',GB:'+44',DE:'+49',BE:'+32',PT:'+351',IT:'+39'
+};
+
+function selectRole(role) {
+  document.getElementById('reg-role').value = role;
+  ['customer','rider','supplier','circular_autorizada'].forEach(function(r){
+    var c = document.getElementById('rc-'+r);
+    if (c) c.className = r === role ? 'role-card on' : 'role-card';
+  });
+}
+
+function updateCities() {
+  var country = document.getElementById('reg-country').value;
+  var cityEl  = document.getElementById('reg-city');
+  var cities  = _CITIES[country] || [];
+  cityEl.innerHTML = '<option value="">— Ciudad —</option>';
+  cities.forEach(function(c){ cityEl.innerHTML += '<option value="'+c+'">'+c+'</option>'; });
+
+  // Update currency info
+  var cur = _CURRENCY_BY_COUNTRY[country];
+  var info = document.getElementById('reg-currency-info');
+  var lbl  = document.getElementById('reg-currency-label');
+  if (cur && info && lbl) { lbl.textContent = cur; info.style.display = 'block'; }
+  else if (info) { info.style.display = 'none'; }
+
+  // Sync phone prefix
+  var prefix = _PREFIX_BY_COUNTRY[country];
+  if (prefix) {
+    var sel = document.getElementById('reg-prefix');
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].value === prefix) { sel.selectedIndex = i; break; }
+    }
+  }
+}
+
+function updatePrefix() {}
+
 function showRegister() {
   document.getElementById('form-login').style.display = 'none';
   document.getElementById('form-register').style.display = 'block';
@@ -1088,9 +1227,12 @@ function showLogin() {
 function doRegister() {
   var name    = document.getElementById('reg-name').value.trim();
   var email   = document.getElementById('reg-email').value.trim();
-  var phone   = document.getElementById('reg-phone').value.trim();
+  var prefix  = document.getElementById('reg-prefix').value;
+  var phoneNum= document.getElementById('reg-phone-num').value.trim();
+  var phone   = prefix + phoneNum;
   var pass    = document.getElementById('reg-pass').value;
   var country = document.getElementById('reg-country').value;
+  var city    = document.getElementById('reg-city').value;
   var role    = document.getElementById('reg-role').value;
   var err     = document.getElementById('reg-err');
   var btn     = document.getElementById('reg-btn');
@@ -1108,7 +1250,7 @@ function doRegister() {
   fetch(API + '/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name, email: email, phone: phone, password: pass, country: country, role: role })
+    body: JSON.stringify({ name: name, email: email, phone: phone, password: pass, country: country, city: city, role: role })
   })
   .then(function(r){ return r.json(); })
   .then(function(resp) {
