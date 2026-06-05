@@ -1,33 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
-  <!-- Background pill (teal) -->
-  <rect width="400" height="100" rx="16" fill="#e0f5f2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 90" width="340" height="90">
+  <!-- NO background - transparent -->
 
-  <!-- Icon rounded square (teal) -->
-  <rect x="8" y="8" width="84" height="84" rx="18" fill="#00897B"/>
+  <!-- Icon rounded square (teal, no outer bg) -->
+  <rect x="0" y="3" width="84" height="84" rx="16" fill="#00897B"/>
 
   <!-- Phone + cart icon -->
-  <!-- Phone -->
-  <rect x="20" y="28" width="28" height="46" rx="5" fill="white" opacity="0.2"/>
-  <rect x="20" y="28" width="28" height="46" rx="5" fill="none" stroke="white" stroke-width="2.5"/>
-  <rect x="26" y="68" width="16" height="3" rx="1.5" fill="white" opacity="0.5"/>
-  <!-- Small screen content -->
-  <rect x="24" y="35" width="20" height="3" rx="1.5" fill="white" opacity="0.5"/>
-  <rect x="24" y="41" width="14" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <!-- Phone body -->
+  <rect x="12" y="18" width="28" height="50" rx="5" fill="white" opacity="0.22"/>
+  <rect x="12" y="18" width="28" height="50" rx="5" fill="none" stroke="white" stroke-width="2.5"/>
+  <rect x="18" y="60" width="16" height="3" rx="1.5" fill="white" opacity="0.5"/>
+  <rect x="16" y="26" width="20" height="3" rx="1.5" fill="white" opacity="0.45"/>
+  <rect x="16" y="32" width="14" height="3" rx="1.5" fill="white" opacity="0.45"/>
 
-  <!-- Cart (right of phone, orange) -->
-  <g transform="translate(48, 32)">
-    <path d="M 2 0 L 28 0 L 24 22 L 6 22 Z" fill="#F5A623"/>
-    <path d="M 2 0 L -4 -10" stroke="#F5A623" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="8" cy="27" r="5" fill="#F5A623"/>
-    <circle cx="8" cy="27" r="2.5" fill="#00897B"/>
-    <circle cx="20" cy="27" r="5" fill="#F5A623"/>
-    <circle cx="20" cy="27" r="2.5" fill="#00897B"/>
+  <!-- Cart (orange) -->
+  <g transform="translate(42, 24)">
+    <path d="M 2 0 L 32 0 L 28 26 L 6 26 Z" fill="#FF6B35"/>
+    <path d="M 2 0 L -4 -12" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="9" cy="32" r="6" fill="#FF6B35"/>
+    <circle cx="9" cy="32" r="3" fill="#00897B"/>
+    <circle cx="23" cy="32" r="6" fill="#FF6B35"/>
+    <circle cx="23" cy="32" r="3" fill="#00897B"/>
+    <!-- Grid lines on cart -->
+    <line x1="0" y1="10" x2="30" y2="10" stroke="white" stroke-width="2" opacity="0.5"/>
+    <line x1="-1" y1="18" x2="29" y2="18" stroke="white" stroke-width="2" opacity="0.5"/>
   </g>
 
   <!-- Text block -->
-  <text x="102" y="42" font-family="Arial Black, Arial, sans-serif" font-size="26" font-weight="900">
-    <tspan fill="#00897B">Xender</tspan><tspan fill="#F5A623">Shop</tspan>
+  <!-- Brand name -->
+  <text x="96" y="40" font-family="Arial Black, Arial, sans-serif" font-size="28" font-weight="900">
+    <tspan fill="#00897B">Xender</tspan><tspan fill="#FF6B35">Shop</tspan>
   </text>
-  <text x="102" y="62" font-family="Arial, sans-serif" font-size="14" fill="#333" opacity="0.8">We Simplify Life</text>
-  <text x="102" y="80" font-family="Arial, sans-serif" font-size="11" fill="#00897B" letter-spacing="2">SHOP · DELIVER · ENJOY</text>
+  <!-- Slogan -->
+  <text x="97" y="58" font-family="Arial, sans-serif" font-size="13" fill="#555">We Simplify Life</text>
+  <!-- Tagline -->
+  <text x="97" y="76" font-family="Arial, sans-serif" font-size="10.5" fill="#00897B" letter-spacing="2" font-weight="700">SHOP · DELIVER · ENJOY</text>
 </svg>
