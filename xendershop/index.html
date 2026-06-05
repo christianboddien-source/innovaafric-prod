@@ -1165,7 +1165,7 @@ document.querySelectorAll('.pcard').forEach(function(c){
 function pmSz(btn){btn.closest('div').querySelectorAll('button').forEach(b=>{b.style.border='1.5px solid var(--border)';b.style.background='#fff';b.style.color='#333';});btn.style.border='1.5px solid #FF4010';btn.style.background='#fff5f2';btn.style.color='#FF4010';}
 
 // Newsletter
-function nlSubmit(e){e.preventDefault();var em=document.getElementById('nl-email').value;alert('✅ ¡Suscrito! Recibirás ofertas en '+em);document.getElementById('nl-email').value='';}
+async function nlSubmit(e){e.preventDefault();var em=document.getElementById('nl-email').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}try{await SB.from('newsletter_subscribers').insert({email:em,source:'xendershop',created_at:new Date().toISOString()});}catch(err){}xsToast('✅ ¡Suscrito! Recibirás las mejores ofertas en '+em,'success');document.getElementById('nl-email').value='';if(btn){btn.textContent='Suscribirme →';btn.disabled=false;}}
 </script>
 
 <!-- ═══ PRODUCT MODAL ═══ -->
@@ -1319,5 +1319,7 @@ function submitVendor(e){e.preventDefault();alert('✅ ¡Tienda registrada! Nues
 </style>
 </body>
 </html>
+
+
 
 
