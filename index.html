@@ -490,10 +490,10 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         </div>
       </div>
       <div style="display:flex;gap:7px;padding:0 14px;margin-bottom:14px;overflow-x:auto">
-        <div class="pill pill-blue">Todos</div>
-        <div class="pill pill-off">Enviados</div>
-        <div class="pill pill-off">Recibidos</div>
-        <div class="pill pill-off">Compras</div>
+        <div id="txf-all"      class="pill pill-blue" style="cursor:pointer;flex-shrink:0" onclick="filterTxn('all')">Todos</div>
+        <div id="txf-sent"     class="pill pill-off"  style="cursor:pointer;flex-shrink:0" onclick="filterTxn('sent')">Enviados</div>
+        <div id="txf-received" class="pill pill-off"  style="cursor:pointer;flex-shrink:0" onclick="filterTxn('received')">Recibidos</div>
+        <div id="txf-purchase" class="pill pill-off"  style="cursor:pointer;flex-shrink:0" onclick="filterTxn('purchase')">Compras</div>
       </div>
       <div id="txn-list" style="padding:0 14px">
         <div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando movimientos…</div>
@@ -3069,6 +3069,7 @@ goScreen = function(id) {
   if (id === 's-recibir')       populateRecibir();
   if (id === 's-retirar')       refreshBalanceInScreens();
   if (id === 's-cambiar')       refreshBalanceInScreens();
+  if (id === 's-wallet') { refreshBalanceInScreens(); if (!_allTxns.length) loadTransactions(); }
   if (id === 's-cuentas-bancarias') loadBancosLista();
   if (id === 's-nuevo-banco') { updateBancoCiudad(); updateBancoSwift(); updateBancoMoneda(); }
   if (id === 's-tontinas')      loadTontinas();
@@ -3154,16 +3155,48 @@ function syncToRailway(sbToken, userData) {
 }
 
 // ── HOME TRANSACTIONS ───────────────────────────────────
+var _allTxns = [];
+
 function loadTransactions() {
   if (!_token) return;
-  railGet('/money/history?limit=30').then(function(resp) {
-    var items = (resp && resp.success && resp.data && resp.data.items) ? resp.data.items : [];
-    renderTxnList('txn-list', items, 30);
-    renderTxnList('home-txn-list', items, 4);
+  railGet('/money/history?limit=50').then(function(resp) {
+    _allTxns = (resp && resp.success && resp.data && resp.data.items) ? resp.data.items : [];
+    renderTxnList('txn-list', _allTxns, 50);
+    renderTxnList('home-txn-list', _allTxns, 4);
+    // Update bar chart heights based on real data
+    updateWalletChart(_allTxns);
   }).catch(function(){
     var el = document.getElementById('txn-list');
-    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">No se pudieron cargar los movimientos</div>';
+    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">Sin movimientos aún</div>';
   });
+}
+
+function filterTxn(type) {
+  ['all','sent','received','purchase'].forEach(function(t) {
+    var el = document.getElementById('txf-' + t);
+    if (el) el.className = t === type ? 'pill pill-blue' : 'pill pill-off';
+  });
+  var userId = _user && _user.id;
+  var filtered = _allTxns;
+  if (type === 'sent')     filtered = _allTxns.filter(function(t){ return t.senderId === userId || t.type === 'send' || t.type === 'withdraw'; });
+  if (type === 'received') filtered = _allTxns.filter(function(t){ return t.recipientId === userId || t.type === 'deposit'; });
+  if (type === 'purchase') filtered = _allTxns.filter(function(t){ return t.type === 'purchase'; });
+  renderTxnList('txn-list', filtered, 50);
+}
+
+function updateWalletChart(txns) {
+  // Build last 7 days volumes for bar chart
+  var bars = document.querySelectorAll('#s-wallet .bar');
+  if (!bars.length || !txns.length) return;
+  var now = Date.now();
+  var day = 86400000;
+  var vols = [0,0,0,0,0,0,0];
+  txns.forEach(function(t) {
+    var age = Math.floor((now - new Date(t.createdAt).getTime()) / day);
+    if (age >= 0 && age < 7) vols[6 - age] += Math.abs(t.amount || 0);
+  });
+  var max = Math.max.apply(null, vols) || 1;
+  bars.forEach(function(b, i) { b.style.height = Math.max(10, Math.round(vols[i] / max * 100)) + '%'; });
 }
 
 function renderTxnList(containerId, items, maxItems) {
