@@ -483,14 +483,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="pill pill-off">Recibidos</div>
         <div class="pill pill-off">Compras</div>
       </div>
-      <div style="padding:0 14px">
-        <div style="font-size:9px;color:var(--txt3);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">HOY</div>
-        <div class="txn-row"><div class="txn-ico" style="background:rgba(245,166,35,.1)">💸</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Envío a Douala</div><div style="font-size:10px;color:var(--txt3)">Paul Mbarga · XenderMoney</div></div><div class="txn-amt-neg">-€200</div></div>
-        <div class="txn-row"><div class="txn-ico" style="background:rgba(34,197,94,.1)">📥</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Recibido de Carlos</div><div style="font-size:10px;color:var(--txt3)">XenderMoney P2P</div></div><div class="txn-amt-pos">+€150</div></div>
-        <div style="font-size:9px;color:var(--txt3);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:12px 0 4px">AYER</div>
-        <div class="txn-row"><div class="txn-ico" style="background:rgba(168,85,247,.1)">🛒</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">XenderShop</div><div style="font-size:10px;color:var(--txt3)">Pedido #XS-2847 · Electrónica</div></div><div class="txn-amt-neg">-€45.90</div></div>
-        <div class="txn-row"><div class="txn-ico" style="background:rgba(41,171,226,.1)">🚚</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">XenderDelivery</div><div style="font-size:10px;color:var(--txt3)">Envío express · Yaoundé</div></div><div class="txn-amt-neg">-€8.50</div></div>
-        <div class="txn-row"><div class="txn-ico" style="background:rgba(34,197,94,.1)">💰</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Reintegro Orange Money</div><div style="font-size:10px;color:var(--txt3)">Cajero · Douala</div></div><div class="txn-amt-pos">+€300</div></div>
+      <div id="txn-list" style="padding:0 14px">
+        <div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando movimientos…</div>
       </div>
       <div style="height:10px"></div>
     </div>
@@ -845,8 +839,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="card" style="border-radius:22px;margin-bottom:12px">
           <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Tienes</div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div style="font-size:32px;font-weight:900;color:var(--txt)">1,245.80</div>
-            <div class="pill pill-blue" style="font-size:13px">EUR €</div>
+            <div id="cambiar-saldo" style="font-size:32px;font-weight:900;color:var(--txt)">—</div>
+            <div class="pill pill-blue" style="font-size:13px">XAF</div>
           </div>
           <div style="height:1px;background:var(--border);margin-bottom:14px;position:relative">
             <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold)">⇅</div>
@@ -882,13 +876,13 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div style="padding:0 14px">
         <div class="card" style="border-radius:22px;margin-bottom:14px">
           <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Saldo disponible</div>
-          <div style="font-size:30px;font-weight:900;color:var(--txt);margin-bottom:4px">€ 1,245.80</div>
-          <div style="font-size:10px;color:var(--txt3)">Mínimo retiro: €10 · Sin comisión XenderMoney</div>
+          <div id="retirar-saldo" style="font-size:30px;font-weight:900;color:var(--txt);margin-bottom:4px">— XAF</div>
+          <div style="font-size:10px;color:var(--txt3)">Mínimo retiro: 5 000 XAF · Sin comisión XenderMoney</div>
         </div>
         <div class="section-title">¿Cuánto quieres retirar?</div>
         <div class="card" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;border-radius:16px">
-          <div style="font-size:22px;font-weight:900;color:var(--txt);flex:1">€ 200.00</div>
-          <div class="pill pill-gold">MAX</div>
+          <input id="retirar-input" type="number" placeholder="0" style="font-size:22px;font-weight:900;color:var(--txt);background:none;border:none;outline:none;flex:1;width:0">
+          <div class="pill pill-gold" onclick="document.getElementById('retirar-input').value=_balances.XAF">MAX</div>
         </div>
         <div class="section-title">Destino del retiro</div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
@@ -1194,20 +1188,40 @@ function doLogin() {
       afterLogin();
     });
   })
-  .catch(function(e) {
-    var msg = e.message || 'Email o contraseña incorrectos';
-    if (msg.includes('Invalid login')) msg = 'Email o contraseña incorrectos';
-    err.textContent = msg;
-    btn.innerHTML = 'Entrar';
-    btn.disabled = false;
+  .catch(function(sbErr) {
+    // Fallback: try Railway JWT (for users not in Supabase)
+    fetch(RAIL_API + '/auth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
+    }).then(function(r){ return r.json(); }).then(function(resp) {
+      if (!resp || !resp.success || !resp.data || !resp.data.access_token) throw new Error('invalid');
+      _token = resp.data.access_token;
+      var u = resp.data.user || {};
+      _user = {
+        id: u.id, email: u.email, name: u.name || u.email,
+        role: u.role || 'customer', country: u.country || null,
+        city: u.city || null, phone: u.phone || null,
+        kyc: u.kyc_status || 'pending', ia_code: u.ia_code || null
+      };
+      localStorage.setItem('inn_user', JSON.stringify(_user));
+      afterLogin();
+    }).catch(function() {
+      var msg = sbErr.message || 'Email o contraseña incorrectos';
+      if (msg.includes('Invalid login') || msg.includes('invalid')) msg = 'Email o contraseña incorrectos';
+      err.textContent = msg;
+      btn.innerHTML = 'Entrar';
+      btn.disabled = false;
+    });
   });
 }
 
 function afterLogin() {
   document.getElementById('s-login').style.display = 'none';
   populateUser();
+  refreshBalanceInScreens();
   loadBalance();
-  // Allow Enter key on login
+  loadTransactions();
   document.getElementById('login-btn').innerHTML = 'Entrar';
   document.getElementById('login-btn').disabled = false;
 }
@@ -1417,11 +1431,63 @@ function loadBalance() {
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
     updateBalanceDisplay();
-    var wEl  = document.getElementById('wallet-xaf');
-    var wEur = document.getElementById('wallet-eur');
-    if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
-    if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    refreshBalanceInScreens();
   }).catch(function(){});
+}
+
+function refreshBalanceInScreens() {
+  var wEl  = document.getElementById('wallet-xaf');
+  var wEur = document.getElementById('wallet-eur');
+  if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
+  if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  var rEl = document.getElementById('retirar-saldo');
+  if (rEl) rEl.textContent = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
+  var cEl = document.getElementById('cambiar-saldo');
+  if (cEl) cEl.textContent = _balances.XAF.toLocaleString('fr-FR');
+}
+
+function loadTransactions() {
+  if (!_token) return;
+  railGet('/money/history?limit=30').then(function(resp) {
+    var el = document.getElementById('txn-list');
+    if (!el) return;
+    var items = (resp && resp.success && resp.data && resp.data.items) ? resp.data.items : [];
+    if (!items.length) {
+      el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Sin movimientos aún</div>';
+      return;
+    }
+    var userId = _user && _user.id;
+    var html = '';
+    var lastDate = '';
+    items.forEach(function(txn) {
+      var d = new Date(txn.createdAt);
+      var today = new Date(); today.setHours(0,0,0,0);
+      var yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
+      var label = d >= today ? 'HOY' : (d >= yesterday ? 'AYER' : d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}).toUpperCase());
+      if (label !== lastDate) {
+        html += '<div style="font-size:9px;color:var(--txt3);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:12px 0 4px">' + label + '</div>';
+        lastDate = label;
+      }
+      var isIn = txn.recipientId === userId;
+      var typeIcons = { send:'💸', purchase:'🛒', withdraw:'🏧', deposit:'💰', transfer:'🔄' };
+      var icon = isIn ? '📥' : (typeIcons[txn.type] || '💸');
+      var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
+      var cur = isIn ? (txn.currencyReceived || txn.currencySent) : txn.currencySent;
+      var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
+      var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('fr-FR') : parseFloat(amt).toFixed(2)) + ' ' + cur;
+      var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
+      var note = txn.note || (txn.type === 'send' ? 'Envío' : txn.type === 'purchase' ? 'Compra' : 'Transacción');
+      html += '<div class="txn-row">' +
+        '<div class="txn-ico" style="background:' + iconBg + '">' + icon + '</div>' +
+        '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + note + '</div>' +
+        '<div style="font-size:10px;color:var(--txt3)">' + d.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + '</div></div>' +
+        '<div class="' + amtClass + '">' + amtStr + '</div></div>';
+    });
+    el.innerHTML = html;
+  }).catch(function(){
+    var el = document.getElementById('txn-list');
+    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">No se pudieron cargar los movimientos</div>';
+  });
 }
 
 // -- On start ----------------------------
