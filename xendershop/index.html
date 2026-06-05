@@ -1322,7 +1322,8 @@ function submitVendor(e){e.preventDefault();alert('✅ ¡Tienda registrada! Nues
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Nombre de la tienda *</label><input type="text" placeholder="Mi Tienda Africa" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Categoría principal *</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona categoría</option><option>📱 Electrónica</option><option>👗 Moda Mujer</option><option>👔 Moda Hombre</option><option>🏠 Hogar & Jardín</option><option>💄 Belleza & Salud</option><option>⚽ Deportes</option><option>🧸 Bebé & Mamá</option><option>🍎 Alimentación</option><option>🚗 Automóvil</option></select></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Número de productos estimados</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>1 - 10</option><option>11 - 50</option><option>51 - 200</option><option>200+</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>MTN MoMo</option><option>Orange Money</option><option>Wave</option><option>Transferencia bancaria</option><option>Todos los anteriores</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="xendermoney" selected>⭐ XenderMoney</option>
+<option>MTN MoMo</option><option>Orange Money</option><option>Wave</option><option>Transferencia bancaria</option><option>Todos los anteriores</option></select></div>
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Descripción de la tienda</label><textarea placeholder="Describe tus productos y servicios..." rows="3" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;"></textarea></div>
         <div style="grid-column:1/-1;"><button onclick="showVendorTab('docs')" type="button" style="width:100%;padding:14px;background:#c2410c;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;">Siguiente → Finalizar registro</button></div>
       </div>
@@ -1367,6 +1368,7 @@ if(typeof openModal==='undefined'){function openModal(id){document.getElementByI
 </style>
 </body>
 </html>
+
 
 
 
