@@ -156,6 +156,10 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 /* MINI CHART */
 .chart-bars{display:flex;align-items:flex-end;gap:5px;height:36px}
 .bar{flex:1;border-radius:3px 3px 0 0}
+
+/* SVC TOAST */
+#svc-toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a2235;border:1px solid rgba(41,171,226,.35);border-radius:16px;padding:10px 18px;font-size:11px;font-weight:700;color:var(--txt);z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.6);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+#svc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body ontouchstart="">
@@ -248,15 +252,15 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <!-- Services -->
       <div style="padding:0 14px;margin-bottom:8px"><div class="section-title">Servicios</div></div>
       <div class="svc-scroll">
-        <div class="svc-item"><div style="font-size:20px">🤖</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">InnovaBot</div></div>
-        <div class="svc-item"><div style="font-size:20px">🤝</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Tontinas</div></div>
-        <div class="svc-item"><div style="font-size:20px">📱</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Pago QR</div></div>
-        <div class="svc-item"><div style="font-size:20px">🗺️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Mapa live</div></div>
-        <div class="svc-item"><div style="font-size:20px">🧾</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Facturas</div></div>
-        <div class="svc-item"><div style="font-size:20px">🏪</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">POS</div></div>
-        <div class="svc-item"><div style="font-size:20px">🛡️</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Seguro</div></div>
-        <div class="svc-item"><div style="font-size:20px">🎁</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Gift Card</div></div>
-        <div class="svc-item"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Inversión</div></div>
+        <div class="svc-item" onclick="showToast('InnovaBot','Tu asistente IA 24/7 — próximamente')"><div style="font-size:20px">🤖</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">InnovaBot</div></div>
+        <div class="svc-item" onclick="showToast('Tontinas','Ahorro colectivo africano — próximamente')"><div style="font-size:20px">🤝</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Tontinas</div></div>
+        <div class="svc-item" onclick="showToast('Pago QR','Paga escaneando — próximamente')"><div style="font-size:20px">📱</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Pago QR</div></div>
+        <div class="svc-item" onclick="goScreen('s-track')"><div style="font-size:20px">🗺️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Mapa live</div></div>
+        <div class="svc-item" onclick="showToast('Facturas','Gestión de facturas — próximamente')"><div style="font-size:20px">🧾</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Facturas</div></div>
+        <div class="svc-item" onclick="showToast('POS','Terminal de punto de venta — próximamente')"><div style="font-size:20px">🏪</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">POS</div></div>
+        <div class="svc-item" onclick="showToast('Seguro','Seguros tricontinentales — próximamente')"><div style="font-size:20px">🛡️</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Seguro</div></div>
+        <div class="svc-item" onclick="showToast('Gift Card','Tarjetas regalo — próximamente')"><div style="font-size:20px">🎁</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Gift Card</div></div>
+        <div class="svc-item" onclick="showToast('Inversión','Inversión tricontinental — próximamente')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Inversión</div></div>
       </div>
       <!-- Nuestra Comunidad -->
       <div style="padding:0 14px;margin-bottom:8px">
@@ -876,6 +880,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 
 <!-- Install toast -->
 <div id="install-toast">📲 Toca "Añadir a pantalla de inicio" para instalar la app</div>
+<div id="svc-toast"></div>
 
 <script>
 var history_stack = ['s-home'];
@@ -933,6 +938,15 @@ window.addEventListener('beforeinstallprompt', function(e) {
   toast.style.display = 'block';
   setTimeout(function(){ toast.style.display='none'; }, 5000);
 });
+
+var _toastTimer;
+function showToast(title, msg) {
+  var t = document.getElementById('svc-toast');
+  t.textContent = '✨ ' + title + ' · ' + msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
 
 function updateClock() {
   var d = new Date();
