@@ -1881,6 +1881,10 @@ function goScreen(id) {
   document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('on'); });
   var nb = nav_map[id];
   if (nb) document.getElementById(nb).classList.add('on');
+  // Refresca saldo al entrar en pantallas financieras
+  if (['s-home','s-wallet','s-send','s-retirar','s-cambiar','s-bills'].indexOf(id) !== -1 && _token) {
+    loadBalance();
+  }
 }
 
 function goBack() {
@@ -2068,9 +2072,9 @@ function doLogin() {
 function afterLogin() {
   document.getElementById('s-login').style.display = 'none';
   populateUser();
-  refreshBalanceInScreens();
   loadBalance();
   loadTransactions();
+  startBalanceAutoRefresh();
   document.getElementById('login-btn').innerHTML = 'Entrar';
   document.getElementById('login-btn').disabled = false;
 }
@@ -2360,18 +2364,19 @@ function populateUser() {
   }
 }
 
+var _balanceRefreshTimer = null;
+
 function loadBalance() {
-  // Wallet data already loaded via supabase_exchange in doLogin/getSession.
-  // Fallback: query Railway API directly if we have a Railway token.
   if (!_token) return;
-  railGet('/money/balance').then(function(resp) {
-    if (!resp || !resp.success || !resp.data || !resp.data.balances) return;
-    var b = resp.data.balances;
+  // Usa /money/wallet — sin bloqueo KYC, siempre devuelve saldo real
+  railGet('/money/wallet').then(function(resp) {
+    if (!resp || !resp.success || !resp.data) return;
+    var w = resp.data;
     _balances = {
-      XAF: Math.round((b.XAF && b.XAF.amount) || 0),
-      EUR: parseFloat(((b.EUR && b.EUR.amount) || 0).toFixed(2)),
-      USD: parseFloat(((b.USD && b.USD.amount) || 0).toFixed(2)),
-      GHS: parseFloat(((b.XOF && b.XOF.amount) || 0).toFixed(2))
+      XAF: Math.round(w.balanceXaf || 0),
+      EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+      USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+      GHS: parseFloat((w.balanceXof || 0).toFixed(2))
     };
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -2379,6 +2384,19 @@ function loadBalance() {
     refreshBalanceInScreens();
   }).catch(function(){});
 }
+
+// Refresca el saldo automáticamente cada 60 segundos mientras la app está activa
+function startBalanceAutoRefresh() {
+  if (_balanceRefreshTimer) clearInterval(_balanceRefreshTimer);
+  _balanceRefreshTimer = setInterval(function() {
+    if (_token) loadBalance();
+  }, 60000);
+}
+
+// Refresca saldo al volver de background
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden && _token) loadBalance();
+});
 
 function refreshBalanceInScreens() {
   var xaf  = _balances.XAF || 0;
