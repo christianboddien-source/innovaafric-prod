@@ -183,11 +183,14 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <defs><linearGradient id="gIA2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#29ABE2"/><stop offset="100%" stop-color="#1a5a8a"/></linearGradient></defs>
             <text x="15" y="21" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">IA</text>
           </svg>
-          <span style="font-size:13px;font-weight:900;color:var(--txt)">INNOVAAFRIC</span>
+          <div>
+            <div style="font-size:13px;font-weight:900;color:var(--txt);line-height:1.1">INNOVAAFRIC</div>
+            <div style="font-size:9px;font-weight:600;color:var(--txt3);line-height:1">Amadou Diallo</div>
+          </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           <div class="icon-btn" style="font-size:16px;position:relative">🔔<div class="badge"></div></div>
-          <div class="icon-btn" style="background:linear-gradient(135deg,var(--gold),#e05a00);font-size:14px;font-weight:900;color:#fff;font-style:normal">A</div>
+          <div class="icon-btn" onclick="goScreen('s-perfil')" style="background:linear-gradient(135deg,var(--gold),#e05a00);font-size:14px;font-weight:900;color:#fff;font-style:normal">A</div>
         </div>
       </div>
       <!-- Balance -->
@@ -196,13 +199,13 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <span style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:700">Saldo total</span>
           <span class="pill pill-green" style="font-size:9px">📈 +2.3% este mes</span>
         </div>
-        <div style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:3px">€ 1,245.80</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:14px">Actualizado · <span style="cursor:pointer">ocultar</span></div>
+        <div id="balance-amount" style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:3px">816 832 XAF</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:14px">Actualizado · <span id="balance-toggle" style="cursor:pointer;color:rgba(255,255,255,.5)" onclick="toggleBalance()">ocultar</span></div>
         <div style="display:flex;gap:7px">
-          <div class="pill pill-blue">EUR</div>
-          <div class="pill pill-off">XAF</div>
-          <div class="pill pill-off">USD</div>
-          <div class="pill pill-off">GHS</div>
+          <div id="pill-XAF" class="pill pill-blue" onclick="switchCurrency('XAF')">XAF</div>
+          <div id="pill-EUR" class="pill pill-off" onclick="switchCurrency('EUR')">EUR</div>
+          <div id="pill-USD" class="pill pill-off" onclick="switchCurrency('USD')">USD</div>
+          <div id="pill-GHS" class="pill pill-off" onclick="switchCurrency('GHS')">GHS</div>
         </div>
       </div>
       <!-- 4 Actions -->
@@ -309,11 +312,12 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
           <div>
             <div style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-bottom:3px">SALDO DISPONIBLE</div>
-            <div style="font-size:26px;font-weight:900;color:#fff;letter-spacing:-1px">€ 1,245.80</div>
+            <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px">816 832 XAF</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">≈ € 1,245.80</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px">Este mes</div>
-            <div style="font-size:13px;font-weight:800;color:var(--green)">+ € 890.00</div>
+            <div style="font-size:13px;font-weight:800;color:var(--green)">+ 583 700 XAF</div>
           </div>
         </div>
         <div class="chart-bars" style="margin-top:14px">
@@ -938,6 +942,42 @@ window.addEventListener('beforeinstallprompt', function(e) {
   toast.style.display = 'block';
   setTimeout(function(){ toast.style.display='none'; }, 5000);
 });
+
+// -- Currency switcher ------------------
+var _balanceXAF = 816832;
+var _rates = { XAF:1, EUR:0.001524, USD:0.001658, GHS:0.02540 };
+var _symbols = { XAF:'XAF', EUR:'€', USD:'$', GHS:'GHS' };
+var _curCurrency = 'XAF';
+var _balanceHidden = false;
+
+function switchCurrency(cur) {
+  _curCurrency = cur;
+  ['XAF','EUR','USD','GHS'].forEach(function(c){
+    var p = document.getElementById('pill-'+c);
+    if (p) { p.className = c === cur ? 'pill pill-blue' : 'pill pill-off'; }
+  });
+  updateBalanceDisplay();
+}
+
+function updateBalanceDisplay() {
+  var el = document.getElementById('balance-amount');
+  if (!el) return;
+  if (_balanceHidden) { el.textContent = '••••••'; return; }
+  var val = _balanceXAF * _rates[_curCurrency];
+  var sym = _symbols[_curCurrency];
+  if (_curCurrency === 'XAF') {
+    el.textContent = Math.round(val).toLocaleString('fr-FR') + ' XAF';
+  } else {
+    el.textContent = sym + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+}
+
+function toggleBalance() {
+  _balanceHidden = !_balanceHidden;
+  var t = document.getElementById('balance-toggle');
+  if (t) t.textContent = _balanceHidden ? 'mostrar' : 'ocultar';
+  updateBalanceDisplay();
+}
 
 var _toastTimer;
 function showToast(title, msg) {
