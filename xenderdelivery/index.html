@@ -1083,7 +1083,7 @@ if(!localStorage.getItem('cookie_xd')){document.getElementById('cookie-banner').
 function cookieAccept(){localStorage.setItem('cookie_xd','all');document.getElementById('cookie-banner').style.display='none';}
 function cookieDecline(){localStorage.setItem('cookie_xd','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
-function nlXd(e){e.preventDefault();alert('✅ ¡Suscrito en XenderDelivery! Novedades en '+document.getElementById('nl-xd').value);document.getElementById('nl-xd').value='';}
+async function nlXd(e){e.preventDefault();var em=document.getElementById('nl-xd').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}try{await SB.from('newsletter_subscribers').insert({email:em,source:'xenderdelivery',created_at:new Date().toISOString()});}catch(err){}xdToast('✅ ¡Suscrito en XenderDelivery! Novedades en '+em,'success');document.getElementById('nl-xd').value='';if(btn){btn.textContent='Suscribirme →';btn.disabled=false;}}
 function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.getElementById('ham-btn-xd');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
 /* trackOrder defined in head — Supabase-backed with demo fallback */
 /* submitRiderReg defined in head — Supabase-backed */
@@ -1144,6 +1144,8 @@ function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.ge
 </style>
 </body>
 </html>
+
+
 
 
 
