@@ -210,15 +210,15 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <div class="action-circle" style="background:rgba(245,166,35,.12)"><span style="font-size:20px;color:var(--gold)">↑</span></div>
           <div class="action-lbl" style="color:var(--gold)">Enviar</div>
         </div>
-        <div class="action-item">
+        <div class="action-item" onclick="goScreen('s-recibir')">
           <div class="action-circle" style="background:rgba(34,197,94,.1)"><span style="font-size:20px;color:var(--green)">↓</span></div>
           <div class="action-lbl" style="color:var(--green)">Recibir</div>
         </div>
-        <div class="action-item">
+        <div class="action-item" onclick="goScreen('s-cambiar')">
           <div class="action-circle" style="background:rgba(41,171,226,.1)"><span style="font-size:20px;color:var(--blue)">⇄</span></div>
           <div class="action-lbl" style="color:var(--blue)">Cambiar</div>
         </div>
-        <div class="action-item">
+        <div class="action-item" onclick="goScreen('s-retirar')">
           <div class="action-circle" style="background:rgba(168,85,247,.1)"><span style="font-size:20px;color:var(--purple)">↧</span></div>
           <div class="action-lbl" style="color:var(--purple)">Retirar</div>
         </div>
@@ -658,6 +658,256 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div style="height:16px"></div>
     </div>
 
+    <!-- ══ RECIBIR ══ -->
+    <div class="screen" id="s-recibir">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Recibir dinero</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="text-align:center;padding:20px 0 16px">
+          <div style="width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid var(--green);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:36px">↓</div>
+          <div style="font-size:18px;font-weight:900;color:var(--green);margin-bottom:6px">Tu enlace de cobro</div>
+          <div style="font-size:12px;color:var(--txt2)">Comparte este código QR o enlace para recibir dinero</div>
+        </div>
+        <div class="card" style="text-align:center;margin-bottom:14px;border-radius:20px">
+          <div style="width:130px;height:130px;background:white;border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <rect width="110" height="110" fill="white"/>
+              <rect x="5" y="5" width="40" height="40" rx="4" fill="#0A0E1A"/>
+              <rect x="10" y="10" width="30" height="30" rx="2" fill="white"/>
+              <rect x="15" y="15" width="20" height="20" rx="1" fill="#0A0E1A"/>
+              <rect x="65" y="5" width="40" height="40" rx="4" fill="#0A0E1A"/>
+              <rect x="70" y="10" width="30" height="30" rx="2" fill="white"/>
+              <rect x="75" y="15" width="20" height="20" rx="1" fill="#0A0E1A"/>
+              <rect x="5" y="65" width="40" height="40" rx="4" fill="#0A0E1A"/>
+              <rect x="10" y="70" width="30" height="30" rx="2" fill="white"/>
+              <rect x="15" y="75" width="20" height="20" rx="1" fill="#0A0E1A"/>
+              <rect x="50" y="50" width="8" height="8" fill="#29ABE2"/>
+              <rect x="62" y="50" width="8" height="8" fill="#29ABE2"/>
+              <rect x="74" y="50" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="86" y="50" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="50" y="62" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="62" y="62" width="8" height="8" fill="#29ABE2"/>
+              <rect x="74" y="62" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="86" y="62" width="8" height="8" fill="#29ABE2"/>
+              <rect x="50" y="74" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="62" y="74" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="74" y="74" width="8" height="8" fill="#29ABE2"/>
+              <rect x="86" y="74" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="50" y="86" width="8" height="8" fill="#29ABE2"/>
+              <rect x="62" y="86" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="74" y="86" width="8" height="8" fill="#0A0E1A"/>
+              <rect x="86" y="86" width="8" height="8" fill="#29ABE2"/>
+            </svg>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:4px">@innovaafric/usuario</div>
+          <div style="font-size:10px;color:var(--txt3)">Acepta EUR · XAF · USD · GHS</div>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <button class="btn-green" style="flex:1;padding:13px">📋 Copiar enlace</button>
+          <button class="btn-outline" style="flex:1;padding:13px">📤 Compartir</button>
+        </div>
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.08);border:1px solid rgba(0,137,123,.2);display:flex;align-items:center;gap:10px">
+          <svg width="60" height="16" viewBox="0 0 100 28"><rect width="100" height="28" rx="6" fill="#00897B"/><text x="50" y="19" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
+          <div style="font-size:10px;color:var(--green);font-weight:700">Cobro instantáneo sin comisión</div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goScreen('s-home')"><div class="nav-icon">🏠</div><div class="nav-lbl" style="color:#444">Home</div></div>
+        <div class="nav-item active"><div class="nav-icon">💳</div><div class="nav-lbl">Wallet</div><div class="pip"></div></div>
+        <div class="nav-item" onclick="goScreen('s-shop')"><div class="nav-icon">🛒</div><div class="nav-lbl" style="color:#444">Shop</div></div>
+        <div class="nav-item" onclick="goScreen('s-track')"><div class="nav-icon">📦</div><div class="nav-lbl" style="color:#444">Pedidos</div></div>
+        <div class="nav-item" onclick="goScreen('s-perfil')"><div class="nav-icon">👤</div><div class="nav-lbl" style="color:#444">Perfil</div></div>
+      </div>
+    </div>
+
+    <!-- ══ CAMBIAR ══ -->
+    <div class="screen" id="s-cambiar">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Cambiar divisa</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="card" style="border-radius:22px;margin-bottom:12px">
+          <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Tienes</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-size:32px;font-weight:900;color:var(--txt)">1,245.80</div>
+            <div class="pill pill-blue" style="font-size:13px">EUR €</div>
+          </div>
+          <div style="height:1px;background:var(--border);margin-bottom:14px;position:relative">
+            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold)">⇄</div>
+          </div>
+          <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Recibirás</div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:28px;font-weight:900;color:var(--green)">816,832</div>
+            <div class="pill pill-green" style="font-size:12px">XAF</div>
+          </div>
+          <div style="font-size:10px;color:var(--txt3);margin-top:10px">1 EUR = 655.957 XAF · Comisión: 0%</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="section-title">Selecciona divisa destino</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="card" style="border-color:var(--green);text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🌍</div><div style="font-size:12px;font-weight:800;color:var(--green)">XAF</div><div style="font-size:9px;color:var(--txt3)">Franco CFA</div></div>
+            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇺🇸</div><div style="font-size:12px;font-weight:800;color:var(--txt)">USD</div><div style="font-size:9px;color:var(--txt3)">Dólar</div></div>
+            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇬🇭</div><div style="font-size:12px;font-weight:800;color:var(--txt)">GHS</div><div style="font-size:9px;color:var(--txt3)">Cedi ghanés</div></div>
+            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇬🇧</div><div style="font-size:12px;font-weight:800;color:var(--txt)">GBP</div><div style="font-size:9px;color:var(--txt3)">Libra esterlina</div></div>
+          </div>
+        </div>
+        <button class="btn-primary">Confirmar cambio →</button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goScreen('s-home')"><div class="nav-icon">🏠</div><div class="nav-lbl" style="color:#444">Home</div></div>
+        <div class="nav-item active"><div class="nav-icon">💳</div><div class="nav-lbl">Wallet</div><div class="pip"></div></div>
+        <div class="nav-item" onclick="goScreen('s-shop')"><div class="nav-icon">🛒</div><div class="nav-lbl" style="color:#444">Shop</div></div>
+        <div class="nav-item" onclick="goScreen('s-track')"><div class="nav-icon">📦</div><div class="nav-lbl" style="color:#444">Pedidos</div></div>
+        <div class="nav-item" onclick="goScreen('s-perfil')"><div class="nav-icon">👤</div><div class="nav-lbl" style="color:#444">Perfil</div></div>
+      </div>
+    </div>
+
+    <!-- ══ RETIRAR ══ -->
+    <div class="screen" id="s-retirar">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Retirar dinero</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="card" style="border-radius:22px;margin-bottom:14px">
+          <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Saldo disponible</div>
+          <div style="font-size:30px;font-weight:900;color:var(--txt);margin-bottom:4px">€ 1,245.80</div>
+          <div style="font-size:10px;color:var(--txt3)">Mínimo retiro: €10 · Sin comisión XenderMoney</div>
+        </div>
+        <div class="section-title">¿Cuánto quieres retirar?</div>
+        <div class="card" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;border-radius:16px">
+          <div style="font-size:22px;font-weight:900;color:var(--txt);flex:1">€ 200.00</div>
+          <div class="pill pill-gold">MAX</div>
+        </div>
+        <div class="section-title">Destino del retiro</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <div class="card" style="display:flex;align-items:center;gap:12px;border-color:var(--purple);border-radius:14px;cursor:pointer">
+            <span style="font-size:22px">🏦</span>
+            <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Cuenta bancaria SEPA</div><div style="font-size:10px;color:var(--txt3)">1-2 días hábiles</div></div>
+            <div style="width:18px;height:18px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
+            <span style="font-size:22px">📱</span>
+            <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">MTN Mobile Money</div><div style="font-size:10px;color:var(--txt3)">Inmediato</div></div>
+          </div>
+          <div class="card" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
+            <span style="font-size:22px">🟠</span>
+            <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Orange Money</div><div style="font-size:10px;color:var(--txt3)">Inmediato</div></div>
+          </div>
+        </div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#7c3aed)">Solicitar retiro →</button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goScreen('s-home')"><div class="nav-icon">🏠</div><div class="nav-lbl" style="color:#444">Home</div></div>
+        <div class="nav-item active"><div class="nav-icon">💳</div><div class="nav-lbl">Wallet</div><div class="pip"></div></div>
+        <div class="nav-item" onclick="goScreen('s-shop')"><div class="nav-icon">🛒</div><div class="nav-lbl" style="color:#444">Shop</div></div>
+        <div class="nav-item" onclick="goScreen('s-track')"><div class="nav-icon">📦</div><div class="nav-lbl" style="color:#444">Pedidos</div></div>
+        <div class="nav-item" onclick="goScreen('s-perfil')"><div class="nav-icon">👤</div><div class="nav-lbl" style="color:#444">Perfil</div></div>
+      </div>
+    </div>
+
+    <!-- ══ SHOP ══ -->
+    <div class="screen" id="s-shop">
+      <div class="page-header">
+        <div class="page-title">Shop</div>
+        <div class="icon-btn">🔍</div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto" class="no-scroll">
+          <div class="pill pill-blue" style="flex-shrink:0">Todo</div>
+          <div class="pill pill-off" style="flex-shrink:0">XenderShop</div>
+          <div class="pill pill-off" style="flex-shrink:0">BigShop</div>
+          <div class="pill pill-off" style="flex-shrink:0">Ofertas</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Smartphones</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €89</div></div>
+          </div>
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Electrónica</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €25</div></div>
+          </div>
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+            <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Moda & Textil</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €12</div></div>
+          </div>
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Alimentación</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €5</div></div>
+          </div>
+        </div>
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.08);border:1px solid rgba(0,137,123,.2);display:flex;align-items:center;gap:10px">
+          <svg width="60" height="16" viewBox="0 0 100 28"><rect width="100" height="28" rx="6" fill="#00897B"/><text x="50" y="19" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
+          <div style="font-size:10px;color:var(--green);font-weight:700">Paga con XenderMoney — sin comisión</div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goScreen('s-home')"><div class="nav-icon">🏠</div><div class="nav-lbl" style="color:#444">Home</div></div>
+        <div class="nav-item" onclick="goScreen('s-wallet')"><div class="nav-icon">💳</div><div class="nav-lbl" style="color:#444">Wallet</div></div>
+        <div class="nav-item active"><div class="nav-icon">🛒</div><div class="nav-lbl">Shop</div><div class="pip"></div></div>
+        <div class="nav-item" onclick="goScreen('s-track')"><div class="nav-icon">📦</div><div class="nav-lbl" style="color:#444">Pedidos</div></div>
+        <div class="nav-item" onclick="goScreen('s-perfil')"><div class="nav-icon">👤</div><div class="nav-lbl" style="color:#444">Perfil</div></div>
+      </div>
+    </div>
+
+    <!-- ══ PERFIL ══ -->
+    <div class="screen" id="s-perfil">
+      <div style="padding:20px 14px 10px;text-align:center">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">A</div>
+        <div style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:3px">Amadou Diallo</div>
+        <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">amadou@innovaafric.com</div>
+        <div style="display:flex;justify-content:center;gap:8px">
+          <span class="pill pill-green">✓ Verificado</span>
+          <span class="pill pill-blue">Premium</span>
+        </div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title" style="margin-top:10px">Mi cuenta</div>
+        <div class="card" style="border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+            <span style="font-size:18px">👤</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Datos personales</div><span style="color:var(--txt3);font-size:12px">›</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+            <span style="font-size:18px">🔐</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Seguridad y contraseña</div><span style="color:var(--txt3);font-size:12px">›</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+            <span style="font-size:18px">🏦</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Cuentas bancarias</div><span style="color:var(--txt3);font-size:12px">›</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+            <span style="font-size:18px">🔔</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Notificaciones</div><span style="color:var(--txt3);font-size:12px">›</span>
+          </div>
+        </div>
+        <div class="section-title">Soporte</div>
+        <div class="card" style="border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
+            <span style="font-size:18px">🤖</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">InnovaBot — Asistente</div><span class="pill pill-blue" style="font-size:8px">24/7</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer">
+            <span style="font-size:18px">💬</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Chat con soporte</div><span style="color:var(--txt3);font-size:12px">›</span>
+          </div>
+        </div>
+        <button class="btn-outline" style="border-color:rgba(239,68,68,.3);color:var(--red)">Cerrar sesión</button>
+      </div>
+      <div style="height:10px"></div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="goScreen('s-home')"><div class="nav-icon">🏠</div><div class="nav-lbl" style="color:#444">Home</div></div>
+        <div class="nav-item" onclick="goScreen('s-wallet')"><div class="nav-icon">💳</div><div class="nav-lbl" style="color:#444">Wallet</div></div>
+        <div class="nav-item" onclick="goScreen('s-shop')"><div class="nav-icon">🛒</div><div class="nav-lbl" style="color:#444">Shop</div></div>
+        <div class="nav-item" onclick="goScreen('s-track')"><div class="nav-icon">📦</div><div class="nav-lbl" style="color:#444">Pedidos</div></div>
+        <div class="nav-item active"><div class="nav-icon">👤</div><div class="nav-lbl">Perfil</div><div class="pip"></div></div>
+      </div>
+    </div>
+
   </div><!-- /screens -->
 
   <!-- BOTTOM NAV -->
@@ -672,7 +922,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div class="nav-lbl">Wallet</div>
       <div class="pip"></div>
     </button>
-    <button class="nav-btn" id="nb-shop">
+    <button class="nav-btn" id="nb-shop" onclick="goScreen('s-shop')">
       <div class="nav-icon">🛒</div>
       <div class="nav-lbl">Shop</div>
       <div class="pip"></div>
@@ -682,7 +932,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div class="nav-lbl">Pedidos</div>
       <div class="pip"></div>
     </button>
-    <button class="nav-btn" id="nb-perfil">
+    <button class="nav-btn" id="nb-perfil" onclick="goScreen('s-perfil')">
       <div class="nav-icon">👤</div>
       <div class="nav-lbl">Perfil</div>
       <div class="pip"></div>
@@ -699,7 +949,9 @@ var history_stack = ['s-home'];
 
 var nav_map = {
   's-home':'nb-home','s-wallet':'nb-wallet','s-send':'nb-wallet',
-  's-track':'nb-pedidos','s-chat':'nb-pedidos','s-confirm':'nb-pedidos'
+  's-track':'nb-pedidos','s-chat':'nb-pedidos','s-confirm':'nb-pedidos',
+  's-recibir':'nb-wallet','s-cambiar':'nb-wallet','s-retirar':'nb-wallet',
+  's-shop':'nb-shop','s-perfil':'nb-perfil'
 };
 
 function goScreen(id) {
@@ -756,17 +1008,6 @@ window.addEventListener('beforeinstallprompt', function(e) {
   setTimeout(function(){ toast.style.display='none'; }, 5000);
 });
 
-// ── Touch fix: delegate touchend as click for all onclick divs ──
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('[onclick]').forEach(function(el) {
-    el.style.cursor = 'pointer';
-    el.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      var fn = el.getAttribute('onclick');
-      if (fn) { try { eval(fn); } catch(err){} }
-    }, {passive: false});
-  });
-});
 
 // ── Real time clock ─────────────────────
 function updateClock() {
@@ -780,4 +1021,5 @@ setInterval(updateClock, 30000);
 </script>
 </body>
 </html>
+
 
