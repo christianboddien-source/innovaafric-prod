@@ -1398,7 +1398,19 @@ window.addEventListener('beforeinstallprompt', function(e) {
 var SB_URL  = 'https://spnfvmvrlexyiljwyola.supabase.co';
 var SB_ANON = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
 var RAIL_API = 'https://api.innovaafric.com/v1';
-var sb = supabase.createClient(SB_URL, SB_ANON);
+// Initialize SDK safely — never crash if CDN failed or key format rejected
+var sb = null;
+try { if (typeof supabase !== 'undefined') sb = supabase.createClient(SB_URL, SB_ANON); }
+catch(e) { console.warn('Supabase SDK init failed, usando REST directo:', e.message); }
+
+// Direct Supabase REST auth (no SDK needed)
+function sbAuthFetch(email, password) {
+  return fetch(SB_URL + '/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'apikey': SB_ANON },
+    body: JSON.stringify({ email: email, password: password })
+  }).then(function(r) { return r.json(); });
+}
 var _token = null;       // Railway JWT
 var _sbToken = null;     // Supabase JWT
 var _user  = JSON.parse(localStorage.getItem('inn_user') || 'null');
@@ -1434,11 +1446,24 @@ function doLogin() {
   btn.innerHTML = '<span class="login-spinner"></span>Entrando…';
   btn.disabled = true;
 
-  sb.auth.signInWithPassword({ email: email, password: pass })
-  .then(function(result) {
-    if (result.error) throw new Error(result.error.message);
-    _sbToken = result.data.session.access_token;
-    var au  = result.data.user;
+  // Use SDK if available, else use direct REST fetch
+  var authPromise;
+  if (sb && sb.auth) {
+    authPromise = sb.auth.signInWithPassword({ email: email, password: pass }).then(function(result) {
+      if (result.error) throw new Error(result.error.message);
+      return { access_token: result.data.session.access_token, user: result.data.user };
+    });
+  } else {
+    authPromise = sbAuthFetch(email, pass).then(function(data) {
+      if (!data.access_token) throw new Error(data.error_description || data.error || 'Auth failed');
+      return { access_token: data.access_token, user: data.user || {} };
+    });
+  }
+
+  authPromise
+  .then(function(auth) {
+    _sbToken = auth.access_token;
+    var au  = auth.user || {};
     var meta = au.user_metadata || {};
     _user = {
       id:       au.id,
@@ -1747,17 +1772,28 @@ window.addEventListener('DOMContentLoaded', function() {
   if (passEl)  passEl.addEventListener('keydown',  function(e){ if(e.key==='Enter') doLogin(); });
   if (emailEl) emailEl.addEventListener('keydown', function(e){ if(e.key==='Enter') passEl.focus(); });
 
-  // Restore Supabase session automatically
-  sb.auth.getSession().then(function(result) {
-    var session = result.data && result.data.session;
+  // Restore Supabase session automatically (works with or without SDK)
+  var sessionPromise;
+  if (sb && sb.auth) {
+    sessionPromise = sb.auth.getSession().then(function(result) {
+      var s = result.data && result.data.session;
+      return s && s.access_token ? { access_token: s.access_token, user: s.user } : null;
+    });
+  } else {
+    // Read session directly from localStorage (Supabase stores it there)
+    var sbKey = Object.keys(localStorage).find(function(k){ return k.startsWith('sb-') && k.endsWith('-auth-token'); });
+    var stored = sbKey ? JSON.parse(localStorage.getItem(sbKey) || 'null') : null;
+    sessionPromise = Promise.resolve(stored && stored.access_token ? { access_token: stored.access_token, user: stored.user } : null);
+  }
+  sessionPromise.then(function(session) {
     if (session && session.access_token) {
       _sbToken = session.access_token;
-      var au  = session.user;
-      var meta = (au && au.user_metadata) || {};
+      var au  = session.user || {};
+      var meta = au.user_metadata || {};
       _user = {
-        id:      au.id,
-        email:   au.email,
-        name:    meta.full_name || meta.name || au.email.split('@')[0],
+        id:      au.id || null,
+        email:   au.email || '',
+        name:    meta.full_name || meta.name || (au.email || '').split('@')[0],
         role:    meta.role || 'customer',
         ia_code: meta.ia_code || null,
         country: meta.country || null,
