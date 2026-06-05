@@ -1626,7 +1626,18 @@ function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.get
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="empresa@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido *</label>
+          <select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;">
+            <option value="xendermoney" selected>⭐ XenderMoney</option>
+            <option>MTN MoMo</option>
+            <option>Orange Money</option>
+            <option>Wave</option>
+            <option>Transferencia bancaria</option>
+            <option>Visa / Mastercard</option>
+          </select></div>
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#E0921A;"> Acepto las <a href="#" style="color:#E0921A;">Condiciones B2B</a> y la política de escrow</label></div>
         <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#E0921A;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Acceder al catálogo mayorista →</button></div>
@@ -1640,7 +1651,18 @@ function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.get
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="empresa@proveedor.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono / WhatsApp *</label><input type="tel" placeholder="+86 / +237 / +33..." required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País de origen *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>China</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>España</option><option>Francia</option><option>Turquía</option><option>India</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">MOQ mínimo</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>50 unidades</option><option>100 unidades</option><option>500 unidades</option><option>1.000+ unidades</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">MOQ mínimo</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>50 unidades</option><option>100 unidades</option><option>500 unidades</option><option>1.000+ unidades</option></select>
+        </div>
+        <div>
+          <label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido *</label>
+          <select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;">
+            <option value="xendermoney" selected>⭐ XenderMoney</option>
+            <option>MTN MoMo</option>
+            <option>Orange Money</option>
+            <option>Wave</option>
+            <option>Transferencia bancaria</option>
+            <option>Visa / Mastercard</option>
+          </select></div>
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Descripción de productos</label><textarea placeholder="Describe tu catálogo de productos..." rows="3" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;resize:vertical;font-family:inherit;"></textarea></div>
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#E0921A;"> Acepto ser verificado y las <a href="#" style="color:#E0921A;">Condiciones para proveedores</a></label></div>
@@ -1672,6 +1694,7 @@ if(typeof openModal==='undefined'){function openModal(id){document.getElementByI
 <script>window.addEventListener('DOMContentLoaded',function(){calcLote();});</script>
 </body>
 </html>
+
 
 
 
