@@ -412,6 +412,16 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="svc-item" onclick="showToast('Gift Card','Tarjetas regalo — próximamente')"><div style="font-size:20px">🎁</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Gift Card</div></div>
         <div class="svc-item" onclick="showToast('Inversión','Inversión tricontinental — próximamente')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--txt3);margin-top:3px">Inversión</div></div>
       </div>
+      <!-- Movimientos recientes -->
+      <div style="padding:0 14px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="section-title" style="margin:0">Últimos movimientos</div>
+          <span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer" onclick="goScreen('s-wallet')">Ver todos →</span>
+        </div>
+        <div id="home-txn-list">
+          <div style="text-align:center;padding:16px 0;color:var(--txt3);font-size:12px">Sin movimientos aún</div>
+        </div>
+      </div>
       <!-- Nuestra Comunidad -->
       <div style="padding:0 14px;margin-bottom:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -496,87 +506,55 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="page-title" style="font-size:15px">Enviar dinero</div>
         <svg width="70" height="18" viewBox="0 0 100 26"><rect width="100" height="26" rx="6" fill="#00897B"/><text x="50" y="18" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
       </div>
+      <!-- Amount box -->
       <div class="amount-box">
         <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Tú envías</div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="big-amount">200.00</div>
-          <div class="pill pill-blue" style="font-size:12px;font-weight:900">EUR €</div>
+          <input id="send-amount" type="number" min="1" placeholder="0" oninput="calcSend()" style="font-size:32px;font-weight:900;color:#fff;background:none;border:none;outline:none;width:0;flex:1;font-family:'Inter',sans-serif">
+          <select id="send-cur" onchange="calcSend()" style="background:rgba(41,171,226,.15);color:var(--blue);border:1px solid rgba(41,171,226,.3);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:800;outline:none;font-family:'Inter',sans-serif">
+            <option value="XAF">XAF</option>
+            <option value="EUR">EUR €</option>
+            <option value="USD">USD $</option>
+          </select>
         </div>
         <div class="converter-sep"><div class="swap-btn">⇅</div></div>
-        <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Destinatario recibe</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Destinatario recibe</div>
         <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:28px;font-weight:900;color:var(--green)">131,191</div>
-          <div class="pill pill-green" style="font-size:12px;font-weight:900">XAF</div>
+          <div id="send-converted" style="font-size:28px;font-weight:900;color:var(--green)">—</div>
+          <div id="send-dest-cur" class="pill pill-green" style="font-size:12px;font-weight:900">XAF</div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:rgba(255,255,255,.3)">
-          <span>1 EUR = 655.957 XAF</span>
-          <span style="color:var(--gold)">Comisión: €3.00</span>
+          <span id="send-rate-label">1 EUR = 655.957 XAF</span>
+          <span id="send-fee-label" style="color:var(--gold)">Comisión: 0 XAF</span>
         </div>
       </div>
+      <!-- Recipient -->
       <div style="padding:0 14px;margin-bottom:12px">
-        <div class="section-title">Envíos recientes</div>
-        <div style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px">
-          <div style="text-align:center;flex-shrink:0;cursor:pointer">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--blue);margin:0 auto 4px">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=92&h=92&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-            </div>
-            <div style="font-size:8px;font-weight:700;color:var(--txt2)">Paul M.</div>
-            <div style="font-size:7px;color:var(--txt3)">Douala</div>
-          </div>
-          <div style="text-align:center;flex-shrink:0;cursor:pointer">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--border);margin:0 auto 4px">
-              <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=92&h=92&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-            </div>
-            <div style="font-size:8px;font-weight:700;color:var(--txt2)">Aminata D.</div>
-            <div style="font-size:7px;color:var(--txt3)">Dakar</div>
-          </div>
-          <div style="text-align:center;flex-shrink:0;cursor:pointer">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--border);margin:0 auto 4px">
-              <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=92&h=92&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-            </div>
-            <div style="font-size:8px;font-weight:700;color:var(--txt2)">Kofi A.</div>
-            <div style="font-size:7px;color:var(--txt3)">Abidjan</div>
-          </div>
-          <div style="text-align:center;flex-shrink:0;cursor:pointer">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--border);margin:0 auto 4px">
-              <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=92&h=92&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-            </div>
-            <div style="font-size:8px;font-weight:700;color:var(--txt2)">Marie N.</div>
-            <div style="font-size:7px;color:var(--txt3)">Lagos</div>
-          </div>
-          <div style="text-align:center;flex-shrink:0;cursor:pointer">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--border);margin:0 auto 4px">
-              <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=92&h=92&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-            </div>
-            <div style="font-size:8px;font-weight:700;color:var(--txt2)">Fatou B.</div>
-            <div style="font-size:7px;color:var(--txt3)">Bamako</div>
-          </div>
+        <div class="section-title">Destinatario (email o ID)</div>
+        <div class="card-sm" style="display:flex;align-items:center;gap:10px;padding:6px 12px">
+          <span style="font-size:18px">👤</span>
+          <input id="send-recipient" type="email" placeholder="email@ejemplo.com" style="flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
+          <div id="send-recipient-check" style="color:var(--txt3);font-size:14px">○</div>
         </div>
+        <div id="send-recipient-name" style="font-size:11px;color:var(--green);margin-top:6px;padding-left:4px;min-height:16px"></div>
       </div>
-      <div style="padding:0 14px;margin-bottom:12px">
-        <div class="section-title">Destinatario</div>
-        <div class="card-sm" style="display:flex;align-items:center;gap:10px">
-          <div style="width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--blue)">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=76&h=76&fit=crop&face" style="width:100%;height:100%;object-fit:cover">
-          </div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--txt)">Paul Mbarga</div><div style="font-size:10px;color:var(--txt3)">+237 6XX XXX · Douala</div></div>
-          <div style="color:var(--green);font-size:18px">✓</div>
-        </div>
-      </div>
+      <!-- Note -->
       <div style="padding:0 14px;margin-bottom:14px">
-        <div class="section-title">Método de pago</div>
-        <div style="display:flex;gap:7px">
-          <div class="pay-tile on" style="flex:1.4">
-            <svg width="100%" height="14" viewBox="0 0 80 18" style="margin-bottom:3px"><rect width="80" height="18" rx="4" fill="#00897B"/><text x="40" y="13" font-family="Arial Black" font-size="8" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
-            <div style="font-size:8px;font-weight:800;color:var(--blue)">★ Recomendado</div>
-          </div>
-          <div class="pay-tile"><div style="font-size:16px;margin-bottom:2px">📱</div><div style="font-size:9px;font-weight:700;color:var(--txt3)">MTN</div></div>
-          <div class="pay-tile"><div style="font-size:16px;margin-bottom:2px">🟠</div><div style="font-size:9px;font-weight:700;color:var(--txt3)">Orange</div></div>
-          <div class="pay-tile"><div style="font-size:16px;margin-bottom:2px">💳</div><div style="font-size:9px;font-weight:700;color:var(--txt3)">Tarjeta</div></div>
+        <div class="section-title">Nota (opcional)</div>
+        <div class="card-sm">
+          <input id="send-note" type="text" maxlength="80" placeholder="Ej: Alquiler de marzo" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
+        </div>
+      </div>
+      <!-- Saldo disponible -->
+      <div style="padding:0 14px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px 14px">
+          <span style="font-size:11px;color:var(--txt3)">Saldo disponible</span>
+          <span id="send-saldo" style="font-size:12px;font-weight:800;color:var(--txt)">— XAF</span>
         </div>
       </div>
       <div style="padding:0 14px">
-        <button class="btn-primary" onclick="goScreen('s-wallet')">Confirmar envío · € 203.00 ✓</button>
+        <div id="send-err" style="color:var(--red);font-size:11px;font-weight:600;text-align:center;margin-bottom:8px;min-height:16px"></div>
+        <button id="send-btn" class="btn-primary" onclick="doSend()">💸 Confirmar envío</button>
         <div style="text-align:center;font-size:10px;color:var(--txt3);margin-top:8px">⚡ Llegará en menos de 5 minutos</div>
       </div>
       <div style="height:20px"></div>
@@ -778,54 +756,34 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div style="width:36px"></div>
       </div>
       <div style="padding:0 14px">
-        <div style="text-align:center;padding:20px 0 16px">
-          <div style="width:80px;height:80px;border-radius:50%;background:rgba(34,197,94,.1);border:2px solid var(--green);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:36px">📱</div>
-          <div style="font-size:18px;font-weight:900;color:var(--green);margin-bottom:6px">Tu enlace de cobro</div>
-          <div style="font-size:12px;color:var(--txt2)">Comparte este código QR o enlace para recibir dinero</div>
+        <div style="text-align:center;padding:16px 0 14px">
+          <div style="font-size:18px;font-weight:900;color:var(--green);margin-bottom:4px">Tu enlace de cobro</div>
+          <div style="font-size:11px;color:var(--txt3)">Comparte para recibir dinero al instante</div>
         </div>
-        <div class="card" style="text-align:center;margin-bottom:14px;border-radius:20px">
-          <div style="width:130px;height:130px;background:white;border-radius:14px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center">
-            <svg width="110" height="110" viewBox="0 0 110 110">
-              <rect width="110" height="110" fill="white"/>
-              <rect x="5" y="5" width="40" height="40" rx="4" fill="#0A0E1A"/>
-              <rect x="10" y="10" width="30" height="30" rx="2" fill="white"/>
-              <rect x="15" y="15" width="20" height="20" rx="1" fill="#0A0E1A"/>
-              <rect x="65" y="5" width="40" height="40" rx="4" fill="#0A0E1A"/>
-              <rect x="70" y="10" width="30" height="30" rx="2" fill="white"/>
-              <rect x="75" y="15" width="20" height="20" rx="1" fill="#0A0E1A"/>
-              <rect x="5" y="65" width="40" height="40" rx="4" fill="#0A0E1A"/>
-              <rect x="10" y="70" width="30" height="30" rx="2" fill="white"/>
-              <rect x="15" y="75" width="20" height="20" rx="1" fill="#0A0E1A"/>
-              <rect x="50" y="50" width="8" height="8" fill="#29ABE2"/>
-              <rect x="62" y="50" width="8" height="8" fill="#29ABE2"/>
-              <rect x="74" y="50" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="86" y="50" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="50" y="62" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="62" y="62" width="8" height="8" fill="#29ABE2"/>
-              <rect x="74" y="62" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="86" y="62" width="8" height="8" fill="#29ABE2"/>
-              <rect x="50" y="74" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="62" y="74" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="74" y="74" width="8" height="8" fill="#29ABE2"/>
-              <rect x="86" y="74" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="50" y="86" width="8" height="8" fill="#29ABE2"/>
-              <rect x="62" y="86" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="74" y="86" width="8" height="8" fill="#0A0E1A"/>
-              <rect x="86" y="86" width="8" height="8" fill="#29ABE2"/>
-            </svg>
+        <div class="card" style="text-align:center;margin-bottom:14px;border-radius:20px;padding:20px">
+          <div id="recibir-qr" style="width:160px;height:160px;background:white;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+            <img id="recibir-qr-img" src="" style="width:100%;height:100%;display:none">
+            <div id="recibir-qr-placeholder" style="font-size:11px;color:#666;text-align:center;padding:10px">Inicia sesión<br>para ver tu QR</div>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:4px">@innovaafric/usuario</div>
-          <div style="font-size:10px;color:var(--txt3)">Acepta EUR · XAF · USD · GHS</div>
+          <div id="recibir-handle" style="font-size:13px;font-weight:700;color:var(--txt2);margin-bottom:3px">@innovaafric/—</div>
+          <div id="recibir-email" style="font-size:10px;color:var(--txt3);margin-bottom:6px">—</div>
+          <div style="font-size:10px;color:var(--txt3)">Acepta EUR · XAF · USD · XOF</div>
+        </div>
+        <!-- Enlace copiable -->
+        <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:10px 14px;margin-bottom:14px">
+          <div id="recibir-link" style="flex:1;font-size:11px;color:var(--txt3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
+          <div onclick="copiarEnlace()" style="font-size:11px;font-weight:800;color:var(--blue);cursor:pointer;flex-shrink:0">Copiar</div>
         </div>
         <div style="display:flex;gap:10px;margin-bottom:14px">
-          <button class="btn-green" style="flex:1;padding:13px">📋 Copiar enlace</button>
-          <button class="btn-outline" style="flex:1;padding:13px">📤 Compartir</button>
+          <button class="btn-green" style="flex:1;padding:13px" onclick="copiarEnlace()">📋 Copiar enlace</button>
+          <button class="btn-outline" style="flex:1;padding:13px" onclick="compartirEnlace()">📤 Compartir</button>
         </div>
         <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.08);border:1px solid rgba(0,137,123,.2);display:flex;align-items:center;gap:10px">
           <svg width="60" height="16" viewBox="0 0 100 28"><rect width="100" height="28" rx="6" fill="#00897B"/><text x="50" y="19" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
           <div style="font-size:10px;color:var(--green);font-weight:700">Cobro instantáneo sin comisión</div>
         </div>
       </div>
+      <div style="height:10px"></div>
     </div>
 
     <!-- SCREEN: CAMBIAR -->
@@ -861,7 +819,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇬🇧</div><div style="font-size:12px;font-weight:800;color:var(--txt)">GBP</div><div style="font-size:9px;color:var(--txt3)">Libra esterlina</div></div>
           </div>
         </div>
-        <button class="btn-primary">Confirmar cambio →</button>
+        <div id="cambiar-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button class="btn-primary" onclick="showToast('Cambio de divisa','Esta función estará disponible pronto. Por ahora puedes ver tus saldos en múltiples divisas en la pantalla de inicio.')">Confirmar cambio →</button>
       </div>
       <div style="height:10px"></div>
     </div>
@@ -900,7 +859,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Orange Money</div><div style="font-size:10px;color:var(--txt3)">Inmediato</div></div>
           </div>
         </div>
-        <button class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#7c3aed)">Solicitar retiro →</button>
+        <div id="retirar-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#7c3aed)" onclick="doRetirar()">Solicitar retiro →</button>
       </div>
       <div style="height:10px"></div>
     </div>
@@ -1345,15 +1305,15 @@ function doRegister() {
   })
   .then(function(result) {
     if (result.error) throw new Error(result.error.message);
-    _token = result.data.session.access_token;
+    _sbToken = result.data.session.access_token;
     var au  = result.data.user;
     _user = {
-      id:    au.id,
-      email: au.email,
-      name:  name,
-      role:  role
+      id: au.id, email: au.email, name: name, role: role,
+      country: country, city: city, phone: phone, kyc: 'pending', ia_code: null
     };
     localStorage.setItem('inn_user', JSON.stringify(_user));
+    // Sync to Railway (creates wallet + Railway user)
+    syncToRailway(_sbToken, _user);
     afterLogin();
     showToast('¡Bienvenido/a!', 'Cuenta creada. Completa el KYC para activar pagos.');
     btn.innerHTML = '✓ Crear cuenta';
@@ -1444,50 +1404,6 @@ function refreshBalanceInScreens() {
   if (rEl) rEl.textContent = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
   var cEl = document.getElementById('cambiar-saldo');
   if (cEl) cEl.textContent = _balances.XAF.toLocaleString('fr-FR');
-}
-
-function loadTransactions() {
-  if (!_token) return;
-  railGet('/money/history?limit=30').then(function(resp) {
-    var el = document.getElementById('txn-list');
-    if (!el) return;
-    var items = (resp && resp.success && resp.data && resp.data.items) ? resp.data.items : [];
-    if (!items.length) {
-      el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Sin movimientos aún</div>';
-      return;
-    }
-    var userId = _user && _user.id;
-    var html = '';
-    var lastDate = '';
-    items.forEach(function(txn) {
-      var d = new Date(txn.createdAt);
-      var today = new Date(); today.setHours(0,0,0,0);
-      var yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
-      var label = d >= today ? 'HOY' : (d >= yesterday ? 'AYER' : d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}).toUpperCase());
-      if (label !== lastDate) {
-        html += '<div style="font-size:9px;color:var(--txt3);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:12px 0 4px">' + label + '</div>';
-        lastDate = label;
-      }
-      var isIn = txn.recipientId === userId;
-      var typeIcons = { send:'💸', purchase:'🛒', withdraw:'🏧', deposit:'💰', transfer:'🔄' };
-      var icon = isIn ? '📥' : (typeIcons[txn.type] || '💸');
-      var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
-      var cur = isIn ? (txn.currencyReceived || txn.currencySent) : txn.currencySent;
-      var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
-      var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('fr-FR') : parseFloat(amt).toFixed(2)) + ' ' + cur;
-      var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
-      var note = txn.note || (txn.type === 'send' ? 'Envío' : txn.type === 'purchase' ? 'Compra' : 'Transacción');
-      html += '<div class="txn-row">' +
-        '<div class="txn-ico" style="background:' + iconBg + '">' + icon + '</div>' +
-        '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + note + '</div>' +
-        '<div style="font-size:10px;color:var(--txt3)">' + d.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + '</div></div>' +
-        '<div class="' + amtClass + '">' + amtStr + '</div></div>';
-    });
-    el.innerHTML = html;
-  }).catch(function(){
-    var el = document.getElementById('txn-list');
-    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">No se pudieron cargar los movimientos</div>';
-  });
 }
 
 // -- On start ----------------------------
@@ -1610,6 +1526,208 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 30000);
+
+// ── SEND MONEY ──────────────────────────────────────────
+var _rates = { EUR_XAF: 655.957, USD_XAF: 608.5, XAF_EUR: 1/655.957, XAF_USD: 1/608.5, EUR_USD: 1.08, USD_EUR: 0.926 };
+
+function calcSend() {
+  var amt = parseFloat(document.getElementById('send-amount').value) || 0;
+  var cur = document.getElementById('send-cur').value;
+  var destCur = cur === 'XAF' ? 'EUR' : 'XAF';
+  document.getElementById('send-dest-cur').textContent = destCur;
+  var rate = _rates[cur + '_' + destCur] || 1;
+  var converted = amt * rate;
+  var fee = cur === 'XAF' ? Math.round(amt * 0.015) : parseFloat((amt * 0.015).toFixed(2));
+  if (amt > 0) {
+    document.getElementById('send-converted').textContent = destCur === 'XAF' ? Math.round(converted).toLocaleString('fr-FR') : converted.toFixed(2);
+    document.getElementById('send-fee-label').textContent = 'Comisión: ' + fee + ' ' + cur;
+  } else {
+    document.getElementById('send-converted').textContent = '—';
+    document.getElementById('send-fee-label').textContent = 'Comisión: 0 ' + cur;
+  }
+  var rateLabel = cur === 'XAF' ? '1 XAF = ' + rate.toFixed(5) + ' ' + destCur : '1 ' + cur + ' = ' + rate.toFixed(3) + ' ' + destCur;
+  document.getElementById('send-rate-label').textContent = rateLabel;
+}
+
+function doSend() {
+  var amt       = parseFloat(document.getElementById('send-amount').value);
+  var cur       = document.getElementById('send-cur').value;
+  var recipient = document.getElementById('send-recipient').value.trim();
+  var note      = document.getElementById('send-note').value.trim();
+  var err       = document.getElementById('send-err');
+  var btn       = document.getElementById('send-btn');
+  if (!amt || amt <= 0) { err.textContent = 'Introduce un importe válido'; return; }
+  if (!recipient) { err.textContent = 'Introduce el email del destinatario'; return; }
+  if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Enviando…';
+  btn.disabled = true;
+  var destCur = cur === 'XAF' ? 'EUR' : 'XAF';
+  fetch(RAIL_API + '/money/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amt, currency: cur, recipient_email: recipient, dest_currency: destCur, reference: note || undefined })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '💸 Confirmar envío';
+    btn.disabled = false;
+    if (!resp || !resp.success) {
+      err.textContent = (resp && resp.error) || 'Error al procesar el envío';
+      return;
+    }
+    // Actualizar saldo local
+    var sent = resp.data && resp.data.amount_sent;
+    if (sent && cur === 'XAF') _balances.XAF = Math.max(0, _balances.XAF - sent);
+    localStorage.setItem('inn_balance', JSON.stringify(_balances));
+    updateBalanceDisplay(); refreshBalanceInScreens();
+    loadTransactions();
+    document.getElementById('send-amount').value = '';
+    document.getElementById('send-recipient').value = '';
+    document.getElementById('send-note').value = '';
+    document.getElementById('send-converted').textContent = '—';
+    showToast('Envío realizado', 'El dinero está en camino ⚡');
+    goScreen('s-wallet');
+  }).catch(function() {
+    btn.innerHTML = '💸 Confirmar envío';
+    btn.disabled = false;
+    err.textContent = 'Error de conexión. Inténtalo de nuevo.';
+  });
+}
+
+// Init send screen when opened
+var _origGoScreen = goScreen;
+goScreen = function(id) {
+  _origGoScreen(id);
+  if (id === 's-send') {
+    var sEl = document.getElementById('send-saldo');
+    if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : '— XAF';
+    calcSend();
+  }
+  if (id === 's-recibir') populateRecibir();
+  if (id === 's-retirar') refreshBalanceInScreens();
+  if (id === 's-cambiar') refreshBalanceInScreens();
+};
+
+// ── RECIBIR ─────────────────────────────────────────────
+function populateRecibir() {
+  if (!_user) return;
+  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email);
+  var handle = '@innovaafric/' + (_user.name || _user.email).toLowerCase().replace(/\s+/g, '.');
+  var el = document.getElementById('recibir-handle');
+  var el2 = document.getElementById('recibir-email');
+  var el3 = document.getElementById('recibir-link');
+  if (el) el.textContent = handle;
+  if (el2) el2.textContent = _user.email;
+  if (el3) el3.textContent = link;
+  // QR via free API
+  var qrImg = document.getElementById('recibir-qr-img');
+  var qrPh  = document.getElementById('recibir-qr-placeholder');
+  if (qrImg) {
+    qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(link);
+    qrImg.style.display = 'block';
+    if (qrPh) qrPh.style.display = 'none';
+  }
+}
+
+function copiarEnlace() {
+  var link = document.getElementById('recibir-link');
+  if (!link || !link.textContent || link.textContent === '—') return;
+  navigator.clipboard.writeText(link.textContent).then(function(){
+    showToast('Enlace copiado', 'Pégalo donde quieras para recibir pagos');
+  }).catch(function(){
+    showToast('Enlace', link.textContent);
+  });
+}
+
+function compartirEnlace() {
+  var link = document.getElementById('recibir-link');
+  if (!link || !link.textContent || link.textContent === '—') return;
+  var shareData = { title: 'Pagar a ' + (_user && _user.name || 'mí'), text: 'Envíame dinero con INNOVAAFRIC', url: link.textContent };
+  if (navigator.share) {
+    navigator.share(shareData).catch(function(){});
+  } else {
+    copiarEnlace();
+  }
+}
+
+// ── RETIRAR ─────────────────────────────────────────────
+function doRetirar() {
+  var amt = parseFloat(document.getElementById('retirar-input').value);
+  var err = document.getElementById('retirar-err');
+  if (!amt || amt < 5000) { err.textContent = 'El mínimo de retiro es 5 000 XAF'; return; }
+  if (amt > _balances.XAF) { err.textContent = 'Saldo insuficiente'; return; }
+  err.textContent = '';
+  showToast('Retiro solicitado', 'Tu solicitud de ' + Math.round(amt).toLocaleString('fr-FR') + ' XAF está en proceso');
+}
+
+// ── REGISTRO → sync Railway ─────────────────────────────
+function syncToRailway(sbToken, userData) {
+  fetch(RAIL_API + '/auth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ grant_type: 'supabase_exchange', supabase_token: sbToken })
+  }).then(function(r){ return r.json(); }).then(function(ex) {
+    if (ex && ex.success && ex.data && ex.data.access_token) {
+      _token = ex.data.access_token;
+      if (ex.data.wallet) {
+        var w = ex.data.wallet;
+        _balances = { XAF: Math.round(w.balanceXaf||0), EUR: parseFloat((w.balanceEur||0).toFixed(2)), USD: parseFloat((w.balanceUsd||0).toFixed(2)), GHS: parseFloat((w.balanceXof||0).toFixed(2)) };
+        _balanceXAF = _balances.XAF;
+        localStorage.setItem('inn_balance', JSON.stringify(_balances));
+        updateBalanceDisplay(); refreshBalanceInScreens();
+      }
+    }
+  }).catch(function(){});
+}
+
+// ── HOME TRANSACTIONS ───────────────────────────────────
+function loadTransactions() {
+  if (!_token) return;
+  railGet('/money/history?limit=30').then(function(resp) {
+    var items = (resp && resp.success && resp.data && resp.data.items) ? resp.data.items : [];
+    renderTxnList('txn-list', items, 30);
+    renderTxnList('home-txn-list', items, 4);
+  }).catch(function(){
+    var el = document.getElementById('txn-list');
+    if (el) el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">No se pudieron cargar los movimientos</div>';
+  });
+}
+
+function renderTxnList(containerId, items, maxItems) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  var list = items.slice(0, maxItems);
+  if (!list.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Sin movimientos aún</div>';
+    return;
+  }
+  var userId = _user && _user.id;
+  var html = '';
+  var lastDate = '';
+  list.forEach(function(txn) {
+    var d = new Date(txn.createdAt);
+    var today = new Date(); today.setHours(0,0,0,0);
+    var yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1);
+    var label = d >= today ? 'HOY' : (d >= yesterday ? 'AYER' : d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}).toUpperCase());
+    if (label !== lastDate) {
+      html += '<div style="font-size:9px;color:var(--txt3);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:10px 0 4px">' + label + '</div>';
+      lastDate = label;
+    }
+    var isIn = txn.recipientId === userId;
+    var typeIcons = { send:'💸', purchase:'🛒', withdraw:'🏧', deposit:'💰', transfer:'🔄' };
+    var icon = isIn ? '📥' : (typeIcons[txn.type] || '💸');
+    var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
+    var cur = isIn ? (txn.currencyReceived || txn.currencySent) : txn.currencySent;
+    var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
+    var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('fr-FR') : parseFloat(amt||0).toFixed(2)) + ' ' + cur;
+    var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
+    var note = txn.note || (txn.type === 'send' ? 'Envío' : txn.type === 'purchase' ? 'Compra' : txn.type === 'deposit' ? 'Depósito' : 'Transacción');
+    html += '<div class="txn-row"><div class="txn-ico" style="background:' + iconBg + '">' + icon + '</div>' +
+      '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + note + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">' + d.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + '</div></div>' +
+      '<div class="' + amtClass + '">' + amtStr + '</div></div>';
+  });
+  el.innerHTML = html;
+}
 </script>
 </body>
 </html>
