@@ -1,4 +1,4 @@
-﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -292,6 +292,7 @@
     .nav-links{display:none}
   }
 </style>
+<script>function openModal(id){document.getElementById(id).style.display='block';document.body.style.overflow='hidden';}function closeModal(id){document.getElementById(id).style.display='none';document.body.style.overflow='';}</script>
 </head>
 <body>
 
@@ -329,7 +330,7 @@
       <p data-i18n="hero_p">XenderDelivery conecta a comercios con una red de riders verificados. Entregas el mismo día, seguimiento en tiempo real.</p>
       <div class="hero-btns">
         <a href="#features" class="btn-primary" data-i18n="hero_btn1">Enviar Ahora</a>
-        <a href="#riders" class="btn-secondary" data-i18n="hero_btn2">Ser Rider</a>
+        <a href="#" onclick="openModal('modal-rider');return false;" class="btn-secondary" data-i18n="hero_btn2">Ser Rider</a>
       </div>
     </div>
     <div class="truck-visual">
@@ -752,7 +753,7 @@
           <div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:rgba(240,244,255,0.5);">Entregas/día (est.)</span><span id="rd-del" style="color:#F0F4FF;font-weight:700;">9</span></div>
           <div style="display:flex;justify-content:space-between;font-size:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;"><span style="color:rgba(240,244,255,0.5);">Pago semanal</span><span id="rd-week" style="color:#00FFB2;font-weight:800;">22,680 XAF</span></div>
         </div>
-        <a href="#" style="display:block;margin-top:20px;background:#F59E0B;border-radius:10px;padding:12px;font-size:13px;font-weight:700;color:#050B18;text-decoration:none;">Registrarme como Rider →</a>
+        <a href="#" onclick="openModal('modal-rider');return false;" style="display:block;margin-top:20px;background:#F59E0B;border-radius:10px;padding:12px;font-size:13px;font-weight:700;color:#050B18;text-decoration:none;">Registrarme como Rider →</a>
       </div>
     </div>
   </div>
@@ -1185,6 +1186,8 @@ function closeModal(id){document.getElementById(id).style.display='none';documen
 </style>
 </body>
 </html>
+
+
 
 
 
