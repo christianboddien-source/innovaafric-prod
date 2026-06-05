@@ -398,7 +398,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div id="pill-XAF" class="pill pill-blue" onclick="switchCurrency('XAF')">XAF</div>
           <div id="pill-EUR" class="pill pill-off" onclick="switchCurrency('EUR')">EUR</div>
           <div id="pill-USD" class="pill pill-off" onclick="switchCurrency('USD')">USD</div>
-          <div id="pill-GHS" class="pill pill-off" onclick="switchCurrency('GHS')">GHS</div>
+          <div id="pill-XOF" class="pill pill-off" onclick="switchCurrency('XOF')">XOF</div>
         </div>
       </div>
       <!-- 4 Actions -->
@@ -2000,7 +2000,7 @@ function doLogin() {
         XAF: Math.round(w.balanceXaf || 0),
         EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
         USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-        GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+        XOF: parseFloat((w.balanceXof || 0).toFixed(2))
       };
       _balanceXAF = _balances.XAF;
       localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -2052,7 +2052,7 @@ function doLogin() {
             XAF: Math.round(w.balanceXaf || 0),
             EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
             USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-            GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+            XOF: parseFloat((w.balanceXof || 0).toFixed(2))
           };
           _balanceXAF = _balances.XAF;
           localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -2399,7 +2399,7 @@ function loadBalance() {
       XAF: Math.round(w.balanceXaf || 0),
       EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
       USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-      GHS: parseFloat((w.balanceXof || 0).toFixed(2))  // XOF mostrado como GHS slot
+      XOF: parseFloat((w.balanceXof || 0).toFixed(2))
     };
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -2415,7 +2415,7 @@ function autoSelectCurrency() {
   if (_balances.XAF > 0) { switchCurrency('XAF'); return; }
   if (_balances.EUR > 0) { switchCurrency('EUR'); return; }
   if (_balances.USD > 0) { switchCurrency('USD'); return; }
-  if (_balances.GHS > 0) { switchCurrency('GHS'); return; }
+  if (_balances.XOF > 0) { switchCurrency('XOF'); return; }
 }
 
 // Refresca el saldo automáticamente cada 60 segundos mientras la app está activa
@@ -2518,7 +2518,7 @@ window.addEventListener('DOMContentLoaded', function() {
               XAF: Math.round(w.balanceXaf || 0),
               EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
               USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-              GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+              XOF: parseFloat((w.balanceXof || 0).toFixed(2))
             };
             _balanceXAF = _balances.XAF;
             localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -2538,8 +2538,8 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // -- Currency switcher ------------------
 var _balanceXAF = 0;
-var _balances = { XAF:0, EUR:0, USD:0, GHS:0 };
-var _symbols = { XAF:'XAF', EUR:'€', USD:'$', GHS:'GHS' };
+var _balances = { XAF:0, EUR:0, USD:0, XOF:0 };
+var _symbols = { XAF:'XAF', EUR:'€', USD:'$', XOF:'XOF' };
 var _curCurrency = 'XAF';
 var _balanceHidden = false;
 
@@ -2550,11 +2550,11 @@ var _balanceHidden = false;
 })();
 
 // Tasas de conversión desde XAF
-var _FX = { XAF:1, EUR:1/655.957, USD:1/607, GHS:1/75.5, XOF:1 };
+var _FX = { XAF:1, EUR:1/655.957, USD:1/607, XOF:1 };
 
 function switchCurrency(cur) {
   _curCurrency = cur;
-  ['XAF','EUR','USD','GHS'].forEach(function(c){
+  ['XAF','EUR','USD','XOF'].forEach(function(c){
     var p = document.getElementById('pill-'+c);
     if (p) { p.className = c === cur ? 'pill pill-blue' : 'pill pill-off'; }
   });
@@ -3728,7 +3728,7 @@ function syncToRailway(sbToken, userData) {
       _token = ex.data.access_token;
       if (ex.data.wallet) {
         var w = ex.data.wallet;
-        _balances = { XAF: Math.round(w.balanceXaf||0), EUR: parseFloat((w.balanceEur||0).toFixed(2)), USD: parseFloat((w.balanceUsd||0).toFixed(2)), GHS: parseFloat((w.balanceXof||0).toFixed(2)) };
+        _balances = { XAF: Math.round(w.balanceXaf||0), EUR: parseFloat((w.balanceEur||0).toFixed(2)), USD: parseFloat((w.balanceUsd||0).toFixed(2)), XOF: parseFloat((w.balanceXof||0).toFixed(2)) };
         _balanceXAF = _balances.XAF;
         localStorage.setItem('inn_balance', JSON.stringify(_balances));
         updateBalanceDisplay(); refreshBalanceInScreens();
