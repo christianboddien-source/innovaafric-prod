@@ -871,39 +871,54 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div class="page-header">
         <div onclick="goBack()" class="icon-btn">←</div>
         <div class="page-title">Shop</div>
-        <div class="icon-btn">🔍</div>
+        <div class="icon-btn" onclick="toggleShopSearch()">🔍</div>
       </div>
-      <div style="padding:0 14px">
-        <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto">
-          <div class="pill pill-blue" style="flex-shrink:0">Todo</div>
-          <div class="pill pill-off" style="flex-shrink:0">XenderShop</div>
-          <div class="pill pill-off" style="flex-shrink:0">BigShop</div>
-          <div class="pill pill-off" style="flex-shrink:0">Ofertas</div>
+      <div style="padding:0 14px 14px">
+        <!-- Búsqueda -->
+        <div id="shop-search-box" style="display:none;margin-bottom:10px">
+          <input id="shop-search-input" type="text" placeholder="Buscar productos…" class="input-field" style="width:100%" oninput="filterShopProducts()">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+        <!-- Tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto">
+          <div id="shop-tab-all"    class="pill pill-blue"  style="flex-shrink:0;cursor:pointer" onclick="shopTab('all')">Todo</div>
+          <div id="shop-tab-xender" class="pill pill-off"   style="flex-shrink:0;cursor:pointer" onclick="shopTab('xender')">XenderShop</div>
+          <div id="shop-tab-big"    class="pill pill-off"   style="flex-shrink:0;cursor:pointer" onclick="shopTab('big')">BigShop</div>
+          <div id="shop-tab-deals"  class="pill pill-off"   style="flex-shrink:0;cursor:pointer" onclick="shopTab('deals')">Ofertas</div>
+        </div>
+        <!-- Categorías (vista por defecto) -->
+        <div id="shop-cats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Smartphones','xender')">
             <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
             <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Smartphones</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €89</div></div>
           </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Electrónica','xender')">
             <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
             <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Electrónica</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €25</div></div>
           </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Moda & Textil','xender')">
             <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
             <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Moda &amp; Textil</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €12</div></div>
           </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer">
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Alimentación','xender')">
             <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
             <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Alimentación</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €5</div></div>
           </div>
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Hogar','big')">
+            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Hogar</div><div style="font-size:10px;color:var(--gold);font-weight:700">BigShop</div></div>
+          </div>
+          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Ofertas','deals')">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
+            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">🔥 Ofertas</div><div style="font-size:10px;color:var(--red);font-weight:700">Hasta -60%</div></div>
+          </div>
         </div>
+        <!-- Lista de productos (cuando se filtra) -->
+        <div id="shop-products-list" style="display:none"></div>
         <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.08);border:1px solid rgba(0,137,123,.2);display:flex;align-items:center;gap:10px">
           <svg width="60" height="16" viewBox="0 0 100 28"><rect width="100" height="28" rx="6" fill="#00897B"/><text x="50" y="19" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
           <div style="font-size:10px;color:var(--green);font-weight:700">Paga con XenderMoney · sin comisión</div>
         </div>
       </div>
-      <div style="height:10px"></div>
     </div>
 
     <!-- SCREEN: PERFIL -->
@@ -2164,6 +2179,84 @@ function sendBotMsg() {
       '<div style="font-size:13px;color:var(--txt);line-height:1.5">' + answer + '</div></div>';
     msgs.scrollTop = msgs.scrollHeight;
   }, 600);
+}
+
+// ── SHOP ────────────────────────────────────────────────
+var _shopAllProducts = [];
+var _shopCurrentTab  = 'all';
+
+function toggleShopSearch() {
+  var box = document.getElementById('shop-search-box');
+  if (!box) return;
+  var visible = box.style.display !== 'none';
+  box.style.display = visible ? 'none' : 'block';
+  if (!visible) document.getElementById('shop-search-input').focus();
+}
+
+function shopTab(tab) {
+  _shopCurrentTab = tab;
+  ['all','xender','big','deals'].forEach(function(t) {
+    var el = document.getElementById('shop-tab-' + t);
+    if (el) { el.className = t === tab ? 'pill pill-blue' : 'pill pill-off'; }
+  });
+  if (tab === 'all') {
+    document.getElementById('shop-cats').style.display = 'grid';
+    document.getElementById('shop-products-list').style.display = 'none';
+  } else {
+    document.getElementById('shop-cats').style.display = 'none';
+    document.getElementById('shop-products-list').style.display = 'block';
+    loadShopProducts(tab);
+  }
+}
+
+function openShopCat(cat, source) {
+  _shopCurrentTab = source;
+  document.getElementById('shop-cats').style.display = 'none';
+  document.getElementById('shop-products-list').style.display = 'block';
+  loadShopProducts(source, cat);
+}
+
+function loadShopProducts(source, cat) {
+  var el = document.getElementById('shop-products-list');
+  el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando productos…</div>';
+  var endpoint = source === 'big' ? '/bigshop/products' : '/shop/products';
+  var url = endpoint + (cat && cat !== 'Ofertas' ? '?category=' + encodeURIComponent(cat) : '');
+  railGet(url).then(function(resp) {
+    var items = (resp && resp.data && (resp.data.products || resp.data)) || [];
+    if (source === 'deals') items = items.filter(function(p){ return p.discount_pct > 0 || p.original_price; });
+    if (!items.length) {
+      el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">No hay productos disponibles en esta sección.</div>';
+      return;
+    }
+    _shopAllProducts = items;
+    renderShopProducts(items);
+  }).catch(function() {
+    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">No hay productos disponibles en esta sección.</div>';
+  });
+}
+
+function renderShopProducts(items) {
+  var el = document.getElementById('shop-products-list');
+  el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
+    items.slice(0,20).map(function(p) {
+      var price  = p.price || p.price_eur || 0;
+      var currency = p.currency || 'EUR';
+      var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency;
+      var img = p.image_url || p.image || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop';
+      return '<div class="card" style="border-radius:16px;padding:0;overflow:hidden;cursor:pointer" onclick="showToast(\'' + (p.name||'Producto').replace(/'/g,' ') + '\',\'Precio: ' + sym + price + '\')">' +
+        '<img src="' + img + '" style="width:100%;height:80px;object-fit:cover" onerror="this.src=\'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop\'">' +
+        '<div style="padding:8px">' +
+        '<div style="font-size:10px;font-weight:800;color:var(--txt);margin-bottom:2px">' + (p.name||'Producto') + '</div>' +
+        '<div style="font-size:10px;color:var(--green);font-weight:700">' + sym + price + '</div>' +
+        (p.discount_pct ? '<span class="pill pill-red" style="font-size:8px;padding:2px 6px">-' + p.discount_pct + '%</span>' : '') +
+        '</div></div>';
+    }).join('') + '</div>';
+}
+
+function filterShopProducts() {
+  var q = (document.getElementById('shop-search-input').value || '').toLowerCase();
+  if (!q) { renderShopProducts(_shopAllProducts); return; }
+  renderShopProducts(_shopAllProducts.filter(function(p){ return (p.name||'').toLowerCase().includes(q); }));
 }
 
 function loadTontinas() {
