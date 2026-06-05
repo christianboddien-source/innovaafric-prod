@@ -157,6 +157,15 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 .chart-bars{display:flex;align-items:flex-end;gap:5px;height:36px}
 .bar{flex:1;border-radius:3px 3px 0 0}
 
+/* LOGIN SCREEN */
+#s-login{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;z-index:300}
+.login-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(145deg,#29ABE2,#1a5a8a);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 32px rgba(41,171,226,.3)}
+.login-input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:14px;color:var(--txt);font-family:'Inter',sans-serif;outline:none;margin-bottom:10px}
+.login-input:focus{border-color:var(--blue)}
+.login-err{color:var(--red);font-size:11px;font-weight:600;text-align:center;margin-bottom:8px;min-height:16px}
+.login-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* SVC TOAST */
 #svc-toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(20px);background:#1a2235;border:1px solid rgba(41,171,226,.35);border-radius:16px;padding:10px 18px;font-size:11px;font-weight:700;color:var(--txt);z-index:200;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.6);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
 #svc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -169,6 +178,24 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
   <div class="statusbar">
     <span style="font-weight:900">9:41</span>
     <span>📶 5G&nbsp;🔋</span>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="s-login">
+    <div class="login-logo">
+      <svg width="36" height="36" viewBox="0 0 30 30"><text x="15" y="21" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">IA</text></svg>
+    </div>
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:22px;font-weight:900;color:var(--txt)">INNOVAAFRIC</div>
+      <div style="font-size:12px;color:var(--txt3);margin-top:4px">Inicia sesión en tu cuenta</div>
+    </div>
+    <input id="login-email" class="login-input" type="email" placeholder="Correo electrónico" autocomplete="email">
+    <input id="login-pass" class="login-input" type="password" placeholder="Contraseña" autocomplete="current-password">
+    <div class="login-err" id="login-err"></div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()" style="margin-bottom:14px">Entrar</button>
+    <div style="font-size:10px;color:var(--txt3);text-align:center">
+      ¿No tienes cuenta? <span style="color:var(--blue);cursor:pointer">Contacta con INNOVAAFRIC</span>
+    </div>
   </div>
 
   <!-- SCREENS -->
@@ -185,12 +212,12 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           </svg>
           <div>
             <div style="font-size:13px;font-weight:900;color:var(--txt);line-height:1.1">INNOVAAFRIC</div>
-            <div style="font-size:9px;font-weight:600;color:var(--txt3);line-height:1">Amadou Diallo</div>
+            <div class="user-name-display" style="font-size:9px;font-weight:600;color:var(--txt3);line-height:1">—</div>
           </div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           <div class="icon-btn" style="font-size:16px;position:relative">🔔<div class="badge"></div></div>
-          <div class="icon-btn" onclick="goScreen('s-perfil')" style="background:linear-gradient(135deg,var(--gold),#e05a00);font-size:14px;font-weight:900;color:#fff;font-style:normal">A</div>
+          <div class="icon-btn user-initial" onclick="goScreen('s-perfil')" style="background:linear-gradient(135deg,var(--gold),#e05a00);font-size:14px;font-weight:900;color:#fff;font-style:normal">?</div>
         </div>
       </div>
       <!-- Balance -->
@@ -813,8 +840,8 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       </div>
       <div style="padding:10px 14px 10px;text-align:center">
         <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">A</div>
-        <div style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:3px">Amadou Diallo</div>
-        <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">amadou@innovaafric.com</div>
+        <div id="perfil-name" style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:3px">—</div>
+        <div id="perfil-email" style="font-size:11px;color:var(--txt3);margin-bottom:10px">—</div>
         <div style="display:flex;justify-content:center;gap:8px">
           <span class="pill pill-green">✓ Verificado</span>
           <span class="pill pill-blue">Premium</span>
@@ -845,7 +872,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <span style="font-size:18px">💬</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Chat con soporte</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
         </div>
-        <button class="btn-outline" style="border-color:rgba(239,68,68,.3);color:var(--red)">Cerrar sesión</button>
+        <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red)">🚪 Cerrar sesión</button>
       </div>
       <div style="height:10px"></div>
     </div>
@@ -941,6 +968,114 @@ window.addEventListener('beforeinstallprompt', function(e) {
   var toast = document.getElementById('install-toast');
   toast.style.display = 'block';
   setTimeout(function(){ toast.style.display='none'; }, 5000);
+});
+
+// -- API & Auth --------------------------
+var API = 'https://innovaafric-api-production.up.railway.app/v1';
+var _token = localStorage.getItem('inn_token');
+var _user = JSON.parse(localStorage.getItem('inn_user') || 'null');
+
+function apiGet(path) {
+  return fetch(API + path, { headers: { Authorization: 'Bearer ' + _token } }).then(function(r){ return r.json(); });
+}
+
+function doLogin() {
+  var email = document.getElementById('login-email').value.trim();
+  var pass  = document.getElementById('login-pass').value;
+  var err   = document.getElementById('login-err');
+  var btn   = document.getElementById('login-btn');
+  if (!email || !pass) { err.textContent = 'Completa todos los campos'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Entrando…';
+  btn.disabled = true;
+
+  fetch(API + '/auth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ grant_type: 'password', username: email, password: pass })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    if (data.access_token) {
+      _token = data.access_token;
+      localStorage.setItem('inn_token', _token);
+      return apiGet('/auth/me').then(function(me) {
+        _user = me.user || me;
+        localStorage.setItem('inn_user', JSON.stringify(_user));
+        afterLogin();
+      });
+    } else {
+      throw new Error(data.message || data.error || 'Credenciales incorrectas');
+    }
+  })
+  .catch(function(e) {
+    err.textContent = e.message;
+    btn.innerHTML = 'Entrar';
+    btn.disabled = false;
+  });
+}
+
+function afterLogin() {
+  document.getElementById('s-login').style.display = 'none';
+  populateUser();
+  loadBalance();
+  // Allow Enter key on login
+  document.getElementById('login-btn').innerHTML = 'Entrar';
+  document.getElementById('login-btn').disabled = false;
+}
+
+function doLogout() {
+  _token = null; _user = null;
+  localStorage.removeItem('inn_token');
+  localStorage.removeItem('inn_user');
+  localStorage.removeItem('inn_balance');
+  document.getElementById('s-login').style.display = 'flex';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-err').textContent = '';
+  // Reset to home
+  history_stack = ['s-home'];
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var h = document.getElementById('s-home');
+  if (h) h.classList.add('active');
+}
+
+function populateUser() {
+  if (!_user) return;
+  var name = (_user.name || _user.firstName || _user.email || 'Usuario').split(' ');
+  var display = name.join(' ');
+  var initial = display.charAt(0).toUpperCase();
+  // Header name
+  document.querySelectorAll('.user-name-display').forEach(function(el){ el.textContent = display; });
+  document.querySelectorAll('.user-initial').forEach(function(el){ el.textContent = initial; });
+  // Perfil screen
+  var pname = document.getElementById('perfil-name');
+  var pemail = document.getElementById('perfil-email');
+  if (pname) pname.textContent = display;
+  if (pemail) pemail.textContent = _user.email || '';
+}
+
+function loadBalance() {
+  apiGet('/money/balance').then(function(data) {
+    if (data.balance !== undefined || data.balanceXaf !== undefined) {
+      _balanceXAF = Math.round(data.balanceXaf || data.balance * 655.957 || 0);
+      localStorage.setItem('inn_balance', _balanceXAF);
+      updateBalanceDisplay();
+    }
+  }).catch(function(){});
+}
+
+// -- On start ----------------------------
+window.addEventListener('DOMContentLoaded', function() {
+  // Enter key on password field
+  var passEl = document.getElementById('login-pass');
+  if (passEl) passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  var emailEl = document.getElementById('login-email');
+  if (emailEl) emailEl.addEventListener('keydown', function(e){ if(e.key==='Enter') passEl.focus(); });
+
+  if (_token && _user) {
+    afterLogin();
+  }
 });
 
 // -- Currency switcher ------------------
