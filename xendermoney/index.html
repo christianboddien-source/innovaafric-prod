@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -696,41 +696,46 @@
     <h2 class="section-title" data-i18n="sec_feat_h">Everything you need<br />in one wallet</h2>
     <p class="section-sub" data-i18n="sec_feat_sub">Built for the African diaspora and local users — every payment method, every currency, one app.</p>
   </div>
-
+  <style>
+  .features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;margin-top:40px;}
+  .feature-card{border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.15);opacity:0;transform:translateY(20px);animation:fcfade .5s forwards;}
+  .feature-card:nth-child(1){animation-delay:.05s}.feature-card:nth-child(2){animation-delay:.12s}.feature-card:nth-child(3){animation-delay:.19s}
+  .feature-card:nth-child(4){animation-delay:.26s}.feature-card:nth-child(5){animation-delay:.33s}.feature-card:nth-child(6){animation-delay:.4s}
+  @keyframes fcfade{to{opacity:1;transform:translateY(0)}}
+  .fc-img{width:100%;height:160px;object-fit:cover;display:block;transition:transform .4s;}
+  .feature-card:hover .fc-img{transform:scale(1.05);}
+  .fc-body{padding:18px 20px;background:rgba(255,255,255,0.04);}
+  .fc-icon{font-size:22px;margin-bottom:6px;}
+  .feature-title{font-size:15px;font-weight:800;color:#F0F4FF;margin:0 0 6px;}
+  .feature-desc{font-size:12px;color:rgba(240,244,255,0.6);line-height:1.6;margin:0;}
+  </style>
   <div class="features-grid">
     <div class="feature-card reveal">
-      <span class="feature-emoji">⚡</span>
-      <h3 class="feature-title">Instant Transfers</h3>
-      <p class="feature-desc">Send money to any XenderMoney user in under 5 seconds. No delays, no bank hours — available 24/7.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&h=200&fit=crop" alt="Instant Transfers">
+      <div class="fc-body"><div class="fc-icon">⚡</div><h3 class="feature-title">Instant Transfers</h3><p class="feature-desc">Send money to any XenderMoney user in under 5 seconds. No delays, no bank hours — available 24/7.</p></div>
     </div>
     <div class="feature-card reveal">
-      <span class="feature-emoji">📱</span>
-      <h3 class="feature-title">Mobile Money</h3>
-      <p class="feature-desc">Top up and cash out via MTN MoMo, Orange Money, Wave, Moov, and Airtel Money across 8 countries.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=200&fit=crop" alt="Mobile Money">
+      <div class="fc-body"><div class="fc-icon">📱</div><h3 class="feature-title">Mobile Money</h3><p class="feature-desc">Top up and cash out via MTN MoMo, Orange Money, Wave, Moov, and Airtel Money across 8 countries.</p></div>
     </div>
     <div class="feature-card reveal">
-      <span class="feature-emoji">💳</span>
-      <h3 class="feature-title">Card Payments</h3>
-      <p class="feature-desc">European users can fund their wallet with Visa or Mastercard via Stripe. Instant currency conversion included.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=400&h=200&fit=crop" alt="Card Payments">
+      <div class="fc-body"><div class="fc-icon">💳</div><h3 class="feature-title">Card Payments</h3><p class="feature-desc">European users can fund their wallet with Visa or Mastercard via Stripe. Instant currency conversion included.</p></div>
     </div>
     <div class="feature-card reveal">
-      <span class="feature-emoji">🌍</span>
-      <h3 class="feature-title">Multi-Currency</h3>
-      <p class="feature-desc">Hold XAF, EUR, USD, GHS, RWF and more. Transfer across currencies with live exchange rates.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=200&fit=crop" alt="Multi-Currency">
+      <div class="fc-body"><div class="fc-icon">🌍</div><h3 class="feature-title">Multi-Currency</h3><p class="feature-desc">Hold XAF, EUR, USD, GHS, RWF and more. Transfer across currencies with live exchange rates.</p></div>
     </div>
     <div class="feature-card reveal">
-      <span class="feature-emoji">🔒</span>
-      <h3 class="feature-title">KYC & Compliance</h3>
-      <p class="feature-desc">3-level KYC system. Level 1 in minutes with just your phone. Level 3 unlocks unlimited transfers.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1633265486064-086b219458ec?w=400&h=200&fit=crop" alt="KYC Compliance">
+      <div class="fc-body"><div class="fc-icon">🔒</div><h3 class="feature-title">KYC & Compliance</h3><p class="feature-desc">3-level KYC system. Level 1 in minutes with just your phone. Level 3 unlocks unlimited transfers.</p></div>
     </div>
     <div class="feature-card reveal">
-      <span class="feature-emoji">🔔</span>
-      <h3 class="feature-title">Real-Time Alerts</h3>
-      <p class="feature-desc">Instant push notifications for every transaction. Full history with filters, search, and export.</p>
+      <img class="fc-img" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=200&fit=crop" alt="Real-Time Alerts">
+      <div class="fc-body"><div class="fc-icon">🔔</div><h3 class="feature-title">Real-Time Alerts</h3><p class="feature-desc">Instant push notifications for every transaction. Full history with filters, search, and export.</p></div>
     </div>
   </div>
 </section>
-
 <!-- APP SCREENS -->
 <section id="appscreens" style="background:rgba(255,255,255,0.02);padding:100px 6%;">
   <div class="reveal" style="text-align:center;margin-bottom:64px;">
@@ -2025,6 +2030,8 @@ function calcXM(){
 
 </body>
 </html>
+
+
 
 
 
