@@ -1763,6 +1763,19 @@ function doLogin() {
         city: u.city || null, phone: u.phone || null,
         kyc: u.kyc_status || 'pending', ia_code: u.ia_code || null
       };
+      // Cargar wallet desde respuesta Railway (ahora incluye wallet)
+      if (resp.data.wallet) {
+        var w = resp.data.wallet;
+        _balances = {
+          XAF: Math.round(w.balanceXaf || 0),
+          EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+          USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+          GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+        };
+        _balanceXAF = _balances.XAF;
+        localStorage.setItem('inn_balance', JSON.stringify(_balances));
+        updateBalanceDisplay();
+      }
       localStorage.setItem('inn_user', JSON.stringify(_user));
       afterLogin();
     }).catch(function() {
