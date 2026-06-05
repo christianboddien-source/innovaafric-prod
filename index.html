@@ -1985,36 +1985,67 @@ function doLogin() {
     });
   }
 
+  function applyRailwaySession(resp) {
+    _token = resp.data.access_token;
+    var u = resp.data.user || {};
+    _user = {
+      id: u.id, email: u.email, name: u.name || u.email,
+      role: u.role || 'customer', country: u.country || null,
+      city: u.city || null, phone: u.phone || null,
+      kyc: u.kyc_status || 'pending', ia_code: u.ia_code || null
+    };
+    if (resp.data.wallet) {
+      var w = resp.data.wallet;
+      _balances = {
+        XAF: Math.round(w.balanceXaf || 0),
+        EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+        USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+        GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+      };
+      _balanceXAF = _balances.XAF;
+      localStorage.setItem('inn_balance', JSON.stringify(_balances));
+    }
+    localStorage.setItem('inn_user', JSON.stringify(_user));
+    afterLogin();
+  }
+
+  function tryRailwayPassword(onFail) {
+    fetch(RAIL_API + '/auth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
+    }).then(function(r){ return r.json(); }).then(function(resp) {
+      if (!resp || !resp.success || !resp.data || !resp.data.access_token) throw new Error(resp && resp.message ? resp.message : 'invalid');
+      applyRailwaySession(resp);
+    }).catch(function(railErr) { onFail(railErr); });
+  }
+
   authPromise
   .then(function(auth) {
     _sbToken = auth.access_token;
     var au  = auth.user || {};
     var meta = au.user_metadata || {};
     _user = {
-      id:       au.id,
-      email:    au.email,
-      name:     meta.full_name || meta.name || au.email.split('@')[0],
-      role:     meta.role || 'customer',
-      ia_code:  meta.ia_code || null,
-      country:  meta.country || null,
-      city:     meta.city || null,
-      phone:    meta.phone || null,
-      kyc:      meta.kyc_level > 0 ? 'verified' : 'pending'
+      id: au.id, email: au.email,
+      name: meta.full_name || meta.name || au.email.split('@')[0],
+      role: meta.role || 'customer', ia_code: meta.ia_code || null,
+      country: meta.country || null, city: meta.city || null,
+      phone: meta.phone || null, kyc: meta.kyc_level > 0 ? 'verified' : 'pending'
     };
-    // Exchange for Railway JWT to get real wallet data
-    return exchangeSupabaseToken(_sbToken).then(function(ex) {
+    // Intercambio Supabase → Railway JWT
+    exchangeSupabaseToken(_sbToken).then(function(ex) {
       if (ex && ex.success && ex.data && ex.data.access_token) {
+        // Exchange OK — usar datos Railway
         _token = ex.data.access_token;
         var u = ex.data.user || {};
-        _user.id       = u.id || _user.id;
-        _user.name     = u.name || _user.name;
-        _user.role     = u.role || _user.role;
-        _user.country  = u.country || _user.country;
-        _user.city     = u.city || _user.city;
-        _user.phone    = u.phone || _user.phone;
-        _user.kyc      = u.kyc_status || _user.kyc;
-        _user.ia_code  = u.ia_code || meta.ia_code || null;
-        // Wallet from exchange response
+        _user.id      = u.id      || _user.id;
+        _user.name    = u.name    || _user.name;
+        _user.role    = u.role    || _user.role;
+        _user.country = u.country || _user.country;
+        _user.city    = u.city    || _user.city;
+        _user.phone   = u.phone   || _user.phone;
+        _user.kyc     = u.kyc_status || _user.kyc;
+        _user.ia_code = u.ia_code || meta.ia_code || null;
         if (ex.data.wallet) {
           var w = ex.data.wallet;
           _balances = {
@@ -2025,47 +2056,36 @@ function doLogin() {
           };
           _balanceXAF = _balances.XAF;
           localStorage.setItem('inn_balance', JSON.stringify(_balances));
-          updateBalanceDisplay();
         }
+        localStorage.setItem('inn_user', JSON.stringify(_user));
+        afterLogin();
+      } else {
+        // Exchange falló — intentar con contraseña directa en Railway
+        tryRailwayPassword(function() {
+          // Ambos fallaron: entrar con datos Supabase básicos (sin token Railway)
+          localStorage.setItem('inn_user', JSON.stringify(_user));
+          afterLogin();
+        });
       }
-      localStorage.setItem('inn_user', JSON.stringify(_user));
-      afterLogin();
+    }).catch(function() {
+      tryRailwayPassword(function() {
+        localStorage.setItem('inn_user', JSON.stringify(_user));
+        afterLogin();
+      });
     });
   })
   .catch(function(sbErr) {
-    // Fallback: try Railway JWT (for users not in Supabase)
-    fetch(RAIL_API + '/auth/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
-    }).then(function(r){ return r.json(); }).then(function(resp) {
-      if (!resp || !resp.success || !resp.data || !resp.data.access_token) throw new Error('invalid');
-      _token = resp.data.access_token;
-      var u = resp.data.user || {};
-      _user = {
-        id: u.id, email: u.email, name: u.name || u.email,
-        role: u.role || 'customer', country: u.country || null,
-        city: u.city || null, phone: u.phone || null,
-        kyc: u.kyc_status || 'pending', ia_code: u.ia_code || null
-      };
-      // Cargar wallet desde respuesta Railway (ahora incluye wallet)
-      if (resp.data.wallet) {
-        var w = resp.data.wallet;
-        _balances = {
-          XAF: Math.round(w.balanceXaf || 0),
-          EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
-          USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-          GHS: parseFloat((w.balanceXof || 0).toFixed(2))
-        };
-        _balanceXAF = _balances.XAF;
-        localStorage.setItem('inn_balance', JSON.stringify(_balances));
-        updateBalanceDisplay();
-      }
-      localStorage.setItem('inn_user', JSON.stringify(_user));
-      afterLogin();
-    }).catch(function() {
-      var msg = sbErr.message || 'Email o contraseña incorrectos';
-      if (msg.includes('Invalid login') || msg.includes('invalid')) msg = 'Email o contraseña incorrectos';
+    // Supabase falló — intentar Railway password directamente
+    var sbMsg = sbErr.message || '';
+    if (sbMsg.toLowerCase().includes('email not confirmed')) {
+      err.textContent = 'Confirma tu email antes de entrar. Revisa tu bandeja de entrada.';
+      btn.innerHTML = 'Entrar';
+      btn.disabled = false;
+      return;
+    }
+    tryRailwayPassword(function(railErr) {
+      var msg = 'Email o contraseña incorrectos';
+      if (railErr && railErr.message && !railErr.message.includes('invalid')) msg = railErr.message;
       err.textContent = msg;
       btn.innerHTML = 'Entrar';
       btn.disabled = false;
