@@ -346,8 +346,9 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <span style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:700">Saldo total</span>
           <span class="pill pill-green" style="font-size:9px">📈 +2.3% este mes</span>
         </div>
-        <div id="balance-amount" style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:3px">816 832 XAF</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:14px">Actualizado · <span id="balance-toggle" style="cursor:pointer;color:rgba(255,255,255,.5)" onclick="toggleBalance()">ocultar</span></div>
+        <div id="balance-amount" style="font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:2px">— XAF</div>
+        <div id="balance-sub" style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:10px">≈ € —</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:10px">Actualizado · <span id="balance-toggle" style="cursor:pointer;color:rgba(255,255,255,.5)" onclick="toggleBalance()">ocultar</span></div>
         <div style="display:flex;gap:7px">
           <div id="pill-XAF" class="pill pill-blue" onclick="switchCurrency('XAF')">XAF</div>
           <div id="pill-EUR" class="pill pill-off" onclick="switchCurrency('EUR')">EUR</div>
@@ -2104,10 +2105,12 @@ function loadBalance() {
 }
 
 function refreshBalanceInScreens() {
+  var xaf  = _balances.XAF || 0;
+  var eurV = (_balances.EUR && _balances.EUR > 0) ? _balances.EUR : xaf * _FX.EUR;
   var wEl  = document.getElementById('wallet-xaf');
   var wEur = document.getElementById('wallet-eur');
-  if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
-  if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if (wEl)  wEl.textContent  = Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
+  if (wEur) wEur.textContent = '≈ € ' + eurV.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
   var rEl = document.getElementById('retirar-saldo');
   if (rEl) rEl.textContent = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
   var cEl = document.getElementById('cambiar-saldo');
@@ -2200,6 +2203,9 @@ var _balanceHidden = false;
   if (cached) { try { _balances = JSON.parse(cached); _balanceXAF = _balances.XAF || 0; } catch(e){} }
 })();
 
+// Tasas de conversión desde XAF
+var _FX = { XAF:1, EUR:1/655.957, USD:1/607, GHS:1/75.5, XOF:1 };
+
 function switchCurrency(cur) {
   _curCurrency = cur;
   ['XAF','EUR','USD','GHS'].forEach(function(c){
@@ -2209,16 +2215,32 @@ function switchCurrency(cur) {
   updateBalanceDisplay();
 }
 
+function getConvertedBalance(cur) {
+  // Use stored balance for the currency if non-zero, else convert from XAF
+  var stored = _balances[cur] || 0;
+  if (stored > 0) return stored;
+  var xaf = _balances.XAF || 0;
+  return xaf * (_FX[cur] || 1);
+}
+
 function updateBalanceDisplay() {
   var el = document.getElementById('balance-amount');
+  var sub = document.getElementById('balance-sub');
   if (!el) return;
-  if (_balanceHidden) { el.textContent = '••••••'; return; }
-  var val = _balances[_curCurrency] || 0;
+  if (_balanceHidden) { el.textContent = '••••••'; if (sub) sub.textContent = ''; return; }
+  var xaf = _balances.XAF || 0;
   if (_curCurrency === 'XAF') {
-    el.textContent = Math.round(val).toLocaleString('fr-FR') + ' XAF';
+    el.textContent = Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
+    if (sub) sub.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
   } else {
-    el.textContent = _symbols[_curCurrency] + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    var val = getConvertedBalance(_curCurrency);
+    var sym = _symbols[_curCurrency] || _curCurrency;
+    el.textContent = sym + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    if (sub) sub.textContent = '≈ ' + Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
   }
+  // Actualizar también la mini-equivalencia en la home
+  var homeEur = document.getElementById('balance-eur-equiv');
+  if (homeEur) homeEur.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
 function toggleBalance() {
