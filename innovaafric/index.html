@@ -1675,7 +1675,7 @@
   }
 
   // Newsletter
-  function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value;alert('✅ ¡Suscrito! Actualizaciones en '+em);document.getElementById('nl-innova').value='';}
+  async function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}try{var SB=window.SB||window.supabaseClient;if(SB)await SB.from('newsletter_subscribers').insert({email:em,source:'innovaafric',created_at:new Date().toISOString()});}catch(err){}alert('✅ ¡Suscrito! Recibirás actualizaciones de InnovaAFRIC en '+em);document.getElementById('nl-innova').value='';if(btn){btn.textContent='Suscribirse →';btn.disabled=false;}}
 </script>
 
 <!-- ═══ COOKIE BANNER ═══ -->
@@ -1812,6 +1812,8 @@ function submitReg(e,type){e.preventDefault();var msgs={cliente:'✅ ¡Cuenta cr
 </style>
 </body>
 </html>
+
+
 
 
 
