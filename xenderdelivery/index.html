@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -577,35 +577,62 @@
     <div class="section-tag">NUESTRA FLOTA</div>
     <h2 class="section-title reveal">Vehículo adecuado para cada envío</h2>
     <p class="section-sub reveal">Desde un sobre hasta un palé — nuestra flota cubre todos los tamaños.</p>
+    <style>
+    .fleet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-top:32px;}
+    .fleet-card{border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.18);opacity:0;transform:translateY(20px);animation:ffade .5s forwards;}
+    .fleet-card:nth-child(1){animation-delay:.05s}.fleet-card:nth-child(2){animation-delay:.15s}.fleet-card:nth-child(3){animation-delay:.25s}.fleet-card:nth-child(4){animation-delay:.35s}
+    @keyframes ffade{to{opacity:1;transform:translateY(0)}}
+    .fleet-img{width:100%;height:140px;object-fit:cover;display:block;transition:transform .4s;}
+    .fleet-card:hover .fleet-img{transform:scale(1.06);}
+    .fleet-info{padding:14px 16px;background:rgba(255,255,255,0.04);}
+    .fleet-name{font-size:14px;font-weight:800;color:#F0F4FF;margin:0 0 3px;}
+    .fleet-cap{font-size:11px;color:#F59E0B;font-weight:700;margin-bottom:6px;}
+    .fleet-desc{font-size:11px;color:rgba(240,244,255,0.55);line-height:1.6;margin:0;}
+    </style>
     <div class="fleet-grid">
       <div class="fleet-card reveal">
-        <div class="fleet-icon">🛵</div>
-        <div class="fleet-name">Moto Express</div>
-        <div class="fleet-cap">Hasta 5 kg · 30×30×20 cm</div>
-        <div class="fleet-desc">Ideal para documentos, comida, medicamentos y paquetes pequeños. Más rápido en ciudad.</div>
+        <img class="fleet-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop" alt="Moto">
+        <div class="fleet-info"><div class="fleet-name">🛵 Moto Express</div><div class="fleet-cap">Hasta 5 kg · 30×30×20 cm</div><p class="fleet-desc">Ideal para documentos, comida, medicamentos y paquetes pequeños. Más rápido en ciudad.</p></div>
       </div>
       <div class="fleet-card reveal">
-        <div class="fleet-icon">🚲</div>
-        <div class="fleet-name">Bicicleta Eco</div>
-        <div class="fleet-cap">Hasta 2 kg · Zona centro</div>
-        <div class="fleet-desc">Entrega ecológica en zonas céntricas. Tarifa reducida, rápida en tráfico denso.</div>
+        <img class="fleet-img" src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=400&h=200&fit=crop" alt="Bicicleta">
+        <div class="fleet-info"><div class="fleet-name">🚲 Bicicleta Eco</div><div class="fleet-cap">Hasta 2 kg · Zona centro</div><p class="fleet-desc">Entrega ecológica en zonas céntricas. Tarifa reducida, rápida en tráfico denso.</p></div>
       </div>
       <div class="fleet-card reveal">
-        <div class="fleet-icon">🚐</div>
-        <div class="fleet-name">Furgoneta</div>
-        <div class="fleet-cap">Hasta 500 kg · 3m³</div>
-        <div class="fleet-desc">Para envíos medianos y grandes. Muebles, electrodomésticos, cajas múltiples. Asegurado.</div>
+        <img class="fleet-img" src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&h=200&fit=crop" alt="Furgoneta">
+        <div class="fleet-info"><div class="fleet-name">🚐 Furgoneta</div><div class="fleet-cap">Hasta 500 kg · 3m³</div><p class="fleet-desc">Para envíos medianos y grandes. Muebles, electrodomésticos, cajas múltiples. Asegurado.</p></div>
       </div>
       <div class="fleet-card reveal">
-        <div class="fleet-icon">🚛</div>
-        <div class="fleet-name">Camión Cargo</div>
-        <div class="fleet-cap">Hasta 5 T · Interprovincial</div>
-        <div class="fleet-desc">Logística B2B y envíos masivos entre ciudades y países. Ideal para comercios y empresas.</div>
+        <img class="fleet-img" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=400&h=200&fit=crop" alt="Camión">
+        <div class="fleet-info"><div class="fleet-name">🚛 Camión Cargo</div><div class="fleet-cap">Hasta 5 T · Interprovincial</div><p class="fleet-desc">Logística B2B y envíos masivos entre ciudades y países. Ideal para comercios y empresas.</p></div>
       </div>
     </div>
+
+    <!-- Riders en acción -->
+    <div style="margin-top:48px;">
+      <h3 style="font-size:18px;font-weight:800;color:#F0F4FF;margin-bottom:20px;">Nuestros Riders en Acción</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
+        <div style="border-radius:14px;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=400&h=260&fit=crop" style="width:100%;height:180px;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:10px 12px;"><span style="font-size:11px;font-weight:700;color:#fff;">📍 Douala, Cameroun</span></div>
+        </div>
+        <div style="border-radius:14px;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1589308454854-4c7f67c55568?w=400&h=260&fit=crop" style="width:100%;height:180px;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:10px 12px;"><span style="font-size:11px;font-weight:700;color:#fff;">📍 Dakar, Sénégal</span></div>
+        </div>
+        <div style="border-radius:14px;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1542459553-c4f7c5d3b59a?w=400&h=260&fit=crop" style="width:100%;height:180px;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:10px 12px;"><span style="font-size:11px;font-weight:700;color:#fff;">📍 Abidjan, Côte d'Ivoire</span></div>
+        </div>
+        <div style="border-radius:14px;overflow:hidden;position:relative;">
+          <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=260&fit=crop" style="width:100%;height:180px;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:10px 12px;"><span style="font-size:11px;font-weight:700;color:#fff;">📍 Madrid, España</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
-
 <!-- ═══ APP MOCKUP ═══ -->
 <section class="app-section">
   <div class="app-inner">
@@ -1144,6 +1171,8 @@ function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.ge
 </style>
 </body>
 </html>
+
+
 
 
 
