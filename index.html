@@ -497,7 +497,9 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
       <div id="txn-list" style="padding:0 14px">
         <div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando movimientos…</div>
       </div>
-      <div style="height:10px"></div>
+      <div style="padding:0 14px 16px">
+        <button class="btn-outline" style="width:100%" onclick="printReport('transactions')">🖨️ Imprimir extracto (PDF)</button>
+      </div>
     </div>
 
     <!-- SCREEN: SEND MONEY -->
@@ -978,7 +980,11 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
             <span style="font-size:18px">💬</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Chat con soporte</div><span style="color:var(--txt3);font-size:12px">›</span>
           </div>
         </div>
-        <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red)">🚪 Cerrar sesión</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <button class="btn-outline" onclick="printReport('profile')">🖨️ Imprimir perfil</button>
+          <button class="btn-outline" onclick="printReport('wallet')">📊 Extracto PDF</button>
+        </div>
+        <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red);width:100%">🚪 Cerrar sesión</button>
       </div>
       <div style="height:20px"></div>
     </div>
@@ -1031,18 +1037,110 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
 
     <!-- SCREEN: CUENTAS BANCARIAS -->
     <div class="screen" id="s-cuentas-bancarias">
-      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Cuentas bancarias</div><div style="width:36px"></div></div>
-      <div style="padding:20px 16px">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Cuentas bancarias</div><button onclick="goScreen('s-nuevo-banco')" style="background:var(--blue);color:#fff;border:none;border-radius:10px;padding:6px 12px;font-size:11px;font-weight:800;cursor:pointer">+ Nueva</button></div>
+      <div style="padding:16px">
         <div id="bancos-list"><div style="text-align:center;padding:40px 0;color:var(--txt3);font-size:12px">Cargando cuentas…</div></div>
-        <div class="card" style="border-radius:16px;padding:20px;margin-top:16px">
-          <div style="font-size:14px;font-weight:800;color:var(--txt);margin-bottom:4px">Añadir cuenta bancaria</div>
-          <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">Para retiros y transferencias SWIFT</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <input id="banco-nombre" type="text" placeholder="Nombre del banco" class="input-field" style="width:100%">
-            <input id="banco-iban" type="text" placeholder="IBAN / Número de cuenta" class="input-field" style="width:100%">
-            <input id="banco-swift" type="text" placeholder="Código BIC/SWIFT" class="input-field" style="width:100%">
-            <div id="banco-err" style="font-size:12px;color:var(--red);min-height:14px"></div>
-            <button class="btn-primary" onclick="doAddBanco()">🏦 Añadir cuenta</button>
+        <div style="text-align:center;margin-top:8px">
+          <button class="btn-outline" style="width:100%;margin-top:4px" onclick="printReport('banks')">🖨️ Imprimir cuentas (PDF)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: NUEVO BANCO -->
+    <div class="screen" id="s-nuevo-banco">
+      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">🏦 Nuevo banco / cuenta</div><div style="width:36px"></div></div>
+      <div style="padding:16px;overflow-y:auto">
+        <div class="card" style="border-radius:16px;padding:18px;margin-bottom:16px">
+          <!-- Emoji + Nombre -->
+          <div style="display:grid;grid-template-columns:60px 1fr;gap:10px;margin-bottom:12px;align-items:end">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Emoji</div>
+              <div id="banco-emoji-display" style="width:48px;height:48px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:1px solid var(--border)" onclick="cycleBancoEmoji()">🏦</div>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Nombre del banco *</div>
+              <input id="banco-nombre" type="text" placeholder="BGFI Bank, Santander…" class="input-field" style="width:100%">
+            </div>
+          </div>
+          <!-- País + Ciudad -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">País</div>
+              <select id="banco-pais" class="input-field" style="width:100%" onchange="updateBancoCiudad();updateBancoSwift();updateBancoMoneda()">
+                <option value="">Seleccionar…</option>
+                <option value="CM">🇨🇲 Camerún</option>
+                <option value="GQ" selected>🇬🇶 Guinea Ecuatorial</option>
+                <option value="SN">🇸🇳 Senegal</option>
+                <option value="CI">🇨🇮 Costa de Marfil</option>
+                <option value="GH">🇬🇭 Ghana</option>
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="GA">🇬🇦 Gabón</option>
+                <option value="CD">🇨🇩 Congo RD</option>
+                <option value="GN">🇬🇳 Guinea</option>
+                <option value="ES">🇪🇸 España</option>
+                <option value="FR">🇫🇷 Francia</option>
+                <option value="DE">🇩🇪 Alemania</option>
+                <option value="GB">🇬🇧 Reino Unido</option>
+                <option value="MA">🇲🇦 Marruecos</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Ciudad</div>
+              <select id="banco-ciudad" class="input-field" style="width:100%">
+                <option value="Malabo">Malabo</option>
+                <option value="Bata">Bata</option>
+              </select>
+            </div>
+          </div>
+          <!-- SWIFT + Moneda -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">SWIFT / BIC</div>
+              <input id="banco-swift" type="text" placeholder="BGFIGQGA" class="input-field" style="width:100%;text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Moneda</div>
+              <select id="banco-moneda" class="input-field" style="width:100%">
+                <option value="XAF" selected>XAF</option>
+                <option value="XOF">XOF</option>
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GHS">GHS</option>
+                <option value="NGN">NGN</option>
+                <option value="GBP">GBP</option>
+              </select>
+            </div>
+          </div>
+          <!-- IBAN -->
+          <div style="margin-bottom:12px">
+            <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">IBAN / Número de cuenta</div>
+            <input id="banco-iban" type="text" placeholder="GQ00 0000 0000 0000…" class="input-field" style="width:100%;font-family:monospace;letter-spacing:1px">
+          </div>
+          <!-- Titular + Teléfono -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Titular</div>
+              <input id="banco-titular" type="text" placeholder="Nombre completo del titular" class="input-field" style="width:100%">
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Teléfono</div>
+              <input id="banco-telefono" type="tel" placeholder="+240…" class="input-field" style="width:100%">
+            </div>
+          </div>
+          <!-- Dirección -->
+          <div style="margin-bottom:12px">
+            <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Dirección</div>
+            <input id="banco-direccion" type="text" placeholder="Calle, número, ciudad" class="input-field" style="width:100%">
+          </div>
+          <!-- Referencia interna -->
+          <div style="margin-bottom:16px">
+            <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Referencia interna</div>
+            <input id="banco-ref" type="text" placeholder="ej: cuenta comisiones GQ" class="input-field" style="width:100%">
+          </div>
+          <div id="banco-err" style="font-size:12px;color:var(--red);min-height:14px;margin-bottom:8px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <button class="btn-primary" onclick="doAddBanco()">✓ Guardar banco</button>
+            <button class="btn-outline" onclick="goBack()">Cancelar</button>
           </div>
         </div>
       </div>
@@ -1829,6 +1927,74 @@ function doRegister() {
   });
 }
 
+// ── IMPRESIÓN / EXPORTAR PDF ─────────────────────────────
+function printReport(type) {
+  var title = 'InnovaAFRIC — ';
+  var bodyHTML = '';
+  var now = new Date().toLocaleString('es-ES');
+  var user = _user || {};
+  var header = '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #29ABE2;padding-bottom:12px;margin-bottom:20px">' +
+    '<div><div style="font-size:22px;font-weight:900;color:#0A0E1A;letter-spacing:1px">INNOVAAFRIC</div>' +
+    '<div style="font-size:11px;color:#6b7280">Plataforma financiera africana</div></div>' +
+    '<div style="text-align:right"><div style="font-size:11px;color:#6b7280">Generado: ' + now + '</div>' +
+    '<div style="font-size:11px;color:#6b7280">Usuario: ' + (user.name || user.email || '—') + '</div></div></div>';
+
+  if (type === 'transactions' || type === 'wallet') {
+    title += 'Extracto de movimientos';
+    var txnNodes = document.querySelectorAll('#txn-list .txn-row, #txn-list .card');
+    var rows = '';
+    if (txnNodes.length) {
+      txnNodes.forEach(function(n) { rows += '<div style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:12px">' + n.innerText.replace(/\n/g,' · ') + '</div>'; });
+    } else {
+      var txItems = document.querySelectorAll('#txn-list > div');
+      txItems.forEach(function(n){ rows += '<div style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:12px">' + n.innerText + '</div>'; });
+    }
+    var bal = _balances || {};
+    bodyHTML = header +
+      '<h2 style="font-size:16px;font-weight:800;margin-bottom:12px">Extracto de movimientos</h2>' +
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">' +
+      '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO XAF</div><div style="font-size:16px;font-weight:800">' + (bal.XAF||0).toLocaleString('fr-FR') + ' XAF</div></div>' +
+      '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO EUR</div><div style="font-size:16px;font-weight:800">€' + (bal.EUR||0) + '</div></div>' +
+      '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO USD</div><div style="font-size:16px;font-weight:800">$' + (bal.USD||0) + '</div></div>' +
+      '</div>' +
+      '<h3 style="font-size:13px;font-weight:700;margin-bottom:8px">Últimos movimientos</h3>' +
+      (rows || '<div style="font-size:12px;color:#6b7280;padding:12px 0">Sin movimientos registrados.</div>');
+  } else if (type === 'banks') {
+    title += 'Cuentas bancarias';
+    var bankNodes = document.querySelectorAll('#bancos-list .card');
+    var brows = '';
+    if (bankNodes.length) {
+      bankNodes.forEach(function(n){ brows += '<div style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-size:12px">' + n.innerText + '</div>'; });
+    } else { brows = '<div style="font-size:12px;color:#6b7280">Sin cuentas registradas.</div>'; }
+    bodyHTML = header +
+      '<h2 style="font-size:16px;font-weight:800;margin-bottom:16px">Cuentas bancarias registradas</h2>' + brows;
+  } else if (type === 'profile') {
+    title += 'Perfil de usuario';
+    var iaCode = _user && _user.ia_code ? _user.ia_code : '—';
+    bodyHTML = header +
+      '<h2 style="font-size:16px;font-weight:800;margin-bottom:16px">Perfil de usuario</h2>' +
+      '<table style="width:100%;border-collapse:collapse;font-size:12px">' +
+      ['Nombre:' + (user.name||'—'), 'Email:' + (user.email||'—'), 'Teléfono:' + (user.phone||'—'),
+       'País:' + (user.country||'—'), 'Ciudad:' + (user.city||'—'), 'Rol:' + (user.role||'—'),
+       'Código IA:' + iaCode, 'KYC:' + (user.kyc||'—')].map(function(row) {
+        var parts = row.split(':'); return '<tr><td style="padding:6px 8px;font-weight:700;background:#f3f4f6;width:35%">' + parts[0] + '</td><td style="padding:6px 8px">' + parts.slice(1).join(':') + '</td></tr>';
+      }).join('') + '</table>';
+  } else {
+    title += 'Informe general';
+    bodyHTML = header + '<h2>Informe InnovaAFRIC</h2><p style="font-size:12px;color:#6b7280">Generado el ' + now + '</p>';
+  }
+
+  var win = window.open('', '_blank', 'width=800,height=900');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title + '</title>' +
+    '<style>body{font-family:Arial,sans-serif;padding:32px;color:#111;max-width:760px;margin:0 auto}' +
+    'h1,h2,h3{margin:0 0 8px}@media print{body{padding:16px}}' +
+    '.footer{margin-top:32px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:10px;color:#9ca3af;text-align:center}' +
+    '</style></head><body>' + bodyHTML +
+    '<div class="footer">InnovaAFRIC · api.innovaafric.com · Documento generado automáticamente — no requiere firma</div>' +
+    '<script>window.onload=function(){window.print();}<\/script></body></html>');
+  win.document.close();
+}
+
 function doLogout() {
   sb.auth.signOut();
   _token = null; _sbToken = null; _user = null;
@@ -2095,28 +2261,87 @@ function doChangePassword() {
   }).catch(function(){ err.textContent = 'Error de conexión'; });
 }
 
+var _BANCO_EMOJIS = ['🏦','🏧','💳','🏛️','💰','🌍','🤝','📊'];
+var _bancoEmojiIdx = 0;
+function cycleBancoEmoji() {
+  _bancoEmojiIdx = (_bancoEmojiIdx + 1) % _BANCO_EMOJIS.length;
+  document.getElementById('banco-emoji-display').textContent = _BANCO_EMOJIS[_bancoEmojiIdx];
+}
+
+var _BANCO_CITIES = {
+  CM:['Yaoundé','Douala','Bafoussam'], GQ:['Malabo','Bata','Ebebiyín'],
+  SN:['Dakar','Touba','Saint-Louis'], CI:['Abidjan','Bouaké','Yamoussoukro'],
+  GH:['Accra','Kumasi','Tamale'], NG:['Lagos','Abuja','Kano'],
+  GA:['Libreville','Port-Gentil','Franceville'], CD:['Kinshasa','Lubumbashi','Goma'],
+  GN:['Conakri','Nzérékoré','Kindia'], ES:['Madrid','Barcelona','Sevilla'],
+  FR:['París','Lyon','Marsella'], DE:['Berlín','Múnich','Hamburgo'],
+  GB:['Londres','Manchester','Birmingham'], MA:['Casablanca','Rabat','Fez']
+};
+var _BANCO_SWIFT_PREFIX = {
+  CM:'SGCMCMCX', GQ:'BGFIGQGA', SN:'SGSNSNDA', CI:'SGCIABAB',
+  GH:'ECOCGHAC', NG:'ZENITHNG', GA:'BICIGAZP', ES:'CAIXESBB',
+  FR:'BNPAFRPP', DE:'DEUTDEDB', GB:'BARCGB22', MA:'BMCEMAMC'
+};
+var _BANCO_MONEDA = {
+  CM:'XAF', GQ:'XAF', SN:'XOF', CI:'XOF', GH:'GHS',
+  NG:'NGN', GA:'XAF', CD:'USD', GN:'GNF', ES:'EUR',
+  FR:'EUR', DE:'EUR', GB:'GBP', MA:'MAD'
+};
+
+function updateBancoCiudad() {
+  var pais = document.getElementById('banco-pais').value;
+  var sel  = document.getElementById('banco-ciudad');
+  var cities = _BANCO_CITIES[pais] || [];
+  sel.innerHTML = cities.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join('') || '<option>—</option>';
+}
+function updateBancoSwift() {
+  var pais = document.getElementById('banco-pais').value;
+  var prefix = _BANCO_SWIFT_PREFIX[pais] || '';
+  if (prefix) document.getElementById('banco-swift').placeholder = prefix;
+}
+function updateBancoMoneda() {
+  var pais = document.getElementById('banco-pais').value;
+  var moneda = _BANCO_MONEDA[pais] || 'EUR';
+  var sel = document.getElementById('banco-moneda');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (sel.options[i].value === moneda) { sel.selectedIndex = i; break; }
+  }
+}
+
 function doAddBanco() {
-  var nombre = document.getElementById('banco-nombre').value.trim();
-  var iban   = document.getElementById('banco-iban').value.trim();
-  var swift  = document.getElementById('banco-swift').value.trim();
-  var err    = document.getElementById('banco-err');
-  if (!nombre || !iban) { err.textContent = 'Nombre e IBAN son obligatorios'; return; }
+  var nombre   = document.getElementById('banco-nombre').value.trim();
+  var iban     = document.getElementById('banco-iban').value.trim();
+  var swift    = document.getElementById('banco-swift').value.trim();
+  var pais     = document.getElementById('banco-pais').value;
+  var ciudad   = document.getElementById('banco-ciudad').value;
+  var moneda   = document.getElementById('banco-moneda').value;
+  var titular  = document.getElementById('banco-titular').value.trim();
+  var telefono = document.getElementById('banco-telefono').value.trim();
+  var direccion= document.getElementById('banco-direccion').value.trim();
+  var ref      = document.getElementById('banco-ref').value.trim();
+  var emoji    = _BANCO_EMOJIS[_bancoEmojiIdx];
+  var err      = document.getElementById('banco-err');
+  if (!nombre) { err.textContent = 'El nombre del banco es obligatorio'; return; }
   err.textContent = '';
   fetch(RAIL_API + '/banks/accounts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
-    body: JSON.stringify({ bank_name: nombre, account_number: iban, bic: swift })
+    body: JSON.stringify({
+      bank_name: nombre, account_number: iban, bic: swift,
+      country: pais, city: ciudad, currency: moneda,
+      account_holder: titular, phone: telefono,
+      address: direccion, reference: ref, emoji: emoji
+    })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     if (resp && resp.success) {
       err.style.color = 'var(--green)';
-      err.textContent = '✓ Cuenta añadida correctamente';
-      document.getElementById('banco-nombre').value = '';
-      document.getElementById('banco-iban').value = '';
-      document.getElementById('banco-swift').value = '';
-      loadBancosLista();
-      setTimeout(function(){ err.textContent = ''; err.style.color = 'var(--red)'; }, 3000);
+      err.textContent = '✓ Cuenta guardada correctamente';
+      setTimeout(function(){
+        err.textContent = ''; err.style.color = 'var(--red)';
+        goBack(); loadBancosLista();
+      }, 1500);
     } else {
-      err.textContent = (resp && resp.message) || 'Error al añadir cuenta';
+      err.textContent = (resp && resp.message) || 'Error al guardar';
     }
   }).catch(function(){ err.textContent = 'Error de conexión'; });
 }
@@ -2810,6 +3035,7 @@ goScreen = function(id) {
   if (id === 's-retirar')       refreshBalanceInScreens();
   if (id === 's-cambiar')       refreshBalanceInScreens();
   if (id === 's-cuentas-bancarias') loadBancosLista();
+  if (id === 's-nuevo-banco') { updateBancoCiudad(); updateBancoSwift(); updateBancoMoneda(); }
   if (id === 's-tontinas')      loadTontinas();
   if (id === 's-bills')         loadBills();
   if (id === 's-seguros')       loadSeguros();
