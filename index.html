@@ -181,20 +181,70 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
   </div>
 
   <!-- LOGIN -->
-  <div id="s-login">
-    <div class="login-logo">
-      <svg width="36" height="36" viewBox="0 0 30 30"><text x="15" y="21" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">IA</text></svg>
-    </div>
-    <div style="text-align:center;margin-bottom:28px">
-      <div style="font-size:22px;font-weight:900;color:var(--txt)">INNOVAAFRIC</div>
-      <div style="font-size:12px;color:var(--txt3);margin-top:4px">Inicia sesión en tu cuenta</div>
-    </div>
-    <input id="login-email" class="login-input" type="email" placeholder="Correo electrónico" autocomplete="email">
-    <input id="login-pass" class="login-input" type="password" placeholder="Contraseña" autocomplete="current-password">
-    <div class="login-err" id="login-err"></div>
-    <button class="btn-primary" id="login-btn" onclick="doLogin()" style="margin-bottom:14px">Entrar</button>
-    <div style="font-size:10px;color:var(--txt3);text-align:center">
-      ¿No tienes cuenta? <span style="color:var(--blue);cursor:pointer">Contacta con INNOVAAFRIC</span>
+  <div id="s-login" style="overflow-y:auto">
+    <div style="min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 28px 40px">
+      <div class="login-logo">
+        <svg width="36" height="36" viewBox="0 0 30 30"><text x="15" y="21" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">IA</text></svg>
+      </div>
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:22px;font-weight:900;color:var(--txt)">INNOVAAFRIC</div>
+        <div style="font-size:12px;color:var(--txt3);margin-top:4px" id="auth-subtitle">Inicia sesión en tu cuenta</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="form-login" style="width:100%">
+        <input id="login-email" class="login-input" type="email" placeholder="Correo electrónico" autocomplete="email">
+        <input id="login-pass" class="login-input" type="password" placeholder="Contraseña" autocomplete="current-password">
+        <div class="login-err" id="login-err"></div>
+        <button class="btn-primary" id="login-btn" onclick="doLogin()" style="margin-bottom:14px">Entrar</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center">
+          ¿No tienes cuenta? <span style="color:var(--blue);cursor:pointer;font-weight:700" onclick="showRegister()">Crear cuenta gratis →</span>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="form-register" style="width:100%;display:none">
+        <input id="reg-name" class="login-input" type="text" placeholder="Nombre completo" autocomplete="name">
+        <input id="reg-email" class="login-input" type="email" placeholder="Correo electrónico" autocomplete="email">
+        <input id="reg-phone" class="login-input" type="tel" placeholder="Teléfono (ej: +34612345678)" autocomplete="tel">
+        <input id="reg-pass" class="login-input" type="password" placeholder="Contraseña (mín. 8 caracteres)">
+        <select id="reg-country" class="login-input" style="appearance:none">
+          <option value="">— País —</option>
+          <option value="ES">🇪🇸 España</option>
+          <option value="FR">🇫🇷 Francia</option>
+          <option value="CM">🇨🇲 Camerún</option>
+          <option value="SN">🇸🇳 Senegal</option>
+          <option value="CI">🇨🇮 Costa de Marfil</option>
+          <option value="GH">🇬🇭 Ghana</option>
+          <option value="NG">🇳🇬 Nigeria</option>
+          <option value="ML">🇲🇱 Mali</option>
+          <option value="BF">🇧🇫 Burkina Faso</option>
+          <option value="TG">🇹🇬 Togo</option>
+          <option value="BJ">🇧🇯 Benín</option>
+          <option value="GN">🇬🇳 Guinea</option>
+          <option value="GA">🇬🇦 Gabón</option>
+          <option value="CD">🇨🇩 Congo RDC</option>
+          <option value="IT">🇮🇹 Italia</option>
+          <option value="DE">🇩🇪 Alemania</option>
+          <option value="BE">🇧🇪 Bélgica</option>
+          <option value="PT">🇵🇹 Portugal</option>
+          <option value="GB">🇬🇧 Reino Unido</option>
+          <option value="MA">🇲🇦 Marruecos</option>
+        </select>
+        <select id="reg-role" class="login-input" style="appearance:none">
+          <option value="customer">👤 Cliente — enviar y recibir dinero</option>
+          <option value="rider">🛵 Rider — hacer entregas</option>
+          <option value="supplier">🏪 Proveedor — vender en XenderShop</option>
+        </select>
+        <div class="login-err" id="reg-err"></div>
+        <button class="btn-primary" id="reg-btn" onclick="doRegister()" style="margin-bottom:10px">Crear cuenta</button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center">
+          ¿Ya tienes cuenta? <span style="color:var(--blue);cursor:pointer;font-weight:700" onclick="showLogin()">← Iniciar sesión</span>
+        </div>
+        <div style="font-size:9px;color:var(--txt3);text-align:center;margin-top:10px;line-height:1.5">
+          Al registrarte aceptas nuestros <span style="color:var(--blue)">Términos de Servicio</span> y <span style="color:var(--blue)">Política de Privacidad</span>.<br>KYC requerido para activar pagos.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1021,6 +1071,79 @@ function afterLogin() {
   // Allow Enter key on login
   document.getElementById('login-btn').innerHTML = 'Entrar';
   document.getElementById('login-btn').disabled = false;
+}
+
+function showRegister() {
+  document.getElementById('form-login').style.display = 'none';
+  document.getElementById('form-register').style.display = 'block';
+  document.getElementById('auth-subtitle').textContent = 'Crea tu cuenta gratuita';
+}
+
+function showLogin() {
+  document.getElementById('form-register').style.display = 'none';
+  document.getElementById('form-login').style.display = 'block';
+  document.getElementById('auth-subtitle').textContent = 'Inicia sesión en tu cuenta';
+}
+
+function doRegister() {
+  var name    = document.getElementById('reg-name').value.trim();
+  var email   = document.getElementById('reg-email').value.trim();
+  var phone   = document.getElementById('reg-phone').value.trim();
+  var pass    = document.getElementById('reg-pass').value;
+  var country = document.getElementById('reg-country').value;
+  var role    = document.getElementById('reg-role').value;
+  var err     = document.getElementById('reg-err');
+  var btn     = document.getElementById('reg-btn');
+
+  if (!name || !email || !phone || !pass || !country) {
+    err.textContent = 'Completa todos los campos obligatorios';
+    return;
+  }
+  if (pass.length < 8) { err.textContent = 'La contraseña debe tener al menos 8 caracteres'; return; }
+
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Creando cuenta…';
+  btn.disabled = true;
+
+  fetch(API + '/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name, email: email, phone: phone, password: pass, country: country, role: role })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(resp) {
+    if (resp.success) {
+      // Auto-login after register
+      return fetch(API + '/auth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
+      }).then(function(r){ return r.json(); }).then(function(lr) {
+        if (lr.success && lr.data && lr.data.access_token) {
+          _token = lr.data.access_token;
+          _user  = lr.data.user;
+          localStorage.setItem('inn_token', _token);
+          localStorage.setItem('inn_user', JSON.stringify(_user));
+          afterLogin();
+          showToast('Bienvenido/a', '¡Cuenta creada! Completa el KYC para activar pagos.');
+        } else {
+          showLogin();
+          document.getElementById('login-email').value = email;
+          showToast('Cuenta creada', 'Inicia sesión con tu nueva cuenta');
+        }
+        btn.innerHTML = 'Crear cuenta';
+        btn.disabled = false;
+      });
+    } else {
+      var msg = (resp.error && resp.error.message) || 'Error al crear la cuenta';
+      throw new Error(msg);
+    }
+  })
+  .catch(function(e) {
+    err.textContent = e.message;
+    btn.innerHTML = 'Crear cuenta';
+    btn.disabled = false;
+  });
 }
 
 function doLogout() {
