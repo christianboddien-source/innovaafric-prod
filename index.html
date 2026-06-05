@@ -985,6 +985,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <button class="btn-outline" onclick="printReport('profile')">🖨️ Imprimir perfil</button>
           <button class="btn-outline" onclick="printReport('wallet')">📊 Extracto PDF</button>
         </div>
+        <button class="btn-outline" style="width:100%;margin-bottom:10px;border-color:rgba(245,166,35,.3);color:var(--gold)" onclick="goScreen('s-fiscal')">📋 Fiscal &amp; Comisiones</button>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red);width:100%">🚪 Cerrar sesión</button>
       </div>
       <div style="height:20px"></div>
@@ -1206,6 +1207,100 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
           <div style="font-size:12px;color:var(--blue)">+237 6XX XXX XXX</div>
         </div>
         <button class="btn-primary" style="width:100%" onclick="goScreen('s-innovabot')">🤖 Hablar con InnovaBot ahora</button>
+      </div>
+    </div>
+
+    <!-- SCREEN: FISCAL / IMPUESTOS & COMISIONES -->
+    <div class="screen" id="s-fiscal">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">📋 Fiscal &amp; Comisiones</div>
+        <div class="icon-btn" onclick="printFiscalReport()">🖨️</div>
+      </div>
+      <div style="padding:14px 14px 80px">
+
+        <!-- Tasas vigentes -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Comisiones de la plataforma</div>
+        <div class="card" style="border-radius:16px;padding:0;overflow:hidden;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border2)">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">💸 Envío de dinero</div><div style="font-size:10px;color:var(--txt3)">Transferencias entre usuarios</div></div>
+            <span class="pill pill-gold" style="font-size:11px">2,00%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border2)">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🏧 Retiro a banco</div><div style="font-size:10px;color:var(--txt3)">SWIFT / Mobile Money</div></div>
+            <span class="pill pill-gold" style="font-size:11px">1,50%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid var(--border2)">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🔄 Cambio de divisa</div><div style="font-size:10px;color:var(--txt3)">Conversión entre monedas</div></div>
+            <span class="pill pill-blue" style="font-size:11px">0,50%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px">
+            <div><div style="font-size:13px;font-weight:700;color:var(--txt)">🤝 P2P / Tontinas</div><div style="font-size:10px;color:var(--txt3)">Entre miembros del grupo</div></div>
+            <span class="pill pill-green" style="font-size:11px">0,00%</span>
+          </div>
+        </div>
+
+        <!-- Impuestos Hacienda -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Impuestos — Hacienda</div>
+        <div class="card" style="border-radius:16px;padding:0;overflow:hidden;margin-bottom:16px" id="taxes-list">
+          <div style="padding:16px;text-align:center;font-size:12px;color:var(--txt3)">Cargando impuestos…</div>
+        </div>
+
+        <!-- Calculadora fiscal -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Calculadora fiscal en vivo</div>
+        <div class="card" style="border-radius:16px;padding:18px;margin-bottom:16px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">IMPORTE BASE</div>
+              <input id="fiscal-amount" type="number" value="100000" class="input-field" style="width:100%" oninput="calcFiscal()">
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">TIPO DE OPERACIÓN</div>
+              <select id="fiscal-type" class="input-field" style="width:100%" onchange="calcFiscal()">
+                <option value="send">Envío (2%)</option>
+                <option value="withdraw">Retiro (1,5%)</option>
+                <option value="exchange">Cambio (0,5%)</option>
+                <option value="p2p">P2P (0%)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">PAÍS</div>
+              <select id="fiscal-country" class="input-field" style="width:100%" onchange="calcFiscal()">
+                <option value="GQ">Guinea Ecuatorial</option>
+                <option value="CM">Camerún</option>
+                <option value="SN">Senegal</option>
+                <option value="ES">España</option>
+                <option value="FR">Francia</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">MONEDA</div>
+              <select id="fiscal-currency" class="input-field" style="width:100%" onchange="calcFiscal()">
+                <option value="XAF">XAF</option>
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+          </div>
+          <!-- Desglose -->
+          <div style="background:var(--bg3);border-radius:12px;padding:14px" id="fiscal-result">
+            <div style="font-size:11px;color:var(--txt3);text-align:center">Introduce un importe para calcular</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+            <button class="btn-primary" onclick="calcFiscal()">⚡ Calcular</button>
+            <button class="btn-outline" onclick="printFiscalReport()">🖨️ Imprimir PDF</button>
+          </div>
+        </div>
+
+        <!-- Resumen del período -->
+        <div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Resumen fiscal del período</div>
+        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:16px" id="fiscal-summary">
+          <div style="font-size:12px;color:var(--txt3);text-align:center">Cargando resumen…</div>
+        </div>
+
+        <button class="btn-outline" style="width:100%" onclick="printFiscalReport()">🖨️ Informe fiscal completo (PDF)</button>
       </div>
     </div>
 
@@ -2269,6 +2364,242 @@ updateClock();
 setInterval(updateClock, 30000);
 
 // ── TONTINAS ────────────────────────────────────────────
+// ── FISCAL / IMPUESTOS ──────────────────────────────────
+var _fiscalCalcResult = null;
+var _taxesData = [];
+
+var _COMMISSION_RATES = { send: 0.02, withdraw: 0.015, exchange: 0.005, p2p: 0 };
+var _COMMISSION_LABELS = { send: 'Envío de dinero', withdraw: 'Retiro a banco', exchange: 'Cambio de divisa', p2p: 'P2P / Tontinas' };
+
+function loadFiscalScreen() {
+  loadTaxesList();
+  loadFiscalSummary();
+  calcFiscal();
+}
+
+function loadTaxesList() {
+  var el = document.getElementById('taxes-list');
+  if (!el) return;
+  var country = (document.getElementById('fiscal-country') && document.getElementById('fiscal-country').value) || (_user && _user.country) || 'GQ';
+  railGet('/taxes?country=' + country + '&active=true').then(function(resp) {
+    var taxes = (resp && resp.data && resp.data.taxes) || [];
+    _taxesData = taxes;
+    if (!taxes.length) {
+      el.innerHTML = '<div style="padding:16px;text-align:center;font-size:12px;color:var(--txt3)">No hay impuestos configurados para este país.</div>';
+      return;
+    }
+    el.innerHTML = taxes.map(function(t, i) {
+      var border = i < taxes.length - 1 ? 'border-bottom:1px solid var(--border2);' : '';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;' + border + '">' +
+        '<div><div style="font-size:13px;font-weight:700;color:var(--txt)">' + t.name + '</div>' +
+        '<div style="font-size:10px;color:var(--txt3)">' + (t.description || t.type || '') + '</div></div>' +
+        '<span class="pill pill-red" style="font-size:11px">' + parseFloat(t.rate).toFixed(2) + '%</span>' +
+        '</div>';
+    }).join('');
+  }).catch(function() {
+    el.innerHTML = '<div style="padding:16px;text-align:center;font-size:12px;color:var(--txt3)">Sin impuestos configurados.</div>';
+  });
+}
+
+function calcFiscal() {
+  var amtEl     = document.getElementById('fiscal-amount');
+  var typeEl    = document.getElementById('fiscal-type');
+  var countryEl = document.getElementById('fiscal-country');
+  var currEl    = document.getElementById('fiscal-currency');
+  var resEl     = document.getElementById('fiscal-result');
+  if (!amtEl || !resEl) return;
+
+  var base     = parseFloat(amtEl.value) || 0;
+  var type     = typeEl ? typeEl.value : 'send';
+  var country  = countryEl ? countryEl.value : 'GQ';
+  var currency = currEl ? currEl.value : 'XAF';
+  var feeRate  = _COMMISSION_RATES[type] || 0;
+  var fee      = Math.round(base * feeRate * 100) / 100;
+
+  // Fetch taxes from API
+  railGet('/taxes/calculate?country=' + country + '&amount=' + base + '&type=' + type).then(function(resp) {
+    var taxBreakdown = (resp && resp.data && resp.data.taxes) || [];
+    var totalTax     = (resp && resp.data && resp.data.total_tax) || 0;
+    var totalDeduct  = fee + totalTax;
+    var netAmount    = base - totalDeduct;
+    var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
+    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
+
+    _fiscalCalcResult = { base, type, country, currency, fee, feeRate, taxBreakdown, totalTax, totalDeduct, netAmount };
+
+    var taxRows = taxBreakdown.map(function(t) {
+      return '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:6px">' +
+        '<span>🏛️ ' + t.name + ' (' + parseFloat(t.rate).toFixed(2) + '%)</span><span style="color:var(--red)">- ' + fmt(t.amount) + '</span></div>';
+    }).join('');
+
+    resEl.innerHTML =
+      '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--txt);padding-bottom:10px;border-bottom:1px solid var(--border2)">' +
+        '<span>Importe base</span><span>' + fmt(base) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:8px">' +
+        '<span>💰 Comisión InnovaAFRIC (' + (feeRate*100).toFixed(2) + '%)</span>' +
+        '<span style="color:var(--gold)">- ' + fmt(fee) + '</span></div>' +
+      taxRows +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:8px;padding-top:8px;border-top:1px solid var(--border2)">' +
+        '<span>Total deducciones</span><span style="color:var(--red);font-weight:700">- ' + fmt(totalDeduct) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:var(--green);margin-top:10px;padding-top:10px;border-top:2px solid var(--green)">' +
+        '<span>✅ Importe neto</span><span>' + fmt(netAmount) + '</span></div>';
+  }).catch(function() {
+    // Fallback sin API taxes
+    var totalDeduct = fee;
+    var netAmount   = base - fee;
+    var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
+    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
+    _fiscalCalcResult = { base, type, country, currency, fee, feeRate, taxBreakdown:[], totalTax:0, totalDeduct, netAmount };
+    resEl.innerHTML =
+      '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--txt);padding-bottom:10px;border-bottom:1px solid var(--border2)">' +
+        '<span>Importe base</span><span>' + fmt(base) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:8px">' +
+        '<span>💰 Comisión InnovaAFRIC (' + (feeRate*100).toFixed(2) + '%)</span>' +
+        '<span style="color:var(--gold)">- ' + fmt(fee) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:var(--green);margin-top:12px;padding-top:10px;border-top:2px solid var(--green)">' +
+        '<span>✅ Importe neto</span><span>' + fmt(netAmount) + '</span></div>';
+  });
+}
+
+function loadFiscalSummary() {
+  var el = document.getElementById('fiscal-summary');
+  if (!el || !_token) return;
+  railGet('/money/history?limit=100').then(function(resp) {
+    var txns = (resp && resp.data && resp.data.items) || [];
+    var totalSent = 0, totalFees = 0, totalTaxes = 0, countSent = 0;
+    var userId = _user && _user.id;
+    txns.forEach(function(t) {
+      if (t.senderId === userId || t.type === 'send' || t.type === 'withdraw') {
+        totalSent += t.amount || 0;
+        totalFees += t.fee || 0;
+        totalTaxes += t.tax || 0;
+        countSent++;
+      }
+    });
+    var feeRate = totalSent > 0 ? ((totalFees / totalSent) * 100).toFixed(2) : '0.00';
+    el.innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">OPERACIONES</div>' +
+        '<div style="font-size:20px;font-weight:900;color:var(--txt)">' + countSent + '</div></div>' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">VOL. ENVIADO</div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--txt)">' + Math.round(totalSent).toLocaleString('fr-FR') + ' XAF</div></div>' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">COMISIONES PAGADAS</div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--gold)">' + Math.round(totalFees).toLocaleString('fr-FR') + ' XAF</div></div>' +
+      '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">IMPUESTOS</div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--red)">' + Math.round(totalTaxes).toLocaleString('fr-FR') + ' XAF</div></div>' +
+      '</div>' +
+      '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;font-size:12px">' +
+        '<span style="color:var(--txt3)">Tasa efectiva media</span>' +
+        '<span style="font-weight:700;color:var(--txt)">' + feeRate + '%</span></div>';
+  }).catch(function() {
+    el.innerHTML = '<div style="font-size:12px;color:var(--txt3);text-align:center">Sin datos de transacciones.</div>';
+  });
+}
+
+function printFiscalReport() {
+  var now  = new Date().toLocaleString('es-ES');
+  var user = _user || {};
+  var calc = _fiscalCalcResult;
+  var country = document.getElementById('fiscal-country') ? document.getElementById('fiscal-country').value : (user.country || '—');
+  var sym = calc && calc.currency === 'EUR' ? '€' : calc && calc.currency === 'USD' ? '$' : '';
+  var fmt = function(n, cur) {
+    var s = cur === 'EUR' ? '€ ' : cur === 'USD' ? '$ ' : '';
+    return s + parseFloat(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}) + (s ? '' : ' ' + (cur||'XAF'));
+  };
+
+  // Build tax rows
+  var taxRowsHTML = '';
+  var taxTotal = 0;
+  if (calc && calc.taxBreakdown) {
+    calc.taxBreakdown.forEach(function(t) {
+      taxRowsHTML += '<tr><td style="padding:6px 8px">🏛️ ' + t.name + ' (' + parseFloat(t.rate).toFixed(2) + '%)</td>' +
+        '<td style="padding:6px 8px;text-align:right;color:#dc2626">- ' + fmt(t.amount, calc.currency) + '</td></tr>';
+      taxTotal += t.amount || 0;
+    });
+  }
+
+  // Transaction summary from DOM
+  var summaryEl = document.getElementById('fiscal-summary');
+  var summaryTxt = summaryEl ? summaryEl.innerText : '';
+
+  var win = window.open('', '_blank', 'width=820,height=1000');
+  win.document.write('<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<title>Informe Fiscal — InnovaAFRIC</title>' +
+    '<style>' +
+    'body{font-family:Arial,sans-serif;padding:40px;color:#111;max-width:780px;margin:0 auto}' +
+    'h1{font-size:22px;font-weight:900;color:#0A0E1A;margin:0}' +
+    'h2{font-size:15px;font-weight:800;color:#0A0E1A;margin:24px 0 10px;border-bottom:2px solid #29ABE2;padding-bottom:6px}' +
+    'table{width:100%;border-collapse:collapse;font-size:13px}' +
+    'th{background:#0A0E1A;color:#fff;padding:8px 10px;text-align:left;font-size:11px;letter-spacing:1px}' +
+    'td{padding:8px 10px;border-bottom:1px solid #e5e7eb}' +
+    'tr:nth-child(even) td{background:#f9fafb}' +
+    '.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}' +
+    '.badge-gold{background:#fef3c7;color:#92400e}' +
+    '.badge-red{background:#fee2e2;color:#991b1b}' +
+    '.badge-green{background:#dcfce7;color:#166534}' +
+    '.total-row td{font-weight:900;font-size:15px;background:#f0f9ff;border-top:3px solid #29ABE2}' +
+    '.footer{margin-top:40px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:10px;color:#9ca3af;text-align:center}' +
+    '@media print{body{padding:20px}}' +
+    '</style></head><body>' +
+
+    // Header
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #29ABE2;padding-bottom:16px;margin-bottom:24px">' +
+      '<div><h1>INNOVAAFRIC</h1><div style="font-size:11px;color:#6b7280;margin-top:4px">Plataforma financiera africana · api.innovaafric.com</div></div>' +
+      '<div style="text-align:right;font-size:11px;color:#6b7280">' +
+        '<div style="font-size:16px;font-weight:900;color:#0A0E1A;margin-bottom:4px">INFORME FISCAL</div>' +
+        '<div>Fecha: ' + now + '</div>' +
+        '<div>Usuario: ' + (user.name || user.email || '—') + '</div>' +
+        '<div>País: ' + country + '</div>' +
+      '</div></div>' +
+
+    // Info usuario
+    '<h2>Datos del contribuyente</h2>' +
+    '<table><tr><td style="width:35%;background:#f3f4f6;font-weight:700">Nombre</td><td>' + (user.name||'—') + '</td></tr>' +
+    '<tr><td style="background:#f3f4f6;font-weight:700">Email</td><td>' + (user.email||'—') + '</td></tr>' +
+    '<tr><td style="background:#f3f4f6;font-weight:700">Código IA</td><td>' + (user.ia_code||'—') + '</td></tr>' +
+    '<tr><td style="background:#f3f4f6;font-weight:700">País</td><td>' + (user.country||'—') + '</td></tr>' +
+    '<tr><td style="background:#f3f4f6;font-weight:700">Estado KYC</td><td>' + (user.kyc||'—') + '</td></tr></table>' +
+
+    // Tasas comisiones
+    '<h2>Tarifas de comisión vigentes</h2>' +
+    '<table><thead><tr><th>Tipo de operación</th><th>Tasa</th><th>Aplicación</th></tr></thead><tbody>' +
+    '<tr><td>💸 Envío de dinero</td><td><span class="badge badge-gold">2,00%</span></td><td>Deducido del importe enviado</td></tr>' +
+    '<tr><td>🏧 Retiro a banco/MM</td><td><span class="badge badge-gold">1,50%</span></td><td>Deducido del importe retirado</td></tr>' +
+    '<tr><td>🔄 Cambio de divisa</td><td><span class="badge badge-gold">0,50%</span></td><td>Aplicado al cambio</td></tr>' +
+    '<tr><td>🤝 P2P / Tontinas</td><td><span class="badge badge-green">0,00%</span></td><td>Sin comisión entre miembros</td></tr>' +
+    '</tbody></table>' +
+
+    // Cálculo detallado
+    (calc ? '<h2>Desglose del cálculo</h2>' +
+    '<table><thead><tr><th>Concepto</th><th style="text-align:right">Importe</th></tr></thead><tbody>' +
+    '<tr><td>Importe base — ' + (_COMMISSION_LABELS[calc.type]||calc.type) + '</td><td style="text-align:right;font-weight:700">' + fmt(calc.base, calc.currency) + '</td></tr>' +
+    '<tr><td>💰 Comisión InnovaAFRIC (' + (calc.feeRate*100).toFixed(2) + '%)</td><td style="text-align:right;color:#d97706">- ' + fmt(calc.fee, calc.currency) + '</td></tr>' +
+    taxRowsHTML +
+    '<tr class="total-row"><td>✅ Importe neto a recibir</td><td style="text-align:right;color:#16a34a">+ ' + fmt(calc.netAmount, calc.currency) + '</td></tr>' +
+    '<tr class="total-row"><td>📉 Total deducciones</td><td style="text-align:right;color:#dc2626">- ' + fmt(calc.totalDeduct, calc.currency) + '</td></tr>' +
+    '</tbody></table>' : '') +
+
+    // Resumen del período
+    '<h2>Resumen del período</h2>' +
+    '<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;font-size:12px;white-space:pre-line">' + summaryTxt + '</div>' +
+
+    // Aviso legal
+    '<div style="margin-top:20px;padding:12px;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;font-size:11px;color:#92400e">' +
+    '⚠️ <strong>Aviso legal:</strong> Este documento es un extracto informativo generado automáticamente por InnovaAFRIC. ' +
+    'Las comisiones e impuestos indicados corresponden a las tarifas vigentes en la fecha de emisión. ' +
+    'Este documento no sustituye a una declaración fiscal oficial. Consulte a su asesor fiscal para obligaciones tributarias locales.' +
+    '</div>' +
+
+    '<div class="footer">InnovaAFRIC · api.innovaafric.com · Documento generado el ' + now + ' — Confidencial</div>' +
+    '<script>window.onload=function(){window.print();}<\/script>' +
+    '</body></html>');
+  win.document.close();
+}
+
 function doChangePassword() {
   var actual  = document.getElementById('seg-pass-actual').value;
   var nueva   = document.getElementById('seg-pass-nueva').value;
@@ -3070,6 +3401,7 @@ goScreen = function(id) {
   if (id === 's-retirar')       refreshBalanceInScreens();
   if (id === 's-cambiar')       refreshBalanceInScreens();
   if (id === 's-wallet') { refreshBalanceInScreens(); if (!_allTxns.length) loadTransactions(); }
+  if (id === 's-fiscal') loadFiscalScreen();
   if (id === 's-cuentas-bancarias') loadBancosLista();
   if (id === 's-nuevo-banco') { updateBancoCiudad(); updateBancoSwift(); updateBancoMoneda(); }
   if (id === 's-tontinas')      loadTontinas();
