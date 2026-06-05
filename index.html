@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="./icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <style>
 :root{
@@ -1089,13 +1090,18 @@ window.addEventListener('beforeinstallprompt', function(e) {
   setTimeout(function(){ toast.style.display='none'; }, 5000);
 });
 
-// -- API & Auth --------------------------
-var API = 'https://innovaafric-api-production.up.railway.app/v1';
-var _token = localStorage.getItem('inn_token');
-var _user = JSON.parse(localStorage.getItem('inn_user') || 'null');
+// -- Supabase Auth -----------------------
+var SB_URL  = 'https://spnfvmvrlexyiljwyola.supabase.co';
+var SB_ANON = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
+var sb = supabase.createClient(SB_URL, SB_ANON);
+var _token = null;
+var _user  = JSON.parse(localStorage.getItem('inn_user') || 'null');
 
-function apiGet(path) {
-  return fetch(API + path, { headers: { Authorization: 'Bearer ' + _token } }).then(function(r){ return r.json(); });
+function sbGet(table, filters) {
+  var url = SB_URL + '/rest/v1/' + table + '?' + filters + '&select=*';
+  return fetch(url, {
+    headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + _token }
+  }).then(function(r){ return r.json(); });
 }
 
 function doLogin() {
@@ -1108,26 +1114,24 @@ function doLogin() {
   btn.innerHTML = '<span class="login-spinner"></span>Entrando…';
   btn.disabled = true;
 
-  fetch(API + '/auth/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(resp) {
-    if (resp.success && resp.data && resp.data.access_token) {
-      _token = resp.data.access_token;
-      _user  = resp.data.user;
-      localStorage.setItem('inn_token', _token);
-      localStorage.setItem('inn_user', JSON.stringify(_user));
-      afterLogin();
-    } else {
-      var msg = (resp.error && resp.error.message) || 'Email o contraseña incorrectos';
-      throw new Error(msg);
-    }
+  sb.auth.signInWithPassword({ email: email, password: pass })
+  .then(function(result) {
+    if (result.error) throw new Error(result.error.message);
+    _token = result.data.session.access_token;
+    var au  = result.data.user;
+    _user = {
+      id:    au.id,
+      email: au.email,
+      name:  (au.user_metadata && (au.user_metadata.full_name || au.user_metadata.name)) || au.email.split('@')[0],
+      role:  (au.user_metadata && au.user_metadata.role) || 'customer'
+    };
+    localStorage.setItem('inn_user', JSON.stringify(_user));
+    afterLogin();
   })
   .catch(function(e) {
-    err.textContent = e.message;
+    var msg = e.message || 'Email o contraseña incorrectos';
+    if (msg.includes('Invalid login')) msg = 'Email o contraseña incorrectos';
+    err.textContent = msg;
     btn.innerHTML = 'Entrar';
     btn.disabled = false;
   });
@@ -1247,50 +1251,46 @@ function doRegister() {
   btn.innerHTML = '<span class="login-spinner"></span>Creando cuenta…';
   btn.disabled = true;
 
-  fetch(API + '/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: name, email: email, phone: phone, password: pass, country: country, city: city, role: role })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(resp) {
-    if (resp.success) {
-      // Auto-login after register
-      return fetch(API + '/auth/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
-      }).then(function(r){ return r.json(); }).then(function(lr) {
-        if (lr.success && lr.data && lr.data.access_token) {
-          _token = lr.data.access_token;
-          _user  = lr.data.user;
-          localStorage.setItem('inn_token', _token);
-          localStorage.setItem('inn_user', JSON.stringify(_user));
-          afterLogin();
-          showToast('Bienvenido/a', '¡Cuenta creada! Completa el KYC para activar pagos.');
-        } else {
-          showLogin();
-          document.getElementById('login-email').value = email;
-          showToast('Cuenta creada', 'Inicia sesión con tu nueva cuenta');
-        }
-        btn.innerHTML = 'Crear cuenta';
-        btn.disabled = false;
-      });
-    } else {
-      var msg = (resp.error && resp.error.message) || 'Error al crear la cuenta';
-      throw new Error(msg);
+  sb.auth.signUp({
+    email: email,
+    password: pass,
+    options: {
+      data: { full_name: name, phone: phone, country: country, city: city, role: role }
     }
   })
+  .then(function(result) {
+    if (result.error) throw new Error(result.error.message);
+    // Auto-login
+    return sb.auth.signInWithPassword({ email: email, password: pass });
+  })
+  .then(function(result) {
+    if (result.error) throw new Error(result.error.message);
+    _token = result.data.session.access_token;
+    var au  = result.data.user;
+    _user = {
+      id:    au.id,
+      email: au.email,
+      name:  name,
+      role:  role
+    };
+    localStorage.setItem('inn_user', JSON.stringify(_user));
+    afterLogin();
+    showToast('¡Bienvenido/a!', 'Cuenta creada. Completa el KYC para activar pagos.');
+    btn.innerHTML = '✓ Crear cuenta';
+    btn.disabled = false;
+  })
   .catch(function(e) {
-    err.textContent = e.message;
-    btn.innerHTML = 'Crear cuenta';
+    var msg = e.message || 'Error al crear la cuenta';
+    if (msg.includes('already registered')) msg = 'Este email ya está registrado';
+    err.textContent = msg;
+    btn.innerHTML = '✓ Crear cuenta';
     btn.disabled = false;
   });
 }
 
 function doLogout() {
+  sb.auth.signOut();
   _token = null; _user = null;
-  localStorage.removeItem('inn_token');
   localStorage.removeItem('inn_user');
   localStorage.removeItem('inn_balance');
   document.getElementById('s-login').style.display = 'flex';
@@ -1320,38 +1320,61 @@ function populateUser() {
 }
 
 function loadBalance() {
-  apiGet('/money/balance').then(function(resp) {
-    if (resp.success && resp.data && resp.data.balances) {
-      var b = resp.data.balances;
-      _balanceXAF = Math.round(b.XAF ? b.XAF.amount : 0);
-      _balances = {
-        XAF: Math.round(b.XAF ? b.XAF.amount : 0),
-        EUR:  b.EUR  ? b.EUR.amount  : 0,
-        USD:  b.USD  ? b.USD.amount  : 0,
-        GHS:  b.GHS  ? b.GHS.amount  : (_balanceXAF * 0.02540)
-      };
-      localStorage.setItem('inn_balance', JSON.stringify(_balances));
-      updateBalanceDisplay();
-      // Also update wallet screen
-      var wEl = document.getElementById('wallet-xaf');
-      var wEur = document.getElementById('wallet-eur');
-      if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
-      if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2,maximumFractionDigits:2});
+  if (!_user || !_user.id) return;
+  // Try Supabase wallet table (Prisma model "Wallet")
+  sbGet('Wallet', 'userId=eq.' + _user.id)
+  .then(function(rows) {
+    var w = Array.isArray(rows) && rows.length ? rows[0] : null;
+    if (!w) {
+      // fallback: try lowercase table name
+      return sbGet('wallets', 'userId=eq.' + _user.id).then(function(r2){
+        return Array.isArray(r2) && r2.length ? r2[0] : null;
+      });
     }
-  }).catch(function(){});
+    return w;
+  })
+  .then(function(w) {
+    if (!w) return;
+    _balances = {
+      XAF: Math.round(w.balanceXaf || 0),
+      EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+      USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+      GHS: parseFloat((w.balanceXof || w.balanceXaf * 0.025 || 0).toFixed(2))
+    };
+    _balanceXAF = _balances.XAF;
+    localStorage.setItem('inn_balance', JSON.stringify(_balances));
+    updateBalanceDisplay();
+    var wEl  = document.getElementById('wallet-xaf');
+    var wEur = document.getElementById('wallet-eur');
+    if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
+    if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  })
+  .catch(function(){});
 }
 
 // -- On start ----------------------------
 window.addEventListener('DOMContentLoaded', function() {
-  // Enter key on password field
-  var passEl = document.getElementById('login-pass');
-  if (passEl) passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  var passEl  = document.getElementById('login-pass');
   var emailEl = document.getElementById('login-email');
+  if (passEl)  passEl.addEventListener('keydown',  function(e){ if(e.key==='Enter') doLogin(); });
   if (emailEl) emailEl.addEventListener('keydown', function(e){ if(e.key==='Enter') passEl.focus(); });
 
-  if (_token && _user) {
-    afterLogin();
-  }
+  // Restore Supabase session automatically
+  sb.auth.getSession().then(function(result) {
+    var session = result.data && result.data.session;
+    if (session && session.access_token) {
+      _token = session.access_token;
+      var au  = session.user;
+      _user = {
+        id:    au.id,
+        email: au.email,
+        name:  (au.user_metadata && (au.user_metadata.full_name || au.user_metadata.name)) || au.email.split('@')[0],
+        role:  (au.user_metadata && au.user_metadata.role) || 'customer'
+      };
+      localStorage.setItem('inn_user', JSON.stringify(_user));
+      afterLogin();
+    }
+  });
 });
 
 // -- Currency switcher ------------------
