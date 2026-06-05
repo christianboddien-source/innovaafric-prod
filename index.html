@@ -339,12 +339,12 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
           <div>
             <div style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-bottom:3px">SALDO DISPONIBLE</div>
-            <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px">816 832 XAF</div>
-            <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">≈ € 1,245.80</div>
+            <div id="wallet-xaf" style="font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px">— XAF</div>
+            <div id="wallet-eur" style="font-size:11px;color:rgba(255,255,255,.35);margin-top:2px">≈ € —</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:9px;color:rgba(255,255,255,.35);margin-bottom:3px">Este mes</div>
-            <div style="font-size:13px;font-weight:800;color:var(--green)">+ 583 700 XAF</div>
+            <div style="font-size:13px;font-weight:800;color:var(--green)">En tiempo real</div>
           </div>
         </div>
         <div class="chart-bars" style="margin-top:14px">
@@ -992,20 +992,19 @@ function doLogin() {
   fetch(API + '/auth/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ grant_type: 'password', username: email, password: pass })
+    body: JSON.stringify({ grant_type: 'password', email: email, password: pass })
   })
   .then(function(r){ return r.json(); })
-  .then(function(data) {
-    if (data.access_token) {
-      _token = data.access_token;
+  .then(function(resp) {
+    if (resp.success && resp.data && resp.data.access_token) {
+      _token = resp.data.access_token;
+      _user  = resp.data.user;
       localStorage.setItem('inn_token', _token);
-      return apiGet('/auth/me').then(function(me) {
-        _user = me.user || me;
-        localStorage.setItem('inn_user', JSON.stringify(_user));
-        afterLogin();
-      });
+      localStorage.setItem('inn_user', JSON.stringify(_user));
+      afterLogin();
     } else {
-      throw new Error(data.message || data.error || 'Credenciales incorrectas');
+      var msg = (resp.error && resp.error.message) || 'Email o contraseña incorrectos';
+      throw new Error(msg);
     }
   })
   .catch(function(e) {
@@ -1056,11 +1055,23 @@ function populateUser() {
 }
 
 function loadBalance() {
-  apiGet('/money/balance').then(function(data) {
-    if (data.balance !== undefined || data.balanceXaf !== undefined) {
-      _balanceXAF = Math.round(data.balanceXaf || data.balance * 655.957 || 0);
-      localStorage.setItem('inn_balance', _balanceXAF);
+  apiGet('/money/balance').then(function(resp) {
+    if (resp.success && resp.data && resp.data.balances) {
+      var b = resp.data.balances;
+      _balanceXAF = Math.round(b.XAF ? b.XAF.amount : 0);
+      _balances = {
+        XAF: Math.round(b.XAF ? b.XAF.amount : 0),
+        EUR:  b.EUR  ? b.EUR.amount  : 0,
+        USD:  b.USD  ? b.USD.amount  : 0,
+        GHS:  b.GHS  ? b.GHS.amount  : (_balanceXAF * 0.02540)
+      };
+      localStorage.setItem('inn_balance', JSON.stringify(_balances));
       updateBalanceDisplay();
+      // Also update wallet screen
+      var wEl = document.getElementById('wallet-xaf');
+      var wEur = document.getElementById('wallet-eur');
+      if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
+      if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2,maximumFractionDigits:2});
     }
   }).catch(function(){});
 }
@@ -1079,11 +1090,17 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 // -- Currency switcher ------------------
-var _balanceXAF = 816832;
-var _rates = { XAF:1, EUR:0.001524, USD:0.001658, GHS:0.02540 };
+var _balanceXAF = 0;
+var _balances = { XAF:0, EUR:0, USD:0, GHS:0 };
 var _symbols = { XAF:'XAF', EUR:'€', USD:'$', GHS:'GHS' };
 var _curCurrency = 'XAF';
 var _balanceHidden = false;
+
+// Restore cached balance while API loads
+(function(){
+  var cached = localStorage.getItem('inn_balance');
+  if (cached) { try { _balances = JSON.parse(cached); _balanceXAF = _balances.XAF || 0; } catch(e){} }
+})();
 
 function switchCurrency(cur) {
   _curCurrency = cur;
@@ -1098,12 +1115,11 @@ function updateBalanceDisplay() {
   var el = document.getElementById('balance-amount');
   if (!el) return;
   if (_balanceHidden) { el.textContent = '••••••'; return; }
-  var val = _balanceXAF * _rates[_curCurrency];
-  var sym = _symbols[_curCurrency];
+  var val = _balances[_curCurrency] || 0;
   if (_curCurrency === 'XAF') {
     el.textContent = Math.round(val).toLocaleString('fr-FR') + ' XAF';
   } else {
-    el.textContent = sym + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    el.textContent = _symbols[_curCurrency] + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
   }
 }
 
