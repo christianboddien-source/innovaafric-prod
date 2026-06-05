@@ -958,17 +958,33 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         <div class="page-title">Mi Perfil</div>
         <div class="icon-btn">⚙️</div>
       </div>
-      <div style="padding:10px 14px 10px;text-align:center">
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">A</div>
-        <div id="perfil-name" style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:3px">—</div>
+      <div style="padding:10px 14px 14px;text-align:center">
+        <div id="perfil-initial" style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e05a00);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#fff;box-shadow:0 0 0 4px rgba(245,166,35,.2)">?</div>
+        <div id="perfil-name" style="font-size:18px;font-weight:900;color:var(--txt);margin-bottom:2px">—</div>
         <div id="perfil-email" style="font-size:11px;color:var(--txt3);margin-bottom:10px">—</div>
-        <div style="display:flex;justify-content:center;gap:8px">
-          <span class="pill pill-green">✓ Verificado</span>
-          <span class="pill pill-blue">Premium</span>
+        <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
+          <span id="perfil-kyc" class="pill pill-gold">⏳ Pendiente KYC</span>
+          <span id="perfil-role" class="pill pill-blue">Cliente</span>
+        </div>
+      </div>
+      <!-- IA Code card -->
+      <div style="margin:0 14px 14px;background:linear-gradient(135deg,rgba(41,171,226,.08),rgba(41,171,226,.03));border:1px solid rgba(41,171,226,.2);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:4px">Código IA Interno</div>
+          <div id="perfil-iacode" style="font-size:18px;font-weight:900;color:var(--blue);letter-spacing:2px">—</div>
+        </div>
+        <div style="font-size:28px;opacity:.4">🤖</div>
+      </div>
+      <!-- Country / location -->
+      <div style="margin:0 14px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">📍</span>
+        <div>
+          <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--txt3);margin-bottom:2px">Ubicación</div>
+          <div id="perfil-country" style="font-size:13px;font-weight:700;color:var(--txt)">—</div>
         </div>
       </div>
       <div style="padding:0 14px">
-        <div class="section-title" style="margin-top:10px">Mi cuenta</div>
+        <div class="section-title">Mi cuenta</div>
         <div class="card" style="border-radius:18px;padding:0;overflow:hidden;margin-bottom:14px">
           <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer">
             <span style="font-size:18px">👤</span><div style="flex:1;font-size:13px;font-weight:600;color:var(--txt)">Datos personales</div><span style="color:var(--txt3);font-size:12px">›</span>
@@ -994,7 +1010,7 @@ body{font-family:'Inter',sans-serif;color:var(--txt)}
         </div>
         <button class="btn-outline" onclick="doLogout()" style="border-color:rgba(239,68,68,.3);color:var(--red)">🚪 Cerrar sesión</button>
       </div>
-      <div style="height:10px"></div>
+      <div style="height:20px"></div>
     </div>
 
   </div><!-- /screens -->
@@ -1093,14 +1109,30 @@ window.addEventListener('beforeinstallprompt', function(e) {
 // -- Supabase Auth -----------------------
 var SB_URL  = 'https://spnfvmvrlexyiljwyola.supabase.co';
 var SB_ANON = 'sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
+var RAIL_API = 'https://api.innovaafric.com/v1';
 var sb = supabase.createClient(SB_URL, SB_ANON);
-var _token = null;
+var _token = null;       // Railway JWT
+var _sbToken = null;     // Supabase JWT
 var _user  = JSON.parse(localStorage.getItem('inn_user') || 'null');
 
 function sbGet(table, filters) {
   var url = SB_URL + '/rest/v1/' + table + '?' + filters + '&select=*';
   return fetch(url, {
-    headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + _token }
+    headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + _sbToken }
+  }).then(function(r){ return r.json(); });
+}
+
+function railGet(path) {
+  return fetch(RAIL_API + path, {
+    headers: { 'Authorization': 'Bearer ' + _token, 'Content-Type': 'application/json' }
+  }).then(function(r){ return r.json(); });
+}
+
+function exchangeSupabaseToken(sbToken) {
+  return fetch(RAIL_API + '/auth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ grant_type: 'supabase_exchange', supabase_token: sbToken })
   }).then(function(r){ return r.json(); });
 }
 
@@ -1117,16 +1149,50 @@ function doLogin() {
   sb.auth.signInWithPassword({ email: email, password: pass })
   .then(function(result) {
     if (result.error) throw new Error(result.error.message);
-    _token = result.data.session.access_token;
+    _sbToken = result.data.session.access_token;
     var au  = result.data.user;
+    var meta = au.user_metadata || {};
     _user = {
-      id:    au.id,
-      email: au.email,
-      name:  (au.user_metadata && (au.user_metadata.full_name || au.user_metadata.name)) || au.email.split('@')[0],
-      role:  (au.user_metadata && au.user_metadata.role) || 'customer'
+      id:       au.id,
+      email:    au.email,
+      name:     meta.full_name || meta.name || au.email.split('@')[0],
+      role:     meta.role || 'customer',
+      ia_code:  meta.ia_code || null,
+      country:  meta.country || null,
+      city:     meta.city || null,
+      phone:    meta.phone || null,
+      kyc:      meta.kyc_level > 0 ? 'verified' : 'pending'
     };
-    localStorage.setItem('inn_user', JSON.stringify(_user));
-    afterLogin();
+    // Exchange for Railway JWT to get real wallet data
+    return exchangeSupabaseToken(_sbToken).then(function(ex) {
+      if (ex && ex.success && ex.data && ex.data.access_token) {
+        _token = ex.data.access_token;
+        var u = ex.data.user || {};
+        _user.id       = u.id || _user.id;
+        _user.name     = u.name || _user.name;
+        _user.role     = u.role || _user.role;
+        _user.country  = u.country || _user.country;
+        _user.city     = u.city || _user.city;
+        _user.phone    = u.phone || _user.phone;
+        _user.kyc      = u.kyc_status || _user.kyc;
+        _user.ia_code  = u.ia_code || meta.ia_code || null;
+        // Wallet from exchange response
+        if (ex.data.wallet) {
+          var w = ex.data.wallet;
+          _balances = {
+            XAF: Math.round(w.balanceXaf || 0),
+            EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+            USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+            GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+          };
+          _balanceXAF = _balances.XAF;
+          localStorage.setItem('inn_balance', JSON.stringify(_balances));
+          updateBalanceDisplay();
+        }
+      }
+      localStorage.setItem('inn_user', JSON.stringify(_user));
+      afterLogin();
+    });
   })
   .catch(function(e) {
     var msg = e.message || 'Email o contraseña incorrectos';
@@ -1290,7 +1356,7 @@ function doRegister() {
 
 function doLogout() {
   sb.auth.signOut();
-  _token = null; _user = null;
+  _token = null; _sbToken = null; _user = null;
   localStorage.removeItem('inn_user');
   localStorage.removeItem('inn_balance');
   document.getElementById('s-login').style.display = 'flex';
@@ -1306,40 +1372,47 @@ function doLogout() {
 
 function populateUser() {
   if (!_user) return;
-  var name = (_user.name || _user.firstName || _user.email || 'Usuario').split(' ');
-  var display = name.join(' ');
-  var initial = display.charAt(0).toUpperCase();
-  // Header name
+  var display = _user.name || _user.email || 'Usuario';
+  var initial  = display.charAt(0).toUpperCase();
+  // Header
   document.querySelectorAll('.user-name-display').forEach(function(el){ el.textContent = display; });
   document.querySelectorAll('.user-initial').forEach(function(el){ el.textContent = initial; });
   // Perfil screen
-  var pname = document.getElementById('perfil-name');
+  var pname  = document.getElementById('perfil-name');
   var pemail = document.getElementById('perfil-email');
-  if (pname) pname.textContent = display;
-  if (pemail) pemail.textContent = _user.email || '';
+  var prole  = document.getElementById('perfil-role');
+  var pkyc   = document.getElementById('perfil-kyc');
+  var pcode  = document.getElementById('perfil-iacode');
+  var pcountry = document.getElementById('perfil-country');
+  var pinitial = document.getElementById('perfil-initial');
+  if (pname)    pname.textContent    = display;
+  if (pemail)   pemail.textContent   = _user.email || '';
+  if (pinitial) pinitial.textContent = initial;
+  var roleLabels = { customer:'Cliente', rider:'Rider', supplier:'Proveedor', circular_autorizada:'Circular', admin:'Admin', ceo:'CEO', employee:'Empleado', agent:'Agente' };
+  if (prole) prole.textContent = roleLabels[_user.role] || _user.role || 'Cliente';
+  if (pkyc) {
+    if (_user.kyc === 'verified') {
+      pkyc.textContent = '✓ Verificado'; pkyc.className = 'pill pill-green';
+    } else {
+      pkyc.textContent = '⏳ Pendiente KYC'; pkyc.className = 'pill pill-gold';
+    }
+  }
+  if (pcode) pcode.textContent = _user.ia_code || '—';
+  if (pcountry) pcountry.textContent = (_user.city ? _user.city + ', ' : '') + (_user.country || '—');
 }
 
 function loadBalance() {
-  if (!_user || !_user.id) return;
-  // Try Supabase wallet table (Prisma model "Wallet")
-  sbGet('Wallet', 'userId=eq.' + _user.id)
-  .then(function(rows) {
-    var w = Array.isArray(rows) && rows.length ? rows[0] : null;
-    if (!w) {
-      // fallback: try lowercase table name
-      return sbGet('wallets', 'userId=eq.' + _user.id).then(function(r2){
-        return Array.isArray(r2) && r2.length ? r2[0] : null;
-      });
-    }
-    return w;
-  })
-  .then(function(w) {
-    if (!w) return;
+  // Wallet data already loaded via supabase_exchange in doLogin/getSession.
+  // Fallback: query Railway API directly if we have a Railway token.
+  if (!_token) return;
+  railGet('/money/balance').then(function(resp) {
+    if (!resp || !resp.success || !resp.data || !resp.data.balances) return;
+    var b = resp.data.balances;
     _balances = {
-      XAF: Math.round(w.balanceXaf || 0),
-      EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
-      USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-      GHS: parseFloat((w.balanceXof || w.balanceXaf * 0.025 || 0).toFixed(2))
+      XAF: Math.round((b.XAF && b.XAF.amount) || 0),
+      EUR: parseFloat(((b.EUR && b.EUR.amount) || 0).toFixed(2)),
+      USD: parseFloat(((b.USD && b.USD.amount) || 0).toFixed(2)),
+      GHS: parseFloat(((b.XOF && b.XOF.amount) || 0).toFixed(2))
     };
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
@@ -1348,8 +1421,7 @@ function loadBalance() {
     var wEur = document.getElementById('wallet-eur');
     if (wEl)  wEl.textContent  = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
     if (wEur) wEur.textContent = '≈ € ' + _balances.EUR.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
-  })
-  .catch(function(){});
+  }).catch(function(){});
 }
 
 // -- On start ----------------------------
@@ -1363,16 +1435,53 @@ window.addEventListener('DOMContentLoaded', function() {
   sb.auth.getSession().then(function(result) {
     var session = result.data && result.data.session;
     if (session && session.access_token) {
-      _token = session.access_token;
+      _sbToken = session.access_token;
       var au  = session.user;
+      var meta = (au && au.user_metadata) || {};
       _user = {
-        id:    au.id,
-        email: au.email,
-        name:  (au.user_metadata && (au.user_metadata.full_name || au.user_metadata.name)) || au.email.split('@')[0],
-        role:  (au.user_metadata && au.user_metadata.role) || 'customer'
+        id:      au.id,
+        email:   au.email,
+        name:    meta.full_name || meta.name || au.email.split('@')[0],
+        role:    meta.role || 'customer',
+        ia_code: meta.ia_code || null,
+        country: meta.country || null,
+        city:    meta.city || null,
+        phone:   meta.phone || null,
+        kyc:     meta.kyc_level > 0 ? 'verified' : 'pending'
       };
-      localStorage.setItem('inn_user', JSON.stringify(_user));
-      afterLogin();
+      // Exchange for Railway JWT
+      exchangeSupabaseToken(_sbToken).then(function(ex) {
+        if (ex && ex.success && ex.data && ex.data.access_token) {
+          _token = ex.data.access_token;
+          var u = ex.data.user || {};
+          _user.id      = u.id || _user.id;
+          _user.name    = u.name || _user.name;
+          _user.role    = u.role || _user.role;
+          _user.country = u.country || _user.country;
+          _user.city    = u.city || _user.city;
+          _user.phone   = u.phone || _user.phone;
+          _user.kyc     = u.kyc_status || _user.kyc;
+          _user.ia_code = u.ia_code || meta.ia_code || null;
+          if (ex.data.wallet) {
+            var w = ex.data.wallet;
+            _balances = {
+              XAF: Math.round(w.balanceXaf || 0),
+              EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+              USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+              GHS: parseFloat((w.balanceXof || 0).toFixed(2))
+            };
+            _balanceXAF = _balances.XAF;
+            localStorage.setItem('inn_balance', JSON.stringify(_balances));
+            updateBalanceDisplay();
+          }
+        }
+        localStorage.setItem('inn_user', JSON.stringify(_user));
+        afterLogin();
+      }).catch(function(){
+        // If exchange fails, still log in with Supabase data only
+        localStorage.setItem('inn_user', JSON.stringify(_user));
+        afterLogin();
+      });
     }
   });
 });
