@@ -745,8 +745,11 @@
   .pcard:nth-child(1){animation-delay:.05s}.pcard:nth-child(2){animation-delay:.13s}.pcard:nth-child(3){animation-delay:.21s}
   .pcard:nth-child(4){animation-delay:.29s}.pcard:nth-child(5){animation-delay:.37s}.pcard:nth-child(6){animation-delay:.45s}
   @keyframes pfade{to{opacity:1;transform:translateY(0)}}
-  .pcard img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .45s;}
-  .pcard:hover img{transform:scale(1.06);}
+  .pcard img{width:100%;height:220px;object-fit:cover;display:block;animation:kburns 8s ease-in-out infinite alternate;}
+  .pcard:nth-child(even) img{animation-name:kburns2;animation-duration:10s;}
+  @keyframes kburns{0%{transform:scale(1) translate(0,0);}100%{transform:scale(1.12) translate(-2%,-1%);}}
+  @keyframes kburns2{0%{transform:scale(1.08) translate(1%,0);}100%{transform:scale(1) translate(0,1%);}}
+  .pcard:hover img{animation-play-state:paused;}
   .pcard-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(10,15,30,.85));padding:14px 16px;}
   .pcard-op{font-size:10px;font-weight:800;letter-spacing:1.5px;color:#F5A623;text-transform:uppercase;margin-bottom:3px;}
   .pcard-desc{font-size:12px;color:#F0F4FF;font-weight:600;margin:0;}
@@ -798,8 +801,32 @@
       <div class="pcard-overlay"><div class="pcard-op">🤝 Transferencia P2P</div><p class="pcard-desc">Envío directo entre contactos</p><div class="pcard-loc">📍 Abidjan, Côte d'Ivoire</div></div>
     </div>
     <div class="pcard">
-      <img src="https://images.unsplash.com/photo-1493689485253-f69a77b52a63?w=400&h=300&fit=crop" alt="Mobile top-up">
+      <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop" alt="Mobile top-up">
       <div class="pcard-overlay"><div class="pcard-op">📲 Recarga móvil</div><p class="pcard-desc">Top-up Orange Money en segundos</p><div class="pcard-loc">📍 Dakar, Sénégal</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=300&fit=crop" alt="African woman sending money">
+      <div class="pcard-overlay"><div class="pcard-op">💌 Enviando dinero</div><p class="pcard-desc">Mamá envía el sustento a Duala desde Madrid</p><div class="pcard-loc">📍 Madrid → Cameroun</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop" alt="Man sending money">
+      <div class="pcard-overlay"><div class="pcard-op">🎉 ¡Llegó el dinero!</div><p class="pcard-desc">Papá recibe la transferencia al instante</p><div class="pcard-loc">📍 París → Dakar</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=400&h=300&fit=crop" alt="Happy diaspora">
+      <div class="pcard-overlay"><div class="pcard-op">😊 Familia conectada</div><p class="pcard-desc">"Le cambié la vida con XenderMoney"</p><div class="pcard-loc">📍 Lyon → Abidjan</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=400&h=300&fit=crop" alt="Woman happy with phone">
+      <div class="pcard-overlay"><div class="pcard-op">🥹 Emoción real</div><p class="pcard-desc">Primera transferencia recibida — coste 0 XAF</p><div class="pcard-loc">📍 Barcelona → Lagos</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" alt="video call family">
+      <div class="pcard-overlay"><div class="pcard-op">📞 Videollamada + pago</div><p class="pcard-desc">Envío mientras hablas con tus seres queridos</p><div class="pcard-loc">📍 Marseille → Bamako</div></div>
+    </div>
+    <div class="pcard">
+      <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=300&fit=crop" alt="woman at home sending">
+      <div class="pcard-overlay"><div class="pcard-op">🏠 Desde casa</div><p class="pcard-desc">Sin filas, sin comisiones ocultas, sin estrés</p><div class="pcard-loc">📍 Bilbao → Yaoundé</div></div>
     </div>
   </div>
 </section>
@@ -2098,6 +2125,7 @@ function calcXM(){
 
 </body>
 </html>
+
 
 
 
