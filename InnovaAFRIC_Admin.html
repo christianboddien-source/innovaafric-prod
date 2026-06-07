@@ -8574,10 +8574,12 @@ function renderBigShopVendors(vendors){
       +'</tr>';
   }).join('');
 }
-function saveBigShopPlans(){
+async function saveBigShopPlans(){
   var plans={basic:{fee:parseFloat(document.getElementById('plan-basic-fee').value)||8,maxProducts:parseInt(document.getElementById('plan-basic-prods').value)||50,price:parseFloat(document.getElementById('plan-basic-price').value)||0},pro:{fee:parseFloat(document.getElementById('plan-pro-fee').value)||5,maxProducts:'unlimited',price:parseFloat(document.getElementById('plan-pro-price').value)||29}};
   localStorage.setItem('ia_bigshop_plans',JSON.stringify(plans));
-  toast('✅ Planes guardados','success');
+  // Persistir en Supabase config
+  SB.from('config').upsert({key:'bigshop_plans',value:JSON.stringify(plans),updated_at:new Date().toISOString()}).catch(()=>null);
+  toast('✅ Planes guardados en Supabase','success');
   logAdminAction('save_bigshop_plans','Planes BigShop actualizados');
 }
 
@@ -8589,7 +8591,21 @@ async function loadDeliveryAdmin(){
   try{
 
   var r=await rwAPI('GET','/admin/delivery');
-  ALL_DELIVERIES=r.success?(r.data.deliveries||r.data.items||[]):getDemoDeliveries();
+  ALL_DELIVERIES=r.success?(r.data.deliveries||r.data.items||[]):[];
+  // Fallback: Supabase shipment_tracking table
+  if(!ALL_DELIVERIES.length){
+    try{
+      var sbR=await SB.from('shipment_tracking').select('*,user:user_id(full_name,email)').order('timestamp',{ascending:false}).limit(100).catch(()=>({data:[]}));
+      if(sbR.data&&sbR.data.length){
+        ALL_DELIVERIES=sbR.data.map(function(t){
+          return{id:t.order_id||t.id,customer:(t.user&&(t.user.full_name||t.user.email))||'—',
+            origin:t.location||'—',destination:t.description||'—',
+            status:t.status||'confirmed',rider:'—',eta:'—',created_at:t.timestamp};
+        });
+      }
+    }catch(e){}
+  }
+  if(!ALL_DELIVERIES.length) ALL_DELIVERIES=getDemoDeliveries();
   updateDeliveryStats();
   renderDeliveryAdmin(ALL_DELIVERIES);
 
@@ -8639,13 +8655,20 @@ function openDeliveryUpdate(id,customer,status){
   document.getElementById('delivery-notes').value='';
   openModal('m-delivery-status');
 }
-function updateDeliveryStatus(){
+async function updateDeliveryStatus(){
   var id=document.getElementById('delivery-edit-id').value;
   var status=document.getElementById('delivery-new-status').value;
   var notes=document.getElementById('delivery-notes').value;
   var d=ALL_DELIVERIES.find(function(x){return x.id===id;});
   if(d)d.status=status;
   closeModal('m-delivery-status');
+  // Persistir en Supabase
+  SB.from('shipment_tracking').insert({
+    order_id:id,status:status,description:notes||STATUS_LABEL[status]||status,
+    location:'Admin update',timestamp:new Date().toISOString()
+  }).catch(()=>null);
+  // Intentar Railway también
+  rwAPI('PATCH','/admin/delivery/'+id,{status:status,notes:notes||undefined}).catch(()=>null);
   toast('✅ Estado actualizado: '+(STATUS_LABEL[status]||status),'success');
   logAdminAction('update_delivery',id+' → '+status+(notes?' ('+notes+')':''));
   renderDeliveryAdmin(ALL_DELIVERIES);
@@ -8656,9 +8679,13 @@ function updateDeliveryStatus(){
 // V19 — ADS ADMIN
 // ══════════════════════════════════════════════════════
 var AD_PRICES_CONFIG={local:{1:500,3:1200,7:2500,30:8000,currency:'XAF'},nacional:{1:2000,3:5000,7:10000,30:30000,currency:'XAF'},africa:{1:5,3:12,7:25,30:80,currency:'EUR'},global:{1:10,3:25,7:50,30:150,currency:'EUR'}};
-function loadAdsAdmin(){
-  var stored=localStorage.getItem('ia_ad_prices');
-  if(stored)AD_PRICES_CONFIG=JSON.parse(stored);
+async function loadAdsAdmin(){
+  // Cargar precios desde Supabase config primero
+  try{
+    var r=await SB.from('config').select('value').eq('key','ad_prices').single().catch(()=>null);
+    if(r&&r.data)AD_PRICES_CONFIG=JSON.parse(r.data.value);
+    else{var stored=localStorage.getItem('ia_ad_prices');if(stored)AD_PRICES_CONFIG=JSON.parse(stored);}
+  }catch(e){var stored=localStorage.getItem('ia_ad_prices');if(stored)AD_PRICES_CONFIG=JSON.parse(stored);}
   renderAdPricesEditor();
   loadAdsAdminList();
   updateAdsStats();
@@ -8686,7 +8713,8 @@ function saveAdPrices(){
     });
   });
   localStorage.setItem('ia_ad_prices',JSON.stringify(AD_PRICES_CONFIG));
-  toast('✅ Tarifas de publicidad guardadas','success');
+  SB.from('config').upsert({key:'ad_prices',value:JSON.stringify(AD_PRICES_CONFIG),updated_at:new Date().toISOString()}).catch(()=>null);
+  toast('✅ Tarifas guardadas en Supabase','success');
   logAdminAction('save_ad_prices','Tarifas de publicidad actualizadas');
 }
 function updateAdsStats(){
