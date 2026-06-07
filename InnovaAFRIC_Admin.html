@@ -3989,7 +3989,10 @@ select.form-input option{background:var(--s2)}
 
 <div id="pg-campaigns" style="display:none">
   <div class="mod-header"><h2>Campañas</h2>
-    <button class="btn-primary" onclick="openModal('m-create-campaign')">+ Nueva campaña</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn-secondary" onclick="exportCampaignsCSV()">📥 CSV</button>
+      <button class="btn-primary" onclick="openModal('m-create-campaign')">+ Nueva campaña</button>
+    </div>
   </div>
   <div id="campaigns-stats" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"></div>
   <div style="display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap">
@@ -14544,7 +14547,15 @@ var SMS_LOG=[
 ];
 
 /* ── TEMPLATES ──────────────────────────────────────────────── */
-function loadTemplates(){filterTemplates(TEMPLATES_DATA);}
+async function loadTemplates(){
+  try{
+    var q=await SB.from('message_templates').select('id,name,channel,lang,subject,body,status,created_at').order('created_at',{ascending:false}).limit(100).catch(()=>({data:null}));
+    if(q.data&&q.data.length){
+      TEMPLATES_DATA=q.data.map(function(t){return{id:t.id,name:t.name,channel:t.channel||'email',lang:t.lang||'es',subject:t.subject||'',body:t.body||'',status:t.status||'activa',created_at:t.created_at};});
+    }
+  }catch(e){}
+  filterTemplates(TEMPLATES_DATA);
+}
 
 function filterTemplates(data){
   data=data||TEMPLATES_DATA;
@@ -14829,7 +14840,25 @@ function viewABReport(id){
 }
 
 /* ── INBOX ──────────────────────────────────────────────────── */
-function loadInbox(){
+async function loadInbox(){
+  // Intentar cargar desde Supabase notifications o messages
+  try{
+    var q=await SB.from('notifications').select('id,user_id,title,body,type,read,created_at').order('created_at',{ascending:false}).limit(100).catch(()=>({data:null}));
+    if(q.data&&q.data.length){
+      INBOX_DATA=q.data.map(function(n){
+        var u=ALL_USERS&&ALL_USERS.find(function(x){return x.id===n.user_id;});
+        return{
+          id:n.id,
+          user:u?u.full_name||u.email:'Usuario',
+          type:n.type||'alerta',
+          subject:n.title||'Notificación',
+          preview:n.body||'',
+          date:n.created_at?new Date(n.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',
+          status:n.read?'leido':'no_leido'
+        };
+      });
+    }
+  }catch(e){}
   filterInbox(INBOX_DATA);
   var unread=INBOX_DATA.filter(m=>m.status==='no_leido').length;
   var badge=document.getElementById('sb-inbox-count');
@@ -14895,7 +14924,17 @@ function replyMessage(id){
 }
 
 /* ── SMS GATEWAY ────────────────────────────────────────────── */
-function loadSMSGateway(){
+async function loadSMSGateway(){
+  // Intentar cargar desde Supabase sms_logs
+  try{
+    var q=await SB.from('sms_logs').select('id,user_id,phone,message,provider,cost,status,created_at').order('created_at',{ascending:false}).limit(200).catch(()=>({data:null}));
+    if(q.data&&q.data.length){
+      SMS_LOG=q.data.map(function(s){
+        var u=ALL_USERS&&ALL_USERS.find(function(x){return x.id===s.user_id;});
+        return{id:s.id,user:u?u.full_name||u.email:'Usuario',phone:s.phone||'—',msg:s.message||'—',provider:s.provider||'—',cost:Number(s.cost||0),date:s.created_at?new Date(s.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',status:s.status||'desconocido'};
+      });
+    }
+  }catch(e){}
   var delivered=SMS_LOG.filter(s=>s.status==='entregado').length;
   var cost=SMS_LOG.reduce((s,x)=>s+(typeof x.cost==='number'?x.cost:0),0);
   var el=document.getElementById('sms-stats');
@@ -14987,6 +15026,15 @@ function sendSMS(){
 }
 
 /* ── COMM ANALYTICS ─────────────────────────────────────────── */
+function exportCampaignsCSV(){
+  if(!CAMPAIGNS_DATA.length){toast('Sin datos','warn');return;}
+  var h=['ID','Nombre','Canal','Audiencia','Enviados','Apertura %','Conv %','Fecha','Estado'];
+  var rows=[h.join(',')].concat(CAMPAIGNS_DATA.map(c=>[c.id,'"'+c.name+'"',c.channel,c.audience,c.sent,c.openRate,c.convRate,c.date,c.status].join(','))).join('\r\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows],{type:'text/csv;charset=utf-8'}));
+  a.download='campaigns_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  toast('✅ CSV exportado');
+}
+
 function loadCommAnalytics(){
   var totalMsg=CAMPAIGNS_DATA.reduce((s,c)=>s+c.sent,0)+SMS_LOG.length+INBOX_DATA.length;
   var avgOpen=(CAMPAIGNS_DATA.filter(c=>c.openRate>0).reduce((s,c)=>s+c.openRate,0)/(CAMPAIGNS_DATA.filter(c=>c.openRate>0).length||1)).toFixed(1);
