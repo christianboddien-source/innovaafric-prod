@@ -13138,12 +13138,29 @@ async function loadSessionsAdmin(){
   tb.innerHTML='<tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr>';
   var r=await rwAPI('GET','/admin/sessions');
   ALL_SESSIONS=(r&&r.success&&(r.data.sessions||r.data.items||r.data))||[];
-  if(!ALL_SESSIONS.length){
-    ALL_SESSIONS=[
-      {id:'s1',user_name:'Amara Diallo',email:'amara@demo.com',ip:'41.188.10.22',device:'mobile',country:'CM',started_at:new Date(Date.now()-1800000).toISOString(),last_active:new Date().toISOString()},
-      {id:'s2',user_name:'Carlos Ruiz',email:'carlos@demo.com',ip:'85.32.100.5',device:'desktop',country:'ES',started_at:new Date(Date.now()-7200000).toISOString(),last_active:new Date(Date.now()-300000).toISOString()},
-      {id:'s3',user_name:'API Client',email:'api@partner.com',ip:'192.168.1.1',device:'api',country:'FR',started_at:new Date(Date.now()-86400000).toISOString(),last_active:new Date(Date.now()-600000).toISOString()}
-    ];
+  // Fallback: construir sesiones desde usuarios activos en Supabase (updated en últimas 2h)
+  if(!ALL_SESSIONS.length&&SB){
+    try{
+      var since2h=new Date(Date.now()-7200000).toISOString();
+      var{data:recentUsers}=await SB.from('users')
+        .select('id,full_name,email,country,updated_at,is_active')
+        .gte('updated_at',since2h)
+        .eq('is_active',true)
+        .order('updated_at',{ascending:false})
+        .limit(50);
+      ALL_SESSIONS=(recentUsers||[]).map(function(u,i){
+        return{
+          id:'sess_'+u.id,
+          user_name:u.full_name||u.email,
+          email:u.email,
+          ip:'—',
+          device:'Web / App',
+          country:u.country||'—',
+          started_at:u.updated_at,
+          last_active:u.updated_at
+        };
+      });
+    }catch(e){console.warn('Sessions fallback failed:',e);}
   }
   var lbl=document.getElementById('sess-count-label');
   if(lbl)lbl.textContent=ALL_SESSIONS.length+' sesiones activas';
@@ -19525,18 +19542,37 @@ async function loadLoginLogs(){
   if(!tb)return;
   tb.innerHTML='<tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr>';
   var period=document.getElementById('ll-period-f').value;
+  var list=[];
+
+  // Intentar Railway primero
   var r=await rwAPI('GET','/admin/login-logs?period='+period);
-  var list=(r&&r.success&&(r.data.logs||r.data.items||r.data))||[];
-  if(!list.length){
-    var now=Date.now();
-    list=[
-      {id:'l1',email:'admin@innovaafric.com',ip:'85.32.100.5',country:'ES',device:'Chrome / Windows',status:'success',created_at:new Date(now-1800000).toISOString()},
-      {id:'l2',email:'unknown@hack.com',ip:'45.227.253.10',country:'BR',device:'curl/7.8',status:'failed',created_at:new Date(now-3600000).toISOString()},
-      {id:'l3',email:'unknown@hack.com',ip:'45.227.253.10',country:'BR',device:'curl/7.8',status:'failed',created_at:new Date(now-3610000).toISOString()},
-      {id:'l4',email:'maria@innovaafric.com',ip:'85.32.100.6',country:'ES',device:'Safari / iPhone',status:'success',created_at:new Date(now-7200000).toISOString()},
-      {id:'l5',email:'attacker@spam.ru',ip:'91.108.56.33',country:'RU',device:'Python-urllib',status:'blocked',created_at:new Date(now-86400000).toISOString()}
-    ];
+  list=(r&&r.success&&(r.data.logs||r.data.items||r.data))||[];
+
+  // Fallback: construir desde usuarios de Supabase (last_sign_in / updated_at)
+  if(!list.length&&SB){
+    try{
+      var hoursMap={'24h':24,'7d':168,'30d':720};
+      var hours=hoursMap[period]||24;
+      var since=new Date(Date.now()-hours*3600000).toISOString();
+      var{data:users}=await SB.from('users')
+        .select('id,email,country,updated_at,is_blocked,is_active')
+        .gte('updated_at',since)
+        .order('updated_at',{ascending:false})
+        .limit(100);
+      list=(users||[]).map(function(u){
+        return{
+          id:u.id,
+          email:u.email||'—',
+          ip:'—',
+          country:u.country||'—',
+          device:'Web / App',
+          status:u.is_blocked?'blocked':'success',
+          created_at:u.updated_at
+        };
+      });
+    }catch(e){console.warn('Login logs fallback failed:',e);}
   }
+
   ALL_LOGIN_LOGS=list;
   var total=list.length;
   var failed=list.filter(function(l){return l.status==='failed';}).length;
@@ -20012,10 +20048,17 @@ var ALL_VIP=[];
 async function loadVIPLimits(){
   var tb=document.getElementById('tb-vip');
   if(!tb)return;
-  var stored=JSON.parse(localStorage.getItem('ia_vip_limits')||'[]');
-  ALL_VIP=stored.length?stored:[
-    {user_name:'Amara Diallo',email:'amara@demo.com',daily_send:2000,monthly_send:20000,daily_cash:5000,max_balance:50000,reason:'Cliente VIP empresarial',assigned_by:'Super Admin'}
-  ];
+  tb.innerHTML='<tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr>';
+  // Cargar desde Supabase config table
+  try{
+    var{data}=await SB.from('config').select('value').eq('key','vip_limits').single();
+    ALL_VIP=data&&data.value?JSON.parse(data.value):[];
+  }catch(e){
+    // Fallback a localStorage si Supabase no tiene la tabla config o la clave
+    ALL_VIP=JSON.parse(localStorage.getItem('ia_vip_limits')||'[]');
+  }
+  if(!ALL_VIP.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin límites VIP configurados</td></tr>';return;}
+  // (resto del render igual)
   if(!ALL_VIP.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin límites VIP configurados</td></tr>';return;}
   tb.innerHTML=ALL_VIP.map(function(v,i){
     return '<tr>'
@@ -20044,7 +20087,10 @@ async function saveVIPLimits(){
     assigned_by:'Admin'
   };
   ALL_VIP.push(entry);
-  localStorage.setItem('ia_vip_limits',JSON.stringify(ALL_VIP));
+  // Guardar en Supabase config table y localStorage como backup
+  try{
+    await SB.from('config').upsert({key:'vip_limits',value:JSON.stringify(ALL_VIP),updated_at:new Date().toISOString()});
+  }catch(e){localStorage.setItem('ia_vip_limits',JSON.stringify(ALL_VIP));}
   await rwAPI('POST','/admin/users/vip-limits',entry);
   logAdminAction('set_vip_limits','user:'+userQ);
   toast('👑 Límites VIP asignados','success');
@@ -20052,9 +20098,11 @@ async function saveVIPLimits(){
   loadVIPLimits();
 }
 
-function removeVIP(i){
+async function removeVIP(i){
   ALL_VIP.splice(i,1);
-  localStorage.setItem('ia_vip_limits',JSON.stringify(ALL_VIP));
+  try{
+    await SB.from('config').upsert({key:'vip_limits',value:JSON.stringify(ALL_VIP),updated_at:new Date().toISOString()});
+  }catch(e){localStorage.setItem('ia_vip_limits',JSON.stringify(ALL_VIP));}
   toast('Límites VIP eliminados','info');
   loadVIPLimits();
 }
