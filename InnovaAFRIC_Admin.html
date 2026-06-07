@@ -499,6 +499,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('aichat',this)"><span class="ic">🤖</span><span data-i18n="nav:aichat">Admin AI Chat</span></div>
     <div class="sb-group" data-i18n="grp:Ecosistema-Xender">Ecosistema Xender</div>
     <div class="sb-link" onclick="nav('worldmap',this)"><span class="ic">🌍</span><span data-i18n="nav:worldmap">Mapa mundial</span></div>
+    <div class="sb-link" onclick="nav('xendershop',this)"><span class="ic">🛒</span><span>XenderShop Admin</span><span class="badge-warn" id="sb-xshop-count" style="display:none">0</span></div>
     <div class="sb-link" onclick="nav('shop-cats',this)"><span class="ic">🏷️</span><span data-i18n="nav:shop-cats">Categorías Shop</span></div>
     <div class="sb-link" onclick="nav('bills-providers',this)"><span class="ic">⚡</span><span data-i18n="nav:bills-providers">Proveedores Bills</span></div>
     <div class="sb-link" onclick="nav('bigshop-admin',this)"><span class="ic">🏪</span><span data-i18n="nav:bigshop-admin">XenderBigShop</span></div>
@@ -1892,6 +1893,163 @@ select.form-input option{background:var(--s2)}
         <button class="topbar-btn btn-primary" onclick="loadWorldMap()" style="font-size:11px;margin-left:auto">↻ Actualizar</button>
       </div>
       <div id="admin-worldmap"></div>
+    </div>
+
+    <!-- XENDERSHOP ADMIN -->
+    <div id="pg-xendershop" style="display:none">
+      <!-- Header con stats y acceso rápido -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head" style="flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title">🛒 XenderShop Admin</div>
+            <div class="card-sub">Gestión completa de la tienda online · <a href="https://christianboddien-source.github.io/innovaafric-prod/xendershop/" target="_blank" style="color:var(--cyan)">Ver tienda en vivo ↗</a></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="topbar-btn btn-ghost" onclick="loadXenderShop()">↺ Actualizar</button>
+            <button class="topbar-btn btn-ghost" onclick="exportXShopProductsCSV()">📥 CSV</button>
+            <button class="topbar-btn btn-cyan" onclick="openModal('m-xshop-product')">+ Nuevo producto</button>
+          </div>
+        </div>
+        <!-- KPIs -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 20px 16px">
+          <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Productos</div>
+            <div style="font-size:22px;font-weight:700;color:var(--cyan)" id="xshop-total-products">—</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Pedidos hoy</div>
+            <div style="font-size:22px;font-weight:700;color:#10b981" id="xshop-orders-today">—</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Revenue hoy</div>
+            <div style="font-size:22px;font-weight:700;color:#fbbf24" id="xshop-revenue-today">—</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Sin stock</div>
+            <div style="font-size:22px;font-weight:700;color:#f87171" id="xshop-out-stock">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs: Productos / Pedidos / Configuración -->
+      <div style="display:flex;gap:0;margin-bottom:16px;background:var(--s2);border-radius:10px;overflow:hidden;border:1px solid var(--b1)">
+        <button id="xshop-tab-products" class="topbar-btn" style="flex:1;border-radius:0;padding:10px;font-weight:600;background:var(--cyan);color:#000" onclick="xshopTab('products')">🛍️ Productos</button>
+        <button id="xshop-tab-orders" class="topbar-btn btn-ghost" style="flex:1;border-radius:0;padding:10px" onclick="xshopTab('orders')">📦 Pedidos</button>
+        <button id="xshop-tab-settings" class="topbar-btn btn-ghost" style="flex:1;border-radius:0;padding:10px" onclick="xshopTab('settings')">⚙️ Configuración</button>
+      </div>
+
+      <!-- TAB: Productos -->
+      <div id="xshop-panel-products" class="card">
+        <div style="padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap">
+          <input class="filter-input" id="xshop-search" placeholder="Buscar producto..." oninput="renderXShopProducts()" style="flex:1;min-width:200px">
+          <select class="filter-select" id="xshop-cat-filter" onchange="renderXShopProducts()">
+            <option value="">Todas las categorías</option>
+            <option value="electro">⚡ Electrónica</option>
+            <option value="hogar">🏠 Hogar</option>
+            <option value="moda">👗 Moda</option>
+            <option value="solar">☀️ Solar</option>
+            <option value="sport">🏃 Deporte</option>
+            <option value="beauty">💄 Belleza</option>
+            <option value="kids">👶 Niños</option>
+            <option value="food">🍎 Alimentación</option>
+            <option value="other">📦 Otros</option>
+          </select>
+          <select class="filter-select" id="xshop-stock-filter" onchange="renderXShopProducts()">
+            <option value="">Todo el stock</option>
+            <option value="in">En stock</option>
+            <option value="out">Sin stock</option>
+            <option value="low">Stock bajo (&lt;5)</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Producto</th><th>Categoría</th><th>Precio EUR</th><th>Precio XAF</th><th>Stock</th><th>CE</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-xshop-products"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- TAB: Pedidos -->
+      <div id="xshop-panel-orders" class="card" style="display:none">
+        <div style="padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap">
+          <input class="filter-input" id="xshop-order-search" placeholder="Buscar pedido o usuario..." oninput="renderXShopOrders()" style="flex:1">
+          <select class="filter-select" id="xshop-order-status" onchange="renderXShopOrders()">
+            <option value="">Todos los estados</option>
+            <option value="pending">⏳ Pendiente</option>
+            <option value="processing">🔄 Procesando</option>
+            <option value="shipped">📦 Enviado</option>
+            <option value="delivered">✅ Entregado</option>
+            <option value="cancelled">❌ Cancelado</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Pedido</th><th>Cliente</th><th>Productos</th><th>Total EUR</th><th>Total XAF</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-xshop-orders"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+        </table></div>
+      </div>
+
+      <!-- TAB: Configuración -->
+      <div id="xshop-panel-settings" class="card" style="display:none;padding:20px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:16px">⚙️ Configuración de XenderShop</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label class="form-label">URL de la tienda</label>
+            <input class="form-input" value="https://christianboddien-source.github.io/innovaafric-prod/xendershop/" readonly style="opacity:.7">
+          </div>
+          <div>
+            <label class="form-label">Fuente de productos</label>
+            <input class="form-input" value="Supabase → tabla products" readonly style="opacity:.7">
+          </div>
+          <div>
+            <label class="form-label">Moneda principal</label>
+            <select class="form-input" id="xshop-main-currency">
+              <option value="EUR">EUR (€)</option>
+              <option value="XAF">XAF (FCFA)</option>
+              <option value="USD">USD ($)</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Descuento global (%)</label>
+            <input class="form-input" type="number" id="xshop-global-discount" value="0" min="0" max="90" placeholder="0">
+          </div>
+          <div style="grid-column:1/-1">
+            <label class="form-label">Mensaje banner de la tienda</label>
+            <input class="form-input" id="xshop-banner-msg" placeholder="Ej: Envío gratis a Guinea Ecuatorial este mes">
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <button class="topbar-btn btn-cyan" onclick="saveXShopSettings()">💾 Guardar configuración</button>
+          <a href="https://christianboddien-source.github.io/innovaafric-prod/xendershop/" target="_blank" class="topbar-btn btn-ghost">🌐 Abrir tienda</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Nuevo/Editar Producto XenderShop -->
+    <div id="m-xshop-product" class="modal-overlay" onclick="if(event.target===this)closeModal('m-xshop-product')">
+      <div class="modal-box" style="max-width:600px" onclick="event.stopPropagation()">
+        <div class="modal-hdr"><h3 id="m-xshop-title">Nuevo producto</h3><button onclick="closeModal('m-xshop-product')">✕</button></div>
+        <input type="hidden" id="xshop-prod-id">
+        <div class="form-grid">
+          <label style="grid-column:1/-1">Nombre del producto *<input class="form-input" id="xshop-prod-name" placeholder="Nombre del producto"></label>
+          <label>Categoría *<select class="form-input" id="xshop-prod-cat">
+            <option value="electro">⚡ Electrónica</option><option value="hogar">🏠 Hogar</option>
+            <option value="moda">👗 Moda</option><option value="solar">☀️ Solar</option>
+            <option value="sport">🏃 Deporte</option><option value="beauty">💄 Belleza</option>
+            <option value="kids">👶 Niños</option><option value="food">🍎 Alimentación</option><option value="other">📦 Otros</option>
+          </select></label>
+          <label>Precio EUR €<input class="form-input" type="number" id="xshop-prod-eur" placeholder="29.99" min="0" step="0.01"></label>
+          <label>Precio XAF<input class="form-input" type="number" id="xshop-prod-xaf" placeholder="19650" min="0"></label>
+          <label>Stock<input class="form-input" type="number" id="xshop-prod-stock" placeholder="100" min="0"></label>
+          <label>País de origen<input class="form-input" id="xshop-prod-origin" placeholder="China, España, Ghana..."></label>
+          <label style="display:flex;align-items:center;gap:8px;grid-column:1/-1">
+            <input type="checkbox" id="xshop-prod-ce"> Certificado CE / conforme con normativa
+          </label>
+          <label style="grid-column:1/-1">Descripción<textarea class="form-input" id="xshop-prod-desc" rows="3" placeholder="Descripción del producto..."></textarea></label>
+          <label style="grid-column:1/-1">URL imagen<input class="form-input" id="xshop-prod-img" placeholder="https://..."></label>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn-secondary" onclick="closeModal('m-xshop-product')">Cancelar</button>
+          <button class="btn-primary" onclick="saveXShopProduct()">💾 Guardar producto</button>
+        </div>
+      </div>
     </div>
 
     <!-- CATEGORÍAS SHOP -->
@@ -8841,6 +8999,7 @@ nav=function(page,el){
   if(page==='aichat')initAIChat();
   if(page==='sync')checkSyncStatus();
   if(page==='worldmap')initAdminWorldMap();
+  if(page==='xendershop')loadXenderShop();
   if(page==='shop-cats')loadShopCategories();
   if(page==='bills-providers')loadBillProviders();
   if(page==='bigshop-admin')loadBigShopAdmin();
@@ -21224,6 +21383,223 @@ function printAdminUsers(){
   </body></html>`;
   const w=window.open('','_blank','width=1000,height=700');
   w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),400);
+}
+
+// ══════════════════════════════════════════════════════
+// XENDERSHOP ADMIN
+// ══════════════════════════════════════════════════════
+var ALL_XSHOP_PRODUCTS=[], ALL_XSHOP_ORDERS=[];
+
+async function loadXenderShop(){
+  // Cargar productos desde Supabase
+  document.getElementById('tb-xshop-products').innerHTML='<tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr>';
+  try{
+    var[{data:products},{data:orders}]=await Promise.all([
+      SB.from('products').select('*').order('created_at',{ascending:false}).limit(200),
+      SB.from('shop_orders').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(100)
+        .catch(()=>SB.from('orders').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).limit(100))
+    ]);
+    ALL_XSHOP_PRODUCTS=products||[];
+    ALL_XSHOP_ORDERS=orders||[];
+  }catch(e){
+    ALL_XSHOP_PRODUCTS=[];ALL_XSHOP_ORDERS=[];
+  }
+
+  // KPIs
+  var today=new Date().toISOString().slice(0,10);
+  var outOfStock=ALL_XSHOP_PRODUCTS.filter(function(p){return Number(p.stock||0)===0;}).length;
+  var ordersToday=ALL_XSHOP_ORDERS.filter(function(o){return (o.created_at||'').startsWith(today);});
+  var revenueToday=ordersToday.reduce(function(s,o){return s+Number(o.total_eur||o.total||0);},0);
+
+  document.getElementById('xshop-total-products').textContent=ALL_XSHOP_PRODUCTS.length;
+  document.getElementById('xshop-orders-today').textContent=ordersToday.length;
+  document.getElementById('xshop-revenue-today').textContent='€'+revenueToday.toFixed(2);
+  document.getElementById('xshop-out-stock').textContent=outOfStock;
+
+  // Badge sidebar
+  var badge=document.getElementById('sb-xshop-count');
+  if(badge){badge.textContent=outOfStock;badge.style.display=outOfStock>0?'inline':'none';}
+
+  renderXShopProducts();
+  renderXShopOrders();
+
+  // Cargar configuración guardada
+  try{
+    var cfg=await SB.from('config').select('value').eq('key','xendershop_settings').single().catch(()=>null);
+    if(cfg&&cfg.data){
+      var s=JSON.parse(cfg.data.value);
+      if(s.main_currency)document.getElementById('xshop-main-currency').value=s.main_currency;
+      if(s.global_discount!==undefined)document.getElementById('xshop-global-discount').value=s.global_discount;
+      if(s.banner_msg)document.getElementById('xshop-banner-msg').value=s.banner_msg;
+    }
+  }catch(e){}
+}
+
+function xshopTab(tab){
+  ['products','orders','settings'].forEach(function(t){
+    document.getElementById('xshop-panel-'+t).style.display=t===tab?'':'none';
+    var btn=document.getElementById('xshop-tab-'+t);
+    if(btn){btn.style.background=t===tab?'var(--cyan)':'';btn.style.color=t===tab?'#000':'';}
+  });
+}
+
+function renderXShopProducts(){
+  var q=(document.getElementById('xshop-search')?.value||'').toLowerCase();
+  var cat=document.getElementById('xshop-cat-filter')?.value||'';
+  var st=document.getElementById('xshop-stock-filter')?.value||'';
+  var list=ALL_XSHOP_PRODUCTS.filter(function(p){
+    var mq=!q||(p.name||'').toLowerCase().includes(q)||(p.description||'').toLowerCase().includes(q);
+    var mc=!cat||p.category===cat;
+    var ms=!st||(st==='out'&&Number(p.stock||0)===0)||(st==='in'&&Number(p.stock||0)>0)||(st==='low'&&Number(p.stock||0)>0&&Number(p.stock||0)<5);
+    return mq&&mc&&ms;
+  });
+  var tb=document.getElementById('tb-xshop-products');
+  var catIcons={electro:'⚡',hogar:'🏠',moda:'👗',solar:'☀️',sport:'🏃',beauty:'💄',kids:'👶',food:'🍎',other:'📦'};
+  tb.innerHTML=list.length?list.map(function(p){
+    var stock=Number(p.stock||0);
+    var sc=stock===0?'#f87171':stock<5?'#f59e0b':'#10b981';
+    return'<tr>'
+      +'<td><div style="font-weight:600;font-size:12px">'+(p.name||'—')+'</div>'+(p.description?'<div style="font-size:10px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.description+'</div>':'')+'</td>'
+      +'<td><span style="font-size:11px">'+(catIcons[p.category]||'📦')+' '+(p.category||'—')+'</span></td>'
+      +'<td style="color:#fbbf24;font-weight:600">€'+(Number(p.priceEur||p.price_eur||0)).toFixed(2)+'</td>'
+      +'<td style="color:var(--cyan)">'+(Number(p.priceXaf||p.price_xaf||0)).toLocaleString()+' XAF</td>'
+      +'<td style="color:'+sc+';font-weight:600">'+stock+'</td>'
+      +'<td style="text-align:center">'+(p.ceCertified||p.ce_certified?'✅':'—')+'</td>'
+      +'<td><span style="color:'+sc+';font-size:11px">'+(stock===0?'❌ Sin stock':stock<5?'⚠️ Bajo':'✅ OK')+'</span></td>'
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="btn-sm btn-ghost" onclick="editXShopProduct(\''+p.id+'\')">✏️</button>'
+      +'<button class="btn-sm btn-danger" onclick="deleteXShopProduct(\''+p.id+'\',\''+( p.name||'').replace(/'/g,'')+'\')" style="background:var(--red);color:#fff;border:none;padding:3px 7px;border-radius:5px;cursor:pointer;font-size:11px">🗑️</button>'
+      +'</td></tr>';
+  }).join(''):'<tr><td colspan="8" class="td-empty">Sin productos</td></tr>';
+}
+
+function renderXShopOrders(){
+  var q=(document.getElementById('xshop-order-search')?.value||'').toLowerCase();
+  var st=document.getElementById('xshop-order-status')?.value||'';
+  var stColors={pending:'#f59e0b',processing:'#06b6d4',shipped:'#8b5cf6',delivered:'#10b981',cancelled:'#f87171'};
+  var stIcons={pending:'⏳',processing:'🔄',shipped:'📦',delivered:'✅',cancelled:'❌'};
+  var list=ALL_XSHOP_ORDERS.filter(function(o){
+    var u=o.user||{};
+    var mq=!q||(u.full_name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q)||(o.id||'').toLowerCase().includes(q);
+    var ms=!st||o.status===st;
+    return mq&&ms;
+  });
+  var tb=document.getElementById('tb-xshop-orders');
+  tb.innerHTML=list.length?list.map(function(o){
+    var u=o.user||{};
+    var items=Array.isArray(o.items)?o.items.length:(o.quantity||1);
+    var status=o.status||'pending';
+    return'<tr>'
+      +'<td style="font-family:var(--mono);font-size:11px;color:var(--cyan)">'+(o.id||'—').slice(0,12)+'</td>'
+      +'<td><div style="font-weight:600;font-size:12px">'+(u.full_name||'—')+'</div><div style="font-size:10px;color:var(--muted)">'+(u.email||'')+'</div></td>'
+      +'<td style="text-align:center">'+items+' art.</td>'
+      +'<td style="color:#fbbf24;font-weight:600">€'+Number(o.total_eur||o.total||0).toFixed(2)+'</td>'
+      +'<td style="color:var(--cyan)">'+Number(o.total_xaf||0).toLocaleString()+' XAF</td>'
+      +'<td><span style="color:'+(stColors[status]||'#94a3b8')+'">'+(stIcons[status]||'?')+' '+status+'</span></td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(o.created_at?new Date(o.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—')+'</td>'
+      +'<td style="display:flex;gap:4px">'
+      +(status==='pending'?'<button class="btn-sm btn-primary" onclick="updateXShopOrder(\''+o.id+'\',\'processing\')" style="font-size:11px">Procesar</button>':'')
+      +(status==='processing'?'<button class="btn-sm btn-cyan" onclick="updateXShopOrder(\''+o.id+'\',\'shipped\')" style="font-size:11px">Enviar</button>':'')
+      +'</td></tr>';
+  }).join(''):'<tr><td colspan="8" class="td-empty">Sin pedidos</td></tr>';
+}
+
+function editXShopProduct(id){
+  var p=ALL_XSHOP_PRODUCTS.find(function(x){return x.id===id;});
+  if(!p)return;
+  document.getElementById('m-xshop-title').textContent='Editar producto';
+  document.getElementById('xshop-prod-id').value=p.id;
+  document.getElementById('xshop-prod-name').value=p.name||'';
+  document.getElementById('xshop-prod-cat').value=p.category||'other';
+  document.getElementById('xshop-prod-eur').value=p.priceEur||p.price_eur||'';
+  document.getElementById('xshop-prod-xaf').value=p.priceXaf||p.price_xaf||'';
+  document.getElementById('xshop-prod-stock').value=p.stock||0;
+  document.getElementById('xshop-prod-origin').value=p.origin||'';
+  document.getElementById('xshop-prod-ce').checked=!!(p.ceCertified||p.ce_certified);
+  document.getElementById('xshop-prod-desc').value=p.description||'';
+  document.getElementById('xshop-prod-img').value=p.image||p.imageUrl||'';
+  openModal('m-xshop-product');
+}
+
+async function saveXShopProduct(){
+  var id=document.getElementById('xshop-prod-id').value;
+  var data={
+    name:document.getElementById('xshop-prod-name').value.trim(),
+    category:document.getElementById('xshop-prod-cat').value,
+    priceEur:parseFloat(document.getElementById('xshop-prod-eur').value)||0,
+    priceXaf:parseInt(document.getElementById('xshop-prod-xaf').value)||0,
+    stock:parseInt(document.getElementById('xshop-prod-stock').value)||0,
+    origin:document.getElementById('xshop-prod-origin').value.trim(),
+    ceCertified:document.getElementById('xshop-prod-ce').checked,
+    description:document.getElementById('xshop-prod-desc').value.trim(),
+    image:document.getElementById('xshop-prod-img').value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  if(!data.name){toast('Nombre requerido','error');return;}
+  try{
+    if(id){
+      await SB.from('products').update(data).eq('id',id);
+      toast('✅ Producto actualizado','success');
+    }else{
+      data.id='prod_'+Date.now();data.created_at=new Date().toISOString();
+      await SB.from('products').insert(data);
+      toast('✅ Producto creado','success');
+    }
+    closeModal('m-xshop-product');
+    document.getElementById('xshop-prod-id').value='';
+    document.getElementById('m-xshop-title').textContent='Nuevo producto';
+    logAdminAction(id?'edit_product':'create_product','name:'+data.name);
+    loadXenderShop();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteXShopProduct(id,name){
+  if(!confirm('¿Eliminar "'+name+'"?'))return;
+  try{
+    await SB.from('products').delete().eq('id',id);
+    toast('🗑️ Producto eliminado','success');
+    logAdminAction('delete_product','id:'+id);
+    loadXenderShop();
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function updateXShopOrder(id,status){
+  try{
+    var tbl=ALL_XSHOP_ORDERS.some(function(o){return o.id===id&&o.table;});
+    await SB.from('shop_orders').update({status:status,updated_at:new Date().toISOString()}).eq('id',id)
+      .catch(()=>SB.from('orders').update({status:status,updated_at:new Date().toISOString()}).eq('id',id));
+    var o=ALL_XSHOP_ORDERS.find(function(x){return x.id===id;});
+    if(o)o.status=status;
+    renderXShopOrders();
+    toast('📦 Pedido actualizado: '+status,'success');
+    logAdminAction('update_order','id:'+id+' status:'+status);
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function saveXShopSettings(){
+  var settings={
+    main_currency:document.getElementById('xshop-main-currency').value,
+    global_discount:parseFloat(document.getElementById('xshop-global-discount').value)||0,
+    banner_msg:document.getElementById('xshop-banner-msg').value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  try{
+    await SB.from('config').upsert({key:'xendershop_settings',value:JSON.stringify(settings),updated_at:new Date().toISOString()});
+    toast('✅ Configuración guardada','success');
+    logAdminAction('xshop_settings','currency:'+settings.main_currency);
+  }catch(e){toast('Error al guardar: '+e.message,'error');}
+}
+
+function exportXShopProductsCSV(){
+  if(!ALL_XSHOP_PRODUCTS.length){toast('Sin datos','warn');return;}
+  var h=['ID','Nombre','Categoría','Precio EUR','Precio XAF','Stock','CE','Origen'];
+  var rows=[h.join(',')].concat(ALL_XSHOP_PRODUCTS.map(function(p){
+    return[p.id,'"'+(p.name||'')+'"',p.category||'',p.priceEur||p.price_eur||0,p.priceXaf||p.price_xaf||0,p.stock||0,p.ceCertified?'Sí':'No','"'+(p.origin||'')+'"'].join(',');
+  })).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+rows],{type:'text/csv;charset=utf-8'}));
+  a.download='xendershop_products_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();toast('✅ CSV exportado');
 }
 
 // ══════════════════════════════════════════════════════
