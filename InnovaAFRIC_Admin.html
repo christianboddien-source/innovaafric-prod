@@ -10980,7 +10980,137 @@ var PAGE_CONTENT_TR={
     'Comisiones globales':'Commissions globales',
     'Nuevo usuario':'Nouvel utilisateur',
     'Configuración general':'Configuration générale',
-    'Perfil del admin':'Profil admin'
+    'Perfil del admin':'Profil admin',
+    // Nuevos módulos
+    '🔍 Saldos & Auditoría':'🔍 Soldes & Audit',
+    'Saldos reales · Auditoría Railway · Límites de wallet':'Soldes réels · Audit Railway · Limites portefeuille',
+    '🧑‍💼 Usuarios administrativos':'🧑‍💼 Utilisateurs administratifs',
+    'Gestión de accesos al panel':'Gestion des accès au panneau'
+  }
+};
+
+// ── Diccionario de textos comunes de UI (botones, tablas, filtros, forms) ──
+var UI_TEXT_TR={
+  en:{
+    // Botones comunes
+    'Actualizar':'Refresh','↻':'↻','+ Nuevo':'+ New','+ Nueva':'+ New',
+    'Nuevo usuario':'New user','Nuevo admin':'New admin','+ Nuevo admin':'+ New admin',
+    'Guardar':'Save','Cancelar':'Cancel','Cerrar':'Close','Eliminar':'Delete',
+    'Editar':'Edit','Ver':'View','Buscar':'Search','Filtrar':'Filter',
+    'Exportar':'Export','Importar':'Import','Descargar':'Download',
+    'CSV':'CSV','PDF':'PDF','Excel':'Excel','Imprimir':'Print',
+    '🖨️ PDF':'🖨️ PDF','📥 CSV':'📥 CSV','📊 Excel':'📊 Excel',
+    'Auditar todos':'Audit all','↺ Actualizar':'↺ Refresh',
+    'Reconciliar':'Reconcile','🔍 Auditar todos':'🔍 Audit all',
+    '← Volver':'← Back','Volver':'Back',
+    'Crear usuario':'Create user','🎭 Por rol':'🎭 By role',
+    '✅ Todos':'✅ All','⬜ Ninguno':'⬜ None',
+    '+ Nuevo email':'+ New email','✉️ Nuevo email':'✉️ New email',
+    '✓ Marcar todos leídos':'✓ Mark all read',
+    'Enviar ➤':'Send ➤','↩️ Responder':'↩️ Reply',
+    '🗑️ Borrar chat':'🗑️ Clear chat',
+    '📥 CSV':'📥 CSV','🖨️ Imprimir':'🖨️ Print',
+    // Cabeceras de tabla comunes
+    'Administrador':'Administrator','ADMINISTRADOR':'Administrator',
+    'Usuario':'User','Usuarios':'Users','Nombre':'Name','Email':'Email',
+    'Rol':'Role','País':'Country','Ciudad':'City','Estado':'Status',
+    'Acciones':'Actions','Fecha':'Date','Importe':'Amount','Tipo':'Type',
+    'Divisa':'Currency','Referencia':'Reference','Módulos':'Modules',
+    'Último acceso':'Last access','Creado':'Created','Descripción':'Description',
+    'Teléfono':'Phone','Dirección':'Address','Nivel':'Level',
+    'Código IA':'IA Code','Saldo':'Balance','Puntos':'Points',
+    'Categoría':'Category','Método':'Method','Destino':'Destination',
+    'Origen':'Origin','Comisión':'Commission','Tasa':'Rate',
+    'Notas':'Notes','Motivo':'Reason','Documento':'Document',
+    'Proveedor':'Provider','Cuenta':'Account','Límite':'Limit',
+    // Opciones de filtro comunes
+    'Todos':'All','Todas':'All','Todos los roles':'All roles',
+    'Todos los países':'All countries','Todos los estados':'All statuses',
+    'Activos':'Active','Bloqueados':'Blocked','Pendiente':'Pending',
+    'Completado':'Completed','Cancelado':'Cancelled','En proceso':'In progress',
+    'Verificado':'Verified','Sin verificar':'Unverified',
+    'Todo el período':'All time','Hoy':'Today','Esta semana':'This week',
+    'Este mes':'This month','Este año':'This year',
+    // Etiquetas de formulario comunes
+    'Nombre completo':'Full name','Contraseña':'Password',
+    'Contraseña temporal':'Temporary password','Rol administrativo':'Admin role',
+    'Saldo inicial EUR €':'Initial balance EUR €',
+    'Código postal':'Zip code','Calle':'Street','Número / Piso':'Number / Floor',
+    'ID o Email del usuario':'User ID or Email','ID o Email':'ID or Email',
+    'Buscar por nombre o email...':'Search by name or email...',
+    'Buscar usuario...':'Search user...','Buscar...':'Search...',
+    // Mensajes de estado
+    'Sin datos':'No data','Cargando...':'Loading...',
+    'No hay resultados':'No results','Sin registros':'No records',
+    'Módulos accesibles (selecciona los que puede ver)':'Accessible modules (select those visible)',
+    'Módulos accesibles':'Accessible modules',
+    'Gestión de accesos al panel':'Panel access management',
+    '🔄 Saldos & Sincronización':'🔄 Balances & Sync',
+    '🔍 Saldos & Auditoría':'🔍 Balances & Audit',
+    'Saldos reales · Auditoría Railway · Límites de wallet':'Real balances · Railway Audit · Wallet limits',
+    'Límites activos':'Active limits',
+    'Reconciliar usuario (Railway vs historial txns)':'Reconcile user (Railway vs txn history)',
+    'ID o Email del usuario':'User ID or Email',
+    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD'
+  },
+  fr:{
+    // Botones comunes
+    'Actualizar':'Actualiser','↻':'↻','+ Nuevo':'+ Nouveau','+ Nueva':'+ Nouvelle',
+    'Nuevo usuario':'Nouvel utilisateur','Nuevo admin':'Nouvel admin','+ Nuevo admin':'+ Nouvel admin',
+    'Guardar':'Enregistrer','Cancelar':'Annuler','Cerrar':'Fermer','Eliminar':'Supprimer',
+    'Editar':'Modifier','Ver':'Voir','Buscar':'Rechercher','Filtrar':'Filtrer',
+    'Exportar':'Exporter','Importar':'Importer','Descargar':'Télécharger',
+    'CSV':'CSV','PDF':'PDF','Excel':'Excel','Imprimir':'Imprimer',
+    '🖨️ PDF':'🖨️ PDF','📥 CSV':'📥 CSV','📊 Excel':'📊 Excel',
+    'Auditar todos':'Auditer tout','↺ Actualizar':'↺ Actualiser',
+    'Reconciliar':'Réconcilier','🔍 Auditar todos':'🔍 Auditer tout',
+    '← Volver':'← Retour','Volver':'Retour',
+    'Crear usuario':'Créer utilisateur','🎭 Por rol':'🎭 Par rôle',
+    '✅ Todos':'✅ Tous','⬜ Ninguno':'⬜ Aucun',
+    '+ Nuevo email':'+ Nouvel email','✉️ Nuevo email':'✉️ Nouvel email',
+    '✓ Marcar todos leídos':'✓ Tout marquer lu',
+    'Enviar ➤':'Envoyer ➤','↩️ Responder':'↩️ Répondre',
+    '🗑️ Borrar chat':'🗑️ Effacer chat',
+    // Cabeceras de tabla comunes
+    'Administrador':'Administrateur','ADMINISTRADOR':'Administrateur',
+    'Usuario':'Utilisateur','Usuarios':'Utilisateurs','Nombre':'Nom','Email':'Email',
+    'Rol':'Rôle','País':'Pays','Ciudad':'Ville','Estado':'Statut',
+    'Acciones':'Actions','Fecha':'Date','Importe':'Montant','Tipo':'Type',
+    'Divisa':'Devise','Referencia':'Référence','Módulos':'Modules',
+    'Último acceso':'Dernier accès','Creado':'Créé','Descripción':'Description',
+    'Teléfono':'Téléphone','Dirección':'Adresse','Nivel':'Niveau',
+    'Código IA':'Code IA','Saldo':'Solde','Puntos':'Points',
+    'Categoría':'Catégorie','Método':'Méthode','Destino':'Destination',
+    'Origen':'Origine','Comisión':'Commission','Tasa':'Taux',
+    'Notas':'Notes','Motivo':'Motif','Documento':'Document',
+    'Proveedor':'Fournisseur','Cuenta':'Compte','Límite':'Limite',
+    // Opciones de filtro comunes
+    'Todos':'Tous','Todas':'Toutes','Todos los roles':'Tous les rôles',
+    'Todos los países':'Tous les pays','Todos los estados':'Tous les statuts',
+    'Activos':'Actifs','Bloqueados':'Bloqués','Pendiente':'En attente',
+    'Completado':'Complété','Cancelado':'Annulé','En proceso':'En cours',
+    'Verificado':'Vérifié','Sin verificar':'Non vérifié',
+    'Todo el período':'Toute la période','Hoy':'Aujourd\'hui','Esta semana':'Cette semaine',
+    'Este mes':'Ce mois','Este año':'Cette année',
+    // Etiquetas de formulario comunes
+    'Nombre completo':'Nom complet','Contraseña':'Mot de passe',
+    'Contraseña temporal':'Mot de passe temporaire','Rol administrativo':'Rôle administratif',
+    'Saldo inicial EUR €':'Solde initial EUR €',
+    'Código postal':'Code postal','Calle':'Rue','Número / Piso':'Numéro / Étage',
+    'ID o Email del usuario':'ID ou Email utilisateur','ID o Email':'ID ou Email',
+    'Buscar por nombre o email...':'Rechercher par nom ou email...',
+    'Buscar usuario...':'Rechercher utilisateur...','Buscar...':'Rechercher...',
+    // Mensajes de estado
+    'Sin datos':'Aucune donnée','Cargando...':'Chargement...',
+    'No hay resultados':'Aucun résultat','Sin registros':'Aucun enregistrement',
+    'Módulos accesibles (selecciona los que puede ver)':'Modules accessibles (sélectionner ceux visibles)',
+    'Módulos accesibles':'Modules accessibles',
+    'Gestión de accesos al panel':'Gestion des accès au panneau',
+    '🔍 Saldos & Auditoría':'🔍 Soldes & Audit',
+    'Saldos reales · Auditoría Railway · Límites de wallet':'Soldes réels · Audit Railway · Limites portefeuille',
+    'Límites activos':'Limites actifs',
+    'Reconciliar usuario (Railway vs historial txns)':'Réconcilier utilisateur (Railway vs historique)',
+    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD'
   }
 };
 
@@ -11036,24 +11166,78 @@ function applyAdminLang(){
 
 function _applyPageContentTranslation(lang){
   if(lang==='es'){
-    // Restaurar español original guardado en data-es
     document.querySelectorAll('[data-es]').forEach(function(el){
       el.textContent=el.getAttribute('data-es');
     });
+    document.querySelectorAll('[data-es-ph]').forEach(function(el){
+      el.placeholder=el.getAttribute('data-es-ph');
+    });
+    document.querySelectorAll('[data-es-val]').forEach(function(el){
+      el.value=el.getAttribute('data-es-val');
+      if(el.tagName==='OPTION'&&el.selected)el.parentElement.dispatchEvent(new Event('change'));
+    });
     return;
   }
-  var CT=PAGE_CONTENT_TR[lang];
-  if(!CT)return;
-  // Traducir card-title, card-sub y section-heading por text-content matching
-  var sels=['.card-title','.card-sub','[data-pg-heading]'];
-  sels.forEach(function(sel){
+  var CT=PAGE_CONTENT_TR[lang]||{};
+  var UT=UI_TEXT_TR[lang]||{};
+
+  function _tr(key){return CT[key]||UT[key]||null;}
+
+  // ── 1. card-title, card-sub, data-pg-heading (texto puro) ──
+  ['.card-title','.card-sub','[data-pg-heading]'].forEach(function(sel){
     document.querySelectorAll(sel).forEach(function(el){
-      // Solo traducir elementos sin hijos (texto puro)
       if(el.children.length>0)return;
-      var esKey=el.getAttribute('data-es')||el.textContent.trim();
-      if(!el.hasAttribute('data-es'))el.setAttribute('data-es',esKey);
-      if(CT[esKey])el.textContent=CT[esKey];
+      var k=el.getAttribute('data-es')||el.textContent.trim();
+      if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+      var t=_tr(k);if(t)el.textContent=t;
     });
+  });
+
+  // ── 2. Cabeceras de tabla (th) dentro de módulos ──
+  document.querySelectorAll('[id^="pg-"] thead th').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 3. Botones de texto puro dentro de módulos ──
+  document.querySelectorAll('[id^="pg-"] button, .modal button').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 4. Etiquetas de formulario dentro de módulos ──
+  document.querySelectorAll('[id^="pg-"] .form-label, .modal .form-label, [id^="pg-"] label').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 5. Placeholders de inputs dentro de módulos ──
+  document.querySelectorAll('[id^="pg-"] input[placeholder], .modal input[placeholder]').forEach(function(el){
+    var k=el.getAttribute('data-es-ph')||el.placeholder;
+    if(!el.hasAttribute('data-es-ph')&&k)el.setAttribute('data-es-ph',k);
+    var t=_tr(k);if(t)el.placeholder=t;
+  });
+
+  // ── 6. Opciones de select-filter comunes ──
+  document.querySelectorAll('[id^="pg-"] .filter-select option, [id^="pg-"] select.form-input option').forEach(function(el){
+    if(el.value&&el.value!=='')return; // Solo opción "todos" (value='')
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 7. Textos de sección (filter-bar labels, section headings) ──
+  document.querySelectorAll('[id^="pg-"] .section-title, [id^="pg-"] .filter-label, [id^="pg-"] h3, [id^="pg-"] h4').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
   });
 }
 
