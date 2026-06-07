@@ -486,6 +486,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('vcards',this)"><span class="ic">💳</span><span data-i18n="nav:vcards">Tarjetas virtuales</span></div>
     <div class="sb-link" onclick="nav('accounting',this)"><span class="ic">📒</span><span data-i18n="nav:accounting">Contabilidad</span></div>
     <div class="sb-link" onclick="nav('payroll',this)"><span class="ic">💼</span><span data-i18n="nav:payroll">Nómina Riders</span></div>
+    <div class="sb-link" onclick="nav('saldos',this)"><span class="ic">🔍</span><span>Saldos & Auditoría</span></div>
     <div class="sb-group" data-i18n="grp:Railway-Sistema">Railway — Sistema</div>
     <div class="sb-link" onclick="nav('productos',this)"><span class="ic">🛍️</span><span data-i18n="nav:productos">Productos</span></div>
     <div class="sb-link" onclick="nav('chat',this)"><span class="ic">💬</span><span data-i18n="nav:chat">Chat</span></div>
@@ -6208,6 +6209,44 @@ select.form-input option{background:var(--s2)}
   </div>
 </div>
 
+<!-- SALDOS & AUDITORÍA -->
+<div id="pg-saldos" style="display:none">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head" style="flex-wrap:wrap;gap:8px">
+      <div><div class="card-title">🔍 Saldos & Auditoría</div><div class="card-sub">Saldos reales · Auditoría Railway · Límites de wallet</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="topbar-btn btn-ghost" onclick="loadSaldos()">↺ Actualizar</button>
+        <button class="topbar-btn btn-ghost" onclick="exportSaldosCSV()">📥 CSV</button>
+        <button class="topbar-btn btn-ghost" onclick="exportSaldosExcel()">📊 Excel</button>
+        <button class="topbar-btn btn-ghost" onclick="printSaldos()">🖨️ Imprimir</button>
+        <button class="topbar-btn btn-cyan" id="btn-audit-all" onclick="auditAllSaldos()">🔍 Auditar todos</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 20px 16px">
+      <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Total EUR</div><div style="font-size:20px;font-weight:700;color:#fbbf24" id="sal-total-eur">—</div></div>
+      <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Total XAF</div><div style="font-size:20px;font-weight:700;color:var(--cyan)" id="sal-total-xaf">—</div></div>
+      <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Total USD</div><div style="font-size:20px;font-weight:700;color:#60a5fa" id="sal-total-usd">—</div></div>
+      <div style="background:var(--s2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:6px">Límites activos</div><div style="font-size:12px;font-weight:600;color:#10b981;line-height:1.6">EUR/USD 3.000<br>XAF/XOF 2.000.000</div></div>
+    </div>
+    <div style="margin:0 20px 16px;background:var(--s2);border-radius:10px;padding:14px">
+      <div style="font-weight:600;margin-bottom:10px;font-size:13px">🔍 Reconciliar usuario (Railway vs historial txns)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+        <div style="flex:1;min-width:200px"><label class="form-label">ID o Email</label><input class="form-input" id="sal-rec-input" placeholder="usr_xxx o email@..." list="sal-rec-list"><datalist id="sal-rec-list"></datalist></div>
+        <button class="topbar-btn btn-cyan" onclick="reconcileSaldo()" style="height:36px">🔍 Reconciliar</button>
+      </div>
+      <div id="sal-rec-result" style="margin-top:12px;display:none"></div>
+    </div>
+    <div style="padding:0 20px 10px;display:flex;gap:8px">
+      <input class="form-input" id="sal-search" placeholder="🔍 Buscar usuario..." oninput="renderSaldos()" style="flex:1">
+      <select class="filter-select" id="sal-filter" onchange="renderSaldos()"><option value="">Todas</option><option value="eur">EUR &gt; 0</option><option value="xaf">XAF &gt; 0</option><option value="usd">USD &gt; 0</option></select>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Usuario</th><th>País</th><th>EUR</th><th>XAF</th><th>USD</th><th>Estado EUR</th><th>Estado XAF</th><th>Acción</th></tr></thead>
+      <tbody id="tb-saldos"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
 <!-- CORRIDORS TOP -->
 <div id="pg-corridors" style="display:none">
   <div class="card">
@@ -7191,6 +7230,7 @@ async function openRecharge(uid,name){
   }catch(e){document.getElementById('cur-eur').textContent='0.00';document.getElementById('cur-xaf').textContent='0';document.getElementById('cur-usd').textContent='0.00';}
   openModal('m-recharge');
 }
+const WALLET_LIMITS={EUR:{cap:3000,reloadThreshold:2800},USD:{cap:3000,reloadThreshold:2800},XAF:{cap:2000000,reloadThreshold:1800000},XOF:{cap:2000000,reloadThreshold:1800000}};
 async function doRecharge(){
   const uid=document.getElementById('m-recharge-id').value;
   const addE=Number(document.getElementById('add-eur').value)||0;
@@ -7198,7 +7238,20 @@ async function doRecharge(){
   const addU=Number(document.getElementById('add-usd').value)||0;
   const addP=Number(document.getElementById('add-pts').value)||0;
   const{data:w}=await SB.from('wallets').select('*').eq('user_id',uid).single();
-  const{error}=await SB.from('wallets').update({eur:Number(w?.eur||0)+addE,xaf:Number(w?.xaf||0)+addX,usd:Number(w?.usd||0)+addU,points:Number(w?.points||0)+addP}).eq('user_id',uid);
+  const curE=Number(w?.eur||0),curX=Number(w?.xaf||0),curU=Number(w?.usd||0);
+  if(addE>0){
+    if(curE>WALLET_LIMITS.EUR.reloadThreshold){toast('❌ EUR: saldo (€'+curE.toFixed(2)+') supera el umbral de recarga (€'+WALLET_LIMITS.EUR.reloadThreshold+'). No se puede recargar todavía.','error');return;}
+    if(curE+addE>WALLET_LIMITS.EUR.cap){toast('❌ EUR: superaría el techo de €'+WALLET_LIMITS.EUR.cap+'. Máximo: €'+(WALLET_LIMITS.EUR.cap-curE).toFixed(2),'error');return;}
+  }
+  if(addU>0){
+    if(curU>WALLET_LIMITS.USD.reloadThreshold){toast('❌ USD: saldo ($'+curU.toFixed(2)+') supera el umbral ($'+WALLET_LIMITS.USD.reloadThreshold+').','error');return;}
+    if(curU+addU>WALLET_LIMITS.USD.cap){toast('❌ USD: superaría el techo de $'+WALLET_LIMITS.USD.cap+'.','error');return;}
+  }
+  if(addX>0){
+    if(curX>WALLET_LIMITS.XAF.reloadThreshold){toast('❌ XAF: saldo ('+curX.toLocaleString()+') supera el umbral ('+WALLET_LIMITS.XAF.reloadThreshold.toLocaleString()+' XAF).','error');return;}
+    if(curX+addX>WALLET_LIMITS.XAF.cap){toast('❌ XAF: superaría el techo de '+WALLET_LIMITS.XAF.cap.toLocaleString()+' XAF.','error');return;}
+  }
+  const{error}=await SB.from('wallets').update({eur:curE+addE,xaf:curX+addX,usd:curU+addU,points:Number(w?.points||0)+addP}).eq('user_id',uid);
   if(error){toast('Error: '+error.message,'error');return;}
   closeModal('m-recharge');
   toast('✅ Wallet recargado','success');
@@ -8771,6 +8824,7 @@ nav=function(page,el){
   if(page==='marketing-admin')loadMarketingAdmin();
   if(page==='taxes-admin')loadTaxConfigEditor();
   if(page==='pos-admin')loadPOSAdmin();
+  if(page==='saldos')loadSaldos();
 };
 
 // ── LOANS ─────────────────────────────────────────────────
@@ -20643,6 +20697,119 @@ function _applyAdminRole(role){
   var savedRole=localStorage.getItem('ia_admin_role')||'superadmin';
   setTimeout(function(){_applyAdminRole(savedRole);},500);
 })();
+
+// ══════════════════════════════════════════════════════
+// SALDOS & AUDITORÍA — lee Supabase + audita Railway
+// ══════════════════════════════════════════════════════
+let ALL_SALDOS=[];
+async function loadSaldos(){
+  document.getElementById('tb-saldos').innerHTML='<tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr>';
+  try{
+    const[{data:users},{data:wallets}]=await Promise.all([
+      SB.from('users').select('id,full_name,email,country,role'),
+      SB.from('wallets').select('user_id,eur,xaf,usd,xof,points')
+    ]);
+    ALL_SALDOS=(wallets||[]).map(w=>{
+      const u=(users||[]).find(u=>u.id===w.user_id)||{};
+      return{...w,name:u.full_name||u.email||w.user_id,email:u.email||'',country:u.country||'—'};
+    });
+    const dl=document.getElementById('sal-rec-list');
+    if(dl)dl.innerHTML=(users||[]).slice(0,80).map(u=>`<option value="${u.id}">${u.full_name||''} — ${u.email||''}</option>`).join('');
+    document.getElementById('sal-total-eur').textContent='€'+(ALL_SALDOS.reduce((s,w)=>s+Number(w.eur||0),0)).toFixed(2);
+    document.getElementById('sal-total-xaf').textContent=(ALL_SALDOS.reduce((s,w)=>s+Number(w.xaf||0),0)).toLocaleString()+' XAF';
+    document.getElementById('sal-total-usd').textContent='$'+(ALL_SALDOS.reduce((s,w)=>s+Number(w.usd||0),0)).toFixed(2);
+    renderSaldos();
+  }catch(e){document.getElementById('tb-saldos').innerHTML=`<tr><td colspan="8" style="text-align:center;color:#f87171;padding:20px">Error: ${e.message}</td></tr>`;}
+}
+function _walletStatus(cur,val){
+  const lim=WALLET_LIMITS[cur];if(!lim)return'';
+  if(val===0)return'<span style="color:var(--muted);font-size:10px">vacío</span>';
+  const pct=(val/lim.cap*100).toFixed(0);
+  if(val>lim.reloadThreshold)return`<span style="color:#f87171;font-size:10px">🔴 ${pct}% — no recargable</span>`;
+  return`<span style="color:#10b981;font-size:10px">🟢 ${pct}% — recargable</span>`;
+}
+function renderSaldos(){
+  const q=(document.getElementById('sal-search')?.value||'').toLowerCase();
+  const f=document.getElementById('sal-filter')?.value||'';
+  const list=ALL_SALDOS.filter(w=>{
+    const m=!q||(w.name||'').toLowerCase().includes(q)||(w.email||'').toLowerCase().includes(q);
+    const cf=!f||(f==='eur'&&Number(w.eur)>0)||(f==='xaf'&&Number(w.xaf)>0)||(f==='usd'&&Number(w.usd)>0);
+    return m&&cf;
+  });
+  document.getElementById('tb-saldos').innerHTML=list.length?list.map(w=>{
+    const e=Number(w.eur||0),x=Number(w.xaf||0),u=Number(w.usd||0);
+    return`<tr><td><div style="font-weight:600;font-size:12px">${w.name}</div><div style="font-size:10px;color:var(--muted)">${w.email}</div></td>
+      <td>${w.country}</td>
+      <td style="color:#fbbf24;font-weight:600">${e>0?'€'+e.toFixed(2):'—'}</td>
+      <td style="color:var(--cyan);font-weight:600">${x>0?x.toLocaleString()+' XAF':'—'}</td>
+      <td style="color:#60a5fa;font-weight:600">${u>0?'$'+u.toFixed(2):'—'}</td>
+      <td>${_walletStatus('EUR',e)}</td><td>${_walletStatus('XAF',x)}</td>
+      <td><button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="reconcileSaldoById('${w.user_id}')">🔍</button></td></tr>`;
+  }).join(''):'<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">Sin resultados</td></tr>';
+}
+async function reconcileSaldo(){
+  const val=document.getElementById('sal-rec-input').value.trim();if(!val)return;
+  const found=ALL_SALDOS.find(w=>w.email===val||w.user_id===val);
+  await reconcileSaldoById(found?.user_id||val);
+}
+async function reconcileSaldoById(uid){
+  const box=document.getElementById('sal-rec-result');box.style.display='block';
+  box.innerHTML='<div style="color:var(--muted);font-size:12px">⏳ Auditando Railway...</div>';
+  try{
+    const r=await rwAPI('POST','/admin/balance/reconcile',{user_id:uid});
+    if(!r.success){box.innerHTML=`<div style="color:#f87171;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:10px">${r.error||'No encontrado en Railway'}</div>`;return;}
+    const d=r.data,ok=d.is_consistent,cur=d.current_balance||{},exp=d.computed_from_history||{};
+    box.innerHTML=`<div style="background:${ok?'rgba(16,185,129,.08)':'rgba(251,191,36,.08)'};border:1px solid ${ok?'rgba(16,185,129,.3)':'rgba(251,191,36,.3)'};border-radius:10px;padding:14px">
+      <div style="font-weight:700;margin-bottom:8px;color:${ok?'#10b981':'#fbbf24'}">${ok?'✅ Consistente':'⚠️ Inconsistencia'} — ${d.user?.name||uid} · ${d.completed_transactions||0} txns</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:11px">
+        ${['EUR','XAF','USD','XOF'].map(c=>{const cv=cur[c]??0,ev=exp[c]??0,diff=cv-ev,color=Math.abs(diff)<0.01?'#10b981':'#f87171';const fmt=v=>c==='EUR'||c==='USD'?v.toFixed(2):Math.round(v).toLocaleString();
+        return`<div style="background:var(--s2);padding:8px;border-radius:7px"><div style="color:var(--muted);font-size:10px;margin-bottom:4px">${c}</div><div style="color:#60a5fa">Actual: ${fmt(cv)}</div><div style="color:#a78bfa">Esperado: ${fmt(ev)}</div><div style="color:${color}">${Math.abs(diff)<0.01?'✓ OK':'Diff: '+(diff>0?'+':'')+fmt(diff)}</div></div>`;}).join('')}
+      </div></div>`;
+  }catch(e){box.innerHTML=`<div style="color:#f87171">${e.message}</div>`;}
+}
+async function auditAllSaldos(){
+  const btn=document.getElementById('btn-audit-all');btn.disabled=true;btn.textContent='⏳ Auditando...';
+  try{
+    const r=await rwAPI('POST','/admin/balance/audit-all');
+    if(r.success){const d=r.data;toast(`✅ ${d.ok}/${d.total} OK${d.issues>0?' · ⚠️ '+d.issues+' problemas':''}`,d.issues>0?'warn':'success');
+      if(d.issues>0)alert('⚠️ Wallets con inconsistencias en Railway:\n'+d.flagged_wallets.map(w=>`• ${w.name||w.userId}`).join('\n'));
+    }else{toast('❌ Error en auditoría','error');}
+  }catch(e){toast('❌ '+e.message,'error');}
+  finally{btn.disabled=false;btn.textContent='🔍 Auditar todos';}
+}
+function exportSaldosCSV(){
+  if(!ALL_SALDOS.length){toast('Sin datos','warn');return;}
+  const h=['Nombre','Email','País','EUR','XAF','USD','XOF','Estado EUR','Estado XAF'];
+  const csv=[h.join(',')].concat(ALL_SALDOS.map(w=>{
+    const e=Number(w.eur||0),x=Number(w.xaf||0);
+    return[w.name,w.email,w.country,e,x,Number(w.usd||0),Number(w.xof||0),
+      e>WALLET_LIMITS.EUR.reloadThreshold?'No recargable':'Recargable',
+      x>WALLET_LIMITS.XAF.reloadThreshold?'No recargable':'Recargable'
+    ].map(v=>{const s=String(v??'');return s.includes(',')?'"'+s+'"':s;}).join(',');
+  })).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download='saldos_'+new Date().toISOString().slice(0,10)+'.csv';a.click();toast('✅ CSV exportado');
+}
+function exportSaldosExcel(){
+  if(!ALL_SALDOS.length){toast('Sin datos','warn');return;}
+  const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const hRow=['Nombre','Email','País','EUR','XAF','USD','XOF'].map(c=>`<Cell ss:StyleID="hdr"><Data ss:Type="String">${c}</Data></Cell>`).join('');
+  const dRows=ALL_SALDOS.map(w=>`<Row><Cell><Data ss:Type="String">${esc(w.name)}</Data></Cell><Cell><Data ss:Type="String">${esc(w.email)}</Data></Cell><Cell><Data ss:Type="String">${w.country}</Data></Cell><Cell ss:StyleID="num"><Data ss:Type="Number">${Number(w.eur||0)}</Data></Cell><Cell ss:StyleID="num"><Data ss:Type="Number">${Number(w.xaf||0)}</Data></Cell><Cell ss:StyleID="num"><Data ss:Type="Number">${Number(w.usd||0)}</Data></Cell><Cell ss:StyleID="num"><Data ss:Type="Number">${Number(w.xof||0)}</Data></Cell></Row>`).join('');
+  const xml=`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="hdr"><Font ss:Bold="1"/><Interior ss:Color="#00AEEF" ss:Pattern="Solid"/><Font ss:Color="#FFFFFF" ss:Bold="1"/></Style><Style ss:ID="num"><NumberFormat ss:Format="#,##0.00"/></Style></Styles><Worksheet ss:Name="Saldos"><Table><Row>${hRow}</Row>${dRows}</Table></Worksheet></Workbook>`;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([xml],{type:'application/vnd.ms-excel'}));
+  a.download='saldos_'+new Date().toISOString().slice(0,10)+'.xls';a.click();toast('✅ Excel exportado');
+}
+function printSaldos(){
+  if(!ALL_SALDOS.length){toast('Sin datos','warn');return;}
+  const now=new Date().toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'});
+  const tE=ALL_SALDOS.reduce((s,w)=>s+Number(w.eur||0),0),tX=ALL_SALDOS.reduce((s,w)=>s+Number(w.xaf||0),0),tU=ALL_SALDOS.reduce((s,w)=>s+Number(w.usd||0),0);
+  const rows=ALL_SALDOS.map((w,i)=>`<tr style="background:${i%2===0?'#f8fafc':'#fff'}"><td>${w.name}</td><td>${w.email}</td><td>${w.country}</td><td style="text-align:right;color:#b45309">${Number(w.eur||0)>0?'€'+Number(w.eur).toFixed(2):'—'}</td><td style="text-align:right;color:#0369a1">${Number(w.xaf||0)>0?Number(w.xaf).toLocaleString()+' XAF':'—'}</td><td style="text-align:right;color:#1d4ed8">${Number(w.usd||0)>0?'$'+Number(w.usd).toFixed(2):'—'}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Saldos InnovaAFRIC</title><style>body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#1e293b}h1{font-size:16px;color:#0369a1}.kpis{display:flex;gap:16px;margin:12px 0}.kpi{background:#f1f5f9;border-radius:8px;padding:10px 16px}.kpi .l{font-size:9px;color:#64748b;text-transform:uppercase}.kpi .v{font-size:15px;font-weight:700;color:#0369a1}table{width:100%;border-collapse:collapse;font-size:10px}thead tr{background:#0369a1;color:#fff}th{padding:6px 8px;text-align:left}td{padding:5px 8px;border-bottom:1px solid #e2e8f0}tfoot tr{background:#f1f5f9;font-weight:700}</style></head><body>
+  <h1>Informe de Saldos — InnovaAFRIC</h1><p style="color:#64748b;font-size:11px">Generado: ${now} · ${ALL_SALDOS.length} wallets</p>
+  <div class="kpis"><div class="kpi"><div class="l">EUR</div><div class="v">€${tE.toFixed(2)}</div></div><div class="kpi"><div class="l">XAF</div><div class="v">${tX.toLocaleString()}</div></div><div class="kpi"><div class="l">USD</div><div class="v">$${tU.toFixed(2)}</div></div><div class="kpi"><div class="l">Techo EUR/USD</div><div class="v">3.000</div></div><div class="kpi"><div class="l">Techo XAF/XOF</div><div class="v">2.000.000</div></div></div>
+  <table><thead><tr><th>Nombre</th><th>Email</th><th>País</th><th>EUR</th><th>XAF</th><th>USD</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="3">TOTALES (${ALL_SALDOS.length} wallets)</td><td style="text-align:right">€${tE.toFixed(2)}</td><td style="text-align:right">${tX.toLocaleString()} XAF</td><td style="text-align:right">$${tU.toFixed(2)}</td></tr></tfoot></table></body></html>`;
+  const w=window.open('','_blank','width=900,height=700');w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),400);
+}
 </script>
 </body>
 </html>
