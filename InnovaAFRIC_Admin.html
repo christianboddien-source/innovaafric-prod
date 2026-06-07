@@ -17717,7 +17717,13 @@ async function createAMLRule(){
   };
   if(!rule.name){toast('Nombre requerido','error');return;}
   ALL_AML_RULES.push(rule);
-  await rwAPI('POST','/admin/aml/rules',rule);
+  // Persistir en Railway y Supabase
+  await rwAPI('POST','/admin/aml/rules',rule).catch(()=>null);
+  SB.from('aml_rules').insert({
+    id:rule.id,name:rule.name,type:rule.type,action:rule.action,
+    severity:rule.severity,condition:rule.condition,threshold:rule.threshold,
+    active:true,created_at:new Date().toISOString()
+  }).catch(()=>null);
   logAdminAction('create_aml_rule','name:'+rule.name+' action:'+rule.action);
   toast('⚖️ Regla AML creada','success');
   closeModal('m-create-aml-rule');
@@ -17854,6 +17860,14 @@ async function runSanctionsScan(){
   updateSanctionsStats();
   renderSanctionsTable(results);
   var hits=results.filter(function(r){return r.match_type!=='clear';}).length;
+  // Persistir hits en Supabase sanctions_scan_results
+  if(hits>0){
+    var toSave=results.filter(function(r){return r.match_type!=='clear';}).map(function(r){
+      return{user_id:r.userId||null,user_name:r.user,country:r.country,list_name:r.list,
+        match_type:r.match_type,score:r.score,status:r.status,scan_date:new Date().toISOString()};
+    });
+    SB.from('sanctions_results').upsert(toSave,{onConflict:'user_name,list_name'}).catch(()=>null);
+  }
   toast('✅ Escaneo completado — '+users.length+' usuarios · '+hits+' coincidencias','success');
   logAdminAction('sanctions_scan','users:'+users.length+' hits:'+hits);
 }
@@ -18149,8 +18163,28 @@ function exportSARCSV(){
 
 // ── COMPLIANCE DASHBOARD ──────────────────────────────────────
 async function loadComplianceDashboard(){
-  // Real KYC stats from Supabase users
+  // Refrescar datos desde Supabase si no están en memoria
   var users=ALL_USERS||[];
+  if(!users.length){
+    try{
+      var ur=await SB.from('users').select('id,full_name,email,country,kyc_status,is_frozen').limit(500).catch(()=>({data:[]}));
+      users=ur.data||[];
+      ALL_USERS=users;
+    }catch(e){}
+  }
+  // Refrescar SARS si vacíos
+  if(!(ALL_SARS||[]).length){try{await loadSARWorkflow();}catch(e){}}
+  // Refrescar CASES si vacíos
+  if(!(ALL_CASES||[]).length){try{await loadCases();}catch(e){}}
+  // Refrescar FROZEN si vacíos
+  if(!(ALL_FROZEN||[]).length){try{await loadFrozenAccounts();}catch(e){}}
+  // Contar CTRs pendientes desde Supabase
+  try{
+    var ctrRes=await SB.from('ctr_reports').select('status').eq('status','pending').catch(()=>({data:[]}));
+    if(ctrRes.data&&ctrRes.data.length&&!ALL_CTR.length){
+      document.getElementById('ctr-pending')&&(document.getElementById('ctr-pending').textContent=ctrRes.data.length);
+    }
+  }catch(e){}
   var kycVerified=users.filter(function(u){return u.kyc_status==='approved'||u.kyc_status==='verified';}).length;
   var kycRate=users.length?Math.round(kycVerified/users.length*100):72;
   var openCases=(ALL_SARS||[]).filter(function(s){return s.status!=='closed';}).length+(ALL_CASES||[]).filter(function(c){return c.status!=='closed';}).length;
