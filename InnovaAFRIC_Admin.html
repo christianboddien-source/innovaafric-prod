@@ -11070,7 +11070,33 @@ var UI_TEXT_TR={
     'Límites activos':'Active limits',
     'Reconciliar usuario (Railway vs historial txns)':'Reconcile user (Railway vs txn history)',
     'ID o Email del usuario':'User ID or Email',
-    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD'
+    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD',
+    // Stat labels comunes
+    'Usuarios Supabase':'Supabase Users','Usuarios Railway':'Railway Users',
+    'Sin sincronizar':'Not synced','Última sync':'Last sync','Último sync':'Last sync',
+    'Planes activos':'Active plans','Suscriptores':'Subscribers',
+    'Reclamaciones activas':'Active claims','Primas mensuales':'Monthly premiums',
+    'Objetivos activos':'Active goals','Total ahorrado (EUR)':'Total saved (EUR)',
+    'Depósitos este mes':'Deposits this month','Objetivos completados':'Completed goals',
+    'Solicitudes pendientes':'Pending requests','En producción':'In production',
+    'Activas':'Active','Bloqueadas':'Blocked',
+    'Stock disponible':'Available stock','Pagos vencidos':'Overdue payments',
+    'Volumen financiado':'Financed volume','Intereses generados':'Generated interest',
+    'Fondos activos':'Active funds','Miembros totales':'Total members',
+    'AUM total (EUR)':'Total AUM (EUR)','Rendimiento medio':'Average yield',
+    'Reglas activas':'Active rules','Excelente (800+)':'Excellent (800+)',
+    'Bueno (600-799)':'Good (600-799)','Regular (400-599)':'Fair (400-599)',
+    'Bajo (<400)':'Low (<400)',
+    // Form labels con *
+    'Nombre completo':'Full name','Contraseña':'Password',
+    'Rol':'Role','Concepto':'Concept','Referencia interna':'Internal reference',
+    'Moneda':'Currency','Tipo de ajuste':'Adjustment type','Buscar usuario':'Search user',
+    'Máx productos':'Max products','Precio/mes':'Price/month',
+    'Precio/mes (EUR)':'Price/month (EUR)','Comisión %':'Commission %',
+    'Transacciones/mes':'Transactions/month','Importe promedio (EUR)':'Average amount (EUR)',
+    'Comisión (%)':'Commission (%)','Comisión internacional (%)':'Int\'l commission (%)',
+    'Comisión P2P (%)':'P2P commission (%)','Límite KYC básico (EUR)':'Basic KYC limit (EUR)',
+    'Límite KYC estándar (EUR)':'Standard KYC limit (EUR)','Mensaje mantenimiento':'Maintenance message'
   },
   fr:{
     // Botones comunes
@@ -11129,7 +11155,33 @@ var UI_TEXT_TR={
     'Saldos reales · Auditoría Railway · Límites de wallet':'Soldes réels · Audit Railway · Limites portefeuille',
     'Límites activos':'Limites actifs',
     'Reconciliar usuario (Railway vs historial txns)':'Réconcilier utilisateur (Railway vs historique)',
-    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD'
+    'Total EUR':'Total EUR','Total XAF':'Total XAF','Total USD':'Total USD',
+    // Stat labels comunes
+    'Usuarios Supabase':'Utilisateurs Supabase','Usuarios Railway':'Utilisateurs Railway',
+    'Sin sincronizar':'Non synchronisé','Última sync':'Dernière sync','Último sync':'Dernière sync',
+    'Planes activos':'Plans actifs','Suscriptores':'Abonnés',
+    'Reclamaciones activas':'Réclamations actives','Primas mensuales':'Primes mensuelles',
+    'Objetivos activos':'Objectifs actifs','Total ahorrado (EUR)':'Total épargné (EUR)',
+    'Depósitos este mes':'Dépôts ce mois','Objetivos completados':'Objectifs complétés',
+    'Solicitudes pendientes':'Demandes en attente','En producción':'En production',
+    'Activas':'Actives','Bloqueadas':'Bloquées',
+    'Stock disponible':'Stock disponible','Pagos vencidos':'Paiements en retard',
+    'Volumen financiado':'Volume financé','Intereses generados':'Intérêts générés',
+    'Fondos activos':'Fonds actifs','Miembros totales':'Membres totaux',
+    'AUM total (EUR)':'AUM total (EUR)','Rendimiento medio':'Rendement moyen',
+    'Reglas activas':'Règles actives','Excelente (800+)':'Excellent (800+)',
+    'Bueno (600-799)':'Bon (600-799)','Regular (400-599)':'Moyen (400-599)',
+    'Bajo (<400)':'Faible (<400)',
+    // Form labels
+    'Nombre completo':'Nom complet','Contraseña':'Mot de passe',
+    'Rol':'Rôle','Concepto':'Concept','Referencia interna':'Référence interne',
+    'Moneda':'Devise','Tipo de ajuste':'Type d\'ajustement','Buscar usuario':'Rechercher utilisateur',
+    'Máx productos':'Max produits','Precio/mes':'Prix/mois',
+    'Precio/mes (EUR)':'Prix/mois (EUR)','Comisión %':'Commission %',
+    'Transacciones/mes':'Transactions/mois','Importe promedio (EUR)':'Montant moyen (EUR)',
+    'Comisión (%)':'Commission (%)','Comisión internacional (%)':'Commission int\'l (%)',
+    'Comisión P2P (%)':'Commission P2P (%)','Límite KYC básico (EUR)':'Limite KYC basique (EUR)',
+    'Límite KYC estándar (EUR)':'Limite KYC standard (EUR)','Mensaje mantenimiento':'Message maintenance'
   }
 };
 
@@ -11231,9 +11283,14 @@ function _applyPageContentTranslation(lang){
   // ── 4. Etiquetas de formulario dentro de módulos ──
   document.querySelectorAll('[id^="pg-"] .form-label, .modal .form-label, [id^="pg-"] label').forEach(function(el){
     if(el.children.length>0)return;
-    var k=el.getAttribute('data-es')||el.textContent.trim();
-    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
-    var t=_tr(k);if(t)el.textContent=t;
+    var raw=el.textContent.trim();
+    // Separar el sufijo obligatorio " *" para no romper la coincidencia
+    var suffix=raw.endsWith(' *')?' *':'';
+    var k=el.getAttribute('data-es')||raw;
+    var cleanKey=k.replace(/ \*$/,'');
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',raw);
+    var t=_tr(cleanKey)||_tr(raw);
+    if(t)el.textContent=t+((el.getAttribute('data-es')||'').endsWith(' *')?' *':'');
   });
 
   // ── 5. Placeholders de inputs dentro de módulos ──
@@ -11253,6 +11310,22 @@ function _applyPageContentTranslation(lang){
 
   // ── 7. Textos de sección (filter-bar labels, section headings) ──
   document.querySelectorAll('[id^="pg-"] .section-title, [id^="pg-"] .filter-label, [id^="pg-"] h3, [id^="pg-"] h4').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 8. KPI labels (stat-lbl, lbl, card KPIs) dentro de módulos ──
+  document.querySelectorAll('[id^="pg-"] .stat-lbl, [id^="pg-"] .lbl, [id^="pg-"] .card-lbl, [id^="pg-"] [class*="kpi-label"], [id^="pg-"] [class*="kpi-title"]').forEach(function(el){
+    if(el.children.length>0)return;
+    var k=el.getAttribute('data-es')||el.textContent.trim();
+    if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
+    var t=_tr(k);if(t)el.textContent=t;
+  });
+
+  // ── 9. Textos de data-pg-heading y elementos con data-i18n-content ──
+  document.querySelectorAll('[data-pg-heading], [data-i18n-content]').forEach(function(el){
     if(el.children.length>0)return;
     var k=el.getAttribute('data-es')||el.textContent.trim();
     if(!el.hasAttribute('data-es'))el.setAttribute('data-es',k);
