@@ -2380,8 +2380,9 @@ select.form-input option{background:var(--s2)}
       <button class="back-btn" onclick="nav('dashboard',null)">← Volver</button>
       <div style="display:grid;grid-template-columns:200px 1fr;gap:16px;height:calc(100vh - 190px)">
         <div class="card" style="margin-bottom:0;overflow:hidden;display:flex;flex-direction:column">
-          <div style="padding:10px">
+          <div style="padding:10px;display:flex;flex-direction:column;gap:6px">
             <button class="btn-block btn-primary" onclick="openModal('m-new-email')" style="font-size:12px;padding:8px">✉️ Nuevo email</button>
+            <button class="btn-block btn-ghost" onclick="markAllEmailsRead()" style="font-size:11px;padding:6px">✓ Marcar todos leídos</button>
           </div>
           <div style="padding:6px;display:flex;flex-direction:column;gap:2px">
             <div onclick="loadEmailFolder('inbox')" id="email-tab-inbox" style="padding:7px 10px;border-radius:7px;cursor:pointer;font-size:13px;background:var(--cyan-d);color:var(--cyan);font-weight:600">📥 Bandeja <span id="email-inbox-count" style="float:right;background:var(--cyan);color:#000;border-radius:10px;padding:0 6px;font-size:10px">0</span></div>
@@ -2415,7 +2416,12 @@ select.form-input option{background:var(--s2)}
           <div style="flex:1;overflow-y:auto" id="msg-contacts-list"><div class="td-empty">Sin contactos</div></div>
         </div>
         <div class="card" style="margin-bottom:0;overflow:hidden;display:flex;flex-direction:column">
-          <div class="card-head" id="msg-chat-header"><div class="card-title" style="color:var(--muted)">Selecciona una conversación</div></div>
+          <div class="card-head" id="msg-chat-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div class="card-title" style="color:var(--muted)">Selecciona una conversación</div>
+            <div id="msg-chat-actions" style="display:none;gap:6px">
+              <button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="clearCurrentChat()">🗑️ Borrar chat</button>
+            </div>
+          </div>
           <div style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:4px" id="msg-messages">
             <div style="text-align:center;padding:40px;color:var(--muted)"><div style="font-size:32px;margin-bottom:8px">💬</div>Selecciona un contacto</div>
           </div>
@@ -5920,8 +5926,10 @@ select.form-input option{background:var(--s2)}
   <div class="card">
     <div class="card-head">
       <div><div class="card-title">🧑‍💼 Usuarios administrativos</div><div class="card-sub" id="au-count-label">Gestión de accesos al panel</div></div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="topbar-btn btn-ghost" onclick="loadAdminUsers()">↻</button>
+        <button class="topbar-btn btn-ghost" onclick="exportAdminUsersCSV()">📥 CSV</button>
+        <button class="topbar-btn btn-ghost" onclick="printAdminUsers()">🖨️ PDF</button>
         <button class="topbar-btn btn-primary" onclick="openModal('m-create-admin')">+ Nuevo admin</button>
       </div>
     </div>
@@ -8825,6 +8833,9 @@ nav=function(page,el){
   if(page==='taxes-admin')loadTaxConfigEditor();
   if(page==='pos-admin')loadPOSAdmin();
   if(page==='saldos')loadSaldos();
+  if(page==='email'){loadEmailFolder('inbox');loadEmailUsers();}
+  if(page==='mensajeria')loadMsgContacts();
+  if(page==='admin-users')loadAdminUsers();
 };
 
 // ── LOANS ─────────────────────────────────────────────────
@@ -11630,7 +11641,7 @@ function loadMsgContacts(){
 function openMsgWith(userId,name){
   MSG_ACTIVE_USER=userId;
   var header=document.getElementById('msg-chat-header');
-  if(header)header.innerHTML='<div class="card-title">💬 '+name+'</div>';
+  if(header)header.innerHTML='<div class="card-title">💬 '+name+'</div><div style="display:flex;gap:6px"><button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="clearCurrentChat()">🗑️ Borrar chat</button></div>';
   var ia=document.getElementById('msg-input-area');
   if(ia)ia.style.display='flex';
   var msgs=MSG_DATA[userId]||[];
@@ -20697,6 +20708,72 @@ function _applyAdminRole(role){
   var savedRole=localStorage.getItem('ia_admin_role')||'superadmin';
   setTimeout(function(){_applyAdminRole(savedRole);},500);
 })();
+
+// ══════════════════════════════════════════════════════
+// ADMIN USERS — EXPORT PDF / CSV
+// ══════════════════════════════════════════════════════
+function exportAdminUsersCSV(){
+  if(!ALL_ADMIN_USERS||!ALL_ADMIN_USERS.length){toast('Sin datos para exportar','warn');return;}
+  const h=['Nombre','Email','Rol','País','Módulos','Estado','Último acceso'];
+  const rows=[h.join(',')].concat(ALL_ADMIN_USERS.map(u=>[
+    u.full_name||'',u.email||'',u.role||'',u.country||'',
+    (u.modules||[]).length+'/'+ALL_MODULES.length,
+    u.blocked?'Bloqueado':'Activo',
+    u.last_login?new Date(u.last_login).toLocaleString('es'):''
+  ].map(v=>{const s=String(v??'');return s.includes(',')?'"'+s+'"':s;}).join(','))).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+rows],{type:'text/csv;charset=utf-8'}));
+  a.download='admins_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();toast('✅ CSV exportado');
+}
+
+function printAdminUsers(){
+  if(!ALL_ADMIN_USERS||!ALL_ADMIN_USERS.length){toast('Sin datos','warn');return;}
+  const now=new Date().toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const rows=ALL_ADMIN_USERS.map((u,i)=>`<tr style="background:${i%2===0?'#f8fafc':'#fff'}">
+    <td>${u.full_name||'—'}</td>
+    <td>${u.email||'—'}</td>
+    <td><span style="background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:4px;font-size:11px">${u.role||'—'}</span></td>
+    <td>${u.country||'—'}</td>
+    <td style="text-align:center">${(u.modules||[]).length}/${ALL_MODULES?ALL_MODULES.length:'?'}</td>
+    <td style="color:${u.blocked?'#ef4444':'#10b981'}">${u.blocked?'🚫 Bloqueado':'✅ Activo'}</td>
+    <td style="color:#64748b;font-size:11px">${u.last_login?new Date(u.last_login).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca'}</td>
+  </tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Usuarios Admin — InnovaAFRIC</title>
+  <style>body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#1e293b}
+  h1{font-size:16px;color:#0369a1;margin-bottom:4px}.sub{color:#64748b;font-size:11px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse}thead tr{background:#0369a1;color:#fff}
+  th{padding:7px 10px;text-align:left;font-weight:600}td{padding:5px 10px;border-bottom:1px solid #e2e8f0}
+  .footer{margin-top:16px;font-size:10px;color:#94a3b8;text-align:center}
+  @media print{body{margin:10px}}</style></head><body>
+  <h1>🧑‍💼 Usuarios Administrativos — InnovaAFRIC</h1>
+  <div class="sub">Generado: ${now} · Total: ${ALL_ADMIN_USERS.length} administradores</div>
+  <table><thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>País</th><th>Módulos</th><th>Estado</th><th>Último acceso</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <div class="footer">InnovaAFRIC Admin Panel · Documento confidencial</div>
+  </body></html>`;
+  const w=window.open('','_blank','width=1000,height=700');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),400);
+}
+
+// ── EMAIL: Marcar todos leídos ────────────────────────
+function markAllEmailsRead(){
+  ALL_EMAILS.forEach(e=>{if(e.to==='admin@innovaafric.com')e.read=true;});
+  localStorage.setItem('ia_internal_emails',JSON.stringify(ALL_EMAILS));
+  renderEmailList();
+  toast('✅ Todos los emails marcados como leídos');
+}
+
+// ── MENSAJERÍA: Limpiar chat activo ──────────────────
+function clearCurrentChat(){
+  if(!MSG_ACTIVE_USER)return;
+  if(!confirm('¿Borrar toda la conversación?'))return;
+  MSG_DATA[MSG_ACTIVE_USER]=[];
+  localStorage.setItem('ia_internal_msgs',JSON.stringify(MSG_DATA));
+  renderMessages(MSG_ACTIVE_USER);
+  loadMsgContacts();
+  toast('✅ Conversación borrada');
+}
 
 // ══════════════════════════════════════════════════════
 // SALDOS & AUDITORÍA — lee Supabase + audita Railway
