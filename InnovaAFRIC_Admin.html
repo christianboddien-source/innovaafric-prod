@@ -8843,7 +8843,13 @@ function loadMarketingAdmin(){
 var TAX_CONFIG=JSON.parse(localStorage.getItem('ia_tax_config')||'null')||{GQ:{iva:19,irpf:25,remesas:2,comercio:5,innova:15,rep:10,gov:75},CM:{iva:19.25,irpf:30,remesas:2.5,comercio:5,innova:12,rep:8,gov:80},GA:{iva:18,irpf:35,remesas:2,comercio:4,innova:15,rep:10,gov:75},SN:{iva:18,irpf:30,remesas:1.5,comercio:5,innova:10,rep:8,gov:82},CI:{iva:18,irpf:30,remesas:2,comercio:5,innova:10,rep:8,gov:82},ES:{iva:21,irpf:25,remesas:0,comercio:15,innova:5,rep:5,gov:90},FR:{iva:20,irpf:30,remesas:0,comercio:15,innova:5,rep:5,gov:90}};
 var COUNTRY_NAMES={GQ:'🇬🇶 Guinea Ecuatorial',CM:'🇨🇲 Camerún',GA:'🇬🇦 Gabón',SN:'🇸🇳 Senegal',CI:'🇨🇮 Costa de Marfil',ES:'🇪🇸 España',FR:'🇫🇷 Francia'};
 
-function loadTaxConfigEditor(){
+async function loadTaxConfigEditor(){
+  // Cargar config fiscal desde Supabase
+  try{
+    var r=await SB.from('config').select('value').eq('key','tax_config').single().catch(()=>null);
+    if(r&&r.data)TAX_CONFIG=JSON.parse(r.data.value);
+    else{var s=localStorage.getItem('ia_tax_config');if(s)TAX_CONFIG=JSON.parse(s);}
+  }catch(e){var s=localStorage.getItem('ia_tax_config');if(s)TAX_CONFIG=JSON.parse(s);}
   var el=document.getElementById('tax-config-editor');if(!el)return;
   el.innerHTML=Object.entries(TAX_CONFIG).map(function(e){
     var country=e[0],cfg=e[1];
@@ -8863,7 +8869,7 @@ function loadTaxConfigEditor(){
   }).join('');
   loadTaxHistory();
 }
-function saveTaxConfig(){
+async function saveTaxConfig(){
   Object.keys(TAX_CONFIG).forEach(function(country){
     ['iva','remesas','comercio','innova','rep','gov'].forEach(function(field){
       var el=document.getElementById('tc-'+country+'-'+field);
@@ -8871,7 +8877,10 @@ function saveTaxConfig(){
     });
   });
   localStorage.setItem('ia_tax_config',JSON.stringify(TAX_CONFIG));
-  toast('✅ Configuración fiscal guardada','success');
+  SB.from('config').upsert({key:'tax_config',value:JSON.stringify(TAX_CONFIG),updated_at:new Date().toISOString()}).catch(()=>null);
+  // Guardar en Railway también
+  rwAPI('POST','/admin/taxes/config',TAX_CONFIG).catch(()=>null);
+  toast('✅ Configuración fiscal guardada en Supabase','success');
   logAdminAction('save_tax_config','Configuración fiscal actualizada para '+Object.keys(TAX_CONFIG).length+' países');
 }
 function loadTaxHistory(){
@@ -13793,8 +13802,18 @@ function configIntegration(id){
 }
 
 /* ── STRIPE CONNECT ─────────────────────────────────────────── */
-function loadStripeConnect(){
-  rwAPI('GET','/stripe/accounts').then(d=>renderStripeAccounts(d&&d.length?d:STRIPE_ACCOUNTS)).catch(()=>renderStripeAccounts(STRIPE_ACCOUNTS));
+async function loadStripeConnect(){
+  // Cargar cuentas Stripe desde Supabase config o Railway
+  try{
+    var r=await rwAPI('GET','/stripe/accounts').catch(()=>null);
+    if(r&&r.success&&(r.data.accounts||r.data.items||r.data).length){
+      STRIPE_ACCOUNTS=r.data.accounts||r.data.items||r.data;
+    }else{
+      var sb=await SB.from('config').select('value').eq('key','stripe_accounts').single().catch(()=>null);
+      if(sb&&sb.data)STRIPE_ACCOUNTS=JSON.parse(sb.data.value);
+    }
+  }catch(e){}
+  renderStripeAccounts(STRIPE_ACCOUNTS);
   var stats=STRIPE_ACCOUNTS.filter(a=>a.status==='activo').reduce((s,a)=>({vol:s.vol+a.vol,count:s.count+1}),{vol:0,count:0});
   var el=document.getElementById('stripe-stats');
   if(el)el.innerHTML=`
@@ -13842,7 +13861,9 @@ function connectStripeAccount(){
   if(!f.merchant||!f.email){toast('Nombre y email son obligatorios','warning');return;}
   var chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   var rand=Array.from({length:6},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-  STRIPE_ACCOUNTS.push({id:'acct_'+rand,merchant:f.merchant,country:f.country,type:f.type,vol:0,commission:2.9,payouts:'mensual',status:'activo'});
+  var newAcct={id:'acct_'+rand,merchant:f.merchant,country:f.country,type:f.type,vol:0,commission:2.9,payouts:'mensual',status:'activo'};
+  STRIPE_ACCOUNTS.push(newAcct);
+  SB.from('config').upsert({key:'stripe_accounts',value:JSON.stringify(STRIPE_ACCOUNTS),updated_at:new Date().toISOString()}).catch(()=>null);
   toast('Cuenta Stripe conectada: '+f.merchant,'success');closeModal('m-stripe-account');loadStripeConnect();
   logAdminAction('connect_stripe',f.merchant);
 }
@@ -13853,7 +13874,21 @@ function triggerPayout(id){
 }
 
 /* ── QUICKBOOKS ─────────────────────────────────────────────── */
-function loadQuickbooks(){
+async function loadQuickbooks(){
+  // Cargar cuentas QB desde Supabase config
+  try{
+    var r=await SB.from('config').select('value').eq('key','quickbooks_accounts').single().catch(()=>null);
+    if(r&&r.data)QB_ACCOUNTS=JSON.parse(r.data.value);
+    else{
+      // Intentar sincronizar desde transacciones de Supabase
+      var txRes=await SB.from('transactions').select('type,amount,created_at').order('created_at',{ascending:false}).limit(500).catch(()=>({data:[]}));
+      if(txRes.data&&txRes.data.length){
+        var ingPorTipo={};
+        txRes.data.forEach(function(t){var k=t.type||'otro';ingPorTipo[k]=(ingPorTipo[k]||0)+Number(t.amount||0);});
+        QB_ACCOUNTS=Object.entries(ingPorTipo).map(function(e,i){return{id:'QB-'+(i+1).toString().padStart(3,'0'),name:e[0].charAt(0).toUpperCase()+e[0].slice(1),type:['topup','cashout'].includes(e[0])?'gasto':'ingreso',qbBalance:e[1],innoBalance:e[1],status:'sincronizado'};});
+      }
+    }
+  }catch(e){}
   var diff=QB_ACCOUNTS.filter(a=>a.status==='diferencia').length;
   var totalIncome=QB_ACCOUNTS.filter(a=>a.type==='ingreso').reduce((s,a)=>s+a.innoBalance,0);
   var totalExp=QB_ACCOUNTS.filter(a=>a.type==='gasto').reduce((s,a)=>s+a.innoBalance,0);
@@ -14409,7 +14444,15 @@ function exportConsentsCSV(){
 }
 
 /* ── KNOWLEDGE BASE ─────────────────────────────────────────── */
-function loadKnowledgeBase(){filterKB(KB_DATA);}
+async function loadKnowledgeBase(){
+  try{
+    var r=await SB.from('knowledge_base').select('*').order('updated_at',{ascending:false}).limit(100).catch(()=>({data:null}));
+    if(r.data&&r.data.length){
+      KB_DATA=r.data.map(function(a){return{id:a.id,title:a.title,cat:a.category||a.cat||'tecnico',lang:a.lang||'es',content:a.content||'',views:a.views||0,helpful:a.helpful_pct||0,updated:(a.updated_at||a.created_at||'').slice(0,10),status:a.status||'publicado'};});
+    }
+  }catch(e){}
+  filterKB(KB_DATA);
+}
 
 function filterKB(data){
   data=data||KB_DATA;
@@ -14447,6 +14490,7 @@ function createArticle(){
   var na={id:'KB'+(KB_DATA.length+1).toString().padStart(3,'0'),...f,views:0,helpful:0,
     updated:new Date().toISOString().slice(0,10),status:'publicado'};
   KB_DATA.push(na);
+  SB.from('knowledge_base').insert({id:na.id,title:na.title,category:na.cat,lang:na.lang,content:na.content,status:na.status,views:0,helpful_pct:0,created_at:new Date().toISOString(),updated_at:new Date().toISOString()}).catch(()=>null);
   toast('Artículo publicado','success');closeModal('m-create-article');filterKB();
   logAdminAction('create_kb_article',f.title);
 }
@@ -14469,7 +14513,14 @@ function unpublishArticle(id){var a=KB_DATA.find(x=>x.id===id);if(a){a.status='b
 function publishArticle(id){var a=KB_DATA.find(x=>x.id===id);if(a){a.status='publicado';filterKB();toast('Artículo publicado','success');}}
 
 /* ── SUPPORT SHIFTS ─────────────────────────────────────────── */
-function loadSupportShifts(){
+async function loadSupportShifts(){
+  // Cargar turnos desde Supabase
+  try{
+    var r=await SB.from('support_shifts').select('*').eq('status','activo').order('created_at',{ascending:false}).limit(50).catch(()=>({data:null}));
+    if(r.data&&r.data.length){
+      SHIFTS_DATA=r.data.map(function(s){return{agent:s.agent_name||'—',role:s.role||'soporte_n1',country:s.country||'—',shift:s.shift_type||'manana',hours:'—',tickets:s.tickets_resolved||0,rating:s.avg_rating||0,status:s.status||'activo'};});
+    }
+  }catch(e){}
   var active=SHIFTS_DATA.filter(s=>s.status==='activo').length;
   var tickets=SHIFTS_DATA.reduce((s,x)=>s+x.tickets,0);
   var avgRating=(SHIFTS_DATA.reduce((s,x)=>s+x.rating,0)/SHIFTS_DATA.length).toFixed(1);
@@ -14523,7 +14574,9 @@ function assignShift(){
     from:document.getElementById('shift-from').value,to:document.getElementById('shift-to').value};
   if(!f.agent||!f.from){toast('Agente y fecha inicio son obligatorios','warning');return;}
   var hourMap={manana:'06:00-14:00',tarde:'14:00-22:00',noche:'22:00-06:00'};
-  SHIFTS_DATA.push({agent:f.agent,role:f.role,country:f.country,shift:f.shift,hours:hourMap[f.shift],tickets:0,rating:0,status:'activo'});
+  var newShift={agent:f.agent,role:f.role,country:f.country,shift:f.shift,hours:hourMap[f.shift],tickets:0,rating:0,status:'activo'};
+  SHIFTS_DATA.push(newShift);
+  SB.from('support_shifts').insert({agent_name:f.agent,role:f.role,country:f.country,shift_type:f.shift,date_from:f.from,date_to:f.to,status:'activo',created_at:new Date().toISOString()}).catch(()=>null);
   toast('Turno asignado a '+f.agent,'success');closeModal('m-assign-shift');loadSupportShifts();
   logAdminAction('assign_shift',f.agent);
 }
@@ -14601,6 +14654,8 @@ function sendChatMessage(){
   var msg={from:'Admin',role:'supervisor',msg:input.value.trim(),ts:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})};
   if(!CHAT_MESSAGES[_activeChatChannel])CHAT_MESSAGES[_activeChatChannel]=[];
   CHAT_MESSAGES[_activeChatChannel].push(msg);
+  // Persistir en Supabase
+  SB.from('internal_messages').insert({channel_id:_activeChatChannel,from_user:'Admin',role:'supervisor',message:msg.msg,created_at:new Date().toISOString()}).catch(()=>null);
   input.value='';
   switchChatChannel(_activeChatChannel);
 }
@@ -19946,10 +20001,11 @@ function filterLoginLogs(){
   renderLoginLogs(list);
 }
 
-function blockIPFromLog(ip){
+async function blockIPFromLog(ip){
   if(!confirm('¿Bloquear la IP '+ip+'?'))return;
   var wl=JSON.parse(localStorage.getItem('ia_ip_blacklist')||'[]');
   if(!wl.includes(ip)){wl.push(ip);localStorage.setItem('ia_ip_blacklist',JSON.stringify(wl));}
+  SB.from('config').upsert({key:'ip_blacklist',value:JSON.stringify(wl),updated_at:new Date().toISOString()}).catch(()=>null);
   logAdminAction('block_ip','ip:'+ip);
   toast('🚫 IP bloqueada: '+ip,'success');
 }
@@ -19969,11 +20025,12 @@ function exportLoginLogsCSV(){
 var IP_WHITELIST=[];
 
 async function loadIPWhitelist(){
-  var stored=JSON.parse(localStorage.getItem('ia_ip_whitelist')||'[]');
-  IP_WHITELIST=stored.length?stored:[
-    {ip:'85.32.100.0/24',desc:'Oficina Madrid',added:new Date().toISOString()},
-    {ip:'41.188.10.22',desc:'Oficina Yaoundé',added:new Date().toISOString()}
-  ];
+  // Cargar desde Supabase config, fallback localStorage
+  try{
+    var r=await SB.from('config').select('value').eq('key','ip_whitelist').single().catch(()=>null);
+    if(r&&r.data){IP_WHITELIST=JSON.parse(r.data.value);}
+    else{var s=localStorage.getItem('ia_ip_whitelist');IP_WHITELIST=s?JSON.parse(s):[{ip:'85.32.100.0/24',desc:'Oficina Madrid',added:new Date().toISOString()},{ip:'41.188.10.22',desc:'Oficina Yaoundé',added:new Date().toISOString()}];}
+  }catch(e){var s=localStorage.getItem('ia_ip_whitelist');IP_WHITELIST=s?JSON.parse(s):[];}
   var tb=document.getElementById('tb-whitelist');
   if(!tb)return;
   if(!IP_WHITELIST.length){tb.innerHTML='<tr><td colspan="4" class="td-empty">Sin IPs configuradas — acceso abierto a todos</td></tr>';return;}
