@@ -999,8 +999,15 @@ select.form-input option{background:var(--s2)}
       <!-- Tasas globales -->
       <div class="card" style="margin-bottom:16px">
         <div class="card-head">
-          <div><div class="card-title">📈 Tasas y comisiones globales</div><div class="card-sub">Valores base · Supabase config table</div></div>
-          <button class="topbar-btn btn-primary" onclick="saveRates()" data-i18n="btn:save-supabase">💾 Guardar en Supabase</button>
+          <div>
+            <div class="card-title">📈 Tasas y comisiones globales</div>
+            <div class="card-sub">Valores base · Supabase config table</div>
+            <div id="rates-freshness" style="margin-top:4px;font-size:11px;color:var(--muted)">Comprobando actualización...</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="topbar-btn btn-ghost" onclick="checkRatesFreshness()">↺</button>
+            <button class="topbar-btn btn-primary" onclick="saveRates()" data-i18n="btn:save-supabase">💾 Guardar en Supabase</button>
+          </div>
         </div>
         <div style="padding:20px">
           <div style="font-size:13px;font-weight:600;margin-bottom:12px" data-pg-heading>Tasas de cambio</div>
@@ -7210,9 +7217,9 @@ async function loadWallets(){
     const tb=document.getElementById('tb-wallets');
     tb.innerHTML=(data||[]).length?(data||[]).map(w=>`<tr>
       <td><div class="user-cell"><div class="uc-av" style="background:${avColor(w.user?.email||'x')};color:#000">${initials(w.user?.full_name||w.user?.email||'?')}</div><div><div class="uc-name">${w.user?.full_name||'—'}</div><div class="uc-email">${w.user?.email||''}</div></div></div></td>
-      <td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">€${Number(w.eur).toFixed(2)}</td>
-      <td style="font-family:var(--mono);color:var(--muted)">${Math.round(w.xaf).toLocaleString('es')}</td>
-      <td style="font-family:var(--mono);color:var(--muted)">$${Number(w.usd).toFixed(2)}</td>
+      <td style="font-family:var(--mono);font-weight:700;color:${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'#f87171':'var(--cyan)'}">€${Number(w.eur).toFixed(2)}${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'<span title="Techo EUR alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':Number(w.eur)===0?'':' <span style="font-size:9px;color:var(--muted)">/ €3k</span>'}</td>
+      <td style="font-family:var(--mono);color:${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'#f87171':'var(--muted)'}">  ${Math.round(w.xaf).toLocaleString('es')}${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'<span title="Techo XAF alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
+      <td style="font-family:var(--mono);color:${Number(w.usd)>WALLET_LIMITS.USD.reloadThreshold?'#f87171':'var(--muted)'}">$${Number(w.usd).toFixed(2)}${Number(w.usd)>WALLET_LIMITS.USD.reloadThreshold?'<span title="Techo USD alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
       <td style="font-family:var(--mono);color:var(--amber)">${w.points||0}</td>
       <td style="font-size:11px;color:var(--muted)">${w.updated_at?fmt_date(w.updated_at):'—'}</td>
       <td><button class="topbar-btn btn-primary" style="padding:5px 12px;font-size:12px" onclick="openRecharge('${w.user_id}','${(w.user?.full_name||w.user?.email||'Usuario').replace(/'/g,'')}')">💰 Recargar</button></td>
@@ -7272,15 +7279,22 @@ async function doRechargeAll(){
   const addU=Number(document.getElementById('all-usd').value)||0;
   const addP=Number(document.getElementById('all-pts').value)||0;
   const{data:ws}=await SB.from('wallets').select('*,user:user_id(email)');
-  let cnt=0;
+  let cnt=0, skipped=0;
   for(const w of ws||[]){
     if(w.user?.email==='admin@innovaafric.com')continue;
-    await SB.from('wallets').update({eur:Number(w.eur)+addE,xaf:Number(w.xaf)+addX,usd:Number(w.usd)+addU,points:Number(w.points||0)+addP}).eq('user_id',w.user_id);
+    const curE=Number(w.eur||0),curX=Number(w.xaf||0),curU=Number(w.usd||0);
+    // Validar límites por divisa — si alguna supera el umbral, saltamos esa divisa
+    const newE=addE>0&&curE<=WALLET_LIMITS.EUR.reloadThreshold?Math.min(curE+addE,WALLET_LIMITS.EUR.cap):curE;
+    const newX=addX>0&&curX<=WALLET_LIMITS.XAF.reloadThreshold?Math.min(curX+addX,WALLET_LIMITS.XAF.cap):curX;
+    const newU=addU>0&&curU<=WALLET_LIMITS.USD.reloadThreshold?Math.min(curU+addU,WALLET_LIMITS.USD.cap):curU;
+    const changed=newE!==curE||newX!==curX||newU!==curU||addP>0;
+    if(!changed){skipped++;continue;}
+    await SB.from('wallets').update({eur:newE,xaf:newX,usd:newU,points:Number(w.points||0)+addP}).eq('user_id',w.user_id);
     cnt++;
   }
   closeModal('m-all-recharge');
-  toast('✅ '+cnt+' wallets recargados','success');
-  logAdminAction('recharge_all',cnt+' wallets recargados');
+  toast('✅ '+cnt+' wallets recargados'+(skipped?' · '+skipped+' omitidos (techo alcanzado)':''),'success');
+  logAdminAction('recharge_all',cnt+' wallets recargados, '+skipped+' omitidos por límite');
   setTimeout(()=>{loadDashboard();loadWallets();},300);
 }
 
@@ -8836,6 +8850,11 @@ nav=function(page,el){
   if(page==='email'){loadEmailFolder('inbox');loadEmailUsers();}
   if(page==='mensajeria')loadMsgContacts();
   if(page==='admin-users')loadAdminUsers();
+  if(page==='fraud')loadFraudData();
+  if(page==='user-timeline'){var tl=document.getElementById('tl-user-q');if(tl)tl.focus();}
+  if(page==='settings'){loadRatesEditor();checkRatesFreshness();}
+  if(page==='crear')resetCreateForm();
+  if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
 
 // ── LOANS ─────────────────────────────────────────────────
@@ -20938,6 +20957,29 @@ function printAdminUsers(){
   </body></html>`;
   const w=window.open('','_blank','width=1000,height=700');
   w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),400);
+}
+
+// ── RATES: comprobar frescura de tasas ───────────────
+async function checkRatesFreshness(){
+  const el=document.getElementById('rates-freshness');
+  if(!el)return;
+  try{
+    // Verificar tasas en Railway
+    const r=await rwAPI('GET','/utils/rates');
+    if(r&&r.success&&r.data&&r.data.rates&&r.data.rates.length){
+      const oldest=r.data.rates.reduce((a,b)=>new Date(a.updatedAt)<new Date(b.updatedAt)?a:b);
+      const daysSince=Math.floor((Date.now()-new Date(oldest.updatedAt))/86400000);
+      if(daysSince>7){
+        el.innerHTML='⚠️ Tasas desactualizadas — última actualización hace <strong>'+daysSince+' días</strong> · <a href="https://www.bceao.int" target="_blank" style="color:var(--cyan)">Ver BCEAO</a>';
+        el.style.color='#f87171';
+      } else {
+        el.innerHTML='✅ Tasas actualizadas — última actualización hace '+daysSince+' día'+(daysSince!==1?'s':'');
+        el.style.color='#10b981';
+      }
+    }
+  }catch(e){
+    el.textContent='No se pudo verificar estado de tasas';
+  }
 }
 
 // ── EMAIL: Marcar todos leídos ────────────────────────
