@@ -65,7 +65,32 @@
       padding: 100px 6% 80px;
       background: linear-gradient(160deg, var(--white) 0%, var(--bg) 60%, var(--bg2) 100%);
     }
-    .hero-inner { max-width: 800px; }
+    .hero-inner { max-width: 1200px; width:100%; display:grid; grid-template-columns:1fr 480px; align-items:center; gap:60px; }
+    .hero-text {}
+    @media(max-width:960px){ .hero-inner{ grid-template-columns:1fr; } .hero-anim{ display:none; } }
+
+    /* ── Animación tricontinental ── */
+    .hero-anim{ position:relative; width:100%; height:480px; }
+    .ha-svg{ position:absolute;inset:0;width:100%;height:100%; }
+    .ha-node{ position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;transition:opacity .5s,transform .5s; }
+    .ha-node.show{ opacity:1;transform:scale(1)!important; }
+    .ha-ico{ width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid;box-shadow:0 0 16px currentColor; }
+    .ha-lbl{ font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase; }
+    .ha-eu{ top:20px;left:20px;color:#2B8DC7;transform:scale(.5); }
+    .ha-eu .ha-ico{ background:rgba(43,141,199,.1);border-color:#2B8DC7; }
+    .ha-as{ top:20px;right:20px;color:#E0921A;transform:scale(.5); }
+    .ha-as .ha-ico{ background:rgba(224,146,26,.1);border-color:#E0921A; }
+    .ha-af{ bottom:20px;left:50%;margin-left:-44px;color:#22c55e;transform:scale(.5); }
+    .ha-af .ha-ico{ background:rgba(34,197,94,.1);border-color:#22c55e; }
+    .ha-center{ position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);opacity:0;text-align:center;transition:opacity .6s,transform .6s; }
+    .ha-center.show{ opacity:1;transform:translate(-50%,-50%) scale(1); }
+    .ha-center svg{ filter:drop-shadow(0 0 14px rgba(43,141,199,.5));animation:haPulse 2s ease-in-out infinite; }
+    .ha-cname{ font-size:14px;font-weight:900;color:#0D2B4E;letter-spacing:2px;margin-top:6px; }
+    .ha-csub{ font-size:9px;color:#2B8DC7;letter-spacing:2px;font-weight:600;margin-top:2px; }
+    .ha-tagline{ position:absolute;bottom:0;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:3px;text-transform:uppercase;opacity:0;transition:opacity .6s;white-space:nowrap; }
+    .ha-tagline.show{ opacity:1; }
+    .ha-tagline span{ color:#2B8DC7; }
+    @keyframes haPulse{0%,100%{filter:drop-shadow(0 0 8px rgba(43,141,199,.4))}50%{filter:drop-shadow(0 0 22px rgba(43,141,199,.9))}}
     .hero-tag {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(43,141,199,0.1); border: 1px solid rgba(43,141,199,0.25);
@@ -289,18 +314,65 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-tag" data-i18n="hero_badge">Asia · Europe · Africa Ecosystem</div>
-    <h1 data-i18n="hero_h1">Connecting <span class="accent-orange">Asia</span>, <span class="accent-blue">Europe</span><br/>& <span class="accent-orange">Africa</span> — as One</h1>
-    <p class="hero-sub" data-i18n="hero_sub">InnovaAFRIC is the triangular digital infrastructure that links Asia's production, Europe's logistics hub, and Africa's explosive consumer market — payments, e-commerce and delivery in one unified ecosystem.</p>
-    <div class="hero-btns">
-      <a href="#products" class="btn-primary" data-i18n="hero_btn1">Explore Products →</a>
-      <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
+    <!-- Texto izquierda -->
+    <div class="hero-text">
+      <div class="hero-tag" data-i18n="hero_badge">Asia · Europe · Africa Ecosystem</div>
+      <h1 data-i18n="hero_h1">Connecting <span class="accent-orange">Asia</span>, <span class="accent-blue">Europe</span><br/>& <span class="accent-orange">Africa</span> — as One</h1>
+      <p class="hero-sub" data-i18n="hero_sub">InnovaAFRIC is the triangular digital infrastructure that links Asia's production, Europe's logistics hub, and Africa's explosive consumer market — payments, e-commerce and delivery in one unified ecosystem.</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn-primary" data-i18n="hero_btn1">Explore Products →</a>
+        <a href="#how" class="btn-outline" data-i18n="hero_btn2">How it works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num">8+</span><span class="stat-lbl" data-i18n="s1l">African countries</span></div>
+        <div class="stat-item"><span class="stat-num">4</span><span class="stat-lbl" data-i18n="s2l">Core products</span></div>
+        <div class="stat-item"><span class="stat-num">3</span><span class="stat-lbl" data-i18n="s3l">Continents</span></div>
+        <div class="stat-item"><span class="stat-num">1</span><span class="stat-lbl" data-i18n="s4l">Unified platform</span></div>
+      </div>
     </div>
-    <div class="hero-stats">
-      <div class="stat-item"><span class="stat-num">8+</span><span class="stat-lbl" data-i18n="s1l">African countries</span></div>
-      <div class="stat-item"><span class="stat-num">4</span><span class="stat-lbl" data-i18n="s2l">Core products</span></div>
-      <div class="stat-item"><span class="stat-num">3</span><span class="stat-lbl" data-i18n="s3l">Continents</span></div>
-      <div class="stat-item"><span class="stat-num">1</span><span class="stat-lbl" data-i18n="s4l">Unified platform</span></div>
+
+    <!-- Animación derecha -->
+    <div class="hero-anim" id="heroAnim">
+      <svg class="ha-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- Líneas triángulo -->
+        <path id="ha-eu-as" d="M 96 60 Q 240 16 384 60"   fill="none" stroke="#2B8DC7" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
+        <path id="ha-eu-af" d="M 60 96 Q 70 260 176 400"  fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
+        <path id="ha-as-af" d="M 420 96 Q 410 260 304 400" fill="none" stroke="#E0921A" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
+        <!-- Puntos viajando -->
+        <circle r="6" fill="#2B8DC7" opacity="0" id="hd1"><animateMotion dur="1.8s" repeatCount="indefinite" begin="indefinite" id="hd1m"><mpath href="#hp-eu-as"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd1o"/></circle>
+        <circle r="6" fill="#22c55e"  opacity="0" id="hd2"><animateMotion dur="2.1s" repeatCount="indefinite" begin="indefinite" id="hd2m"><mpath href="#hp-eu-af"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd2o"/></circle>
+        <circle r="6" fill="#E0921A"  opacity="0" id="hd3"><animateMotion dur="2s"   repeatCount="indefinite" begin="indefinite" id="hd3m"><mpath href="#hp-as-af"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd3o"/></circle>
+        <path id="hp-eu-as" d="M 96 60 Q 240 16 384 60"    style="display:none"/>
+        <path id="hp-eu-af" d="M 60 96 Q 70 260 176 400"   style="display:none"/>
+        <path id="hp-as-af" d="M 304 400 Q 410 260 420 96" style="display:none"/>
+      </svg>
+      <!-- Nodos -->
+      <div class="ha-node ha-eu" id="haEu"><div class="ha-ico">🌍</div><div class="ha-lbl">Europa</div></div>
+      <div class="ha-node ha-as" id="haAs"><div class="ha-ico">🌏</div><div class="ha-lbl">Asia</div></div>
+      <div class="ha-node ha-af" id="haAf"><div class="ha-ico">🌍</div><div class="ha-lbl">África</div></div>
+      <!-- Logo central -->
+      <div class="ha-center" id="haCenter">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100" height="100">
+          <rect width="200" height="200" rx="40" fill="#0D2B4E"/>
+          <circle cx="100" cy="88" r="34" fill="none" stroke="#2B8DC7" stroke-width="5"/>
+          <ellipse cx="100" cy="88" rx="18" ry="34" fill="none" stroke="#2B8DC7" stroke-width="3"/>
+          <line x1="66" y1="88" x2="134" y2="88" stroke="#2B8DC7" stroke-width="3"/>
+          <line x1="68" y1="72" x2="132" y2="72" stroke="#2B8DC7" stroke-width="2"/>
+          <line x1="68" y1="104" x2="132" y2="104" stroke="#2B8DC7" stroke-width="2"/>
+          <line x1="100" y1="54" x2="100" y2="30" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="100" cy="24" r="6" fill="#2B8DC7"/>
+          <line x1="124" y1="64" x2="143" y2="45" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="148" cy="40" r="6" fill="#2B8DC7"/>
+          <line x1="134" y1="88" x2="158" y2="88" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="164" cy="88" r="6" fill="#2B8DC7"/>
+          <line x1="124" y1="112" x2="143" y2="131" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="148" cy="136" r="6" fill="#2B8DC7"/>
+          <line x1="100" y1="122" x2="100" y2="146" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="100" cy="152" r="6" fill="#2B8DC7"/>
+          <line x1="76" y1="112" x2="57" y2="131" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="52" cy="136" r="6" fill="#2B8DC7"/>
+          <line x1="66" y1="88" x2="42" y2="88" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="36" cy="88" r="6" fill="#2B8DC7"/>
+          <line x1="76" y1="64" x2="57" y2="45" stroke="#2B8DC7" stroke-width="3.5"/><circle cx="52" cy="40" r="6" fill="#2B8DC7"/>
+        </svg>
+        <div class="ha-cname">InnovaAFRIC</div>
+        <div class="ha-csub">We Simplify Life</div>
+      </div>
+      <!-- Tagline -->
+      <div class="ha-tagline" id="haTagline">Conectando <span>Asia · Europa · África</span></div>
     </div>
   </div>
 </section>
@@ -1815,6 +1887,24 @@ if(typeof openModal==='undefined'){function openModal(id){document.getElementByI
   #reg-cliente form,#reg-comercio form,#reg-rider form{grid-template-columns:1fr!important;}
 }
 </style>
+<script>
+(function(){
+  var t = function(fn,ms){ return setTimeout(fn,ms); };
+  t(function(){ document.getElementById('haEu').classList.add('show'); }, 400);
+  t(function(){ document.getElementById('haAs').classList.add('show'); }, 700);
+  t(function(){ document.getElementById('haAf').classList.add('show'); }, 1000);
+  t(function(){ document.getElementById('ha-eu-as').style.strokeDashoffset='0'; }, 1300);
+  t(function(){ document.getElementById('ha-eu-af').style.strokeDashoffset='0'; }, 1600);
+  t(function(){ document.getElementById('ha-as-af').style.strokeDashoffset='0'; }, 1900);
+  t(function(){
+    document.getElementById('haCenter').classList.add('show');
+    ['hd1m','hd2m','hd3m','hd1o','hd2o','hd3o'].forEach(function(id){
+      var el=document.getElementById(id); if(el&&el.beginElement) el.beginElement();
+    });
+  }, 2300);
+  t(function(){ document.getElementById('haTagline').classList.add('show'); }, 3100);
+})();
+</script>
 </body>
 </html>
 
