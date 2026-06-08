@@ -298,6 +298,28 @@ select.form-input option{background:var(--s2)}
 .stat-card .sub{font-size:11px;color:var(--muted);margin-top:3px}
 .stat-card.c-cyan{border-top:2px solid var(--cyan)}.stat-card.c-green{border-top:2px solid var(--green)}.stat-card.c-amber{border-top:2px solid var(--amber)}.stat-card.c-red{border-top:2px solid var(--red)}.stat-card.c-purple{border-top:2px solid var(--purple)}
 
+/* SPLASH ADMIN */
+#adm-splash{position:fixed;inset:0;background:#0A1628;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:opacity .6s,visibility .6s}
+#adm-splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+#adm-stage{position:relative;width:300px;height:300px;flex-shrink:0}
+#adm-svg{position:absolute;inset:0;width:100%;height:100%}
+.adm-node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0;transition:opacity .5s,transform .5s}
+.adm-node.show{opacity:1;transform:scale(1)!important}
+.adm-ico{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid;box-shadow:0 0 14px currentColor}
+.adm-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:inherit}
+.adm-eu{top:10px;left:10px;color:#29ABE2;transform:scale(.5)}.adm-eu .adm-ico{background:rgba(41,171,226,.12);border-color:#29ABE2}
+.adm-as{top:10px;right:10px;color:#F5A623;transform:scale(.5)}.adm-as .adm-ico{background:rgba(245,166,35,.12);border-color:#F5A623}
+.adm-af{bottom:10px;left:50%;margin-left:-36px;color:#22c55e;transform:scale(.5)}.adm-af .adm-ico{background:rgba(34,197,94,.12);border-color:#22c55e}
+#adm-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);opacity:0;text-align:center;transition:opacity .6s,transform .6s}
+#adm-center.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#adm-center svg{animation:admPulse 2s ease-in-out infinite}
+#adm-cname{font-size:13px;font-weight:900;color:#29ABE2;letter-spacing:2px;margin-top:5px}
+#adm-csub{font-size:8px;color:rgba(41,171,226,.6);letter-spacing:2px;font-weight:600;margin-top:2px}
+#adm-tagline{font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:3px;text-transform:uppercase;margin-top:18px;opacity:0;transition:opacity .6s}
+#adm-tagline.show{opacity:1}
+#adm-tagline span{color:#29ABE2}
+@keyframes admPulse{0%,100%{filter:drop-shadow(0 0 8px rgba(41,171,226,.5))}50%{filter:drop-shadow(0 0 22px rgba(41,171,226,.9))}}
+
 /* SETUP */
 #setup{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
 .setup-card{background:var(--s1);border:1px solid var(--b1);border-radius:16px;padding:36px;max-width:420px;width:100%}
@@ -420,6 +442,47 @@ select.form-input option{background:var(--s2)}
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
+
+<!-- SPLASH ANIMACIÓN TRICONTINENTAL -->
+<div id="adm-splash">
+  <div id="adm-stage">
+    <svg id="adm-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <path id="adm-l1" d="M 68 44 Q 150 14 232 44"  fill="none" stroke="#29ABE2" stroke-width="1.5" stroke-dasharray="300" stroke-dashoffset="300" style="transition:stroke-dashoffset 1s ease"/>
+      <path id="adm-l2" d="M 44 68 Q 50 165 122 252" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="300" stroke-dashoffset="300" style="transition:stroke-dashoffset 1s ease"/>
+      <path id="adm-l3" d="M 256 68 Q 250 165 178 252" fill="none" stroke="#F5A623" stroke-width="1.5" stroke-dasharray="300" stroke-dashoffset="300" style="transition:stroke-dashoffset 1s ease"/>
+      <circle r="4" fill="#29ABE2" opacity="0" id="add1"><animateMotion dur="1.8s" repeatCount="indefinite" begin="indefinite" id="add1m"><mpath href="#adp1"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="add1o"/></circle>
+      <circle r="4" fill="#22c55e"  opacity="0" id="add2"><animateMotion dur="2.1s" repeatCount="indefinite" begin="indefinite" id="add2m"><mpath href="#adp2"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="add2o"/></circle>
+      <circle r="4" fill="#F5A623"  opacity="0" id="add3"><animateMotion dur="2s"   repeatCount="indefinite" begin="indefinite" id="add3m"><mpath href="#adp3"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="add3o"/></circle>
+      <path id="adp1" d="M 68 44 Q 150 14 232 44"    style="display:none"/>
+      <path id="adp2" d="M 44 68 Q 50 165 122 252"   style="display:none"/>
+      <path id="adp3" d="M 178 252 Q 250 165 256 68"  style="display:none"/>
+    </svg>
+    <div class="adm-node adm-eu" id="admEu"><div class="adm-ico">🌍</div><div class="adm-lbl">Europa</div></div>
+    <div class="adm-node adm-as" id="admAs"><div class="adm-ico">🌏</div><div class="adm-lbl">Asia</div></div>
+    <div class="adm-node adm-af" id="admAf"><div class="adm-ico">🌍</div><div class="adm-lbl">África</div></div>
+    <div id="adm-center">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="68" height="68">
+        <rect width="200" height="200" rx="40" fill="#0A1628"/>
+        <circle cx="100" cy="88" r="34" fill="none" stroke="#29ABE2" stroke-width="5"/>
+        <ellipse cx="100" cy="88" rx="18" ry="34" fill="none" stroke="#29ABE2" stroke-width="3"/>
+        <line x1="66" y1="88" x2="134" y2="88" stroke="#29ABE2" stroke-width="3"/>
+        <line x1="68" y1="72" x2="132" y2="72" stroke="#29ABE2" stroke-width="2"/>
+        <line x1="68" y1="104" x2="132" y2="104" stroke="#29ABE2" stroke-width="2"/>
+        <line x1="100" y1="54" x2="100" y2="30" stroke="#29ABE2" stroke-width="3.5"/><circle cx="100" cy="24" r="6" fill="#29ABE2"/>
+        <line x1="124" y1="64" x2="143" y2="45" stroke="#29ABE2" stroke-width="3.5"/><circle cx="148" cy="40" r="6" fill="#29ABE2"/>
+        <line x1="134" y1="88" x2="158" y2="88" stroke="#29ABE2" stroke-width="3.5"/><circle cx="164" cy="88" r="6" fill="#29ABE2"/>
+        <line x1="124" y1="112" x2="143" y2="131" stroke="#29ABE2" stroke-width="3.5"/><circle cx="148" cy="136" r="6" fill="#29ABE2"/>
+        <line x1="100" y1="122" x2="100" y2="146" stroke="#29ABE2" stroke-width="3.5"/><circle cx="100" cy="152" r="6" fill="#29ABE2"/>
+        <line x1="76" y1="112" x2="57" y2="131" stroke="#29ABE2" stroke-width="3.5"/><circle cx="52" cy="136" r="6" fill="#29ABE2"/>
+        <line x1="66" y1="88" x2="42" y2="88" stroke="#29ABE2" stroke-width="3.5"/><circle cx="36" cy="88" r="6" fill="#29ABE2"/>
+        <line x1="76" y1="64" x2="57" y2="45" stroke="#29ABE2" stroke-width="3.5"/><circle cx="52" cy="40" r="6" fill="#29ABE2"/>
+      </svg>
+      <div id="adm-cname">InnovaAFRIC</div>
+      <div id="adm-csub">Panel de Administración</div>
+    </div>
+  </div>
+  <div id="adm-tagline">Conectando <span>Asia · Europa · África</span></div>
+</div>
 
 <!-- SESSION TIMEOUT WARNING -->
 <div class="session-warn" id="session-warn">
@@ -6688,14 +6751,37 @@ async function connectDB(){
   }catch(e){console.log('Supabase no disponible');}
   loadDashboard();loadUsers();setupAdminRealtime();
 }
-(async function auto(){
-  document.getElementById('setup').style.display='none';
-  try{
-    const mod=await import('https://esm.sh/@supabase/supabase-js@2');
-    SB=mod.createClient(SB_URL,SB_KEY);
-  }catch(e){console.log('Supabase no disponible — modo Railway/demo');}
-  loadDashboard();loadUsers();setupAdminRealtime();
+// Pre-rellenar campos con valores por defecto al mostrar setup
+function prefillSetup(){
+  var u=document.getElementById('sb-url');
+  var k=document.getElementById('sb-key');
+  if(u&&!u.value)u.value=SB_URL;
+  if(k&&!k.value)k.value=SB_KEY;
+}
+// ── Splash animación ──────────────────────────────────────
+(function(){
+  var t=function(fn,ms){return setTimeout(fn,ms)};
+  t(function(){document.getElementById('admEu').classList.add('show')},300);
+  t(function(){document.getElementById('admAs').classList.add('show')},600);
+  t(function(){document.getElementById('admAf').classList.add('show')},900);
+  t(function(){document.getElementById('adm-l1').style.strokeDashoffset='0'},1200);
+  t(function(){document.getElementById('adm-l2').style.strokeDashoffset='0'},1500);
+  t(function(){document.getElementById('adm-l3').style.strokeDashoffset='0'},1800);
+  t(function(){
+    document.getElementById('adm-center').classList.add('show');
+    ['add1m','add2m','add3m','add1o','add2o','add3o'].forEach(function(id){
+      var el=document.getElementById(id);if(el&&el.beginElement)el.beginElement();
+    });
+  },2200);
+  t(function(){document.getElementById('adm-tagline').classList.add('show')},3000);
+  t(function(){
+    document.getElementById('adm-splash').classList.add('hidden');
+    document.getElementById('setup').style.display='flex';
+    prefillSetup();
+  },4500);
 })();
+
+// auto-connect se hace desde connectDB() tras la animación + setup
 
 // ── NAV ───────────────────────────────────────────────────
 function nav(page,el){
