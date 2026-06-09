@@ -6394,7 +6394,7 @@ select.form-input option{background:var(--s2)}
       <div class="table-wrap">
         <table>
           <thead><tr><th>Circular</th><th>Barrio / País</th><th>Autorizado por</th><th>Unidades disp.</th><th>Estado</th><th>Acciones</th></tr></thead>
-          <tbody id="tb-circulares"><tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+          <tbody id="tb-circulares-admin"><tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr></tbody>
         </table>
       </div>
     </div>
@@ -9381,6 +9381,21 @@ nav=function(page,el){
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
 
+// ── SHOW TOAST ───────────────────────────────────────────
+function showToast(msg,type){
+  // Toast visual flotante
+  var t=document.createElement('div');
+  var isErr=type==='error';
+  t.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;background:'+(isErr?'var(--red-d,#3b1a1a)':'var(--s3,#1e293b)')+';color:'+(isErr?'var(--red,#f87171)':'var(--fg,#f1f5f9)')+';border:1px solid '+(isErr?'var(--red,#f87171)':'var(--b2,#334155)')+';border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.4);max-width:340px;word-break:break-word;transition:opacity .3s';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},320);},3200);
+  // También añadir al centro de notificaciones si existe
+  if(typeof addNotif==='function'){
+    addNotif(msg,'',isErr?'error':'success');
+  }
+}
+
 // ── CIRCULARES AUTORIZADAS ────────────────────────────────
 function circTab(tab){
   ['lista','autorizar','pendientes'].forEach(t=>{
@@ -9396,7 +9411,7 @@ async function loadCircularesAdmin(){
   const rows=(r&&(r.circulares||r.data))||[];
   document.getElementById('circ-total').textContent=rows.length;
   document.getElementById('circ-active').textContent=rows.filter(c=>c.status==='active').length;
-  const tb=document.getElementById('tb-circulares');
+  const tb=document.getElementById('tb-circulares-admin');
   if(!tb)return;
   if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin circulares autorizados todavía</td></tr>';return;}
   tb.innerHTML=rows.map(c=>{
