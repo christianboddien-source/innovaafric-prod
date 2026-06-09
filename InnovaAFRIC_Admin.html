@@ -7225,7 +7225,8 @@ function prefillSetup(){
 async function autoLoginFromToken(accessToken){
   try{
     // Validar token contra la API
-    var r=await fetch(RAILWAY_BASE+'/auth/validate-token',{
+    var _apiBase=(typeof RAILWAY_BASE!=='undefined'?RAILWAY_BASE:'https://innovaafric-api-production.up.railway.app/v1');
+    var r=await fetch(_apiBase+'/auth/validate-token',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
       body:JSON.stringify({token:accessToken})
@@ -9721,7 +9722,8 @@ async function doLogin(){
   errEl.style.display='none';
 
   try{
-    var r=await fetch(RAILWAY_BASE+'/auth/token',{
+    var _apiBase=(typeof RAILWAY_BASE!=='undefined'?RAILWAY_BASE:'https://innovaafric-api-production.up.railway.app/v1');
+    var r=await fetch(_apiBase+'/auth/token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({grant_type:'password',email,password:pass})
@@ -9819,7 +9821,8 @@ async function submitUnlockRequest(){
   errEl.style.display='none';okEl.style.display='none';
 
   try{
-    var r=await fetch(RAILWAY_BASE+'/auth/unlock-request',{
+    var _apiBase=(typeof RAILWAY_BASE!=='undefined'?RAILWAY_BASE:'https://innovaafric-api-production.up.railway.app/v1');
+    var r=await fetch(_apiBase+'/auth/unlock-request',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email,full_name:name,message:msg})
