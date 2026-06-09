@@ -38,7 +38,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--txt);display:flex}
 .sb-badge{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--cyan);background:var(--cyan-d);border:1px solid rgba(6,182,212,.3);border-radius:5px;padding:2px 8px}
 .badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700;font-family:var(--mono)}
 .badge-green{background:var(--green-d);color:var(--green)}.badge-red{background:var(--red-d);color:var(--red)}.badge-amber{background:var(--amber-d);color:var(--amber)}.badge-cyan{background:var(--cyan-d);color:var(--cyan)}.badge-purple{background:var(--purple-d);color:var(--purple)}.badge-gray{background:rgba(100,116,139,.15);color:var(--muted)}.badge-blue{background:rgba(99,102,241,.15);color:#818cf8}
-.sb-nav{flex:1;padding:12px 0}
+.sb-search{padding:8px 12px;border-bottom:1px solid var(--b1)}
+.sb-search input{width:100%;background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:7px 10px 7px 30px;font-size:12px;color:var(--fg);outline:none;box-sizing:border-box}
+.sb-search input:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(6,182,212,.15)}
+.sb-search input::placeholder{color:var(--muted)}
+.sb-search-ic{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+.sb-search-wrap{position:relative}
+.sb-nav{flex:1;padding:12px 0;overflow-y:auto}
 .sb-group{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:14px 20px 5px}
 .sb-link{display:flex;align-items:center;gap:10px;padding:8px 16px;margin:1px 8px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:13px;font-weight:500;transition:all .15s;position:relative}
 .sb-link:hover{background:var(--b1);color:var(--subtle)}
@@ -520,7 +526,13 @@ select.form-input option{background:var(--s2)}
     </div>
     <span class="sb-badge">Admin v32 ✦</span>
   </div>
-  <nav class="sb-nav">
+  <div class="sb-search">
+    <div class="sb-search-wrap">
+      <span class="sb-search-ic">🔍</span>
+      <input type="text" id="sb-search-input" placeholder="Buscar módulo..." oninput="filterSidebar(this.value)" autocomplete="off">
+    </div>
+  </div>
+  <nav class="sb-nav" id="sb-nav-list">
     <div class="sb-group" data-i18n="grp:Principal">Principal</div>
     <div class="sb-link active" onclick="nav('dashboard',this)"><span class="ic">📊</span><span data-i18n="nav:dashboard">Dashboard</span></div>
     <div class="sb-link" onclick="nav('users',this)"><span class="ic">👥</span><span data-i18n="nav:users">Usuarios</span><span class="badge-count" id="sb-users-count">0</span></div>
@@ -9380,6 +9392,50 @@ nav=function(page,el){
   if(page==='crear')resetCreateForm();
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
+
+// ── SIDEBAR SEARCH ───────────────────────────────────────
+function filterSidebar(q){
+  var term=(q||'').toLowerCase().trim();
+  var links=document.querySelectorAll('.sb-nav .sb-link');
+  var groups=document.querySelectorAll('.sb-nav .sb-group');
+
+  if(!term){
+    links.forEach(function(el){el.style.display='';});
+    groups.forEach(function(el){el.style.display='';});
+    return;
+  }
+
+  // Ocultar todos los grupos primero
+  groups.forEach(function(el){el.style.display='none';});
+
+  links.forEach(function(el){
+    var text=(el.textContent||'').toLowerCase();
+    var match=text.includes(term);
+    el.style.display=match?'':'none';
+    // Mostrar el grupo padre si hay al menos un match visible
+    if(match){
+      var prev=el.previousElementSibling;
+      while(prev){
+        if(prev.classList.contains('sb-group')){prev.style.display='';break;}
+        prev=prev.previousElementSibling;
+      }
+    }
+  });
+}
+
+// Atajo teclado: Ctrl+K o / abre el buscador del sidebar
+document.addEventListener('keydown',function(e){
+  if((e.ctrlKey&&e.key==='k')||(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA')){
+    e.preventDefault();
+    var inp=document.getElementById('sb-search-input');
+    if(inp){inp.focus();inp.select();}
+  }
+  // Escape limpia la búsqueda
+  if(e.key==='Escape'){
+    var inp=document.getElementById('sb-search-input');
+    if(inp&&document.activeElement===inp){inp.value='';filterSidebar('');inp.blur();}
+  }
+});
 
 // ── SHOW TOAST ───────────────────────────────────────────
 function showToast(msg,type){
