@@ -547,19 +547,63 @@ select.form-input option{background:var(--s2)}
 
 <!-- SETUP -->
 <div id="setup" style="display:none">
-  <div class="setup-card">
-    <div class="setup-logo">INNOVA<span>AFRIC</span></div>
-    <div class="setup-desc">Panel de administración v32 · Supabase + Railway API</div>
-    <div class="form-group">
-      <label class="form-label">Project URL</label>
-      <input class="form-input" id="sb-url" placeholder="https://xxxx.supabase.co">
+  <!-- Pantalla login normal -->
+  <div class="setup-card" id="login-card">
+    <div style="text-align:center;margin-bottom:24px">
+      <div class="sb-logo-ic" style="width:48px;height:48px;font-size:20px;margin:0 auto 12px">IA</div>
+      <div class="setup-logo">INNOVA<span>AFRIC</span></div>
+      <div class="setup-desc">Panel de administración · Acceso restringido</div>
     </div>
     <div class="form-group">
-      <label class="form-label">API Key</label>
-      <input class="form-input" id="sb-key" placeholder="sb_publishable_...">
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" id="login-email" type="email" placeholder="admin@innovaafric.com" autocomplete="email" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
     </div>
-    <div class="err-msg" id="setup-err"></div>
-    <button class="btn-block btn-primary" style="margin-top:16px" onclick="connectDB()">Entrar al dashboard →</button>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <div style="position:relative">
+        <input class="form-input" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="padding-right:40px">
+        <button onclick="toggleLoginPass()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px" id="login-pass-eye">👁</button>
+      </div>
+    </div>
+    <div id="login-err" style="display:none;background:var(--red-d);border:1px solid var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:12px"></div>
+    <div id="login-attempts-bar" style="display:none;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+        <span>Intentos fallidos</span><span id="login-attempts-count">0/5</span>
+      </div>
+      <div style="height:4px;background:var(--s3);border-radius:2px;overflow:hidden">
+        <div id="login-attempts-fill" style="height:100%;background:var(--red);border-radius:2px;transition:width .3s;width:0%"></div>
+      </div>
+    </div>
+    <button class="btn-block btn-primary" id="login-btn" onclick="doLogin()" style="margin-top:4px">Entrar al dashboard →</button>
+    <button onclick="showUnlockForm()" style="width:100%;margin-top:10px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:6px;transition:color .15s" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--muted)'">¿Cuenta bloqueada? Solicitar desbloqueo</button>
+    <!-- Campos ocultos Supabase para compatibilidad -->
+    <input type="hidden" id="sb-url" value="">
+    <input type="hidden" id="sb-key" value="">
+  </div>
+
+  <!-- Pantalla de cuenta bloqueada / solicitud de desbloqueo -->
+  <div class="setup-card" id="unlock-card" style="display:none">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:40px;margin-bottom:8px">🔒</div>
+      <div class="setup-logo">Cuenta bloqueada</div>
+      <div class="setup-desc" id="unlock-reason-txt">Tu cuenta ha sido bloqueada por seguridad.</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tu correo electrónico</label>
+      <input class="form-input" id="unlock-email" type="email" placeholder="tu@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre completo</label>
+      <input class="form-input" id="unlock-name" placeholder="Nombre y apellidos">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Mensaje para InnovaAFRIC (opcional)</label>
+      <textarea class="form-input" id="unlock-msg" rows="3" placeholder="Explica brevemente por qué necesitas acceso..." style="resize:vertical"></textarea>
+    </div>
+    <div id="unlock-err" style="display:none;background:var(--red-d);border:1px solid var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:12px"></div>
+    <div id="unlock-ok" style="display:none;background:var(--green-d);border:1px solid var(--green);border-radius:var(--r);padding:12px 14px;font-size:13px;color:var(--green);margin-bottom:12px"></div>
+    <button class="btn-block btn-primary" id="unlock-btn" onclick="submitUnlockRequest()">📨 Enviar solicitud a InnovaAFRIC</button>
+    <button onclick="showLoginForm()" style="width:100%;margin-top:10px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:6px">← Volver al login</button>
   </div>
 </div>
 
@@ -650,6 +694,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('settings',this)"><span class="ic">⚙️</span><span data-i18n="nav:settings">Ajustes</span></div>
     <div class="sb-group" data-i18n="grp:Seguridad-Acceso">Seguridad &amp; Acceso</div>
     <div class="sb-link" onclick="nav('admin-users',this)"><span class="ic">🧑‍💼</span><span data-i18n="nav:admin-users">Usuarios admin</span></div>
+    <div class="sb-link" onclick="nav('unlock-requests',this)"><span class="ic">🔓</span><span>Solicitudes desbloqueo</span><span class="badge-warn" id="sb-unlock-count" style="display:none">0</span></div>
     <div class="sb-link" onclick="nav('login-logs',this)"><span class="ic">🔐</span><span data-i18n="nav:login-logs">Logs de acceso</span></div>
     <div class="sb-link" onclick="nav('ip-whitelist',this)"><span class="ic">🛡️</span><span data-i18n="nav:ip-whitelist">IP Whitelist</span></div>
     <div class="sb-link" onclick="nav('two-factor',this)"><span class="ic">📱</span><span data-i18n="nav:two-factor">Configurar 2FA</span></div>
@@ -6334,6 +6379,27 @@ select.form-input option{background:var(--s2)}
 </div>
 
 <!-- LOGIN LOGS -->
+<!-- SOLICITUDES DE DESBLOQUEO -->
+<div id="pg-unlock-requests" style="display:none">
+  <div class="stats-grid" style="margin-bottom:16px">
+    <div class="stat-card c-red"><div class="lbl">Pendientes</div><div class="val" id="ur-pending">—</div></div>
+    <div class="stat-card c-green"><div class="lbl">Aprobadas hoy</div><div class="val" id="ur-approved">—</div></div>
+    <div class="stat-card c-amber"><div class="lbl">Rechazadas hoy</div><div class="val" id="ur-rejected">—</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">🔓 Solicitudes de desbloqueo</div><div class="card-sub">Usuarios bloqueados que solicitan recuperar su acceso</div></div>
+      <button class="topbar-btn btn-ghost" onclick="loadUnlockRequests()">↻</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Email</th><th>Nombre</th><th>Mensaje</th><th>Fecha</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-unlock-requests"><tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <div id="pg-login-logs" style="display:none">
   <div class="card">
     <div class="card-head">
@@ -7252,6 +7318,7 @@ function nav(page,el){
     'login-logs':'🔐 Logs de acceso',
     'ip-whitelist':'🛡️ IP Whitelist',
     'two-factor':'📱 Configurar 2FA',
+    'unlock-requests':'🔓 Solicitudes de desbloqueo',
     'user-timeline':'📜 Timeline de usuario',
     duplicates:'👥 Cuentas duplicadas',
     'trust-scores':'⭐ Scores de confianza',
@@ -9563,6 +9630,7 @@ nav=function(page,el){
   if(page==='comisiones')loadComisiones();
   if(page==='rider-payment')loadRiderPayment();
   if(page==='two-factor')load2FAUsers();
+  if(page==='unlock-requests')loadUnlockRequests();
   if(page==='comercios')loadComerciosAdmin();
   if(page==='logistica-admin')loadLogisticaAdmin();
   if(page==='marketing-admin')loadMarketingAdmin();
@@ -9578,6 +9646,200 @@ nav=function(page,el){
   if(page==='crear')resetCreateForm();
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
+
+// ── SOLICITUDES DE DESBLOQUEO (admin) ────────────────────
+async function loadUnlockRequests(){
+  const tb=document.getElementById('tb-unlock-requests');
+  if(tb)tb.innerHTML='<tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr>';
+  const r=await rwAPI('GET','/auth/unlock-requests');
+  const rows=(r&&(r.data&&r.data.requests||r.requests))||[];
+  const badge=document.getElementById('sb-unlock-count');
+  if(badge){badge.textContent=rows.length;badge.style.display=rows.length?'':'none';}
+  document.getElementById('ur-pending').textContent=rows.length;
+  document.getElementById('ur-approved').textContent='—';
+  document.getElementById('ur-rejected').textContent='—';
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">✅ Sin solicitudes pendientes</td></tr>';return;}
+  tb.innerHTML=rows.map(function(req){
+    return'<tr>'
+      +'<td style="font-family:var(--mono);font-size:12px">'+(req.email||'—')+'</td>'
+      +'<td style="font-size:13px">'+(req.fullName||'—')+'</td>'
+      +'<td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(req.message||'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(req.createdAt||'').substring(0,10)+'</td>'
+      +'<td style="display:flex;gap:6px">'
+      +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 10px" onclick="resolveUnlock(\''+req.id+'\',\'approve\',this)">✅ Aprobar</button>'
+      +'<button class="topbar-btn" style="font-size:11px;padding:4px 10px;background:var(--red-d);color:var(--red)" onclick="resolveUnlock(\''+req.id+'\',\'reject\',this)">✗ Rechazar</button>'
+      +'</td></tr>';
+  }).join('');
+}
+
+async function resolveUnlock(id,action,btn){
+  btn.disabled=true;
+  const ep='/auth/unlock-requests/'+id+'/'+(action==='approve'?'approve':'reject');
+  const r=await rwAPI('POST',ep);
+  if(r&&r.success){
+    showToast(action==='approve'?'✅ Cuenta desbloqueada':'✅ Solicitud rechazada');
+    loadUnlockRequests();
+  }else{
+    showToast('❌ '+(r&&r.error||'Error'),'error');
+    btn.disabled=false;
+  }
+}
+
+// Verificar pendientes al cargar y mostrar badge
+setTimeout(async function(){
+  var r=await rwAPI('GET','/auth/unlock-requests');
+  var rows=(r&&(r.data&&r.data.requests||r.requests))||[];
+  var badge=document.getElementById('sb-unlock-count');
+  if(badge&&rows.length){badge.textContent=rows.length;badge.style.display='';}
+  if(rows.length)addNotif('🔓 Solicitudes de desbloqueo',rows.length+' solicitud(es) pendiente(s) de revisión','warning');
+},5000);
+
+// ── LOGIN CON EMAIL + CONTRASEÑA ─────────────────────────
+var _loginAttempts=0;
+var MAX_ATTEMPTS=5;
+
+function toggleLoginPass(){
+  var inp=document.getElementById('login-pass');
+  var eye=document.getElementById('login-pass-eye');
+  if(!inp)return;
+  inp.type=inp.type==='password'?'text':'password';
+  if(eye)eye.textContent=inp.type==='password'?'👁':'🙈';
+}
+
+async function doLogin(){
+  var email=(document.getElementById('login-email').value||'').trim().toLowerCase();
+  var pass=document.getElementById('login-pass').value||'';
+  var btn=document.getElementById('login-btn');
+  var errEl=document.getElementById('login-err');
+
+  if(!email||!pass){
+    showLoginError('Introduce tu correo y contraseña.');return;
+  }
+
+  btn.disabled=true;btn.textContent='Verificando...';
+  errEl.style.display='none';
+
+  try{
+    var r=await fetch(RAILWAY_BASE+'/auth/token',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({grant_type:'password',email,password:pass})
+    });
+    var data=await r.json();
+
+    if(r.status===423||r.status===403){
+      // Cuenta bloqueada
+      showLoginError(data.error||'Cuenta bloqueada.');
+      updateAttemptsBar(MAX_ATTEMPTS);
+      setTimeout(function(){showUnlockForm(email);},1500);
+      btn.disabled=false;btn.textContent='Entrar al dashboard →';
+      return;
+    }
+
+    if(!r.ok||!data.success){
+      _loginAttempts++;
+      updateAttemptsBar(_loginAttempts);
+      showLoginError(data.error||'Email o contraseña incorrectos.');
+      btn.disabled=false;btn.textContent='Entrar al dashboard →';
+      if(_loginAttempts>=MAX_ATTEMPTS){
+        setTimeout(function(){showUnlockForm(email);},1500);
+      }
+      return;
+    }
+
+    // Login exitoso
+    _loginAttempts=0;
+    var token=data.data.access_token;
+    var user=data.data.user;
+    RW_TOKEN=token;
+    localStorage.setItem('ia_rw_token',token);
+    localStorage.setItem('ia_access_role',user.role||'');
+
+    var badge=document.getElementById('role-badge');
+    if(badge){badge.textContent=(user.role||'admin').replace(/_/g,' ').toUpperCase();badge.style.display='inline';}
+
+    document.getElementById('setup').style.display='none';
+
+    try{
+      if(window.supabase){SB=window.supabase.createClient(SB_URL,SB_KEY);}
+      else{var mod=await import('https://esm.sh/@supabase/supabase-js@2');SB=mod.createClient(SB_URL,SB_KEY);}
+    }catch(e){}
+
+    loadDashboard();loadUsers();setupAdminRealtime();
+    showToast('✅ Bienvenido/a, '+(user.name||user.email));
+
+  }catch(e){
+    showLoginError('Error de conexión. Verifica tu internet.');
+    btn.disabled=false;btn.textContent='Entrar al dashboard →';
+  }
+}
+
+function showLoginError(msg){
+  var el=document.getElementById('login-err');
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+
+function updateAttemptsBar(n){
+  var bar=document.getElementById('login-attempts-bar');
+  var fill=document.getElementById('login-attempts-fill');
+  var count=document.getElementById('login-attempts-count');
+  if(bar)bar.style.display='block';
+  if(fill)fill.style.width=Math.min(n/MAX_ATTEMPTS*100,100)+'%';
+  if(count)count.textContent=n+'/'+MAX_ATTEMPTS;
+}
+
+function showUnlockForm(email){
+  document.getElementById('login-card').style.display='none';
+  document.getElementById('unlock-card').style.display='block';
+  if(email){
+    var el=document.getElementById('unlock-email');
+    if(el)el.value=email;
+  }
+  document.getElementById('unlock-err').style.display='none';
+  document.getElementById('unlock-ok').style.display='none';
+}
+
+function showLoginForm(){
+  document.getElementById('unlock-card').style.display='none';
+  document.getElementById('login-card').style.display='block';
+}
+
+async function submitUnlockRequest(){
+  var email=(document.getElementById('unlock-email').value||'').trim();
+  var name=(document.getElementById('unlock-name').value||'').trim();
+  var msg=(document.getElementById('unlock-msg').value||'').trim();
+  var btn=document.getElementById('unlock-btn');
+  var errEl=document.getElementById('unlock-err');
+  var okEl=document.getElementById('unlock-ok');
+
+  if(!email){errEl.textContent='El correo es obligatorio.';errEl.style.display='block';return;}
+
+  btn.disabled=true;btn.textContent='Enviando...';
+  errEl.style.display='none';okEl.style.display='none';
+
+  try{
+    var r=await fetch(RAILWAY_BASE+'/auth/unlock-request',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,full_name:name,message:msg})
+    });
+    var data=await r.json();
+    if(r.ok&&data.success){
+      okEl.textContent='✅ '+(data.data&&data.data.message)||'Solicitud enviada. InnovaAFRIC la revisará en 24-48h.';
+      okEl.style.display='block';
+      btn.textContent='Solicitud enviada';
+    }else{
+      errEl.textContent=data.error||'Error al enviar. Inténtalo de nuevo.';
+      errEl.style.display='block';
+      btn.disabled=false;btn.textContent='📨 Enviar solicitud a InnovaAFRIC';
+    }
+  }catch(e){
+    errEl.textContent='Error de conexión.';
+    errEl.style.display='block';
+    btn.disabled=false;btn.textContent='📨 Enviar solicitud a InnovaAFRIC';
+  }
+}
 
 // ── GENERAR URL DE ACCESO DIRECTO ────────────────────────
 var _urlTargetUserId=null;
