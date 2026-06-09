@@ -28,8 +28,54 @@
 html,body{height:100%;overflow:hidden}
 body{font-family:var(--font);background:var(--bg);color:var(--txt);display:flex}
 
+/* ── TEMA CLARO ──────────────────────────────────────────── */
+body.theme-light{--bg:#f1f5f9;--s1:#ffffff;--s2:#f8fafc;--s3:#f1f5f9;--b1:rgba(0,0,0,.08);--b2:rgba(0,0,0,.12);--txt:#0f172a;--muted:#64748b;--subtle:#475569;--cyan-d:rgba(6,182,212,.12);--green-d:rgba(16,185,129,.12);--amber-d:rgba(245,158,11,.12);--red-d:rgba(239,68,68,.12);--purple-d:rgba(139,92,246,.12)}
+
+/* ── SIDEBAR MINI (colapsado a iconos) ───────────────────── */
+.sb{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;transition:width .2s ease}
+.sb.mini{width:64px;min-width:64px;overflow-x:hidden}
+.sb.mini .sb-brand-text,.sb.mini .sb-badge,.sb.mini .sb-search,.sb.mini .sb-group,.sb.mini .sb-link>span:not(.ic),.sb.mini .badge-count,.sb.mini .badge-warn{display:none!important}
+.sb.mini .sb-link{justify-content:center;padding:10px 0;margin:2px 6px}
+.sb.mini .sb-link .ic{width:auto;font-size:18px}
+.sb.mini .sb-head{padding:14px 0;display:flex;justify-content:center}
+.sb.mini .sb-logo-ic{margin:0}
+.sb-collapse-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;padding:4px 6px;border-radius:6px;transition:color .15s}
+.sb-collapse-btn:hover{color:var(--txt)}
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:width .2s ease}
+
+/* ── API INDICATOR ───────────────────────────────────────── */
+.api-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block;transition:background .3s}
+.api-dot.online{background:var(--green)}
+.api-dot.offline{background:var(--red)}
+.api-status-wrap{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* ── FAB (botón flotante) ────────────────────────────────── */
+.fab-wrap{position:fixed;bottom:28px;right:28px;z-index:800;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.fab-main{width:52px;height:52px;border-radius:50%;background:var(--cyan);color:#000;font-size:22px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(6,182,212,.4);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
+.fab-main:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(6,182,212,.5)}
+.fab-actions{display:none;flex-direction:column;gap:8px;align-items:flex-end}
+.fab-actions.open{display:flex}
+.fab-action{display:flex;align-items:center;gap:8px;cursor:pointer}
+.fab-action-btn{white-space:nowrap;background:var(--s1);border:1px solid var(--b2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:500;color:var(--txt);cursor:pointer;transition:all .15s;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.fab-action-btn:hover{background:var(--s2);border-color:var(--cyan);color:var(--cyan)}
+
+/* ── USER HOVER PREVIEW ──────────────────────────────────── */
+.user-preview-card{position:fixed;z-index:900;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-lg);padding:14px 16px;min-width:220px;box-shadow:0 8px 32px rgba(0,0,0,.4);pointer-events:none;display:none;transition:opacity .15s}
+.upc-av{width:40px;height:40px;border-radius:50%;background:var(--cyan-d);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.upc-name{font-weight:600;font-size:13px}
+.upc-email{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.upc-pill{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--cyan-d);color:var(--cyan);font-weight:600}
+
+/* ── NAV HISTORY ─────────────────────────────────────────── */
+.nav-hist-btn{background:none;border:1px solid var(--b1);border-radius:6px;color:var(--muted);font-size:14px;padding:4px 8px;cursor:pointer;transition:all .15s}
+.nav-hist-btn:hover:not(:disabled){color:var(--txt);border-color:var(--b2)}
+.nav-hist-btn:disabled{opacity:.3;cursor:default}
+
+/* ── AUTO REFRESH COUNTDOWN ──────────────────────────────── */
+.refresh-countdown{font-size:10px;color:var(--muted);font-family:var(--mono);background:var(--s2);border:1px solid var(--b1);border-radius:6px;padding:3px 8px;cursor:pointer;transition:color .15s}
+.refresh-countdown:hover{color:var(--cyan)}
+
 /* SIDEBAR */
-.sb{width:240px;min-width:240px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto}
 .sb-head{padding:20px 20px 16px;border-bottom:1px solid var(--b1)}
 .sb-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .sb-logo-ic{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000}
@@ -524,7 +570,10 @@ select.form-input option{background:var(--s2)}
       <div class="sb-logo-ic">IA</div>
       <div class="sb-brand-text">INNOVA<span>AFRIC</span></div>
     </div>
-    <span class="sb-badge">Admin v32 ✦</span>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span class="sb-badge">Admin v34 ✦</span>
+      <button class="sb-collapse-btn" onclick="toggleSidebarMini()" title="Colapsar sidebar" id="sb-collapse-btn">◀</button>
+    </div>
   </div>
   <div class="sb-search">
     <div class="sb-search-wrap">
@@ -696,10 +745,18 @@ select.form-input option{background:var(--s2)}
   <div class="topbar">
     <div class="topbar-left">
       <button class="sb-toggle" onclick="toggleSidebar()" title="Menú">☰</button>
+      <button class="nav-hist-btn" id="nav-back-btn" onclick="navBack()" title="Atrás" disabled>←</button>
+      <button class="nav-hist-btn" id="nav-fwd-btn" onclick="navForward()" title="Adelante" disabled>→</button>
       <div class="page-title" id="page-title">Dashboard</div>
     </div>
     <div class="topbar-right">
+      <div class="api-status-wrap" title="Estado API Railway">
+        <div class="api-dot" id="api-dot"></div>
+        <span id="api-status-lbl">API</span>
+      </div>
+      <span class="refresh-countdown" id="refresh-countdown" onclick="triggerAutoRefresh()" title="Click para refrescar ahora">↻ 30s</span>
       <span id="last-update" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
+      <button class="topbar-btn btn-ghost" onclick="toggleTheme()" id="theme-btn" title="Modo claro/oscuro">🌙</button>
       <span id="role-badge" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.18);color:#818cf8;border:1px solid rgba(99,102,241,.3)"></span>
       <div style="display:flex;gap:4px;align-items:center">
         <button class="lang-btn on" id="admin-lb-es" onclick="setAdminLang('es',this)" title="Español">🇪🇸</button>
@@ -723,6 +780,28 @@ select.form-input option{background:var(--s2)}
       <button class="topbar-btn btn-ghost" onclick="refreshCurrent()">↻</button>
       <button class="topbar-btn btn-primary" onclick="nav('crear',null)">+ Nuevo usuario</button>
     </div>
+  </div>
+
+  <!-- FAB -->
+  <div class="fab-wrap" id="fab-wrap">
+    <div class="fab-actions" id="fab-actions">
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('crear',null);closeFab()">➕ Nuevo usuario</button></div>
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('comisiones',null);closeFab()">💰 Comisiones</button></div>
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('rider-payment',null);closeFab()">💸 Liberar pagos</button></div>
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('kyc',null);closeFab()">🪪 Cola KYC</button></div>
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('representantes',null);closeFab()">🏅 Representantes</button></div>
+      <div class="fab-action"><button class="fab-action-btn" onclick="nav('circulares-admin',null);closeFab()">🏘️ Circulares</button></div>
+    </div>
+    <button class="fab-main" id="fab-main-btn" onclick="toggleFab()" title="Acciones rápidas">⚡</button>
+  </div>
+
+  <!-- USER PREVIEW CARD -->
+  <div class="user-preview-card" id="user-preview-card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div class="upc-av" id="upc-av">?</div>
+      <div><div class="upc-name" id="upc-name">—</div><div class="upc-email" id="upc-email">—</div></div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap" id="upc-pills"></div>
   </div>
 
   <div class="content">
@@ -6401,6 +6480,8 @@ select.form-input option{background:var(--s2)}
     <div class="card">
       <div class="card-head">
         <div><div class="card-title">🏘️ Circulares Autorizadas</div><div class="card-sub">Usuarios de barrio autorizados por InnovaAFRIC o por un Representante · 5% descuento en compra de unidades</div></div>
+        <button class="topbar-btn btn-ghost" onclick="exportCircularesCSV()">📥 CSV</button>
+        <button class="topbar-btn btn-ghost" onclick="exportCircularesPDF()">📄 PDF</button>
         <button class="topbar-btn btn-ghost" onclick="loadCircularesAdmin()">↻</button>
       </div>
       <div class="table-wrap">
@@ -6483,6 +6564,8 @@ select.form-input option{background:var(--s2)}
     <div class="card-head">
       <div><div class="card-title">⚙️ Configuración de rates</div><div class="card-sub">Porcentajes de distribución por tipo de transacción</div></div>
       <button class="topbar-btn btn-primary" onclick="saveComisionConfig()">💾 Guardar</button>
+      <button class="topbar-btn btn-ghost" onclick="exportComisionesCSV()">📥 CSV</button>
+      <button class="topbar-btn btn-ghost" onclick="exportComisionPDF()">📄 PDF</button>
       <button class="topbar-btn btn-ghost" onclick="loadComisiones()">↻</button>
     </div>
     <div id="com-config-wrap" style="padding:16px 20px">
@@ -6535,6 +6618,8 @@ select.form-input option{background:var(--s2)}
   <div class="card">
     <div class="card-head">
       <div><div class="card-title">💸 Cola de pagos pendientes</div><div class="card-sub">Pagos a riders esperando liberación manual o automática</div></div>
+      <button class="topbar-btn btn-ghost" onclick="exportRiderPaymentCSV()">📥 CSV</button>
+      <button class="topbar-btn btn-ghost" onclick="exportRiderPaymentPDF()">📄 PDF</button>
       <button class="topbar-btn btn-ghost" onclick="loadRiderPayment()">↻</button>
     </div>
     <div class="table-wrap">
@@ -9392,6 +9477,216 @@ nav=function(page,el){
   if(page==='crear')resetCreateForm();
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
+
+// ── SIDEBAR MINI (colapsar a iconos) ─────────────────────
+function toggleSidebarMini(){
+  var sb=document.querySelector('.sb');
+  var btn=document.getElementById('sb-collapse-btn');
+  var mini=sb.classList.toggle('mini');
+  if(btn)btn.textContent=mini?'▶':'◀';
+  localStorage.setItem('ia_sb_mini',mini?'1':'0');
+}
+(function(){
+  if(localStorage.getItem('ia_sb_mini')==='1'){
+    var sb=document.querySelector('.sb');
+    var btn=document.getElementById('sb-collapse-btn');
+    if(sb)sb.classList.add('mini');
+    if(btn)btn.textContent='▶';
+  }
+})();
+
+// ── TEMA CLARO / OSCURO ───────────────────────────────────
+function toggleTheme(){
+  var light=document.body.classList.toggle('theme-light');
+  var btn=document.getElementById('theme-btn');
+  if(btn)btn.textContent=light?'☀️':'🌙';
+  localStorage.setItem('ia_theme',light?'light':'dark');
+}
+(function(){
+  if(localStorage.getItem('ia_theme')==='light'){
+    document.body.classList.add('theme-light');
+    var btn=document.getElementById('theme-btn');
+    if(btn)btn.textContent='☀️';
+  }
+})();
+
+// ── HISTORIAL DE NAVEGACIÓN ───────────────────────────────
+var NAV_HISTORY=[];
+var NAV_IDX=-1;
+var NAV_TRAVELLING=false;
+(function(){
+  var _navBase=nav;
+  nav=function(page,el){
+    _navBase(page,el);
+    if(!NAV_TRAVELLING){
+      if(NAV_IDX<NAV_HISTORY.length-1)NAV_HISTORY=NAV_HISTORY.slice(0,NAV_IDX+1);
+      NAV_HISTORY.push(page);
+      if(NAV_HISTORY.length>30)NAV_HISTORY.shift();
+      NAV_IDX=NAV_HISTORY.length-1;
+    }
+    updateNavHistBtns();
+  };
+})();
+function updateNavHistBtns(){
+  var back=document.getElementById('nav-back-btn');
+  var fwd=document.getElementById('nav-fwd-btn');
+  if(back)back.disabled=NAV_IDX<=0;
+  if(fwd)fwd.disabled=NAV_IDX>=NAV_HISTORY.length-1;
+}
+function navBack(){
+  if(NAV_IDX<=0)return;
+  NAV_IDX--;
+  NAV_TRAVELLING=true;
+  nav(NAV_HISTORY[NAV_IDX],null);
+  NAV_TRAVELLING=false;
+  updateNavHistBtns();
+}
+function navForward(){
+  if(NAV_IDX>=NAV_HISTORY.length-1)return;
+  NAV_IDX++;
+  NAV_TRAVELLING=true;
+  nav(NAV_HISTORY[NAV_IDX],null);
+  NAV_TRAVELLING=false;
+  updateNavHistBtns();
+}
+
+// ── API HEALTH INDICATOR ──────────────────────────────────
+async function checkAPIHealth(){
+  var dot=document.getElementById('api-dot');
+  var lbl=document.getElementById('api-status-lbl');
+  try{
+    var r=await Promise.race([
+      fetch(RAILWAY_BASE+'/utils/health'),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),4000))
+    ]);
+    var online=r.ok;
+    if(dot){dot.className='api-dot '+(online?'online':'offline');}
+    if(lbl)lbl.textContent=online?'API ●':'API ✗';
+  }catch(e){
+    if(dot)dot.className='api-dot offline';
+    if(lbl)lbl.textContent='API ✗';
+  }
+}
+checkAPIHealth();
+setInterval(checkAPIHealth,60000);
+
+// ── AUTO REFRESH CON COUNTDOWN ────────────────────────────
+var AUTO_REFRESH_SEC=30;
+var _arTimer=AUTO_REFRESH_SEC;
+var _arInterval=setInterval(function(){
+  _arTimer--;
+  var el=document.getElementById('refresh-countdown');
+  if(el)el.textContent='↻ '+_arTimer+'s';
+  if(_arTimer<=0){
+    _arTimer=AUTO_REFRESH_SEC;
+    triggerAutoRefresh();
+  }
+},1000);
+function triggerAutoRefresh(){
+  _arTimer=AUTO_REFRESH_SEC;
+  if(typeof refreshCurrent==='function')refreshCurrent();
+}
+
+// ── FAB BOTÓN FLOTANTE ────────────────────────────────────
+function toggleFab(){
+  var actions=document.getElementById('fab-actions');
+  var btn=document.getElementById('fab-main-btn');
+  if(!actions)return;
+  var open=actions.classList.toggle('open');
+  if(btn)btn.textContent=open?'✕':'⚡';
+}
+function closeFab(){
+  var actions=document.getElementById('fab-actions');
+  var btn=document.getElementById('fab-main-btn');
+  if(actions)actions.classList.remove('open');
+  if(btn)btn.textContent='⚡';
+}
+document.addEventListener('click',function(e){
+  var wrap=document.getElementById('fab-wrap');
+  if(wrap&&!wrap.contains(e.target))closeFab();
+});
+
+// ── USER HOVER PREVIEW ────────────────────────────────────
+var _upcTimeout=null;
+function showUserPreview(e,userId){
+  clearTimeout(_upcTimeout);
+  var u=(ALL_USERS||[]).find(function(x){return x.id===userId;});
+  if(!u)return;
+  var card=document.getElementById('user-preview-card');
+  if(!card)return;
+  document.getElementById('upc-av').textContent=initials(u.full_name||u.email||'?');
+  document.getElementById('upc-name').textContent=u.full_name||u.name||'—';
+  document.getElementById('upc-email').textContent=u.email||'—';
+  var pills=document.getElementById('upc-pills');
+  if(pills){
+    var html='<span class="upc-pill">'+(u.role||'—')+'</span>';
+    if(u.country)html+='<span class="upc-pill" style="background:var(--s2);color:var(--subtle)">'+u.country+'</span>';
+    if(u.kyc_status)html+='<span class="upc-pill" style="background:var(--green-d);color:var(--green)">KYC: '+u.kyc_status+'</span>';
+    pills.innerHTML=html;
+  }
+  var x=Math.min(e.clientX+12,window.innerWidth-240);
+  var y=Math.min(e.clientY+12,window.innerHeight-140);
+  card.style.left=x+'px';card.style.top=y+'px';card.style.display='block';
+}
+function hideUserPreview(){
+  _upcTimeout=setTimeout(function(){
+    var card=document.getElementById('user-preview-card');
+    if(card)card.style.display='none';
+  },200);
+}
+
+// ── PENDIENTES BADGE NOTIF ────────────────────────────────
+async function checkPendingBadges(){
+  try{
+    var r1=await rwAPI('GET','/representatives/purchases/pending');
+    var r2=await rwAPI('GET','/circulares/purchases/pending');
+    var repPending=(r1&&(r1.count||0))||0;
+    var circPending=(r2&&(r2.count||0))||0;
+    if(repPending>0)addNotif('⏳ Compras Representantes',''+repPending+' compra(s) de unidades pendientes de confirmar','warning');
+    if(circPending>0)addNotif('⏳ Compras Circulares',''+circPending+' compra(s) de unidades pendientes de confirmar','warning');
+  }catch(e){}
+}
+setTimeout(checkPendingBadges,3000);
+setInterval(checkPendingBadges,300000);
+
+// ── EXPORTS CSV/PDF NUEVAS SECCIONES ─────────────────────
+function exportComisionesCSV(){
+  if(!_COM_HISTORY||!_COM_HISTORY.length){showToast('⚠️ Carga el historial primero','error');return;}
+  var rows=[['Fecha','Tipo','Base','Hacienda','InnovaAFRIC','Representante','Ref']];
+  _COM_HISTORY.forEach(function(c){
+    rows.push([(c.created_at||c.date||'').substring(0,10),c.type||'',c.base_amount||'',c.hacienda||'',c.innova||'',c.rep||'',c.ref||c.id||'']);
+  });
+  downloadCSV(rows,'comisiones_'+Date.now()+'.csv');
+}
+function exportRiderPaymentCSV(){
+  var rows=[];
+  document.querySelectorAll('#tb-rider-payment tr').forEach(function(tr,i){
+    if(i===0)return;
+    var cells=Array.from(tr.querySelectorAll('td')).slice(0,5).map(function(td){return td.textContent.trim();});
+    if(cells.length)rows.push(cells);
+  });
+  if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
+  downloadCSV([['Pedido','Rider','Importe','Fecha','Modo']].concat(rows),'pagos_riders_'+Date.now()+'.csv');
+}
+function exportRiderPaymentPDF(){showToast('📄 Generando PDF pagos riders...');setTimeout(function(){showToast('✅ PDF listo (próximamente)');},1200);}
+function exportCircularesCSV(){
+  var rows=[];
+  document.querySelectorAll('#tb-circulares-admin tr').forEach(function(tr,i){
+    if(i===0)return;
+    var cells=Array.from(tr.querySelectorAll('td')).slice(0,5).map(function(td){return td.textContent.trim();});
+    if(cells.length)rows.push(cells);
+  });
+  if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
+  downloadCSV([['Circular','Barrio/País','Autorizado por','Unidades','Estado']].concat(rows),'circulares_'+Date.now()+'.csv');
+}
+function exportCircularesPDF(){showToast('📄 Generando PDF circulares...');setTimeout(function(){showToast('✅ PDF listo (próximamente)');},1200);}
+
+function downloadCSV(rows,filename){
+  var csv=rows.map(function(r){return r.map(function(c){return'"'+(String(c||'').replace(/"/g,'""'))+'"';}).join(',');}).join('\n');
+  var blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+  showToast('📥 CSV descargado');
+}
 
 // ── SIDEBAR SEARCH ───────────────────────────────────────
 function filterSidebar(q){
