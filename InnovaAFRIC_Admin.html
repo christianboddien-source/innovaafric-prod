@@ -834,6 +834,7 @@ select.form-input option{background:var(--s2)}
       </div>
       <button class="topbar-btn btn-ghost" onclick="refreshCurrent()">↻</button>
       <button class="topbar-btn btn-primary" onclick="nav('crear',null)">+ Nuevo usuario</button>
+      <button class="topbar-btn btn-ghost" onclick="confirmLogout()" title="Cerrar sesión" style="color:var(--red);border-color:var(--red-d)">⏻ Salir</button>
     </div>
   </div>
 
@@ -9657,6 +9658,44 @@ nav=function(page,el){
   if(page==='crear')resetCreateForm();
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
+
+// ── CERRAR SESIÓN ────────────────────────────────────────
+function confirmLogout(){
+  if(!confirm('¿Cerrar sesión? Tendrás que volver a introducir tus credenciales.'))return;
+  logout();
+}
+function logout(){
+  // Limpiar token y datos de sesión
+  RW_TOKEN=null;
+  localStorage.removeItem('ia_rw_token');
+  localStorage.removeItem('ia_access_role');
+  SB=null;
+  // Ocultar app y mostrar login
+  var app=document.querySelector('.app');
+  if(app)app.style.display='none';
+  var setup=document.getElementById('setup');
+  if(setup){
+    setup.style.display='flex';
+    // Limpiar campos
+    var emailEl=document.getElementById('login-email');
+    var passEl=document.getElementById('login-pass');
+    var errEl=document.getElementById('login-err');
+    var bar=document.getElementById('login-attempts-bar');
+    if(emailEl)emailEl.value='';
+    if(passEl)passEl.value='';
+    if(errEl)errEl.style.display='none';
+    if(bar)bar.style.display='none';
+    _loginAttempts=0;
+    // Asegurar que se ve el panel de login y no el de emergencia
+    var loginCard=document.getElementById('login-card');
+    var unlockCard=document.getElementById('unlock-card');
+    var emergency=document.getElementById('emergency-panel');
+    if(loginCard)loginCard.style.display='block';
+    if(unlockCard)unlockCard.style.display='none';
+    if(emergency)emergency.style.display='none';
+  }
+  showToast('✅ Sesión cerrada correctamente');
+}
 
 // ── ACCESO DE EMERGENCIA (5 clics en logo) ───────────────
 var _emergencyClicks=0,_emergencyTimer=null;
