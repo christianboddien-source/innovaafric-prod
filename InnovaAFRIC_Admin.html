@@ -550,7 +550,7 @@ select.form-input option{background:var(--s2)}
   <!-- Pantalla login normal -->
   <div class="setup-card" id="login-card">
     <div style="text-align:center;margin-bottom:24px">
-      <div class="sb-logo-ic" style="width:48px;height:48px;font-size:20px;margin:0 auto 12px">IA</div>
+      <div class="sb-logo-ic" style="width:48px;height:48px;font-size:20px;margin:0 auto 12px;cursor:pointer" onclick="emergencyClick()" title="">IA</div>
       <div class="setup-logo">INNOVA<span>AFRIC</span></div>
       <div class="setup-desc">Panel de administración · Acceso restringido</div>
     </div>
@@ -576,9 +576,19 @@ select.form-input option{background:var(--s2)}
     </div>
     <button class="btn-block btn-primary" id="login-btn" onclick="doLogin()" style="margin-top:4px">Entrar al dashboard →</button>
     <button onclick="showUnlockForm()" style="width:100%;margin-top:10px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:6px;transition:color .15s" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--muted)'">¿Cuenta bloqueada? Solicitar desbloqueo</button>
-    <!-- Campos ocultos Supabase para compatibilidad -->
-    <input type="hidden" id="sb-url" value="">
-    <input type="hidden" id="sb-key" value="">
+    <!-- Acceso de emergencia: clic 5 veces en el logo IA -->
+    <div id="emergency-panel" style="display:none;margin-top:16px;background:var(--s2);border:1px solid var(--amber);border-radius:var(--r-lg);padding:14px">
+      <div style="font-size:11px;color:var(--amber);font-weight:700;margin-bottom:10px">⚡ Acceso directo de emergencia</div>
+      <div class="form-group" style="margin-bottom:8px">
+        <label class="form-label" style="font-size:10px">Supabase URL</label>
+        <input class="form-input" id="sb-url" placeholder="https://xxxx.supabase.co" style="font-size:11px;padding:6px 10px">
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label class="form-label" style="font-size:10px">API Key</label>
+        <input class="form-input" id="sb-key" placeholder="sb_publishable_..." style="font-size:11px;padding:6px 10px">
+      </div>
+      <button class="btn-block btn-primary" style="font-size:12px;padding:8px" onclick="connectDB()">Entrar sin login →</button>
+    </div>
   </div>
 
   <!-- Pantalla de cuenta bloqueada / solicitud de desbloqueo -->
@@ -9648,6 +9658,29 @@ nav=function(page,el){
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
 
+// ── ACCESO DE EMERGENCIA (5 clics en logo) ───────────────
+var _emergencyClicks=0,_emergencyTimer=null;
+function emergencyClick(){
+  _emergencyClicks++;
+  clearTimeout(_emergencyTimer);
+  _emergencyTimer=setTimeout(function(){_emergencyClicks=0;},2000);
+  if(_emergencyClicks>=5){
+    _emergencyClicks=0;
+    var panel=document.getElementById('emergency-panel');
+    if(panel){
+      var visible=panel.style.display==='block';
+      panel.style.display=visible?'none':'block';
+      if(!visible){
+        // Pre-rellenar con valores por defecto
+        var u=document.getElementById('sb-url');
+        var k=document.getElementById('sb-key');
+        if(u&&!u.value)u.value=SB_URL||'';
+        if(k&&!k.value)k.value=SB_KEY||'';
+      }
+    }
+  }
+}
+
 // ── SOLICITUDES DE DESBLOQUEO (admin) ────────────────────
 async function loadUnlockRequests(){
   const tb=document.getElementById('tb-unlock-requests');
@@ -9732,7 +9765,7 @@ async function doLogin(){
 
     if(r.status===423||r.status===403){
       // Cuenta bloqueada
-      showLoginError(data.error||'Cuenta bloqueada.');
+      showLoginError(typeof data.error==='string'?data.error:(data.error&&data.error.message)||'Cuenta bloqueada.');
       updateAttemptsBar(MAX_ATTEMPTS);
       setTimeout(function(){showUnlockForm(email);},1500);
       btn.disabled=false;btn.textContent='Entrar al dashboard →';
@@ -9742,7 +9775,8 @@ async function doLogin(){
     if(!r.ok||!data.success){
       _loginAttempts++;
       updateAttemptsBar(_loginAttempts);
-      showLoginError(data.error||'Email o contraseña incorrectos.');
+      var _errMsg=typeof data.error==='string'?data.error:(data.error&&data.error.message)||'Email o contraseña incorrectos. Verifica tus datos.';
+      showLoginError(_errMsg);
       btn.disabled=false;btn.textContent='Entrar al dashboard →';
       if(_loginAttempts>=MAX_ATTEMPTS){
         setTimeout(function(){showUnlockForm(email);},1500);
