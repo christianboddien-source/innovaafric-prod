@@ -549,6 +549,8 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('vcards',this)"><span class="ic">💳</span><span data-i18n="nav:vcards">Tarjetas virtuales</span></div>
     <div class="sb-link" onclick="nav('accounting',this)"><span class="ic">📒</span><span data-i18n="nav:accounting">Contabilidad</span></div>
     <div class="sb-link" onclick="nav('payroll',this)"><span class="ic">💼</span><span data-i18n="nav:payroll">Nómina Riders</span></div>
+    <div class="sb-link" onclick="nav('comisiones',this)"><span class="ic">💰</span><span>Comisiones</span></div>
+    <div class="sb-link" onclick="nav('rider-payment',this)"><span class="ic">💸</span><span>Pagos Riders</span></div>
     <div class="sb-link" onclick="nav('saldos',this)"><span class="ic">🔍</span><span>Saldos & Auditoría</span></div>
     <div class="sb-group" data-i18n="grp:Railway-Sistema">Railway — Sistema</div>
     <div class="sb-link" onclick="nav('productos',this)"><span class="ic">🛍️</span><span data-i18n="nav:productos">Productos</span></div>
@@ -570,6 +572,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('ads-admin',this)"><span class="ic">📢</span><span data-i18n="nav:ads-admin">Publicidad</span></div>
     <div class="sb-group" data-i18n="grp:Gestion-Rol">Gestión por Rol</div>
     <div class="sb-link" onclick="nav('representantes',this)"><span class="ic">🏅</span><span data-i18n="nav:representantes">Representantes</span></div>
+    <div class="sb-link" onclick="nav('circulares-admin',this)"><span class="ic">🏘️</span><span>Circulares Autorizadas</span></div>
     <div class="sb-link" onclick="nav('comercios',this)"><span class="ic">🏪</span><span data-i18n="nav:comercios">Comercios</span></div>
     <div class="sb-link" onclick="nav('logistica-admin',this)"><span class="ic">📦</span><span data-i18n="nav:logistica-admin">Logística</span></div>
     <div class="sb-link" onclick="nav('marketing-admin',this)"><span class="ic">🎯</span><span data-i18n="nav:marketing-admin">Marketing</span></div>
@@ -2279,19 +2282,64 @@ select.form-input option{background:var(--s2)}
       <div class="stats-grid" style="margin-bottom:16px">
         <div class="stat-card c-amber"><div class="lbl">Total reps</div><div class="val" id="rp-total">—</div></div>
         <div class="stat-card c-green"><div class="lbl">Países cubiertos</div><div class="val" id="rp-countries">—</div></div>
-        <div class="stat-card c-cyan"><div class="lbl">Revenue generado</div><div class="val" id="rp-rev">—</div></div>
+        <div class="stat-card c-cyan"><div class="lbl">Unidades en circulación</div><div class="val" id="rp-units">—</div></div>
+        <div class="stat-card c-purple"><div class="lbl">Compras pendientes</div><div class="val" id="rp-pending-count">—</div></div>
       </div>
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">🏅 Representantes InnovaAFRIC</div><div class="card-sub">Gestión de representantes por país/región</div></div>
-          <button class="topbar-btn btn-primary" onclick="openModal('m-new-representante')">+ Nuevo representante</button>
-          <button class="topbar-btn btn-ghost" onclick="loadRepresentantes()">↻</button>
+      <!-- Tabs -->
+      <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--b1)">
+        <button id="rep-tab-lista" class="topbar-btn" style="border-radius:0;padding:10px 18px;font-weight:600;background:transparent;border-bottom:2px solid var(--cyan);color:var(--cyan);margin-bottom:-2px" onclick="repTab('lista')">👥 Lista</button>
+        <button id="rep-tab-pendientes" class="topbar-btn btn-ghost" style="border-radius:0;padding:10px 18px" onclick="repTab('pendientes')">⏳ Compras pendientes</button>
+        <button id="rep-tab-historial" class="topbar-btn btn-ghost" style="border-radius:0;padding:10px 18px" onclick="repTab('historial')">📋 Historial recargas</button>
+      </div>
+      <!-- Panel Lista -->
+      <div id="rep-panel-lista">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">🏅 Representantes InnovaAFRIC</div><div class="card-sub">Saldo de unidades y usuarios gestionados</div></div>
+            <button class="topbar-btn btn-ghost" onclick="exportRepresentantesPDF()">📄 PDF global</button>
+            <button class="topbar-btn btn-ghost" onclick="loadRepresentantesV34()">↻</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Representante</th><th>País / Zona</th><th>Usuarios</th><th>Unidades disponibles</th><th>Descuento</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody id="tb-representantes"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+            </table>
+          </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Representante</th><th>País / Zona</th><th>Usuarios bajo su cargo</th><th>Circulares</th><th>Revenue</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tb-representantes"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
-          </table>
+      </div>
+      <!-- Panel Compras pendientes -->
+      <div id="rep-panel-pendientes" style="display:none">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">⏳ Compras de unidades pendientes</div><div class="card-sub">Confirmar o rechazar solicitudes de recarga</div></div>
+            <button class="topbar-btn btn-ghost" onclick="loadRepPendientes()">↻</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Representante</th><th>Unidades</th><th>Importe</th><th>Descuento 10%</th><th>Total a pagar</th><th>Fecha</th><th>Acciones</th></tr></thead>
+              <tbody id="tb-rep-pendientes"><tr><td colspan="7" class="td-empty">Sin compras pendientes</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Panel Historial -->
+      <div id="rep-panel-historial" style="display:none">
+        <div class="card">
+          <div class="card-head">
+            <div><div class="card-title">📋 Historial de recargas a clientes</div></div>
+            <div style="display:flex;gap:8px">
+              <select class="filter-select" id="rep-hist-filter" onchange="loadRepHistorial()">
+                <option value="">Todos los representantes</option>
+              </select>
+              <button class="topbar-btn btn-ghost" onclick="loadRepHistorial()">↻</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Representante</th><th>Cliente</th><th>Unidades</th><th>Fecha</th><th>Ref.</th></tr></thead>
+              <tbody id="tb-rep-historial"><tr><td colspan="5" class="td-empty">Sin historial</td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -6303,6 +6351,187 @@ select.form-input option{background:var(--s2)}
       </div>
     </div>
   </div>
+  <!-- Estado 2FA por usuario -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-head">
+      <div><div class="card-title">👥 Estado 2FA por usuario</div><div class="card-sub">Ver y gestionar 2FA de cada cuenta</div></div>
+      <div style="display:flex;gap:8px">
+        <input class="filter-input" id="tfa-user-q" placeholder="Buscar por email..." style="width:220px" oninput="filter2FAUsers()">
+        <button class="topbar-btn btn-ghost" onclick="load2FAUsers()">↻</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Usuario</th><th>Email</th><th>2FA</th><th>Activado</th><th>Acción</th></tr></thead>
+        <tbody id="tb-2fa-users"><tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CIRCULARES AUTORIZADAS -->
+<div id="pg-circulares-admin" style="display:none">
+  <div class="stats-grid" style="margin-bottom:16px">
+    <div class="stat-card c-cyan"><div class="lbl">Total circulares</div><div class="val" id="circ-total">—</div></div>
+    <div class="stat-card c-green"><div class="lbl">Activos</div><div class="val" id="circ-active">—</div></div>
+    <div class="stat-card c-amber"><div class="lbl">Compras pendientes</div><div class="val" id="circ-pending">—</div></div>
+    <div class="stat-card c-purple"><div class="lbl">Comisión (descuento)</div><div class="val">5%</div></div>
+  </div>
+  <!-- Tabs -->
+  <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--b1)">
+    <button id="circ-tab-lista" class="topbar-btn" style="border-radius:0;padding:10px 18px;font-weight:600;background:transparent;border-bottom:2px solid var(--cyan);color:var(--cyan);margin-bottom:-2px" onclick="circTab('lista')">🏘️ Lista</button>
+    <button id="circ-tab-autorizar" class="topbar-btn btn-ghost" style="border-radius:0;padding:10px 18px" onclick="circTab('autorizar')">➕ Autorizar nuevo</button>
+    <button id="circ-tab-pendientes" class="topbar-btn btn-ghost" style="border-radius:0;padding:10px 18px" onclick="circTab('pendientes')">⏳ Compras pendientes</button>
+  </div>
+
+  <!-- Panel Lista -->
+  <div id="circ-panel-lista">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">🏘️ Circulares Autorizadas</div><div class="card-sub">Usuarios de barrio autorizados por InnovaAFRIC o por un Representante · 5% descuento en compra de unidades</div></div>
+        <button class="topbar-btn btn-ghost" onclick="loadCircularesAdmin()">↻</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Circular</th><th>Barrio / País</th><th>Autorizado por</th><th>Unidades disp.</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-circulares"><tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Autorizar -->
+  <div id="circ-panel-autorizar" style="display:none">
+    <div class="card" style="max-width:560px">
+      <div class="card-head"><div class="card-title">➕ Autorizar Circular Autorizada</div></div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label class="form-label">Usuario (email o código IA)</label>
+          <div style="display:flex;gap:8px">
+            <input class="form-input" id="circ-auth-q" placeholder="Buscar usuario por email..." style="flex:1" oninput="searchCircularUser()">
+          </div>
+          <div id="circ-auth-result" style="margin-top:8px;font-size:12px;color:var(--muted)"></div>
+          <input type="hidden" id="circ-auth-userid">
+        </div>
+        <div>
+          <label class="form-label">Barrio / Zona</label>
+          <input class="form-input" id="circ-auth-neighborhood" placeholder="Ej: Barrio Central, Yaoundé Norte...">
+        </div>
+        <div>
+          <label class="form-label">País</label>
+          <select class="filter-select" id="circ-auth-country" style="width:100%">
+            <option value="GQ">🇬🇶 Guinea Ecuatorial</option>
+            <option value="CM">🇨🇲 Camerún</option>
+            <option value="SN">🇸🇳 Senegal</option>
+            <option value="CI">🇨🇮 Costa de Marfil</option>
+            <option value="GA">🇬🇦 Gabón</option>
+            <option value="ES">🇪🇸 España</option>
+            <option value="FR">🇫🇷 Francia</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Notas internas (opcional)</label>
+          <input class="form-input" id="circ-auth-notes" placeholder="Observaciones...">
+        </div>
+        <button class="topbar-btn btn-primary" style="width:100%" onclick="authorizeCircular()">✅ Autorizar como Circular</button>
+        <div style="background:var(--s2);border-radius:var(--r-lg);padding:12px;font-size:12px;color:var(--muted)">
+          <strong style="color:var(--cyan)">ℹ️ Información:</strong> Al autorizar, el usuario recibirá el rol <code>circular_autorizada</code> y podrá comprar unidades de valor con un <strong>5% de descuento</strong> para venderlas en su barrio. Puedes autorizar tanto si eres Admin como Representante InnovaAFRIC.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Compras pendientes -->
+  <div id="circ-panel-pendientes" style="display:none">
+    <div class="card">
+      <div class="card-head">
+        <div><div class="card-title">⏳ Compras de unidades pendientes</div><div class="card-sub">Confirmar o rechazar solicitudes de circulares</div></div>
+        <button class="topbar-btn btn-ghost" onclick="loadCircularPendientes()">↻</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Circular</th><th>Barrio</th><th>Unidades</th><th>A pagar (95%)</th><th>Ahorro (5%)</th><th>Fecha</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-circ-pendientes"><tr><td colspan="7" class="td-empty">Sin compras pendientes</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMISIONES -->
+<div id="pg-comisiones" style="display:none">
+  <div class="stats-grid" style="margin-bottom:16px">
+    <div class="stat-card c-green"><div class="lbl">Total distribuido</div><div class="val" id="com-total">—</div></div>
+    <div class="stat-card c-amber"><div class="lbl">→ Hacienda</div><div class="val" id="com-hacienda">—</div></div>
+    <div class="stat-card c-cyan"><div class="lbl">→ InnovaAFRIC</div><div class="val" id="com-innova">—</div></div>
+    <div class="stat-card c-purple"><div class="lbl">→ Representantes</div><div class="val" id="com-reps">—</div></div>
+  </div>
+  <!-- Config de rates -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head">
+      <div><div class="card-title">⚙️ Configuración de rates</div><div class="card-sub">Porcentajes de distribución por tipo de transacción</div></div>
+      <button class="topbar-btn btn-primary" onclick="saveComisionConfig()">💾 Guardar</button>
+      <button class="topbar-btn btn-ghost" onclick="loadComisiones()">↻</button>
+    </div>
+    <div id="com-config-wrap" style="padding:16px 20px">
+      <div class="loading-cell"><div class="spin"></div></div>
+    </div>
+  </div>
+  <!-- Historial -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-head">
+      <div><div class="card-title">📋 Historial de distribuciones</div></div>
+      <div style="display:flex;gap:8px">
+        <input class="filter-input" type="date" id="com-date-from" style="width:140px">
+        <input class="filter-input" type="date" id="com-date-to" style="width:140px">
+        <select class="filter-select" id="com-type-filter">
+          <option value="">Todos los tipos</option>
+          <option value="remesa">Remesa</option>
+          <option value="pago">Pago</option>
+          <option value="recarga">Recarga</option>
+        </select>
+        <button class="topbar-btn btn-ghost" onclick="loadComisionHistory()">🔍 Filtrar</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Monto base</th><th>Hacienda</th><th>InnovaAFRIC</th><th>Representante</th><th>Ref.</th></tr></thead>
+        <tbody id="tb-comisiones"><tr><td colspan="7" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Resumen -->
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">📊 Resumen por período</div></div>
+      <button class="topbar-btn btn-ghost" onclick="exportComisionPDF()">📄 PDF</button>
+    </div>
+    <div id="com-summary-wrap" style="padding:16px 20px">
+      <div class="loading-cell"><div class="spin"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGOS RIDERS -->
+<div id="pg-rider-payment" style="display:none">
+  <div class="stats-grid" style="margin-bottom:16px">
+    <div class="stat-card c-amber"><div class="lbl">Pendientes</div><div class="val" id="rp-pending">—</div></div>
+    <div class="stat-card c-green"><div class="lbl">Liberados hoy</div><div class="val" id="rp-released">—</div></div>
+    <div class="stat-card c-cyan"><div class="lbl">Importe pendiente</div><div class="val" id="rp-amount">—</div></div>
+    <div class="stat-card c-purple"><div class="lbl">Modo auto activo</div><div class="val" id="rp-auto">—</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">💸 Cola de pagos pendientes</div><div class="card-sub">Pagos a riders esperando liberación manual o automática</div></div>
+      <button class="topbar-btn btn-ghost" onclick="loadRiderPayment()">↻</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Pedido</th><th>Rider</th><th>Importe</th><th>Creado</th><th>Modo</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-rider-payment"><tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- USER TIMELINE -->
@@ -6806,6 +7035,9 @@ function nav(page,el){
     'delivery-admin':'🚚 XenderDelivery Admin',
     'ads-admin':'📢 Publicidad Admin',
     representantes:'🏅 Representantes',
+    'circulares-admin':'🏘️ Circulares Autorizadas',
+    comisiones:'💰 Comisiones · Distribución',
+    'rider-payment':'💸 Pagos Riders · Cola de pagos',
     comercios:'🏪 Comercios verificados',
     'logistica-admin':'📦 Logística · Rutas',
     'marketing-admin':'🎯 Marketing',
@@ -9128,7 +9360,11 @@ nav=function(page,el){
   if(page==='bigshop-admin')loadBigShopAdmin();
   if(page==='delivery-admin')loadDeliveryAdmin();
   if(page==='ads-admin')loadAdsAdmin();
-  if(page==='representantes')loadRepresentantes();
+  if(page==='representantes'){loadRepresentantesV34();loadRepPendientes();}
+  if(page==='circulares-admin'){loadCircularesAdmin();loadCircularPendientes();}
+  if(page==='comisiones')loadComisiones();
+  if(page==='rider-payment')loadRiderPayment();
+  if(page==='two-factor')load2FAUsers();
   if(page==='comercios')loadComerciosAdmin();
   if(page==='logistica-admin')loadLogisticaAdmin();
   if(page==='marketing-admin')loadMarketingAdmin();
@@ -9144,6 +9380,355 @@ nav=function(page,el){
   if(page==='crear')resetCreateForm();
   if(page==='rates'){loadRatesEditor();loadCountryRates();checkRatesFreshness();}
 };
+
+// ── CIRCULARES AUTORIZADAS ────────────────────────────────
+function circTab(tab){
+  ['lista','autorizar','pendientes'].forEach(t=>{
+    const panel=document.getElementById('circ-panel-'+t);
+    const btn=document.getElementById('circ-tab-'+t);
+    if(panel)panel.style.display=t===tab?'':'none';
+    if(btn){btn.style.borderBottom=t===tab?'2px solid var(--cyan)':'2px solid transparent';btn.style.color=t===tab?'var(--cyan)':'';}
+  });
+  if(tab==='pendientes')loadCircularPendientes();
+}
+async function loadCircularesAdmin(){
+  const r=await rwAPI('GET','/circulares');
+  const rows=(r&&(r.circulares||r.data))||[];
+  document.getElementById('circ-total').textContent=rows.length;
+  document.getElementById('circ-active').textContent=rows.filter(c=>c.status==='active').length;
+  const tb=document.getElementById('tb-circulares');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin circulares autorizados todavía</td></tr>';return;}
+  tb.innerHTML=rows.map(c=>{
+    const u=c.user||{};
+    const acc=c.account||{};
+    const autType=c.authorizedByType==='representative'?'<span class="pill pill-amber" style="font-size:10px">Rep</span>':'<span class="pill pill-cyan" style="font-size:10px">Admin</span>';
+    return'<tr>'
+      +'<td><div class="user-cell"><div class="uc-av" style="background:var(--cyan-d);color:var(--cyan)">🏘️</div><div><div class="uc-name">'+(u.name||'—')+'</div><div class="uc-email" style="font-family:var(--mono);font-size:10px">'+(u.email||'—')+'</div></div></div></td>'
+      +'<td style="font-size:12px">'+(c.neighborhood||'—')+' · '+(c.country||'—')+'</td>'
+      +'<td>'+autType+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--purple);font-weight:700">'+(acc.unitBalance!=null?acc.unitBalance:'—')+'</td>'
+      +'<td><span class="pill '+(c.status==='active'?'pill-green':c.status==='pending'?'pill-amber':'pill-gray')+'">'+(c.status||'—')+'</span></td>'
+      +'<td style="display:flex;gap:4px">'
+      +(c.status==='active'
+        ?'<button class="topbar-btn" style="font-size:11px;padding:4px 8px;background:var(--red-d);color:var(--red)" onclick="setCircularStatus(\''+c.id+'\',\'suspended\',this)">⏸ Suspender</button>'
+        :'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="setCircularStatus(\''+c.id+'\',\'active\',this)">▶ Activar</button>')
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+async function loadCircularPendientes(){
+  const r=await rwAPI('GET','/circulares/purchases/pending');
+  const rows=(r&&(r.purchases||r.data))||[];
+  document.getElementById('circ-pending').textContent=rows.length;
+  const tb=document.getElementById('tb-circ-pendientes');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin compras pendientes</td></tr>';return;}
+  tb.innerHTML=rows.map(p=>{
+    const circ=p.circular||{};
+    const u=(circ.user)||{};
+    return'<tr>'
+      +'<td><div class="uc-name">'+(u.name||u.email||'—')+'</div><div class="uc-email" style="font-family:var(--mono);font-size:10px">'+(u.email||'')+'</div></td>'
+      +'<td style="font-size:12px">'+(circ.neighborhood||'—')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--purple);font-weight:700">'+(p.unitsRequested||'—')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--cyan)">'+(p.amountToPay!=null?fmtAmt(p.amountToPay,p.currency):'—')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--green)">+'+( p.amountSaved!=null?fmtAmt(p.amountSaved,p.currency):'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(p.createdAt||'—').substring(0,10)+'</td>'
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="confirmCircularPurchase(\''+p.id+'\',\'confirm\',this)">✅ Confirmar</button>'
+      +'<button class="topbar-btn" style="font-size:11px;padding:4px 8px;background:var(--red-d);color:var(--red)" onclick="confirmCircularPurchase(\''+p.id+'\',\'reject\',this)">✗ Rechazar</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+async function confirmCircularPurchase(id,action,btn){
+  if(!id)return;
+  btn.disabled=true;
+  const ep=action==='confirm'?'/circulares/purchases/'+id+'/confirm':'/circulares/purchases/'+id+'/reject';
+  const r=await rwAPI('POST',ep);
+  if(r&&r.success){showToast(action==='confirm'?'✅ Compra confirmada — unidades acreditadas':'✅ Solicitud rechazada');loadCircularesAdmin();loadCircularPendientes();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;}
+}
+async function setCircularStatus(id,status,btn){
+  btn.disabled=true;
+  const r=await rwAPI('PATCH','/circulares/'+id+'/status',{status});
+  if(r&&r.success){showToast('✅ Estado actualizado');loadCircularesAdmin();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;}
+}
+function searchCircularUser(){
+  const q=(document.getElementById('circ-auth-q').value||'').toLowerCase().trim();
+  const el=document.getElementById('circ-auth-result');
+  const hiddenId=document.getElementById('circ-auth-userid');
+  if(!q){el.innerHTML='';hiddenId.value='';return;}
+  const found=(ALL_USERS||[]).filter(u=>(u.email||'').toLowerCase().includes(q)||(u.full_name||'').toLowerCase().includes(q));
+  if(!found.length){el.innerHTML='<span style="color:var(--red)">Sin resultados</span>';hiddenId.value='';return;}
+  el.innerHTML=found.slice(0,5).map(u=>'<div style="background:var(--s2);border-radius:6px;padding:8px 10px;margin-top:4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="selectCircularUser(\''+u.id+'\',\''+( u.full_name||u.email||'')+'\',\''+u.email+'\')">'
+    +'<div><div style="font-weight:600;font-size:12px">'+(u.full_name||'—')+'</div><div style="font-size:11px;color:var(--muted)">'+(u.email||'—')+'</div></div>'
+    +'<span class="pill pill-cyan" style="font-size:10px">Seleccionar</span>'
+    +'</div>').join('');
+}
+function selectCircularUser(id,name,email){
+  document.getElementById('circ-auth-userid').value=id;
+  document.getElementById('circ-auth-q').value=email;
+  document.getElementById('circ-auth-result').innerHTML='<div style="color:var(--green);font-size:12px;margin-top:4px">✅ Seleccionado: <strong>'+name+'</strong></div>';
+}
+async function authorizeCircular(){
+  const userId=document.getElementById('circ-auth-userid').value;
+  const neighborhood=(document.getElementById('circ-auth-neighborhood').value||'').trim();
+  const country=document.getElementById('circ-auth-country').value;
+  const notes=document.getElementById('circ-auth-notes').value;
+  if(!userId)return showToast('⚠️ Selecciona un usuario primero','error');
+  if(!neighborhood)return showToast('⚠️ Escribe el barrio/zona','error');
+  const r=await rwAPI('POST','/circulares/authorize',{userId,neighborhood,country,notes});
+  if(r&&r.success){
+    showToast('✅ Circular autorizado correctamente');
+    document.getElementById('circ-auth-userid').value='';
+    document.getElementById('circ-auth-q').value='';
+    document.getElementById('circ-auth-neighborhood').value='';
+    document.getElementById('circ-auth-notes').value='';
+    document.getElementById('circ-auth-result').innerHTML='';
+    circTab('lista');
+    loadCircularesAdmin();
+  }else{showToast('❌ '+(r&&r.error||'Error'),'error');}
+}
+
+// ── COMISIONES ────────────────────────────────────────────
+var _COM_CONFIG=null;
+var _COM_HISTORY=[];
+async function loadComisiones(){
+  await loadComisionConfig();
+  await loadComisionHistory();
+  await loadComisionSummary();
+}
+async function loadComisionConfig(){
+  const r=await rwAPI('GET','/commissions/config');
+  const wrap=document.getElementById('com-config-wrap');
+  if(!wrap)return;
+  const cfg=(r&&r.data)||r||{};
+  _COM_CONFIG=cfg;
+  const fields=[
+    {key:'hacienda_pct',label:'Hacienda %'},
+    {key:'innova_pct',label:'InnovaAFRIC %'},
+    {key:'rep_pct',label:'Representante %'},
+    {key:'base_fee',label:'Comisión base (%)'},
+  ];
+  wrap.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">'
+    +fields.map(f=>'<div><label class="form-label">'+f.label+'</label><input class="form-input" id="com-cfg-'+f.key+'" type="number" step="0.01" value="'+(cfg[f.key]!=null?cfg[f.key]:'')+'"></div>').join('')
+    +'</div>';
+}
+async function saveComisionConfig(){
+  const fields=['hacienda_pct','innova_pct','rep_pct','base_fee'];
+  const body={};
+  fields.forEach(k=>{const el=document.getElementById('com-cfg-'+k);if(el)body[k]=parseFloat(el.value)||0;});
+  const r=await rwAPI('POST','/commissions/config',body);
+  if(r&&r.success)showToast('✅ Config guardada');
+  else showToast('❌ Error: '+(r&&r.error||'sin respuesta'),'error');
+}
+async function loadComisionHistory(){
+  const from=document.getElementById('com-date-from');
+  const to=document.getElementById('com-date-to');
+  const type=document.getElementById('com-type-filter');
+  let ep='/commissions/records?limit=100';
+  if(from&&from.value)ep+='&from='+from.value;
+  if(to&&to.value)ep+='&to='+to.value;
+  if(type&&type.value)ep+='&type='+type.value;
+  const r=await rwAPI('GET',ep);
+  const rows=(r&&(r.data||r.records))||[];
+  _COM_HISTORY=rows;
+  const tb=document.getElementById('tb-comisiones');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin registros en el período</td></tr>';return;}
+  tb.innerHTML=rows.map(c=>'<tr>'
+    +'<td style="font-family:var(--mono);font-size:11px">'+(c.created_at||c.date||'—').substring(0,10)+'</td>'
+    +'<td><span class="pill pill-cyan" style="font-size:10px">'+(c.type||'—')+'</span></td>'
+    +'<td style="font-family:var(--mono)">'+(c.base_amount!=null?fmtAmt(c.base_amount,c.currency):'—')+'</td>'
+    +'<td style="color:var(--amber);font-family:var(--mono)">'+(c.hacienda!=null?fmtAmt(c.hacienda,c.currency):'—')+'</td>'
+    +'<td style="color:var(--cyan);font-family:var(--mono)">'+(c.innova!=null?fmtAmt(c.innova,c.currency):'—')+'</td>'
+    +'<td style="color:var(--purple);font-family:var(--mono)">'+(c.rep!=null?fmtAmt(c.rep,c.currency):'—')+'</td>'
+    +'<td style="color:var(--muted);font-size:11px;font-family:var(--mono)">'+(c.ref||c.id||'—')+'</td>'
+    +'</tr>').join('');
+}
+async function loadComisionSummary(){
+  const r=await rwAPI('GET','/commissions/summary');
+  const s=(r&&(r.data||r.summary))||r||{};
+  const el=document.getElementById('com-summary-wrap');
+  if(!el)return;
+  document.getElementById('com-total').textContent=s.total!=null?fmtAmt(s.total,s.currency||'EUR'):'—';
+  document.getElementById('com-hacienda').textContent=s.hacienda!=null?fmtAmt(s.hacienda,s.currency||'EUR'):'—';
+  document.getElementById('com-innova').textContent=s.innova!=null?fmtAmt(s.innova,s.currency||'EUR'):'—';
+  document.getElementById('com-reps').textContent=s.reps!=null?fmtAmt(s.reps,s.currency||'EUR'):'—';
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'
+    +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--amber);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.hacienda_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">Hacienda</div></div>'
+    +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--cyan);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.innova_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">InnovaAFRIC</div></div>'
+    +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--purple);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.rep_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">Representantes</div></div>'
+    +'</div>';
+}
+function exportComisionPDF(){showToast('📄 Generando PDF...');setTimeout(()=>showToast('✅ PDF listo (próximamente)'),1200);}
+
+// ── PAGOS RIDERS ──────────────────────────────────────────
+async function loadRiderPayment(){
+  const r=await rwAPI('GET','/rider-payment/pending');
+  const rows=(r&&(r.data||r.payments))||[];
+  document.getElementById('rp-pending').textContent=rows.length;
+  const total=rows.reduce((s,p)=>s+(Number(p.amount)||0),0);
+  document.getElementById('rp-amount').textContent=rows.length?fmtAmt(total,(rows[0]&&rows[0].currency)||'XAF'):'0';
+  document.getElementById('rp-released').textContent='—';
+  document.getElementById('rp-auto').textContent=rows.filter(p=>p.mode==='auto').length;
+  const tb=document.getElementById('tb-rider-payment');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin pagos pendientes</td></tr>';return;}
+  tb.innerHTML=rows.map(p=>'<tr>'
+    +'<td style="font-family:var(--mono);font-size:11px">'+(p.order_id||p.orderId||'—')+'</td>'
+    +'<td><div class="user-cell"><div class="uc-av" style="background:var(--cyan-d);color:var(--cyan)">🛵</div><div><div class="uc-name">'+(p.rider_name||p.riderId||'—')+'</div></div></div></td>'
+    +'<td style="font-family:var(--mono);color:var(--green)">'+(p.amount!=null?fmtAmt(p.amount,p.currency||'XAF'):'—')+'</td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+(p.created_at||p.date||'—').substring(0,16).replace('T',' ')+'</td>'
+    +'<td><span class="pill '+(p.mode==='auto'?'pill-green':'pill-amber')+'">'+(p.mode||'manual')+'</span></td>'
+    +'<td style="display:flex;gap:4px">'
+    +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="releaseRiderPayment(\''+( p.order_id||p.orderId||'')+'\',this)">✅ Liberar</button>'
+    +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="toggleRiderPayMode(\''+(p.order_id||p.orderId||'')+'\',\''+(p.mode==='auto'?'manual':'auto')+'\',this)">'+(p.mode==='auto'?'→ Manual':'→ Auto')+'</button>'
+    +'</td>'
+    +'</tr>').join('');
+}
+async function releaseRiderPayment(orderId,btn){
+  if(!orderId)return;
+  btn.disabled=true;btn.textContent='...';
+  const r=await rwAPI('POST','/rider-payment/release/'+orderId);
+  if(r&&r.success){showToast('✅ Pago liberado');loadRiderPayment();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;btn.textContent='✅ Liberar';}
+}
+async function toggleRiderPayMode(orderId,newMode,btn){
+  if(!orderId)return;
+  btn.disabled=true;
+  const r=await rwAPI('PATCH','/rider-payment/mode/'+orderId,{mode:newMode});
+  if(r&&r.success){showToast('✅ Modo cambiado a '+newMode);loadRiderPayment();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;}
+}
+
+// ── REPRESENTANTES V34 ────────────────────────────────────
+function repTab(tab){
+  ['lista','pendientes','historial'].forEach(t=>{
+    const panel=document.getElementById('rep-panel-'+t);
+    const btn=document.getElementById('rep-tab-'+t);
+    if(panel)panel.style.display=t===tab?'':'none';
+    if(btn){btn.style.borderBottom=t===tab?'2px solid var(--cyan)':'2px solid transparent';btn.style.color=t===tab?'var(--cyan)':'';}
+  });
+  if(tab==='historial')loadRepHistorial();
+}
+async function loadRepresentantesV34(){
+  const r=await rwAPI('GET','/representatives');
+  const rows=(r&&(r.data||r.representatives))||[];
+  const repsLocal=(ALL_USERS||[]).filter(u=>u.role==='representante');
+  const all=rows.length?rows:repsLocal.map(u=>({id:u.id,name:u.full_name||u.email,country:u.country,city:u.city,units_balance:null,discount_pct:10,active:true}));
+  document.getElementById('rp-total').textContent=all.length;
+  document.getElementById('rp-countries').textContent=new Set(all.map(r=>r.country)).size;
+  const totalUnits=all.reduce((s,r)=>s+(Number(r.units_balance)||0),0);
+  document.getElementById('rp-units').textContent=totalUnits||'—';
+  const tb=document.getElementById('tb-representantes');
+  if(!tb)return;
+  if(!all.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin representantes</td></tr>';return;}
+  tb.innerHTML=all.map(rep=>'<tr>'
+    +'<td><div class="user-cell"><div class="uc-av" style="background:var(--amber);color:#000">'+initials(rep.name||rep.email||'?')+'</div><div><div class="uc-name">'+(rep.name||'—')+'</div><div class="uc-email" style="font-family:var(--mono);font-size:10px">ID: '+(rep.id||'').substring(0,8)+'</div></div></div></td>'
+    +'<td style="font-size:12px">'+(rep.country||'—')+' · '+(rep.city||'—')+'</td>'
+    +'<td style="font-family:var(--mono);color:var(--cyan)">'+(rep.users_count||'—')+'</td>'
+    +'<td style="font-family:var(--mono);color:var(--purple);font-weight:700">'+(rep.units_balance!=null?rep.units_balance:'—')+'</td>'
+    +'<td><span class="pill pill-green">'+(rep.discount_pct||10)+'%</span></td>'
+    +'<td><span class="pill '+(rep.active!==false?'pill-green':'pill-gray')+'">'+(rep.active!==false?'Activo':'Inactivo')+'</span></td>'
+    +'<td style="display:flex;gap:4px">'
+    +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="openFicha(\''+(rep.user_id||rep.id||'')+'\')">👤 Ficha</button>'
+    +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="exportRepPDF(\''+(rep.id||'')+'\')">📄 PDF</button>'
+    +'</td>'
+    +'</tr>').join('');
+}
+async function loadRepPendientes(){
+  const r=await rwAPI('GET','/representatives/purchases/pending');
+  const rows=(r&&(r.data||r.purchases))||[];
+  document.getElementById('rp-pending-count').textContent=rows.length;
+  const tb=document.getElementById('tb-rep-pendientes');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin compras pendientes</td></tr>';return;}
+  tb.innerHTML=rows.map(p=>{
+    const base=Number(p.units||0)*Number(p.unit_price||0);
+    const disc=base*0.10;
+    const total=base-disc;
+    return'<tr>'
+      +'<td><div class="uc-name">'+(p.rep_name||p.rep_id||'—')+'</div></td>'
+      +'<td style="font-family:var(--mono);color:var(--purple);font-weight:700">'+(p.units||'—')+'</td>'
+      +'<td style="font-family:var(--mono)">'+(base?fmtAmt(base,p.currency||'XAF'):'—')+'</td>'
+      +'<td style="color:var(--green);font-family:var(--mono)">-'+fmtAmt(disc,p.currency||'XAF')+'</td>'
+      +'<td style="color:var(--cyan);font-family:var(--mono);font-weight:700">'+fmtAmt(total,p.currency||'XAF')+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(p.created_at||'—').substring(0,10)+'</td>'
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="confirmRepPurchase(\''+(p.id||'')+'\',\'confirm\',this)">✅ Confirmar</button>'
+      +'<button class="topbar-btn" style="font-size:11px;padding:4px 8px;background:var(--red-d);color:var(--red)" onclick="confirmRepPurchase(\''+(p.id||'')+'\',\'reject\',this)">✗ Rechazar</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+async function confirmRepPurchase(purchaseId,action,btn){
+  if(!purchaseId)return;
+  btn.disabled=true;
+  const ep=action==='confirm'?'/representatives/purchases/'+purchaseId+'/confirm':'/representatives/purchases/'+purchaseId+'/reject';
+  const r=await rwAPI('POST',ep);
+  if(r&&r.success){showToast(action==='confirm'?'✅ Compra confirmada':'✅ Compra rechazada');loadRepPendientes();loadRepresentantesV34();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;}
+}
+async function loadRepHistorial(){
+  const filter=document.getElementById('rep-hist-filter');
+  let ep='/representatives/recharges?limit=100';
+  if(filter&&filter.value)ep+='&rep_id='+filter.value;
+  const r=await rwAPI('GET',ep);
+  const rows=(r&&(r.data||r.recharges))||[];
+  const tb=document.getElementById('tb-rep-historial');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin historial</td></tr>';return;}
+  tb.innerHTML=rows.map(h=>'<tr>'
+    +'<td style="font-size:12px">'+(h.rep_name||h.rep_id||'—')+'</td>'
+    +'<td style="font-size:12px">'+(h.client_name||h.client_id||'—')+'</td>'
+    +'<td style="font-family:var(--mono);color:var(--purple)">'+(h.units||'—')+'</td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+(h.created_at||'—').substring(0,10)+'</td>'
+    +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+(h.ref||h.id||'—').substring(0,12)+'</td>'
+    +'</tr>').join('');
+}
+function exportRepresentantesPDF(){showToast('📄 Generando PDF global...');setTimeout(()=>showToast('✅ PDF listo (próximamente)'),1200);}
+function exportRepPDF(id){showToast('📄 Generando PDF rep '+id.substring(0,8)+'...');}
+
+// ── 2FA POR USUARIO ───────────────────────────────────────
+var _2FA_USERS=[];
+async function load2FAUsers(){
+  const r=await rwAPI('GET','/users?limit=500');
+  const users=(r&&(r.data||r.users))||(ALL_USERS||[]);
+  _2FA_USERS=users;
+  render2FAUsers(users);
+}
+function render2FAUsers(users){
+  const tb=document.getElementById('tb-2fa-users');
+  if(!tb)return;
+  if(!users.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin usuarios</td></tr>';return;}
+  tb.innerHTML=users.map(u=>'<tr>'
+    +'<td><div class="user-cell"><div class="uc-av">'+initials(u.full_name||u.email)+'</div><div><div class="uc-name">'+(u.full_name||'—')+'</div></div></div></td>'
+    +'<td style="font-family:var(--mono);font-size:11px">'+(u.email||'—')+'</td>'
+    +'<td><span class="pill '+(u.two_factor_enabled||u.tfa_enabled?'pill-green':'pill-gray')+'">'+(u.two_factor_enabled||u.tfa_enabled?'✅ Activo':'— Inactivo')+'</span></td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+(u.tfa_activated_at||u.two_factor_at||'—')+'</td>'
+    +'<td>'+(u.two_factor_enabled||u.tfa_enabled?'<button class="topbar-btn" style="font-size:11px;padding:4px 8px;background:var(--red-d);color:var(--red)" onclick="disable2FAUser(\''+(u.id||'')+'\',this)">🔓 Desactivar</button>':'<span style="color:var(--muted);font-size:11px">—</span>')+'</td>'
+    +'</tr>').join('');
+}
+function filter2FAUsers(){
+  const q=(document.getElementById('tfa-user-q').value||'').toLowerCase();
+  render2FAUsers(q?_2FA_USERS.filter(u=>(u.email||'').toLowerCase().includes(q)||(u.full_name||'').toLowerCase().includes(q)):_2FA_USERS);
+}
+async function disable2FAUser(userId,btn){
+  if(!userId)return;
+  if(!confirm('¿Desactivar 2FA para este usuario?'))return;
+  btn.disabled=true;
+  const r=await rwAPI('DELETE','/two-factor/'+userId);
+  if(r&&r.success){showToast('✅ 2FA desactivado');load2FAUsers();}
+  else{showToast('❌ '+(r&&r.error||'Error'),'error');btn.disabled=false;}
+}
+function fmtAmt(n,cur){
+  const v=Number(n||0);
+  if(cur==='EUR'||cur==='USD')return(cur==='EUR'?'€':'$')+v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return v.toLocaleString('es-ES',{maximumFractionDigits:0})+' '+(cur||'');
+}
 
 // ── LOANS ─────────────────────────────────────────────────
 let ALL_LOANS=[];
