@@ -305,9 +305,9 @@
 </nav>
 <div class="ham-overlay" id="ham-ia">
   <button onclick="toggleHam('ia')" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
-  <a href="#products" onclick="toggleHam('ia')">🛒 Products</a>
-  <a href="#how" onclick="toggleHam('ia')">⚙️ How it works</a>
-  <a href="#continents" onclick="toggleHam('ia')">🌍 Our Presence</a>
+  <a href="#products" onclick="toggleHam('ia')" data-i18n="ham_p">🛒 Products</a>
+  <a href="#how" onclick="toggleHam('ia')" data-i18n="ham_h">⚙️ How it works</a>
+  <a href="#continents" onclick="toggleHam('ia')" data-i18n="ham_c">🌍 Our Presence</a>
   <a href="#" onclick="openModal('modal-ia');return false;" onclick="toggleHam('ia')" style="background:var(--orange);color:#fff;padding:14px 32px;border-radius:12px;">🚀 Get Started</a>
 </div>
 
@@ -335,21 +335,21 @@
     <div class="hero-anim" id="heroAnim">
       <svg class="ha-svg" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
         <!-- Líneas triángulo -->
-        <path id="ha-eu-as" d="M 96 60 Q 240 16 384 60"   fill="none" stroke="#2B8DC7" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
-        <path id="ha-eu-af" d="M 60 96 Q 70 260 176 400"  fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
-        <path id="ha-as-af" d="M 420 96 Q 410 260 304 400" fill="none" stroke="#E0921A" stroke-width="2" stroke-dasharray="400" stroke-dashoffset="400" style="transition:stroke-dashoffset 1s ease"/>
+        <path id="ha-eu-as" d="M 52 52 Q 240 8 428 52"    fill="none" stroke="#2B8DC7" stroke-width="2" stroke-dasharray="500" stroke-dashoffset="500" style="transition:stroke-dashoffset 1s ease"/>
+        <path id="ha-eu-af" d="M 52 52 Q 36 240 228 428"  fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="500" stroke-dashoffset="500" style="transition:stroke-dashoffset 1s ease"/>
+        <path id="ha-as-af" d="M 428 52 Q 444 240 228 428" fill="none" stroke="#E0921A" stroke-width="2" stroke-dasharray="500" stroke-dashoffset="500" style="transition:stroke-dashoffset 1s ease"/>
         <!-- Puntos viajando -->
         <circle r="6" fill="#2B8DC7" opacity="0" id="hd1"><animateMotion dur="1.8s" repeatCount="indefinite" begin="indefinite" id="hd1m"><mpath href="#hp-eu-as"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd1o"/></circle>
         <circle r="6" fill="#22c55e"  opacity="0" id="hd2"><animateMotion dur="2.1s" repeatCount="indefinite" begin="indefinite" id="hd2m"><mpath href="#hp-eu-af"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd2o"/></circle>
         <circle r="6" fill="#E0921A"  opacity="0" id="hd3"><animateMotion dur="2s"   repeatCount="indefinite" begin="indefinite" id="hd3m"><mpath href="#hp-as-af"/></animateMotion><animate attributeName="opacity" from="0" to="1" dur="0.1s" begin="indefinite" fill="freeze" id="hd3o"/></circle>
-        <path id="hp-eu-as" d="M 96 60 Q 240 16 384 60"    style="display:none"/>
-        <path id="hp-eu-af" d="M 60 96 Q 70 260 176 400"   style="display:none"/>
-        <path id="hp-as-af" d="M 304 400 Q 410 260 420 96" style="display:none"/>
+        <path id="hp-eu-as" d="M 52 52 Q 240 8 428 52"     style="display:none"/>
+        <path id="hp-eu-af" d="M 52 52 Q 36 240 228 428"   style="display:none"/>
+        <path id="hp-as-af" d="M 228 428 Q 444 240 428 52" style="display:none"/>
       </svg>
       <!-- Nodos -->
-      <div class="ha-node ha-eu" id="haEu"><div class="ha-ico">🌍</div><div class="ha-lbl">Europa</div></div>
-      <div class="ha-node ha-as" id="haAs"><div class="ha-ico">🌏</div><div class="ha-lbl">Asia</div></div>
-      <div class="ha-node ha-af" id="haAf"><div class="ha-ico">🌍</div><div class="ha-lbl">África</div></div>
+      <div class="ha-node ha-eu" id="haEu"><div class="ha-ico">🌍</div><div class="ha-lbl" data-i18n="cont_eu">Europa</div></div>
+      <div class="ha-node ha-as" id="haAs"><div class="ha-ico">🌏</div><div class="ha-lbl" data-i18n="cont_as">Asia</div></div>
+      <div class="ha-node ha-af" id="haAf"><div class="ha-ico">🌍</div><div class="ha-lbl" data-i18n="cont_af">África</div></div>
       <!-- Logo central -->
       <div class="ha-center" id="haCenter">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100" height="100">
@@ -372,7 +372,7 @@
         <div class="ha-csub">We Simplify Life</div>
       </div>
       <!-- Tagline -->
-      <div class="ha-tagline" id="haTagline">Conectando <span>Asia · Europa · África</span></div>
+      <div class="ha-tagline" id="haTagline" data-i18n="ha_tagline">Conectando <span>Asia · Europa · África</span></div>
     </div>
   </div>
 </section>
@@ -1463,7 +1463,10 @@
       inv_box1_btn:'Solicitar Deck de Inversión →',
       inv_box2_h:'Para Prensa y Medios',
       inv_box2_p:'InnovaAFRIC es una de las historias de tecnología africana más ambiciosas de nuestra década. Nuestro fundador está disponible para entrevistas, paneles y conferencias. Kits de prensa disponibles bajo solicitud.',
-      inv_box2_btn:'Solicitar Kit de Prensa →'
+      inv_box2_btn:'Solicitar Kit de Prensa →',
+      cont_eu:'Europa', cont_as:'Asia', cont_af:'África',
+      ha_tagline:'Conectando <span>Asia · Europa · África</span>',
+      ham_p:'🛒 Productos', ham_h:'⚙️ Cómo funciona', ham_c:'🌍 Nuestra Presencia'
     },
     en:{
       nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_cta:'Get Started',
@@ -1577,7 +1580,10 @@
       inv_box1_btn:'Request Investor Deck →',
       inv_box2_h:'For Press & Media',
       inv_box2_p:'InnovaAFRIC is one of the most ambitious African tech stories of our decade. Our founder is available for interviews, panels, and keynote engagements. Press kits and high-res assets available on request.',
-      inv_box2_btn:'Request Press Kit →'
+      inv_box2_btn:'Request Press Kit →',
+      cont_eu:'Europe', cont_as:'Asia', cont_af:'Africa',
+      ha_tagline:'Connecting <span>Asia · Europe · Africa</span>',
+      ham_p:'🛒 Products', ham_h:'⚙️ How it works', ham_c:'🌍 Our Presence'
     },
     fr:{
       nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_cta:'Commencer',
@@ -1691,7 +1697,10 @@
       inv_box1_btn:'Demander le Dossier Investisseur →',
       inv_box2_h:'Pour la Presse & Médias',
       inv_box2_p:"InnovaAFRIC est l'une des histoires tech africaines les plus ambitieuses de notre décennie. Notre fondateur est disponible pour des interviews, panels et interventions. Kits presse et ressources haute résolution disponibles sur demande.",
-      inv_box2_btn:'Demander le Kit Presse →'
+      inv_box2_btn:'Demander le Kit Presse →',
+      cont_eu:'Europe', cont_as:'Asie', cont_af:'Afrique',
+      ha_tagline:'Connectant <span>Asie · Europe · Afrique</span>',
+      ham_p:'🛒 Produits', ham_h:'⚙️ Comment ça marche', ham_c:'🌍 Notre Présence'
     }
   };
 
