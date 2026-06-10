@@ -145,7 +145,7 @@
           +'<div class="pcard-price"><span class="sym">€</span>'+price+'</div>'
           +'<div class="pcard-orig">€'+orig+'</div>'
           +'<div class="pcard-title">'+p.name+'</div>'
-          +'<div class="pcard-meta"><span class="pcard-stars">'+stars+'</span><span class="pcard-orders">'+orders+' vendidos</span></div>'
+          +'<div class="pcard-meta"><span class="pcard-stars">'+stars+'</span><span class="pcard-orders">'+orders+' '+((XS_TR[XS_LANG]||XS_TR.es).sold_lbl||'vendidos')+'</span></div>'
           +'<div class="pcard-ship">'+(XS_TR[XS_LANG]||XS_TR.es).ship_free_china+'</div>'
           +'</div></div>';
       }).join('');
@@ -733,7 +733,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div class="section">
   <div class="sec-head">
     <div class="sec-title-red" data-i18n="jfy_h">✨ Solo Para Ti</div>
-    <a href="#" class="see-more">Ver más →</a>
+    <a href="#" class="see-more" data-i18n="ver_mas">Ver más →</a>
   </div>
   <div class="jfy-grid" id="xs-product-grid">
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?w=300&h=300&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-33%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>159.00</div><div class="pcard-orig">€237.00</div><div class="pcard-title">Monitor gaming 27" 165Hz IPS 2K QHD, 1ms, FreeSync, HDMI+DP</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">2,800 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
@@ -1016,7 +1016,8 @@ var XS_TR={
     sub_extensions:'Extensiones & Pelucas', sub_nails:'Uñas', sub_perfumes:'Perfumes',
     sub_bodycare:'Cuidado Corporal', sub_vitamins:'Vitaminas',
     sub_medical:'Equipo Médico', sub_shaving:'Afeitado & Depilación',
-    ship_free:'✈ Envío gratis', ship_free_china:'✈ Envío gratis desde China'
+    ship_free:'✈ Envío gratis', ship_free_china:'✈ Envío gratis desde China',
+    sold_lbl:'vendidos', ver_mas:'Ver más →', ship_plus:'✈ Envío gratis +'
   },
   en:{
     topbar:'Welcome to XenderShop — Shop globally, pay in Africa 🌍 &nbsp;|&nbsp; Free shipping on orders +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Download the app</a>',
@@ -1070,7 +1071,8 @@ var XS_TR={
     sub_extensions:'Extensions & Wigs', sub_nails:'Nails', sub_perfumes:'Perfumes',
     sub_bodycare:'Body Care', sub_vitamins:'Vitamins',
     sub_medical:'Medical Equipment', sub_shaving:'Shaving & Waxing',
-    ship_free:'✈ Free shipping', ship_free_china:'✈ Free shipping from China'
+    ship_free:'✈ Free shipping', ship_free_china:'✈ Free shipping from China',
+    sold_lbl:'sold', ver_mas:'View more →', ship_plus:'✈ Free shipping +'
   },
   fr:{
     topbar:'Bienvenue sur XenderShop — Achetez global, payez en Afrique 🌍 &nbsp;|&nbsp; Livraison gratuite dès +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Télécharger l\'app</a>',
@@ -1124,7 +1126,8 @@ var XS_TR={
     sub_extensions:'Extensions & Perruques', sub_nails:'Ongles', sub_perfumes:'Parfums',
     sub_bodycare:'Soins Corps', sub_vitamins:'Vitamines',
     sub_medical:'Équipement Médical', sub_shaving:'Rasage & Épilation',
-    ship_free:'✈ Livraison gratuite', ship_free_china:'✈ Livraison gratuite depuis Chine'
+    ship_free:'✈ Livraison gratuite', ship_free_china:'✈ Livraison gratuite depuis Chine',
+    sold_lbl:'vendus', ver_mas:'Voir plus →', ship_plus:'✈ Livraison gratuite +'
   }
 };
 var XS_LANG=localStorage.getItem('xs_lang')||'es';
@@ -1145,6 +1148,26 @@ function setLang(l){
     var k=el.getAttribute('data-i18n');
     if(T[k]!==undefined){el.innerHTML=T[k];el.classList.remove('xs-fade');void el.offsetWidth;el.classList.add('xs-fade');}
   });
+  // translate "X vendidos/sold/vendus" in product cards
+  if(T.sold_lbl){
+    document.querySelectorAll('.pcard-orders').forEach(function(el){
+      var num=el.textContent.replace(/[^\d,. ]/g,'').trim();
+      if(num) el.textContent=num+' '+T.sold_lbl;
+    });
+  }
+  // translate shipping text in product cards (preserving "+€XX" suffixes)
+  if(T.ship_free){
+    document.querySelectorAll('.pcard-ship').forEach(function(el){
+      var txt=el.textContent;
+      var isChina=/china|chine/i.test(txt);
+      var extra=txt.replace(/[✈→\s]*(Envío gratis|Free shipping|Livraison gratuite)(?: desde China| from China| depuis Chine)?/gi,'').trim();
+      if(isChina){
+        el.textContent=(T.ship_free_china||T.ship_free)+(extra?' '+extra:'');
+      } else {
+        el.textContent=T.ship_free+(extra?' '+extra:'');
+      }
+    });
+  }
 }
 setLang(XS_LANG);
 
@@ -1198,7 +1221,8 @@ function applyFilters(){
   var cards=document.querySelectorAll('.pcard');
   var shown=0;
   cards.forEach(function(c){
-    var hasFree=c.querySelector('.pcard-ship')&&c.querySelector('.pcard-ship').textContent.includes('gratis');
+    var shipEl=c.querySelector('.pcard-ship');
+    var hasFree=shipEl&&/gratis|free|gratuite/i.test(shipEl.textContent);
     var hasSale=c.querySelector('.pcard-discount');
     var visible=true;
     if(freeOnly&&!hasFree)visible=false;
