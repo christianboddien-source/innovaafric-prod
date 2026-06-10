@@ -146,7 +146,7 @@
           +'<div class="pcard-orig">€'+orig+'</div>'
           +'<div class="pcard-title">'+p.name+'</div>'
           +'<div class="pcard-meta"><span class="pcard-stars">'+stars+'</span><span class="pcard-orders">'+orders+' vendidos</span></div>'
-          +'<div class="pcard-ship">✈ Envío gratis desde China</div>'
+          +'<div class="pcard-ship">'+(XS_TR[XS_LANG]||XS_TR.es).ship_free_china+'</div>'
           +'</div></div>';
       }).join('');
       grid.insertAdjacentHTML('afterbegin', html);
@@ -432,22 +432,22 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
   </div>
   <div class="cat-bar">
     <div class="cat-bar-inner">
-      <a href="#" class="cat-link active">📱 Electrónica</a>
-      <a href="#" class="cat-link">👗 Moda Mujer</a>
-      <a href="#" class="cat-link">👔 Moda Hombre</a>
-      <a href="#" class="cat-link">🏠 Hogar & Jardín</a>
-      <a href="#" class="cat-link">💄 Belleza & Salud</a>
-      <a href="#" class="cat-link">⚽ Deportes</a>
-      <a href="#" class="cat-link">🧸 Bebé & Mamá</a>
-      <a href="#" class="cat-link">🚗 Automóvil</a>
-      <a href="#" class="cat-link">🎮 Juguetes</a>
-      <a href="#" class="cat-link">💎 Joyería</a>
-      <a href="#" class="cat-link">👜 Bolsos</a>
-      <a href="#" class="cat-link">💻 Computadoras</a>
-      <a href="#" class="cat-link">👟 Zapatos</a>
-      <a href="#" class="cat-link">🔒 Seguridad</a>
-      <a href="#" class="cat-link">💡 Iluminación</a>
-      <a href="#" class="cat-link">🍵 Alimentos</a>
+      <a href="#" class="cat-link active" data-i18n="cat_electronics">📱 Electrónica</a>
+      <a href="#" class="cat-link" data-i18n="cat_women">👗 Moda Mujer</a>
+      <a href="#" class="cat-link" data-i18n="cat_men">👔 Moda Hombre</a>
+      <a href="#" class="cat-link" data-i18n="cat_home">🏠 Hogar & Jardín</a>
+      <a href="#" class="cat-link" data-i18n="cat_beauty">💄 Belleza & Salud</a>
+      <a href="#" class="cat-link" data-i18n="cat_sports">⚽ Deportes</a>
+      <a href="#" class="cat-link" data-i18n="cat_baby">🧸 Bebé & Mamá</a>
+      <a href="#" class="cat-link" data-i18n="cat_auto">🚗 Automóvil</a>
+      <a href="#" class="cat-link" data-i18n="cat_toys">🎮 Juguetes</a>
+      <a href="#" class="cat-link" data-i18n="cat_jewelry">💎 Joyería</a>
+      <a href="#" class="cat-link" data-i18n="cat_bags">👜 Bolsos</a>
+      <a href="#" class="cat-link" data-i18n="cat_computers">💻 Computadoras</a>
+      <a href="#" class="cat-link" data-i18n="cat_shoes">👟 Zapatos</a>
+      <a href="#" class="cat-link" data-i18n="cat_security">🔒 Seguridad</a>
+      <a href="#" class="cat-link" data-i18n="cat_lighting">💡 Iluminación</a>
+      <a href="#" class="cat-link" data-i18n="cat_food">🍵 Alimentos</a>
     </div>
   </div>
 </nav>
@@ -458,22 +458,22 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div class="hero-row">
   <!-- Left sidebar -->
   <div class="hero-cats">
-    <div class="hcat-item">📱 Electrónica <span class="arr">›</span></div>
-    <div class="hcat-item">👗 Moda Mujer <span class="arr">›</span></div>
-    <div class="hcat-item">👔 Moda Hombre <span class="arr">›</span></div>
-    <div class="hcat-item">🏠 Hogar & Jardín <span class="arr">›</span></div>
-    <div class="hcat-item">💄 Belleza & Salud <span class="arr">›</span></div>
-    <div class="hcat-item">⚽ Deportes <span class="arr">›</span></div>
-    <div class="hcat-item">🧸 Bebé & Mamá <span class="arr">›</span></div>
-    <div class="hcat-item">🚗 Automóvil <span class="arr">›</span></div>
-    <div class="hcat-item">🎮 Juguetes <span class="arr">›</span></div>
-    <div class="hcat-item">💎 Joyería & Relojes <span class="arr">›</span></div>
-    <div class="hcat-item">👜 Bolsos & Maletas <span class="arr">›</span></div>
-    <div class="hcat-item">💻 Computadoras <span class="arr">›</span></div>
-    <div class="hcat-item">👟 Zapatos <span class="arr">›</span></div>
-    <div class="hcat-item">🔒 Seguridad <span class="arr">›</span></div>
-    <div class="hcat-item">💡 Iluminación <span class="arr">›</span></div>
-    <div class="hcat-item">🍵 Alimentos <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_electronics">📱 Electrónica <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_women">👗 Moda Mujer <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_men">👔 Moda Hombre <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_home">🏠 Hogar & Jardín <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_beauty">💄 Belleza & Salud <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_sports">⚽ Deportes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_baby">🧸 Bebé & Mamá <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_auto">🚗 Automóvil <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_toys">🎮 Juguetes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_jewelry">💎 Joyería & Relojes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_bags">👜 Bolsos & Maletas <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_computers">💻 Computadoras <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_shoes">👟 Zapatos <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_security">🔒 Seguridad <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_lighting">💡 Iluminación <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_food">🍵 Alimentos <span class="arr">›</span></div>
   </div>
 
   <!-- Main banner -->
@@ -555,7 +555,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 
 <!-- ═══════════ ANIMATED PRODUCT TICKER ═══════════ -->
 <div class="prod-ticker-wrap">
-  <div class="prod-ticker-label">🔥 Tendencias</div>
+  <div class="prod-ticker-label" data-i18n="trends_lbl">🔥 Tendencias</div>
   <div class="prod-ticker">
     <div class="prod-ticker-track">
       <div class="ptick"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=80&h=80&fit=crop" alt=""><span>Smartphone -62%</span></div>
@@ -607,23 +607,23 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- ═══════════ ELECTRÓNICA — CATEGORY BLOCK ═══════════ -->
 <div class="cat-block">
   <div class="cat-block-head">
-    <div class="cat-block-title">📱 Electrónica</div>
+    <div class="cat-block-title" data-i18n="cat_electronics">📱 Electrónica</div>
     <a href="#" class="see-more" style="color:#fff;" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="cat-block-body">
     <div class="cat-sidebar">
-      <div class="catsb-item active">Smartphones</div>
-      <div class="catsb-item">Tablets</div>
-      <div class="catsb-item">Laptops</div>
-      <div class="catsb-item">Smart TVs</div>
-      <div class="catsb-item">Auriculares</div>
-      <div class="catsb-item">Smartwatches</div>
-      <div class="catsb-item">Altavoces</div>
-      <div class="catsb-item">Power Banks</div>
-      <div class="catsb-item">Cámaras</div>
-      <div class="catsb-item">Drones</div>
-      <div class="catsb-item">Consolas Gaming</div>
-      <div class="catsb-item">Accesorios</div>
+      <div class="catsb-item active" data-i18n="sub_smartphones">Smartphones</div>
+      <div class="catsb-item" data-i18n="sub_tablets">Tablets</div>
+      <div class="catsb-item" data-i18n="sub_laptops">Laptops</div>
+      <div class="catsb-item" data-i18n="sub_smarttvs">Smart TVs</div>
+      <div class="catsb-item" data-i18n="sub_headphones">Auriculares</div>
+      <div class="catsb-item" data-i18n="sub_smartwatches">Smartwatches</div>
+      <div class="catsb-item" data-i18n="sub_speakers">Altavoces</div>
+      <div class="catsb-item" data-i18n="sub_powerbanks">Power Banks</div>
+      <div class="catsb-item" data-i18n="sub_cameras">Cámaras</div>
+      <div class="catsb-item" data-i18n="sub_drones">Drones</div>
+      <div class="catsb-item" data-i18n="sub_gaming">Consolas Gaming</div>
+      <div class="catsb-item" data-i18n="sub_accessories">Accesorios</div>
     </div>
     <div class="cat-products-area">
       <div class="products-row cols4">
@@ -639,23 +639,23 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- ═══════════ MODA MUJER — CATEGORY BLOCK ═══════════ -->
 <div class="cat-block">
   <div class="cat-block-head">
-    <div class="cat-block-title">👗 Moda Mujer</div>
+    <div class="cat-block-title" data-i18n="cat_women">👗 Moda Mujer</div>
     <a href="#" class="see-more" style="color:#fff;" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="cat-block-body">
     <div class="cat-sidebar">
-      <div class="catsb-item active">Vestidos</div>
-      <div class="catsb-item">Blusas & Tops</div>
-      <div class="catsb-item">Pantalones</div>
-      <div class="catsb-item">Faldas</div>
-      <div class="catsb-item">Chaquetas</div>
-      <div class="catsb-item">Bañadores</div>
-      <div class="catsb-item">Ropa Interior</div>
-      <div class="catsb-item">Ropa Deportiva</div>
-      <div class="catsb-item">Tallas Grandes</div>
-      <div class="catsb-item">Ropa Étnica</div>
-      <div class="catsb-item">Bodas</div>
-      <div class="catsb-item">Maternidad</div>
+      <div class="catsb-item active" data-i18n="sub_dresses">Vestidos</div>
+      <div class="catsb-item" data-i18n="sub_tops">Blusas & Tops</div>
+      <div class="catsb-item" data-i18n="sub_pants">Pantalones</div>
+      <div class="catsb-item" data-i18n="sub_skirts">Faldas</div>
+      <div class="catsb-item" data-i18n="sub_jackets">Chaquetas</div>
+      <div class="catsb-item" data-i18n="sub_swimwear">Bañadores</div>
+      <div class="catsb-item" data-i18n="sub_lingerie">Ropa Interior</div>
+      <div class="catsb-item" data-i18n="sub_sportswear">Ropa Deportiva</div>
+      <div class="catsb-item" data-i18n="sub_plussize">Tallas Grandes</div>
+      <div class="catsb-item" data-i18n="sub_ethnic">Ropa Étnica</div>
+      <div class="catsb-item" data-i18n="sub_wedding">Bodas</div>
+      <div class="catsb-item" data-i18n="sub_maternity">Maternidad</div>
     </div>
     <div class="cat-products-area">
       <div class="products-row cols4">
@@ -671,21 +671,21 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- ═══════════ HOGAR & JARDÍN ═══════════ -->
 <div class="cat-block">
   <div class="cat-block-head">
-    <div class="cat-block-title">🏠 Hogar & Jardín</div>
+    <div class="cat-block-title" data-i18n="cat_home">🏠 Hogar & Jardín</div>
     <a href="#" class="see-more" style="color:#fff;" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="cat-block-body">
     <div class="cat-sidebar">
-      <div class="catsb-item active">Muebles</div>
-      <div class="catsb-item">Ropa de Cama</div>
-      <div class="catsb-item">Cocina</div>
-      <div class="catsb-item">Menaje</div>
-      <div class="catsb-item">Decoración</div>
-      <div class="catsb-item">Baño</div>
-      <div class="catsb-item">Jardín</div>
-      <div class="catsb-item">Herramientas</div>
-      <div class="catsb-item">Limpieza</div>
-      <div class="catsb-item">Solar & Energía</div>
+      <div class="catsb-item active" data-i18n="sub_furniture">Muebles</div>
+      <div class="catsb-item" data-i18n="sub_bedding">Ropa de Cama</div>
+      <div class="catsb-item" data-i18n="sub_kitchen">Cocina</div>
+      <div class="catsb-item" data-i18n="sub_kitchenware">Menaje</div>
+      <div class="catsb-item" data-i18n="sub_decor">Decoración</div>
+      <div class="catsb-item" data-i18n="sub_bathroom">Baño</div>
+      <div class="catsb-item" data-i18n="sub_garden">Jardín</div>
+      <div class="catsb-item" data-i18n="sub_tools">Herramientas</div>
+      <div class="catsb-item" data-i18n="sub_cleaning">Limpieza</div>
+      <div class="catsb-item" data-i18n="sub_solar">Solar & Energía</div>
     </div>
     <div class="cat-products-area">
       <div class="products-row cols4">
@@ -701,21 +701,21 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <!-- ═══════════ BELLEZA & SALUD ═══════════ -->
 <div class="cat-block">
   <div class="cat-block-head">
-    <div class="cat-block-title">💄 Belleza & Salud</div>
+    <div class="cat-block-title" data-i18n="cat_beauty">💄 Belleza & Salud</div>
     <a href="#" class="see-more" style="color:#fff;" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="cat-block-body">
     <div class="cat-sidebar">
-      <div class="catsb-item active">Skincare Facial</div>
-      <div class="catsb-item">Maquillaje</div>
-      <div class="catsb-item">Cabello</div>
-      <div class="catsb-item">Extensiones & Pelucas</div>
-      <div class="catsb-item">Uñas</div>
-      <div class="catsb-item">Perfumes</div>
-      <div class="catsb-item">Cuidado Corporal</div>
-      <div class="catsb-item">Vitaminas</div>
-      <div class="catsb-item">Equipo Médico</div>
-      <div class="catsb-item">Afeitado & Depilación</div>
+      <div class="catsb-item active" data-i18n="sub_skincare">Skincare Facial</div>
+      <div class="catsb-item" data-i18n="sub_makeup">Maquillaje</div>
+      <div class="catsb-item" data-i18n="sub_hair">Cabello</div>
+      <div class="catsb-item" data-i18n="sub_extensions">Extensiones & Pelucas</div>
+      <div class="catsb-item" data-i18n="sub_nails">Uñas</div>
+      <div class="catsb-item" data-i18n="sub_perfumes">Perfumes</div>
+      <div class="catsb-item" data-i18n="sub_bodycare">Cuidado Corporal</div>
+      <div class="catsb-item" data-i18n="sub_vitamins">Vitaminas</div>
+      <div class="catsb-item" data-i18n="sub_medical">Equipo Médico</div>
+      <div class="catsb-item" data-i18n="sub_shaving">Afeitado & Depilación</div>
     </div>
     <div class="cat-products-area">
       <div class="products-row cols4">
@@ -991,7 +991,32 @@ var XS_TR={
     foot_momo:'Mobile Money', foot_card:'Tarjeta Bancaria',
     foot_help:'Centro de Ayuda', foot_privacy:'Política de Privacidad', foot_terms:'Términos de Uso', foot_contact:'Contacto',
     cart_title_txt:'Mi Carrito', cart_subtotal:'Subtotal', cart_ship_lbl:'Envío', cart_ship_free:'Gratis ✈️', cart_total_lbl:'Total',
-    cart_pay_btn:'Pagar con XenderMoney →', cart_continue:'Seguir comprando', cart_promo_ph:'Código promocional', cart_promo_btn:'Aplicar'
+    cart_pay_btn:'Pagar con XenderMoney →', cart_continue:'Seguir comprando', cart_promo_ph:'Código promocional', cart_promo_btn:'Aplicar',
+    trends_lbl:'🔥 Tendencias',
+    cat_electronics:'📱 Electrónica', cat_women:'👗 Moda Mujer', cat_men:'👔 Moda Hombre',
+    cat_home:'🏠 Hogar & Jardín', cat_beauty:'💄 Belleza & Salud', cat_sports:'⚽ Deportes',
+    cat_baby:'🧸 Bebé & Mamá', cat_auto:'🚗 Automóvil', cat_toys:'🎮 Juguetes',
+    cat_jewelry:'💎 Joyería', cat_bags:'👜 Bolsos', cat_computers:'💻 Computadoras',
+    cat_shoes:'👟 Zapatos', cat_security:'🔒 Seguridad', cat_lighting:'💡 Iluminación', cat_food:'🍵 Alimentos',
+    hcat_women:'👗 Moda Mujer', hcat_men:'👔 Moda Hombre', hcat_home:'🏠 Hogar & Jardín',
+    hcat_beauty:'💄 Belleza & Salud', hcat_sports:'⚽ Deportes', hcat_auto:'🚗 Automóvil',
+    hcat_toys:'🎮 Juguetes', hcat_jewelry:'💎 Joyería & Relojes', hcat_bags:'👜 Bolsos & Maletas',
+    sub_smartphones:'Smartphones', sub_tablets:'Tablets', sub_laptops:'Laptops',
+    sub_smarttvs:'Smart TVs', sub_headphones:'Auriculares', sub_smartwatches:'Smartwatches',
+    sub_speakers:'Altavoces', sub_powerbanks:'Power Banks', sub_cameras:'Cámaras',
+    sub_drones:'Drones', sub_gaming:'Consolas Gaming', sub_accessories:'Accesorios',
+    sub_dresses:'Vestidos', sub_tops:'Blusas & Tops', sub_pants:'Pantalones',
+    sub_skirts:'Faldas', sub_jackets:'Chaquetas', sub_swimwear:'Bañadores',
+    sub_lingerie:'Ropa Interior', sub_sportswear:'Ropa Deportiva', sub_plussize:'Tallas Grandes',
+    sub_ethnic:'Ropa Étnica', sub_wedding:'Bodas', sub_maternity:'Maternidad',
+    sub_furniture:'Muebles', sub_bedding:'Ropa de Cama', sub_kitchen:'Cocina',
+    sub_kitchenware:'Menaje', sub_decor:'Decoración', sub_bathroom:'Baño',
+    sub_garden:'Jardín', sub_tools:'Herramientas', sub_cleaning:'Limpieza', sub_solar:'Solar & Energía',
+    sub_skincare:'Skincare Facial', sub_makeup:'Maquillaje', sub_hair:'Cabello',
+    sub_extensions:'Extensiones & Pelucas', sub_nails:'Uñas', sub_perfumes:'Perfumes',
+    sub_bodycare:'Cuidado Corporal', sub_vitamins:'Vitaminas',
+    sub_medical:'Equipo Médico', sub_shaving:'Afeitado & Depilación',
+    ship_free:'✈ Envío gratis', ship_free_china:'✈ Envío gratis desde China'
   },
   en:{
     topbar:'Welcome to XenderShop — Shop globally, pay in Africa 🌍 &nbsp;|&nbsp; Free shipping on orders +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Download the app</a>',
@@ -1020,7 +1045,32 @@ var XS_TR={
     foot_momo:'Mobile Money', foot_card:'Bank Card',
     foot_help:'Help Center', foot_privacy:'Privacy Policy', foot_terms:'Terms of Use', foot_contact:'Contact',
     cart_title_txt:'My Cart', cart_subtotal:'Subtotal', cart_ship_lbl:'Shipping', cart_ship_free:'Free ✈️', cart_total_lbl:'Total',
-    cart_pay_btn:'Pay with XenderMoney →', cart_continue:'Continue shopping', cart_promo_ph:'Promo code', cart_promo_btn:'Apply'
+    cart_pay_btn:'Pay with XenderMoney →', cart_continue:'Continue shopping', cart_promo_ph:'Promo code', cart_promo_btn:'Apply',
+    trends_lbl:'🔥 Trends',
+    cat_electronics:'📱 Electronics', cat_women:'👗 Women\'s Fashion', cat_men:'👔 Men\'s Fashion',
+    cat_home:'🏠 Home & Garden', cat_beauty:'💄 Beauty & Health', cat_sports:'⚽ Sports',
+    cat_baby:'🧸 Baby & Mom', cat_auto:'🚗 Automotive', cat_toys:'🎮 Toys',
+    cat_jewelry:'💎 Jewelry', cat_bags:'👜 Bags', cat_computers:'💻 Computers',
+    cat_shoes:'👟 Shoes', cat_security:'🔒 Security', cat_lighting:'💡 Lighting', cat_food:'🍵 Food',
+    hcat_women:'👗 Women\'s Fashion', hcat_men:'👔 Men\'s Fashion', hcat_home:'🏠 Home & Garden',
+    hcat_beauty:'💄 Beauty & Health', hcat_sports:'⚽ Sports', hcat_auto:'🚗 Automotive',
+    hcat_toys:'🎮 Toys', hcat_jewelry:'💎 Jewelry & Watches', hcat_bags:'👜 Bags & Luggage',
+    sub_smartphones:'Smartphones', sub_tablets:'Tablets', sub_laptops:'Laptops',
+    sub_smarttvs:'Smart TVs', sub_headphones:'Headphones', sub_smartwatches:'Smartwatches',
+    sub_speakers:'Speakers', sub_powerbanks:'Power Banks', sub_cameras:'Cameras',
+    sub_drones:'Drones', sub_gaming:'Gaming Consoles', sub_accessories:'Accessories',
+    sub_dresses:'Dresses', sub_tops:'Tops & Blouses', sub_pants:'Pants',
+    sub_skirts:'Skirts', sub_jackets:'Jackets', sub_swimwear:'Swimwear',
+    sub_lingerie:'Lingerie', sub_sportswear:'Sportswear', sub_plussize:'Plus Sizes',
+    sub_ethnic:'Ethnic Wear', sub_wedding:'Weddings', sub_maternity:'Maternity',
+    sub_furniture:'Furniture', sub_bedding:'Bedding', sub_kitchen:'Kitchen',
+    sub_kitchenware:'Kitchenware', sub_decor:'Decoration', sub_bathroom:'Bathroom',
+    sub_garden:'Garden', sub_tools:'Tools', sub_cleaning:'Cleaning', sub_solar:'Solar & Energy',
+    sub_skincare:'Facial Skincare', sub_makeup:'Makeup', sub_hair:'Hair',
+    sub_extensions:'Extensions & Wigs', sub_nails:'Nails', sub_perfumes:'Perfumes',
+    sub_bodycare:'Body Care', sub_vitamins:'Vitamins',
+    sub_medical:'Medical Equipment', sub_shaving:'Shaving & Waxing',
+    ship_free:'✈ Free shipping', ship_free_china:'✈ Free shipping from China'
   },
   fr:{
     topbar:'Bienvenue sur XenderShop — Achetez global, payez en Afrique 🌍 &nbsp;|&nbsp; Livraison gratuite dès +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Télécharger l\'app</a>',
@@ -1049,7 +1099,32 @@ var XS_TR={
     foot_momo:'Mobile Money', foot_card:'Carte Bancaire',
     foot_help:"Centre d'Aide", foot_privacy:'Politique de Confidentialité', foot_terms:"Conditions d'Utilisation", foot_contact:'Contact',
     cart_title_txt:'Mon Panier', cart_subtotal:'Sous-total', cart_ship_lbl:'Livraison', cart_ship_free:'Gratuit ✈️', cart_total_lbl:'Total',
-    cart_pay_btn:'Payer avec XenderMoney →', cart_continue:'Continuer les achats', cart_promo_ph:'Code promo', cart_promo_btn:'Appliquer'
+    cart_pay_btn:'Payer avec XenderMoney →', cart_continue:'Continuer les achats', cart_promo_ph:'Code promo', cart_promo_btn:'Appliquer',
+    trends_lbl:'🔥 Tendances',
+    cat_electronics:'📱 Électronique', cat_women:'👗 Mode Femme', cat_men:'👔 Mode Homme',
+    cat_home:'🏠 Maison & Jardin', cat_beauty:'💄 Beauté & Santé', cat_sports:'⚽ Sports',
+    cat_baby:'🧸 Bébé & Maman', cat_auto:'🚗 Automobile', cat_toys:'🎮 Jouets',
+    cat_jewelry:'💎 Bijoux', cat_bags:'👜 Sacs', cat_computers:'💻 Ordinateurs',
+    cat_shoes:'👟 Chaussures', cat_security:'🔒 Sécurité', cat_lighting:'💡 Éclairage', cat_food:'🍵 Alimentation',
+    hcat_women:'👗 Mode Femme', hcat_men:'👔 Mode Homme', hcat_home:'🏠 Maison & Jardin',
+    hcat_beauty:'💄 Beauté & Santé', hcat_sports:'⚽ Sports', hcat_auto:'🚗 Automobile',
+    hcat_toys:'🎮 Jouets', hcat_jewelry:'💎 Bijoux & Montres', hcat_bags:'👜 Sacs & Bagages',
+    sub_smartphones:'Smartphones', sub_tablets:'Tablettes', sub_laptops:'Laptops',
+    sub_smarttvs:'Smart TVs', sub_headphones:'Casques & Écouteurs', sub_smartwatches:'Smartwatches',
+    sub_speakers:'Enceintes', sub_powerbanks:'Power Banks', sub_cameras:'Appareils photo',
+    sub_drones:'Drones', sub_gaming:'Consoles Gaming', sub_accessories:'Accessoires',
+    sub_dresses:'Robes', sub_tops:'Tops & Blouses', sub_pants:'Pantalons',
+    sub_skirts:'Jupes', sub_jackets:'Vestes', sub_swimwear:'Maillots de bain',
+    sub_lingerie:'Lingerie', sub_sportswear:'Vêtements de sport', sub_plussize:'Grandes Tailles',
+    sub_ethnic:'Tenues Ethniques', sub_wedding:'Mariages', sub_maternity:'Maternité',
+    sub_furniture:'Meubles', sub_bedding:'Literie', sub_kitchen:'Cuisine',
+    sub_kitchenware:'Vaisselle', sub_decor:'Décoration', sub_bathroom:'Salle de bain',
+    sub_garden:'Jardin', sub_tools:'Outils', sub_cleaning:'Nettoyage', sub_solar:'Solaire & Énergie',
+    sub_skincare:'Soins Visage', sub_makeup:'Maquillage', sub_hair:'Cheveux',
+    sub_extensions:'Extensions & Perruques', sub_nails:'Ongles', sub_perfumes:'Parfums',
+    sub_bodycare:'Soins Corps', sub_vitamins:'Vitamines',
+    sub_medical:'Équipement Médical', sub_shaving:'Rasage & Épilation',
+    ship_free:'✈ Livraison gratuite', ship_free_china:'✈ Livraison gratuite depuis Chine'
   }
 };
 var XS_LANG=localStorage.getItem('xs_lang')||'es';
