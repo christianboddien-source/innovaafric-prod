@@ -808,20 +808,181 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     </div>
   </div>
   <!-- Promo code -->
-  <div style="padding:0 24px 12px;"><div style="display:flex;gap:8px;"><input id="promo-input" type="text" placeholder="Código promocional" style="flex:1;border:1px solid #e8e8e8;border-radius:8px;padding:10px 12px;font-size:13px;outline:none;"><button onclick="applyPromo()" style="background:#FF4010;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aplicar</button></div></div>
+  <div style="padding:0 24px 12px;"><div style="display:flex;gap:8px;"><input id="promo-input" type="text" data-i18n-ph="cart_promo_ph" placeholder="Código promocional" style="flex:1;border:1px solid #e8e8e8;border-radius:8px;padding:10px 12px;font-size:13px;outline:none;"><button onclick="applyPromo()" data-i18n="cart_promo_btn" style="background:#FF4010;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aplicar</button></div></div>
+
+  <!-- DELIVERY OPTION -->
+  <div style="padding:12px 24px;border-top:1px solid #f0f0f0;">
+    <div style="font-size:11px;font-weight:700;color:#1a1a1a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;" data-i18n="del_title">🚚 Xender Delivery</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <label id="del-none-row" style="display:flex;align-items:center;justify-content:space-between;border:2px solid #22C55E;border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .2s;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="radio" name="xs-delivery" value="none" id="del-none" checked onchange="xsUpdateDelivery()" style="accent-color:#FF4010;width:15px;height:15px;">
+          <span style="font-size:12px;font-weight:600;" data-i18n="del_none">Sin delivery</span>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:#22C55E;" data-i18n="cart_ship_free">Gratis ✈️</span>
+      </label>
+      <label id="del-std-row" style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e8e8e8;border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .2s;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="radio" name="xs-delivery" value="std" id="del-std" onchange="xsUpdateDelivery()" style="accent-color:#FF4010;width:15px;height:15px;">
+          <div>
+            <div style="font-size:12px;font-weight:700;" data-i18n="del_std">🚚 Estándar 2–4 días</div>
+            <div style="font-size:10px;color:#999;" data-i18n="del_std_sub">Entrega a domicilio</div>
+          </div>
+        </div>
+        <span style="font-size:12px;font-weight:800;color:#FF4010;">€2.99</span>
+      </label>
+      <label id="del-exp-row" style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e8e8e8;border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .2s;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="radio" name="xs-delivery" value="exp" id="del-exp" onchange="xsUpdateDelivery()" style="accent-color:#FF4010;width:15px;height:15px;">
+          <div>
+            <div style="font-size:12px;font-weight:700;" data-i18n="del_exp">⚡ Express 24h</div>
+            <div style="font-size:10px;color:#999;" data-i18n="del_exp_sub">Ciudades principales</div>
+          </div>
+        </div>
+        <span style="font-size:12px;font-weight:800;color:#FF4010;">€5.99</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- PAYMENT METHODS -->
+  <div style="padding:12px 24px;border-top:1px solid #f0f0f0;">
+    <div style="font-size:11px;font-weight:700;color:#1a1a1a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;" data-i18n="pay_title">💳 Método de pago</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
+      <button onclick="xsSelectPay('xm')" id="xspm-xm" style="border:2px solid #FF4010;border-radius:8px;padding:9px 6px;background:#fff8f6;cursor:pointer;font-size:11px;font-weight:800;color:#FF4010;transition:all .2s;" data-i18n="pay_xm">💰 XenderMoney</button>
+      <button onclick="xsSelectPay('paypal')" id="xspm-paypal" style="border:2px solid #e8e8e8;border-radius:8px;padding:9px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#003087;transition:all .2s;" data-i18n="pay_paypal">🅿 PayPal</button>
+      <button onclick="xsSelectPay('card')" id="xspm-card" style="border:2px solid #e8e8e8;border-radius:8px;padding:9px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#1A1F71;transition:all .2s;" data-i18n="pay_card">💳 Visa / MC</button>
+      <button onclick="xsSelectPay('apple')" id="xspm-apple" style="border:2px solid #e8e8e8;border-radius:8px;padding:9px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#000;transition:all .2s;" data-i18n="pay_apple">🍎 Apple Pay</button>
+    </div>
+  </div>
+
   <!-- Summary -->
-  <div style="padding:16px 24px;border-top:1px solid #f0f0f0;background:#fafafa;">
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:6px;"><span data-i18n="cart_subtotal">Subtotal</span><span>€137.48</span></div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:6px;"><span data-i18n="cart_ship_lbl">Envío</span><span data-i18n="cart_ship_free">Gratis ✈️</span></div>
-    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:16px;padding-top:10px;border-top:1px solid #e8e8e8;"><span data-i18n="cart_total_lbl">Total</span><span style="color:#FF4010;">€137.48</span></div>
-    <button onclick="xsCheckout()" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;" data-i18n="cart_pay_btn">Pagar con XenderMoney →</button>
+  <div style="padding:14px 24px 16px;border-top:1px solid #f0f0f0;background:#fafafa;">
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:5px;"><span data-i18n="cart_subtotal">Subtotal</span><span id="xs-subtotal-val">€0.00</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:5px;"><span data-i18n="cart_ship_lbl">Envío</span><span data-i18n="cart_ship_free">Gratis ✈️</span></div>
+    <div id="xs-delivery-row" style="display:none;justify-content:space-between;font-size:13px;color:#FF4010;margin-bottom:5px;">
+      <span id="xs-delivery-lbl" data-i18n="del_std">🚚 Delivery</span>
+      <span id="xs-delivery-val">€0.00</span>
+    </div>
+    <div id="xs-discount-row" style="display:none;justify-content:space-between;font-size:13px;color:#22C55E;margin-bottom:5px;">
+      <span>🎟 Promo</span><span id="xs-discount-val">-€0.00</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:900;color:#1a1a1a;margin-bottom:14px;padding-top:10px;border-top:1px solid #e8e8e8;"><span data-i18n="cart_total_lbl">Total</span><span style="color:#FF4010;" id="xs-total-val">€0.00</span></div>
+    <button onclick="xsCheckout()" id="xs-pay-btn" style="width:100%;background:#FF4010;color:#fff;border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;" data-i18n="cart_pay_btn">Pagar con XenderMoney →</button>
     <button onclick="closeCart()" style="width:100%;background:none;border:none;padding:10px;font-size:13px;color:#999;cursor:pointer;margin-top:4px;" data-i18n="cart_continue">Seguir comprando</button>
   </div>
 </div>
 <script>
 function openCart(){document.getElementById('cart-sidebar').style.right='0';document.getElementById('cart-overlay').style.display='block';document.body.style.overflow='hidden';}
 function closeCart(){document.getElementById('cart-sidebar').style.right='-420px';document.getElementById('cart-overlay').style.display='none';document.body.style.overflow='';}
-function cartQty(btn,d){var sp=btn.parentElement.querySelector('span');var v=parseInt(sp.textContent)+d;if(v<1)v=1;sp.textContent=v;}
+function cartQty(btn,d){
+  var sp=btn.parentElement.querySelector('span');
+  var v=parseInt(sp.textContent)+d;
+  if(v<1)v=1;
+  sp.textContent=v;
+  xsRecalcCart();
+}
+
+var xsDeliveryMode='none';
+var xsPayMethod='xm';
+
+function xsRecalcCart(){
+  var items=document.querySelectorAll('#cart-sidebar .pcard-price, #cart-sidebar [style*="font-weight:900"][style*="color:#FF4010"]');
+  // Calculate subtotal from qty × price in cart items
+  var sub=0;
+  document.querySelectorAll('#cart-sidebar [style*="padding:14px 0"], #cart-sidebar [style*="padding:14px 0;border-bottom"]').forEach(function(row){
+    var priceEl=row.querySelector('[style*="font-weight:900"][style*="FF4010"]');
+    var qtyEl=row.querySelector('span[style*="min-width"]');
+    if(priceEl&&qtyEl){
+      var price=parseFloat(priceEl.textContent.replace(/[^0-9.]/g,''))||0;
+      var qty=parseInt(qtyEl.textContent)||1;
+      sub+=price*qty;
+    }
+  });
+  if(sub===0){
+    // fallback: read from subtotal display
+    var sv=document.getElementById('xs-subtotal-val');
+    if(sv) sub=parseFloat(sv.textContent.replace(/[^0-9.]/g,''))||0;
+  }
+  var delCosts={none:0,std:2.99,exp:5.99};
+  var delCost=delCosts[xsDeliveryMode]||0;
+  var discountEl=document.getElementById('xs-discount-val');
+  var discount=discountEl?parseFloat(discountEl.textContent.replace(/[^0-9.]/g,''))||0:0;
+  if(sub>0) document.getElementById('xs-subtotal-val').textContent='€'+sub.toFixed(2);
+  document.getElementById('xs-total-val').textContent='€'+(sub+delCost-discount).toFixed(2);
+}
+
+function xsUpdateDelivery(){
+  var sel=document.querySelector('input[name="xs-delivery"]:checked');
+  xsDeliveryMode=sel?sel.value:'none';
+  var delCosts={none:0,std:2.99,exp:5.99};
+  var delCost=delCosts[xsDeliveryMode]||0;
+  var T=XS_TR[XS_LANG]||XS_TR.es;
+  var delRow=document.getElementById('xs-delivery-row');
+  if(delCost>0){
+    delRow.style.display='flex';
+    document.getElementById('xs-delivery-val').textContent='€'+delCost.toFixed(2);
+    document.getElementById('xs-delivery-lbl').textContent=xsDeliveryMode==='exp'?(T.del_exp||'⚡ Express 24h'):(T.del_std||'🚚 Estándar');
+  } else {
+    delRow.style.display='none';
+  }
+  // Border highlight
+  var rows={none:'del-none-row',std:'del-std-row',exp:'del-exp-row'};
+  Object.keys(rows).forEach(function(k){
+    var el=document.getElementById(rows[k]);
+    if(el) el.style.borderColor=k===xsDeliveryMode?(k==='none'?'#22C55E':'#FF4010'):'#e8e8e8';
+  });
+  xsRecalcCart();
+}
+
+function xsSelectPay(method){
+  xsPayMethod=method;
+  var T=XS_TR[XS_LANG]||XS_TR.es;
+  var methods=['xm','paypal','card','apple'];
+  var colors={xm:'#FF4010',paypal:'#003087',card:'#1A1F71',apple:'#000'};
+  var bgs={xm:'#fff8f6',paypal:'#f0f4ff',card:'#f0f2ff',apple:'#f5f5f5'};
+  methods.forEach(function(m){
+    var el=document.getElementById('xspm-'+m);
+    if(!el) return;
+    var active=m===method;
+    el.style.borderColor=active?colors[m]:'#e8e8e8';
+    el.style.background=active?bgs[m]:'#fff';
+  });
+  var btn=document.getElementById('xs-pay-btn');
+  var btnTexts={
+    xm:T.cart_pay_btn||'Pagar con XenderMoney →',
+    paypal:T.pay_btn_paypal||'Pagar con PayPal →',
+    card:T.pay_btn_card||'Pagar con tarjeta →',
+    apple:T.pay_btn_apple||'Apple Pay →'
+  };
+  var btnColors={xm:'#FF4010',paypal:'#003087',card:'#1A1F71',apple:'#000'};
+  btn.textContent=btnTexts[method];
+  btn.style.background=btnColors[method]||'#FF4010';
+  // Remove data-i18n so setLang doesn't overwrite
+  btn.removeAttribute('data-i18n');
+}
+
+// Re-run delivery/pay labels when language changes
+var _origSetLang=setLang;
+setLang=function(l){
+  _origSetLang(l);
+  // Refresh delivery row label
+  var T=XS_TR[l]||XS_TR.es;
+  if(xsDeliveryMode!=='none'){
+    var lbl=document.getElementById('xs-delivery-lbl');
+    if(lbl) lbl.textContent=xsDeliveryMode==='exp'?(T.del_exp||'⚡ Express 24h'):(T.del_std||'🚚 Estándar');
+  }
+  // Refresh pay button if XenderMoney selected
+  if(xsPayMethod==='xm'){
+    var btn=document.getElementById('xs-pay-btn');
+    if(btn){btn.textContent=T.cart_pay_btn||'Pagar con XenderMoney →';btn.setAttribute('data-i18n','cart_pay_btn');}
+  }
+  // Refresh pay method button labels
+  var payKeys={xm:'pay_xm',paypal:'pay_paypal',card:'pay_card',apple:'pay_apple'};
+  Object.keys(payKeys).forEach(function(m){
+    var el=document.getElementById('xspm-'+m);
+    if(el&&T[payKeys[m]]) el.textContent=T[payKeys[m]];
+  });
+};
 /* applyPromo defined in head — Supabase-backed */
 </script>
 
@@ -992,6 +1153,10 @@ var XS_TR={
     foot_help:'Centro de Ayuda', foot_privacy:'Política de Privacidad', foot_terms:'Términos de Uso', foot_contact:'Contacto',
     cart_title_txt:'Mi Carrito', cart_subtotal:'Subtotal', cart_ship_lbl:'Envío', cart_ship_free:'Gratis ✈️', cart_total_lbl:'Total',
     cart_pay_btn:'Pagar con XenderMoney →', cart_continue:'Seguir comprando', cart_promo_ph:'Código promocional', cart_promo_btn:'Aplicar',
+    del_title:'🚚 Xender Delivery', del_none:'Sin delivery', del_std:'🚚 Estándar 2–4 días', del_std_sub:'Entrega a domicilio', del_exp:'⚡ Express 24h', del_exp_sub:'Ciudades principales',
+    pay_title:'💳 Método de pago', pay_xm:'💰 XenderMoney', pay_paypal:'🅿 PayPal', pay_card:'💳 Visa / MC', pay_apple:'🍎 Apple Pay',
+    pay_btn_paypal:'Pagar con PayPal →', pay_btn_card:'Pagar con tarjeta →', pay_btn_apple:'Apple Pay →',
+    del_row_lbl:'Delivery',
     trends_lbl:'🔥 Tendencias',
     cat_electronics:'📱 Electrónica', cat_women:'👗 Moda Mujer', cat_men:'👔 Moda Hombre',
     cat_home:'🏠 Hogar & Jardín', cat_beauty:'💄 Belleza & Salud', cat_sports:'⚽ Deportes',
@@ -1047,6 +1212,10 @@ var XS_TR={
     foot_help:'Help Center', foot_privacy:'Privacy Policy', foot_terms:'Terms of Use', foot_contact:'Contact',
     cart_title_txt:'My Cart', cart_subtotal:'Subtotal', cart_ship_lbl:'Shipping', cart_ship_free:'Free ✈️', cart_total_lbl:'Total',
     cart_pay_btn:'Pay with XenderMoney →', cart_continue:'Continue shopping', cart_promo_ph:'Promo code', cart_promo_btn:'Apply',
+    del_title:'🚚 Xender Delivery', del_none:'No delivery', del_std:'🚚 Standard 2–4 days', del_std_sub:'Home delivery', del_exp:'⚡ Express 24h', del_exp_sub:'Main cities',
+    pay_title:'💳 Payment method', pay_xm:'💰 XenderMoney', pay_paypal:'🅿 PayPal', pay_card:'💳 Visa / MC', pay_apple:'🍎 Apple Pay',
+    pay_btn_paypal:'Pay with PayPal →', pay_btn_card:'Pay by card →', pay_btn_apple:'Apple Pay →',
+    del_row_lbl:'Delivery',
     trends_lbl:'🔥 Trends',
     cat_electronics:'📱 Electronics', cat_women:'👗 Women\'s Fashion', cat_men:'👔 Men\'s Fashion',
     cat_home:'🏠 Home & Garden', cat_beauty:'💄 Beauty & Health', cat_sports:'⚽ Sports',
@@ -1102,6 +1271,10 @@ var XS_TR={
     foot_help:"Centre d'Aide", foot_privacy:'Politique de Confidentialité', foot_terms:"Conditions d'Utilisation", foot_contact:'Contact',
     cart_title_txt:'Mon Panier', cart_subtotal:'Sous-total', cart_ship_lbl:'Livraison', cart_ship_free:'Gratuit ✈️', cart_total_lbl:'Total',
     cart_pay_btn:'Payer avec XenderMoney →', cart_continue:'Continuer les achats', cart_promo_ph:'Code promo', cart_promo_btn:'Appliquer',
+    del_title:'🚚 Xender Delivery', del_none:'Sans livraison', del_std:'🚚 Standard 2–4 jours', del_std_sub:'Livraison à domicile', del_exp:'⚡ Express 24h', del_exp_sub:'Grandes villes',
+    pay_title:'💳 Méthode de paiement', pay_xm:'💰 XenderMoney', pay_paypal:'🅿 PayPal', pay_card:'💳 Visa / MC', pay_apple:'🍎 Apple Pay',
+    pay_btn_paypal:'Payer avec PayPal →', pay_btn_card:'Payer par carte →', pay_btn_apple:'Apple Pay →',
+    del_row_lbl:'Livraison',
     trends_lbl:'🔥 Tendances',
     cat_electronics:'📱 Électronique', cat_women:'👗 Mode Femme', cat_men:'👔 Mode Homme',
     cat_home:'🏠 Maison & Jardin', cat_beauty:'💄 Beauté & Santé', cat_sports:'⚽ Sports',

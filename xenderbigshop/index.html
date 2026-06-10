@@ -1582,6 +1582,49 @@ function calcLote(){
   document.getElementById('lb-result').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;"><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">TOTAL LOTE</div><div style="font-size:26px;font-weight:900;color:#E0921A;">'+sym[cur]+(total.toFixed(2))+'</div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;">PRECIO/UNIDAD</div><div style="font-size:26px;font-weight:900;color:#10B981;">'+sym[cur]+(perUnit.toFixed(3))+'</div></div></div>';
 }
 function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.getElementById('bs-'+x).style.display=x===t?'block':'none';document.getElementById('bst-'+x).style.background=x===t?'#E0921A':'rgba(255,255,255,0.07)';document.getElementById('bst-'+x).style.color=x===t?'#fff':'rgba(255,255,255,0.6)';});}
+
+/* ── BIGSHOP PAYMENT + DELIVERY ── */
+var bsPayMethod='xendermoney';
+var bsDeliveryMode='none';
+var bsDeliveryCosts={none:0,std:4.99,exp:9.99};
+
+function bsSelectPay(btn,method){
+  bsPayMethod=method;
+  document.getElementById('bs-pay-method').value=method;
+  var colors={xendermoney:'#E0921A',paypal:'#003087',card:'#1A1F71',apple:'#000',mtn:'#F5A623',orange:'#FF6600'};
+  var bgs={xendermoney:'#fff8f0',paypal:'#f0f4ff',card:'#f0f2ff',apple:'#f5f5f5',mtn:'#fffbf0',orange:'#fff5f0'};
+  document.querySelectorAll('#bs-pay-grid button').forEach(function(b){
+    b.style.borderColor='#e2e8f0';
+    b.style.background='#fff';
+  });
+  btn.style.borderColor=colors[method]||'#E0921A';
+  btn.style.background=bgs[method]||'#fff8f0';
+  // Update submit button label
+  var labels={xendermoney:'💰 Pagar con XenderMoney →',paypal:'🅿 Pagar con PayPal →',card:'💳 Pagar con tarjeta →',apple:'🍎 Apple Pay →',mtn:'📱 Pagar con MTN MoMo →',orange:'🟠 Pagar con Orange Money →'};
+  var submitBtn=document.getElementById('bs-submit-btn');
+  if(submitBtn) submitBtn.textContent=labels[method]||'Acceder al catálogo mayorista →';
+}
+
+function bsUpdateDelivery(){
+  var sel=document.querySelector('input[name="bs-delivery"]:checked');
+  bsDeliveryMode=sel?sel.value:'none';
+  var cost=bsDeliveryCosts[bsDeliveryMode]||0;
+  // Border highlights
+  var rows={none:'bsdel-none-row',std:'bsdel-std-row',exp:'bsdel-exp-row'};
+  Object.keys(rows).forEach(function(k){
+    var el=document.getElementById(rows[k]);
+    if(el) el.style.borderColor=k===bsDeliveryMode?(k==='none'?'#22C55E':'#E0921A'):'#e2e8f0';
+  });
+  // Show delivery summary
+  var summary=document.getElementById('bs-delivery-summary');
+  if(cost>0){
+    summary.style.display='block';
+    var labels={std:'🚚 Xender Delivery Estándar 3–5 días',exp:'⚡ Xender Delivery Express 24–48h'};
+    summary.textContent=(labels[bsDeliveryMode]||'🚚 Delivery')+' · +€'+cost.toFixed(2)+' al total del pedido';
+  } else {
+    summary.style.display='none';
+  }
+}
 /* submitBS defined in head — Supabase-backed */
 </script>
 
@@ -1628,19 +1671,60 @@ function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.get
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select>
         </div>
-        <div>
-          <label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Método de cobro preferido *</label>
-          <select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;">
-            <option value="xendermoney" selected>⭐ XenderMoney</option>
-            <option>MTN MoMo</option>
-            <option>Orange Money</option>
-            <option>Wave</option>
-            <option>Transferencia bancaria</option>
-            <option>Visa / Mastercard</option>
-          </select></div>
+        <!-- PAYMENT METHODS VISUAL -->
+        <div style="grid-column:1/-1;">
+          <label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:10px;">💳 Método de pago *</label>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="bs-pay-grid">
+            <button type="button" onclick="bsSelectPay(this,'xendermoney')" style="border:2px solid #E0921A;border-radius:10px;padding:10px 6px;background:#fff8f0;cursor:pointer;font-size:11px;font-weight:800;color:#E0921A;transition:all .2s;">💰 XenderMoney</button>
+            <button type="button" onclick="bsSelectPay(this,'paypal')" style="border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#003087;transition:all .2s;">🅿 PayPal</button>
+            <button type="button" onclick="bsSelectPay(this,'card')" style="border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#1A1F71;transition:all .2s;">💳 Visa / MC</button>
+            <button type="button" onclick="bsSelectPay(this,'apple')" style="border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#000;transition:all .2s;">🍎 Apple Pay</button>
+            <button type="button" onclick="bsSelectPay(this,'mtn')" style="border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#FFCB05;transition:all .2s;color:#333;">📱 MTN MoMo</button>
+            <button type="button" onclick="bsSelectPay(this,'orange')" style="border:2px solid #e2e8f0;border-radius:10px;padding:10px 6px;background:#fff;cursor:pointer;font-size:11px;font-weight:800;color:#FF6600;transition:all .2s;">🟠 Orange Money</button>
+          </div>
+          <input type="hidden" id="bs-pay-method" name="pay_method" value="xendermoney">
+        </div>
+
+        <!-- DELIVERY OPTION -->
+        <div style="grid-column:1/-1;">
+          <label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:10px;">🚚 Opción de entrega (Xender Delivery)</label>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label style="display:flex;align-items:center;justify-content:space-between;border:2px solid #22C55E;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .2s;" id="bsdel-none-row">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="radio" name="bs-delivery" value="none" checked onchange="bsUpdateDelivery()" style="accent-color:#E0921A;">
+                <span style="font-size:13px;font-weight:600;">Sin delivery — recojo yo mismo</span>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:#22C55E;">Gratis</span>
+            </label>
+            <label style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .2s;" id="bsdel-std-row">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="radio" name="bs-delivery" value="std" onchange="bsUpdateDelivery()" style="accent-color:#E0921A;">
+                <div>
+                  <div style="font-size:13px;font-weight:700;">🚚 Xender Delivery Estándar — 3–5 días</div>
+                  <div style="font-size:11px;color:#999;">Entrega en almacén o domicilio</div>
+                </div>
+              </div>
+              <span style="font-size:13px;font-weight:800;color:#E0921A;">€4.99</span>
+            </label>
+            <label style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .2s;" id="bsdel-exp-row">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="radio" name="bs-delivery" value="exp" onchange="bsUpdateDelivery()" style="accent-color:#E0921A;">
+                <div>
+                  <div style="font-size:13px;font-weight:700;">⚡ Xender Delivery Express — 24–48h</div>
+                  <div style="font-size:11px;color:#999;">Ciudades principales · Prioritario</div>
+                </div>
+              </div>
+              <span style="font-size:13px;font-weight:800;color:#E0921A;">€9.99</span>
+            </label>
+          </div>
+        </div>
+
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#666;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#E0921A;"> Acepto las <a href="#" style="color:#E0921A;">Condiciones B2B</a> y la política de escrow</label></div>
-        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#E0921A;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Acceder al catálogo mayorista →</button></div>
+        <div style="grid-column:1/-1;" id="bs-submit-row">
+          <div id="bs-delivery-summary" style="display:none;background:#fff8f0;border:1px solid rgba(224,146,26,0.3);border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#E0921A;font-weight:600;"></div>
+          <button type="submit" id="bs-submit-btn" style="width:100%;padding:15px;background:#E0921A;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Acceder al catálogo mayorista →</button>
+        </div>
       </form>
     </div>
     <!-- PROVEEDOR -->
