@@ -556,10 +556,10 @@
 <nav>
   <a href="#" class="logo"><img src="assets/logo.svg" alt="XenderMoney" height="48" style="display:block;"></a>
   <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#mobilemoney">Mobile Money</a></li>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#features" data-i18n="nav_feat">Features</a></li>
+    <li><a href="#mobilemoney" data-i18n="nav_mm">Mobile Money</a></li>
+    <li><a href="#how" data-i18n="nav_how_lnk">How it works</a></li>
+    <li><a href="#pricing" data-i18n="nav_price">Pricing</a></li>
   </ul>
   <div class="lang-switcher">
     <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸 ES</button>
@@ -574,11 +574,11 @@
 </nav>
 <div class="ham-overlay-xm" id="ham-xm">
   <button onclick="toggleHamXm()" style="position:absolute;top:24px;right:24px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;">✕</button>
-  <a href="#features" onclick="toggleHamXm()">⚡ Features</a>
-  <a href="#mobilemoney" onclick="toggleHamXm()">📱 Mobile Money</a>
-  <a href="#calculadora-xm" onclick="toggleHamXm()">🧮 Calculadora</a>
-  <a href="#pricing" onclick="toggleHamXm()">💲 Pricing</a>
-  <a href="#" onclick="openModal('modal-xm');return false;" onclick="toggleHamXm()" style="background:#F5A623;color:#0D2B4E;padding:14px 32px;border-radius:12px;font-weight:900;">🚀 Open Account</a>
+  <a href="#features" onclick="toggleHamXm()" data-i18n="nav_feat">⚡ Features</a>
+  <a href="#mobilemoney" onclick="toggleHamXm()" data-i18n="nav_mm">📱 Mobile Money</a>
+  <a href="#calculadora-xm" onclick="toggleHamXm()" data-i18n="nav_calc">🧮 Calculadora</a>
+  <a href="#pricing" onclick="toggleHamXm()" data-i18n="nav_price">💲 Pricing</a>
+  <a href="#" onclick="openModal('modal-xm');return false;" data-i18n="nav_open_account" style="background:#F5A623;color:#0D2B4E;padding:14px 32px;border-radius:12px;font-weight:900;">🚀 Open Account</a>
 </div>
 
 <!-- HERO -->
@@ -1728,7 +1728,9 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       deep_label:'En Profundidad', deep_h:'Cada Servicio.<br/>Una App.', deep_sub:'Desde micropréstamos hasta ahorro grupal, desde la tienda hasta la entrega — todo integrado en una wallet.',
       deep_s1:'Micropréstamos', deep_s2:'Ahorro Grupal', deep_s3:'Facturas y Servicios', deep_s4:'Integración Tienda',
       cov_label:'Cobertura', cov_h:'35 Países.<br/>3 Continentes.', cov_sub:'XenderMoney opera en Asia, Europa y África. Envía y recibe en tu moneda local — al instante.',
-      fx_label:'Tasas en Vivo', fx_h:'Tasas de Cambio en Tiempo Real', fx_sub:'Actualizadas cada 60 segundos. Sin comisiones ocultas. Lo que ves es lo que envías.'
+      fx_label:'Tasas en Vivo', fx_h:'Tasas de Cambio en Tiempo Real', fx_sub:'Actualizadas cada 60 segundos. Sin comisiones ocultas. Lo que ves es lo que envías.',
+      nav_feat:'Funciones', nav_mm:'Mobile Money', nav_how_lnk:'Cómo funciona', nav_price:'Precios',
+      nav_calc:'Calculadora', nav_open_account:'🚀 Abrir Cuenta'
     },
     en:{
       nav_login:'Log in', nav_open:'Open account',
@@ -1787,7 +1789,9 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       deep_label:'Deep Dive', deep_h:'Every Service.<br/>One Pocket App.', deep_sub:'From micro-loans to group savings, from shop to delivery — everything integrated in one wallet.',
       deep_s1:'Micro-Loans', deep_s2:'Group Savings', deep_s3:'Bills & Utilities', deep_s4:'Shop Integration',
       cov_label:'Coverage', cov_h:'35 Countries.<br/>3 Continents.', cov_sub:'XenderMoney operates across Asia, Europe and Africa. Send and receive in your local currency — instantly.',
-      fx_label:'Live Rates', fx_h:'Real-Time Exchange Rates', fx_sub:'Updated every 60 seconds. Zero hidden fees. What you see is what you send.'
+      fx_label:'Live Rates', fx_h:'Real-Time Exchange Rates', fx_sub:'Updated every 60 seconds. Zero hidden fees. What you see is what you send.',
+      nav_feat:'Features', nav_mm:'Mobile Money', nav_how_lnk:'How it works', nav_price:'Pricing',
+      nav_calc:'Calculator', nav_open_account:'🚀 Open Account'
     },
     fr:{
       nav_login:'Se connecter', nav_open:'Ouvrir un compte',
@@ -1846,7 +1850,9 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       deep_label:'En Profondeur', deep_h:'Chaque Service.<br/>Une App.', deep_sub:"Des micro-prêts à l'épargne de groupe, de la boutique à la livraison — tout intégré dans un wallet.",
       deep_s1:'Micro-Prêts', deep_s2:'Épargne de Groupe', deep_s3:'Factures et Services', deep_s4:'Intégration Boutique',
       cov_label:'Couverture', cov_h:'35 Pays.<br/>3 Continents.', cov_sub:"XenderMoney opère en Asie, Europe et Afrique. Envoyez et recevez dans votre monnaie locale — instantanément.",
-      fx_label:'Taux en Direct', fx_h:'Taux de Change en Temps Réel', fx_sub:"Mis à jour toutes les 60 secondes. Zéro frais cachés. Ce que vous voyez est ce que vous envoyez."
+      fx_label:'Taux en Direct', fx_h:'Taux de Change en Temps Réel', fx_sub:"Mis à jour toutes les 60 secondes. Zéro frais cachés. Ce que vous voyez est ce que vous envoyez.",
+      nav_feat:'Fonctionnalités', nav_mm:'Mobile Money', nav_how_lnk:'Comment ça marche', nav_price:'Tarifs',
+      nav_calc:'Calculateur', nav_open_account:"🚀 Ouvrir un Compte"
     }
   };
 
