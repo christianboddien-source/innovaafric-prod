@@ -1,5 +1,5 @@
-const CACHE = 'innovaafric-v6';
-const PAGES = ['/app', '/', '/money', '/shop', '/delivery', '/bigshop', '/perfil'];
+const CACHE = 'innovaafric-v8';
+const PAGES = ['/'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -18,15 +18,16 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   // solo cachear GET de páginas propias
   if(e.request.method !== 'GET') return;
-  if(e.request.url.includes('/v1/')) return; // no cachear API
+  if(e.request.url.includes('/v1/')) return;        // no cachear API Railway
+  if(e.request.url.includes('supabase.co')) return; // no cachear Supabase
 
+  // RED PRIMERO: las actualizaciones llegan al instante; la caché solo
+  // se usa sin conexión. (Antes era cache-first y los móviles se quedaban
+  // con versiones viejas de la app — el saldo nunca se actualizaba.)
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      const network = fetch(e.request).then(res => {
-        if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-        return res;
-      }).catch(() => cached);
-      return cached || network;
-    })
+    fetch(e.request).then(res => {
+      if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+      return res;
+    }).catch(() => caches.match(e.request))
   );
 });

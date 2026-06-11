@@ -1936,8 +1936,10 @@ function sbAuthFetch(email, password) {
     body: JSON.stringify({ email: email, password: password })
   }).then(function(r) { return r.json(); });
 }
-var _token = null;       // Railway JWT
+var _token = localStorage.getItem('inn_rail_token') || null; // Railway JWT (persistido — antes se perdía al recargar)
 var _sbToken = null;     // Supabase JWT
+setInterval(function(){ if(_token){ localStorage.setItem('inn_rail_token', _token); } }, 2000);
+window.addEventListener('DOMContentLoaded', function(){ if(_token && typeof loadBalance==='function'){ setTimeout(loadBalance, 600); } });
 var _user  = JSON.parse(localStorage.getItem('inn_user') || 'null');
 
 function sbGet(table, filters) {
