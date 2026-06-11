@@ -7629,13 +7629,49 @@ async function loadDashboard(){
 // ── USERS ─────────────────────────────────────────────────
 async function loadUsers(){
   try{
-    const{data:users,count}=await SB.from('users').select('*',{count:'exact'}).order('created_at',{ascending:false});
+    const{data:users}=await SB.from('users').select('*',{count:'exact'}).order('created_at',{ascending:false});
     const{data:wallets}=await SB.from('wallets').select('user_id,eur,xaf,usd,points');
+
+    // ── Railway = FUENTE DE VERDAD de los saldos ──
+    // Supabase aporta el directorio (direcciones, etc.); el dinero viene del API.
+    var railUsers=[];
+    try{
+      var rr=await rwAPI('GET','/admin/users?limit=2000');
+      if(rr&&rr.success&&rr.data&&rr.data.items)railUsers=rr.data.items;
+    }catch(_){ /* sin Railway: fallback a saldos Supabase */ }
+    var railByEmail={};
+    railUsers.forEach(function(ru){ if(ru.email)railByEmail[ru.email.toLowerCase()]=ru; });
+
     ALL_USERS=(users||[]).map(u=>{
       const w=(wallets||[]).find(ww=>ww.user_id===u.id)||{};
-      return{...u,eur:w.eur||0,xaf:w.xaf||0,usd:w.usd||0,points:w.points||0,_wallet:w};
+      const ru=railByEmail[(u.email||'').toLowerCase()];
+      const rw=ru&&ru.wallet?ru.wallet:null;
+      // saldo: Railway si el usuario existe allí; si no, el de Supabase
+      const bal=rw
+        ?{eur:rw.balanceEur||0,xaf:rw.balanceXaf||0,usd:rw.balanceUsd||0,xof:rw.balanceXof||0}
+        :{eur:w.eur||0,xaf:w.xaf||0,usd:w.usd||0};
+      const pin=(ru&&ru.has_pin)?'railway':u.pin_hash;
+      return{...u,eur:bal.eur,xaf:bal.xaf,usd:bal.usd,points:w.points||0,_wallet:bal,
+             pin_hash:pin,_railway:!!ru,_railwayId:ru?ru.id:null,
+             kyc_status:ru?ru.kycStatus:(u.kyc_status||u.kyc_level)};
     });
-    document.getElementById('users-count-label').textContent=(count||0)+' usuarios registrados';
+
+    // Usuarios que solo existen en Railway (creados por las apps del ecosistema)
+    var sbEmails={};(users||[]).forEach(function(su){if(su.email)sbEmails[su.email.toLowerCase()]=1;});
+    railUsers.forEach(function(ru){
+      if(ru.email&&!sbEmails[ru.email.toLowerCase()]){
+        var rw2=ru.wallet||{};
+        var bal2={eur:rw2.balanceEur||0,xaf:rw2.balanceXaf||0,usd:rw2.balanceUsd||0};
+        ALL_USERS.push({id:ru.id,email:ru.email,full_name:ru.name,role:ru.role,
+          country:ru.country,city:ru.city,phone:ru.phone,created_at:ru.createdAt,
+          pin_hash:ru.has_pin?'railway':null,is_blocked:!!ru.blocked,
+          eur:bal2.eur,xaf:bal2.xaf,usd:bal2.usd,points:0,_wallet:bal2,
+          _railway:true,_railwayId:ru.id,kyc_status:ru.kycStatus});
+      }
+    });
+
+    document.getElementById('users-count-label').textContent=
+      ALL_USERS.length+' usuarios'+(railUsers.length?' · saldos sincronizados con Railway ✓':' · ⚠ saldos Supabase (Railway no disponible)');
     renderUsers(ALL_USERS);
   }catch(e){toast('Error: '+e.message,'error');}
 }
@@ -7987,7 +8023,33 @@ async function loadWallets(){
   try{
     const{data}=await SB.from('wallets').select('*,user:user_id(full_name,email,role)');
     const tb=document.getElementById('tb-wallets');
-    tb.innerHTML=(data||[]).length?(data||[]).map(w=>`<tr>
+
+    // ── Railway = FUENTE DE VERDAD de los saldos ──
+    var railUsersW=[];
+    try{
+      var rrw=await rwAPI('GET','/admin/users?limit=2000');
+      if(rrw&&rrw.success&&rrw.data&&rrw.data.items)railUsersW=rrw.data.items;
+    }catch(_){}
+    var railWByEmail={};
+    railUsersW.forEach(function(ru){ if(ru.email)railWByEmail[ru.email.toLowerCase()]=ru; });
+    var rows=(data||[]).map(function(w){
+      var ru=railWByEmail[((w.user&&w.user.email)||'').toLowerCase()];
+      if(ru&&ru.wallet){
+        return Object.assign({},w,{eur:ru.wallet.balanceEur||0,xaf:ru.wallet.balanceXaf||0,usd:ru.wallet.balanceUsd||0});
+      }
+      return w;
+    });
+    // Wallets que solo existen en Railway (cuentas de las apps)
+    var sbEmailsW={};(data||[]).forEach(function(w){var e=(w.user&&w.user.email)||'';if(e)sbEmailsW[e.toLowerCase()]=1;});
+    railUsersW.forEach(function(ru){
+      if(ru.email&&!sbEmailsW[ru.email.toLowerCase()]&&ru.wallet){
+        rows.push({user_id:ru.id,user:{full_name:ru.name,email:ru.email,role:ru.role},
+          eur:ru.wallet.balanceEur||0,xaf:ru.wallet.balanceXaf||0,usd:ru.wallet.balanceUsd||0,
+          points:0,updated_at:null});
+      }
+    });
+
+    tb.innerHTML=(rows||[]).length?(rows||[]).map(w=>`<tr>
       <td><div class="user-cell"><div class="uc-av" style="background:${avColor(w.user?.email||'x')};color:#000">${initials(w.user?.full_name||w.user?.email||'?')}</div><div><div class="uc-name">${w.user?.full_name||'—'}</div><div class="uc-email">${w.user?.email||''}</div></div></div></td>
       <td style="font-family:var(--mono);font-weight:700;color:${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'#f87171':'var(--cyan)'}">€${Number(w.eur).toFixed(2)}${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'<span title="Techo EUR alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':Number(w.eur)===0?'':' <span style="font-size:9px;color:var(--muted)">/ €3k</span>'}</td>
       <td style="font-family:var(--mono);color:${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'#f87171':'var(--muted)'}">  ${Math.round(w.xaf).toLocaleString('es')}${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'<span title="Techo XAF alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
@@ -8015,6 +8077,12 @@ async function openRecharge(uid,name){
     document.getElementById('cur-xaf').textContent=Math.round(w?.xaf||0).toLocaleString('es');
     document.getElementById('cur-usd').textContent=Number(w?.usd||0).toFixed(2);
   }catch(e){document.getElementById('cur-eur').textContent='0.00';document.getElementById('cur-xaf').textContent='0';document.getElementById('cur-usd').textContent='0.00';}
+  // Mostrar el saldo real de Railway si el usuario está sincronizado
+  if(user&&user._wallet&&user._railway){
+    document.getElementById('cur-eur').textContent=Number(user._wallet.eur||0).toFixed(2);
+    document.getElementById('cur-xaf').textContent=Math.round(user._wallet.xaf||0).toLocaleString('es');
+    document.getElementById('cur-usd').textContent=Number(user._wallet.usd||0).toFixed(2);
+  }
   openModal('m-recharge');
 }
 const WALLET_LIMITS={EUR:{cap:3000,reloadThreshold:2800},USD:{cap:3000,reloadThreshold:2800},XAF:{cap:2000000,reloadThreshold:1800000},XOF:{cap:2000000,reloadThreshold:1800000}};
@@ -8038,11 +8106,27 @@ async function doRecharge(){
     if(curX>WALLET_LIMITS.XAF.reloadThreshold){toast('❌ XAF: saldo ('+curX.toLocaleString()+') supera el umbral ('+WALLET_LIMITS.XAF.reloadThreshold.toLocaleString()+' XAF).','error');return;}
     if(curX+addX>WALLET_LIMITS.XAF.cap){toast('❌ XAF: superaría el techo de '+WALLET_LIMITS.XAF.cap.toLocaleString()+' XAF.','error');return;}
   }
+  // ── Railway = FUENTE DE VERDAD: recargar primero en el API ──
+  var au=(typeof ALL_USERS!=='undefined'?ALL_USERS:[]).find(function(x){return x.id===uid;})||{};
+  var railId=au._railwayId||(au._railway?au.id:null);
+  if(railId){
+    var ops=[];
+    if(addE>0)ops.push(['EUR',addE]);
+    if(addX>0)ops.push(['XAF',addX]);
+    if(addU>0)ops.push(['USD',addU]);
+    for(var oi=0;oi<ops.length;oi++){
+      var rr=await rwAPI('POST','/admin/wallet/topup',{user_id:railId,amount:ops[oi][1],currency:ops[oi][0]});
+      if(!rr||!rr.success){toast('❌ Railway ('+ops[oi][0]+'): '+((rr&&rr.error)||'error'),'error');return;}
+    }
+  }else{
+    toast('⚠ Usuario sin cuenta Railway — la recarga solo quedará en Supabase','error');
+  }
+  // Espejo en Supabase (directorio legacy)
   const{error}=await SB.from('wallets').update({eur:curE+addE,xaf:curX+addX,usd:curU+addU,points:Number(w?.points||0)+addP}).eq('user_id',uid);
-  if(error){toast('Error: '+error.message,'error');return;}
+  if(error&&!railId){toast('Error: '+error.message,'error');return;}
   closeModal('m-recharge');
-  toast('✅ Wallet recargado','success');
-  logAdminAction('recharge','Wallet '+uid+' recargado: €'+addE+' XAF'+addX);
+  toast(railId?'✅ Recargado en Railway ✓ (fuente de verdad) + espejo Supabase':'✅ Wallet recargado','success');
+  logAdminAction('recharge','Wallet '+uid+' recargado: €'+addE+' XAF'+addX+(railId?' [Railway '+railId+']':' [solo Supabase]'));
   setTimeout(()=>{loadDashboard();if(CURRENT_PAGE==='wallets')loadWallets();if(CURRENT_PAGE==='users')loadUsers();},300);
 }
 async function doRechargeAll(){
@@ -8051,6 +8135,12 @@ async function doRechargeAll(){
   const addU=Number(document.getElementById('all-usd').value)||0;
   const addP=Number(document.getElementById('all-pts').value)||0;
   const{data:ws}=await SB.from('wallets').select('*,user:user_id(email)');
+  // Mapa de usuarios Railway para espejar la recarga masiva (fuente de verdad)
+  var railBulk={};
+  try{
+    var rb=await rwAPI('GET','/admin/users?limit=2000');
+    if(rb&&rb.success&&rb.data&&rb.data.items)rb.data.items.forEach(function(ru){if(ru.email)railBulk[ru.email.toLowerCase()]=ru;});
+  }catch(_){}
   let cnt=0, skipped=0;
   for(const w of ws||[]){
     if(w.user?.email==='admin@innovaafric.com')continue;
@@ -8062,6 +8152,13 @@ async function doRechargeAll(){
     const changed=newE!==curE||newX!==curX||newU!==curU||addP>0;
     if(!changed){skipped++;continue;}
     await SB.from('wallets').update({eur:newE,xaf:newX,usd:newU,points:Number(w.points||0)+addP}).eq('user_id',w.user_id);
+    // Espejo en Railway (deltas por divisa; sus propios techos aplican)
+    var ruB=railBulk[((w.user&&w.user.email)||'').toLowerCase()];
+    if(ruB){
+      if(newE>curE)await rwAPI('POST','/admin/wallet/topup',{user_id:ruB.id,amount:newE-curE,currency:'EUR'}).catch(function(){});
+      if(newX>curX)await rwAPI('POST','/admin/wallet/topup',{user_id:ruB.id,amount:newX-curX,currency:'XAF'}).catch(function(){});
+      if(newU>curU)await rwAPI('POST','/admin/wallet/topup',{user_id:ruB.id,amount:newU-curU,currency:'USD'}).catch(function(){});
+    }
     cnt++;
   }
   closeModal('m-all-recharge');
