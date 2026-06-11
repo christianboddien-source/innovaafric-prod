@@ -5026,6 +5026,19 @@ select.form-input option{background:var(--s2)}
       <tbody id="tb-merchants"></tbody>
     </table>
   </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-hdr" style="display:flex;justify-content:space-between;align-items:center">
+      <div><div class="card-title">📱 Comercios con App de Comandas (/comercio)</div><div class="card-sub">Reciben pedidos XenderBigShop y avisan a los riders</div></div>
+      <button class="topbar-btn btn-primary" onclick="createComercioApp()">➕ Crear comercio con app</button>
+    </div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table class="tbl">
+        <thead><tr><th>Comercio</th><th>Email</th><th>Ciudad</th><th>Categoría</th><th>QR cobro</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-comercios"><tr><td colspan="7" class="td-empty">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <div id="m-create-merchant" class="modal-overlay" onclick="closeModal('m-create-merchant')">
@@ -18028,7 +18041,7 @@ function exportSLAPDF(){
   var _navV26=nav;
   nav=function(page,el){
     _navV26(page,el);
-    if(page==='merchant-onboarding')loadMerchants();
+    if(page==='merchant-onboarding'){loadMerchants();loadComercios();}
     if(page==='refunds')loadRefunds();
     if(page==='marketplace')loadMarketplace();
     if(page==='reviews')loadReviews();
@@ -18079,6 +18092,96 @@ var PROMOS_DATA=[
   {code:'RAMADAN2026',type:'porcentaje',value:15,uses:1200,limit:2000,expires:'2026-04-30',status:'expirado'},
   {code:'TECH10',type:'porcentaje',value:10,uses:67,limit:300,expires:'2026-08-31',status:'activo'}
 ];
+
+/* ── COMERCIOS CON APP (/comercio) ──────────────────────────── */
+async function loadComercios(){
+  var tb=document.getElementById('tb-comercios');
+  if(!tb)return;
+  var r=await rwAPI('GET','/comercio/list');
+  if(!r||!r.success){tb.innerHTML='<tr><td colspan="7" class="td-empty">Railway no disponible</td></tr>';return;}
+  var list=(r.data&&r.data.merchants)||[];
+  if(!list.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin comercios con app — crea el primero</td></tr>';return;}
+  tb.innerHTML=list.map(function(m){
+    return '<tr>'+
+      '<td style="font-weight:600">'+m.name+'</td>'+
+      '<td style="font-size:11px">'+(m.user&&m.user.email||'—')+'</td>'+
+      '<td>'+(m.city||'—')+' · '+(m.country||'')+'</td>'+
+      '<td>'+(m.category||'—')+'</td>'+
+      '<td><span style="font-family:var(--mono);font-size:10px;background:var(--s3);padding:2px 6px;border-radius:4px">'+m.qrCode+'</span></td>'+
+      '<td>'+(m.active?'<span class="pill pill-green">Activo</span>':'<span class="pill pill-red">Suspendido</span>')+'</td>'+
+      '<td style="white-space:nowrap">'+
+        (m.userId?'<button class="btn-secondary" style="font-size:10px;padding:3px 8px" onclick="generateAccessURL(\''+m.userId+'\',\''+m.name.replace(/'/g,'')+'\',\'comercio\')">🔗 URL app</button> ':'')+
+        '<button class="btn-secondary" style="font-size:10px;padding:3px 8px" onclick="toggleComercio(\''+m.id+'\','+(!m.active)+')">'+(m.active?'Suspender':'Activar')+'</button>'+
+      '</td></tr>';
+  }).join('');
+}
+
+async function toggleComercio(id,active){
+  var r=await rwAPI('PATCH','/comercio/'+id+'/active',{active:active});
+  if(r&&r.success){showToast(r.data.message);loadComercios();}
+  else showToast('❌ '+((r&&r.error)||'Error'),'error');
+}
+
+function createComercioApp(){
+  var old=document.getElementById('com-create-overlay');if(old)old.remove();
+  var ov=document.createElement('div');
+  ov.id='com-create-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  ov.innerHTML='<div style="background:var(--s1,#121826);border:1px solid var(--b1);border-radius:14px;padding:22px;width:min(440px,92vw);max-height:85vh;overflow-y:auto">'+
+    '<div style="font-size:15px;font-weight:700;margin-bottom:4px">🏪 Crear comercio con app</div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:14px">Crea el usuario y el comercio en un paso. Recibirá la app /comercio para gestionar sus comandas.</div>'+
+    '<div style="display:grid;gap:10px">'+
+      '<label style="font-size:11px;color:var(--muted)">Nombre del comercio<input id="cca-name" class="inp" placeholder="Ej: Mini Market Bonabéri"></label>'+
+      '<label style="font-size:11px;color:var(--muted)">Email (login)<input id="cca-email" class="inp" type="email" placeholder="comercio@email.com"></label>'+
+      '<label style="font-size:11px;color:var(--muted)">Teléfono<input id="cca-phone" class="inp" placeholder="+237..."></label>'+
+      '<label style="font-size:11px;color:var(--muted)">Dirección<input id="cca-address" class="inp" placeholder="Avenida..., nº"></label>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+        '<label style="font-size:11px;color:var(--muted)">Ciudad<input id="cca-city" class="inp" placeholder="Duala"></label>'+
+        '<label style="font-size:11px;color:var(--muted)">País<input id="cca-country" class="inp" placeholder="Camerún"></label>'+
+      '</div>'+
+      '<label style="font-size:11px;color:var(--muted)">Categoría<input id="cca-category" class="inp" placeholder="Alimentación"></label>'+
+      '<label style="font-size:11px;color:var(--muted)">Contraseña (vacío = generada automáticamente)<input id="cca-pass" class="inp" placeholder="opcional"></label>'+
+    '</div>'+
+    '<div id="cca-result" style="margin-top:12px;font-size:12px"></div>'+
+    '<div style="display:flex;gap:10px;margin-top:14px">'+
+      '<button class="topbar-btn btn-primary" style="flex:1" id="cca-btn" onclick="submitComercioApp()">Crear comercio</button>'+
+      '<button class="topbar-btn btn-ghost" style="flex:1" onclick="document.getElementById(\'com-create-overlay\').remove()">Cancelar</button>'+
+    '</div></div>';
+  document.body.appendChild(ov);
+}
+
+async function submitComercioApp(){
+  var body={
+    name:document.getElementById('cca-name').value.trim(),
+    email:document.getElementById('cca-email').value.trim(),
+    phone:document.getElementById('cca-phone').value.trim(),
+    address:document.getElementById('cca-address').value.trim(),
+    city:document.getElementById('cca-city').value.trim(),
+    country:document.getElementById('cca-country').value.trim(),
+    category:document.getElementById('cca-category').value.trim()
+  };
+  var pass=document.getElementById('cca-pass').value;
+  if(pass)body.password=pass;
+  if(!body.name||!body.email||!body.country){
+    document.getElementById('cca-result').innerHTML='<span style="color:var(--red)">Nombre, email y país son obligatorios</span>';return;
+  }
+  document.getElementById('cca-btn').disabled=true;
+  var r=await rwAPI('POST','/comercio/register',body);
+  document.getElementById('cca-btn').disabled=false;
+  if(r&&r.success){
+    var d=r.data;
+    document.getElementById('cca-result').innerHTML=
+      '<div style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.4);border-radius:8px;padding:10px">'+
+      '<b>'+d.message+'</b><br>App: <a href="'+d.appUrl+'" target="_blank" style="color:var(--cyan)">'+d.appUrl+'</a><br>'+
+      'Login: <b>'+d.credentials.email+'</b>'+(d.credentials.password?' · Contraseña: <b>'+d.credentials.password+'</b>':'')+'<br>'+
+      '<span style="color:var(--muted)">'+d.credentials.note+'</span></div>';
+    showToast('✅ Comercio creado');
+    loadComercios();
+  }else{
+    document.getElementById('cca-result').innerHTML='<span style="color:var(--red)">❌ '+((r&&r.error)||'Error al crear')+'</span>';
+  }
+}
 
 /* ── MERCHANTS ──────────────────────────────────────────────── */
 async function loadMerchants(){
