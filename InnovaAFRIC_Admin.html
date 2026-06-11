@@ -9993,6 +9993,33 @@ function generateAccessURLForRole(role,label){
   }
 }
 
+// ── CIRCULARES: generar URL de su app (/circular) ─────────
+async function pickCircularForURL(){
+  var r=await rwAPI('GET','/circulares');
+  if(!r||!r.success){showToast('❌ No se pudo cargar la lista de circulares','error');return;}
+  var list=(r.data&&r.data.circulares)||[];
+  if(!list.length){showToast('⚠️ No hay Circulares Autorizadas registradas todavía.','error');return;}
+  // Overlay propio con la lista de circulares para elegir
+  var old=document.getElementById('circ-pick-overlay');if(old)old.remove();
+  var ov=document.createElement('div');
+  ov.id='circ-pick-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var rows=list.map(function(c){
+    var u=c.user||{};
+    return '<div onclick=\'document.getElementById("circ-pick-overlay").remove();generateAccessURL("'+u.id+'","'+String(u.name||u.email||'Circular').replace(/"/g,'')+'","circular_autorizada")\' '+
+      'style="padding:11px 14px;border:1px solid var(--b1);border-radius:8px;margin-bottom:8px;cursor:pointer;background:var(--s2)" '+
+      'onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--b1)\'">'+
+      '<div style="font-size:13px;font-weight:600">'+(u.name||u.email||'—')+'</div>'+
+      '<div style="font-size:11px;color:var(--muted)">'+(c.neighborhood||'')+' · '+(c.country||'')+' · '+(c.status==='active'?'✅ activa':c.status)+'</div></div>';
+  }).join('');
+  ov.innerHTML='<div style="background:var(--s1,#121826);border:1px solid var(--b1);border-radius:14px;padding:20px;width:min(420px,92vw);max-height:70vh;overflow-y:auto">'+
+    '<div style="font-size:14px;font-weight:700;margin-bottom:4px">⚡ Elegir Circular Autorizada</div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:14px">La URL generada abre su app de recargas (/circular)</div>'+rows+
+    '<button onclick="document.getElementById(\'circ-pick-overlay\').remove()" style="width:100%;margin-top:6px;background:none;border:1px solid var(--b2);border-radius:8px;padding:8px;color:var(--muted);cursor:pointer;font-size:12px">Cancelar</button></div>';
+  document.body.appendChild(ov);
+}
+
 // ── SIDEBAR MINI (colapsar a iconos) ─────────────────────
 function toggleSidebarMini(){
   var sb=document.querySelector('.sb');
@@ -11174,7 +11201,7 @@ function loadRoles(){
               </div>
               ${r.dashboard?'<span style="font-size:9px;background:var(--cyan-d);color:var(--cyan);padding:1px 6px;border-radius:4px;font-weight:700">DASHBOARD</span>':''}
             </div>
-            ${r.dashboard?`<button onclick="generateAccessURLForRole('${r.role}','${r.label}')" style="margin-top:8px;width:100%;background:none;border:1px solid var(--b2);border-radius:6px;padding:5px;font-size:11px;color:var(--cyan);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--cyan-d)'" onmouseout="this.style.background='none'">🔗 Generar URL para este rol</button>`:''}
+            ${r.dashboard?`<button onclick="generateAccessURLForRole('${r.role}','${r.label}')" style="margin-top:8px;width:100%;background:none;border:1px solid var(--b2);border-radius:6px;padding:5px;font-size:11px;color:var(--cyan);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--cyan-d)'" onmouseout="this.style.background='none'">🔗 Generar URL para este rol</button>`:r.role==='circular_autorizada'?`<button onclick="pickCircularForURL()" style="margin-top:8px;width:100%;background:none;border:1px solid var(--b2);border-radius:6px;padding:5px;font-size:11px;color:var(--cyan);cursor:pointer;transition:all .15s" onmouseover="this.style.background='var(--cyan-d)'" onmouseout="this.style.background='none'">⚡ Generar URL de su app</button>`:''}
 
           </div>`).join('')}
       </div>
