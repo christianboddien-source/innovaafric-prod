@@ -565,6 +565,125 @@
   </div>
 </section>
 
+<!-- HISTORIAS REALES: ANIMACIONES -->
+<style>
+#stories{padding:80px 6% 70px}
+.st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;margin-top:44px}
+.st-card{background:#fff;border:1px solid rgba(10,22,40,.09);box-shadow:0 6px 24px rgba(10,22,40,.06);border-radius:18px;overflow:hidden}
+.st-card svg{display:block;width:100%;height:auto}
+.st-body{padding:18px 20px 22px}
+.st-ttl{font-size:16px;font-weight:800;color:#0A1628;margin-bottom:6px}
+.st-dsc{font-size:13px;line-height:1.6;color:rgba(10,22,40,.65)}
+/* escena 1: envío */
+@keyframes stFly{0%,18%{offset-distance:0%;opacity:0}22%{opacity:1}60%{offset-distance:100%;opacity:1}66%,100%{offset-distance:100%;opacity:0}}
+@keyframes stEur{0%,40%{opacity:1}46%,100%{opacity:0}}
+@keyframes stFcfa{0%,44%{opacity:0}50%,100%{opacity:1}}
+@keyframes stPop{0%,60%{opacity:0;transform:translateY(8px) scale(.6)}68%{opacity:1;transform:translateY(0) scale(1.1)}74%,92%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0}}
+@keyframes stJump{0%,60%{transform:translateY(0)}66%{transform:translateY(-9px)}72%{transform:translateY(0)}78%{transform:translateY(-5px)}84%,100%{transform:translateY(0)}}
+@keyframes stGlow{0%,58%{opacity:.0}64%,84%{opacity:.85}100%{opacity:0}}
+.st-chip{offset-path:path('M118,108 C190,40 290,40 352,104');animation:stFly 7s ease-in-out infinite}
+.st-eur{animation:stEur 7s infinite}.st-fcfa{animation:stFcfa 7s infinite}
+.st-pop{animation:stPop 7s infinite;transform-origin:370px 92px}
+.st-jump{animation:stJump 7s infinite}
+.st-glow{animation:stGlow 7s infinite}
+/* escena 2: pago QR */
+@keyframes stScan{0%,15%{transform:translateY(0);opacity:0}20%{opacity:1}45%{transform:translateY(34px);opacity:1}50%,100%{opacity:0}}
+@keyframes stCheck{0%,50%{opacity:0;transform:scale(.4)}58%{opacity:1;transform:scale(1.15)}64%,90%{opacity:1;transform:scale(1)}100%{opacity:0}}
+@keyframes stBag{0%,58%{opacity:0;transform:translateY(10px)}66%,92%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+@keyframes stBalloon{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+.st-scan{animation:stScan 7s linear infinite}
+.st-check{animation:stCheck 7s infinite;transform-origin:312px 96px}
+.st-bag{animation:stBag 7s infinite}
+.st-balloon{animation:stBalloon 3s ease-in-out infinite}
+</style>
+<section id="stories">
+  <div class="reveal" style="text-align:center">
+    <span class="sec-label" data-i18n="sec_st">Real Stories</span>
+    <h2 class="sec-title" data-i18n="st_h">Made for real families</h2>
+    <p class="sec-sub" data-i18n="st_sub">This is how InnovaAFRIC feels in everyday life — from Madrid to Malabo, from the wallet to the mall.</p>
+  </div>
+  <div class="st-grid">
+
+    <div class="st-card reveal">
+      <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
+        <rect width="230" height="240" fill="#dfeefc"/><rect x="230" width="230" height="240" fill="#fdeedd"/>
+        <circle cx="50" cy="42" r="16" fill="#f7c948"/>
+        <rect x="20" y="120" width="34" height="60" fill="#b9cee4"/><rect x="62" y="100" width="30" height="80" fill="#a7c2dd"/><rect x="100" y="132" width="26" height="48" fill="#c7d9ec"/>
+        <rect y="180" width="230" height="60" fill="#cfe1f3"/>
+        <path d="M395 70 q-6 -28 8 -42 M395 70 q-26 -12 -30 -34 M395 70 q24 -16 34 -8 M395 70 q16 -22 2 -38" stroke="#1e7d4f" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="390" y="68" width="9" height="46" rx="3" fill="#8a5a33"/>
+        <rect x="230" y="180" width="230" height="60" fill="#f8ddbb"/><rect x="230" y="172" width="230" height="10" fill="#76c7e8"/>
+        <text x="115" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#27557f">🇪🇸 Madrid</text>
+        <text x="345" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#9a5b16">🇬🇶 Malabo</text>
+        <g>
+          <circle cx="95" cy="120" r="15" fill="#7a4a28"/><path d="M80 114 a15 15 0 0 1 30 0 z" fill="#241a12"/>
+          <rect x="80" y="136" width="30" height="44" rx="10" fill="#1f6fb2"/>
+          <rect x="106" y="142" width="14" height="22" rx="4" fill="#0A1628"/><rect x="108" y="145" width="10" height="16" rx="2" fill="#29ABE2"/>
+          <text x="95" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#27557f">Neysson</text>
+        </g>
+        <g class="st-jump">
+          <circle cx="370" cy="132" r="12" fill="#8a5a33"/><path d="M358 127 a12 12 0 0 1 24 0 z" fill="#241a12"/>
+          <rect x="358" y="145" width="24" height="35" rx="9" fill="#e0921a"/>
+          <rect x="340" y="150" width="13" height="20" rx="4" fill="#0A1628"/><rect x="342" y="153" width="9" height="14" rx="2" class="st-glow" fill="#34d399"/>
+          <text x="370" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#9a5b16">Jeysson</text>
+        </g>
+        <path d="M118,108 C190,40 290,40 352,104" stroke="#29ABE2" stroke-width="2" stroke-dasharray="5 6" fill="none" opacity=".5"/>
+        <g class="st-chip">
+          <g class="st-eur"><rect x="-30" y="-13" width="60" height="26" rx="13" fill="#1f6fb2"/><text y="5" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">300 €</text></g>
+          <g class="st-fcfa"><rect x="-46" y="-13" width="92" height="26" rx="13" fill="#1e7d4f"/><text y="5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">196 800 F</text></g>
+        </g>
+        <g class="st-pop"><rect x="316" y="78" width="112" height="26" rx="13" fill="#34d399"/><text x="372" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#063">+196 800 FCFA ✓</text></g>
+      </svg>
+      <div class="st-body">
+        <div class="st-ttl" data-i18n="st1_t">Neysson → Jeysson: from Spain to Malabo in seconds</div>
+        <p class="st-dsc" data-i18n="st1_d">Big brother Neysson works in Spain. He sends €300 with XenderMoney — and his little brother Jeysson receives 196 800 FCFA instantly in Malabo, ready to spend or withdraw at his neighborhood Circular.</p>
+      </div>
+    </div>
+
+    <div class="st-card reveal">
+      <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
+        <rect width="460" height="240" fill="#f2f0fb"/>
+        <rect x="20" y="34" width="420" height="14" rx="7" fill="#6c5ce7"/><text x="230" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="#4b3fb5">🛍️ CENTRO COMERCIAL</text>
+        <rect x="30" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="90" y="104" text-anchor="middle" font-size="26">👗</text>
+        <rect x="310" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="370" y="104" text-anchor="middle" font-size="26">👟</text>
+        <rect y="190" width="460" height="50" fill="#e4e0f5"/>
+        <g>
+          <rect x="270" y="60" width="84" height="104" rx="8" fill="#0A1628"/>
+          <rect x="280" y="70" width="64" height="64" rx="4" fill="#fff"/>
+          <g fill="#0A1628">
+            <rect x="284" y="74" width="12" height="12"/><rect x="328" y="74" width="12" height="12"/><rect x="284" y="118" width="12" height="12"/>
+            <rect x="302" y="78" width="6" height="6"/><rect x="314" y="90" width="6" height="6"/><rect x="296" y="98" width="6" height="6"/>
+            <rect x="322" y="104" width="6" height="6"/><rect x="304" y="112" width="6" height="6"/><rect x="330" y="120" width="6" height="6"/>
+          </g>
+          <rect x="280" y="70" width="64" height="3" rx="1.5" fill="#29ABE2" class="st-scan"/>
+          <text x="312" y="156" text-anchor="middle" font-size="9" font-weight="800" fill="#29ABE2">XenderMoney QR</text>
+        </g>
+        <g>
+          <circle cx="175" cy="98" r="15" fill="#7a4a28"/><circle cx="163" cy="84" r="6" fill="#241a12"/><circle cx="187" cy="84" r="6" fill="#241a12"/>
+          <path d="M158 116 q17 -10 34 0 l-5 52 q-12 6 -24 0 z" fill="#e84393"/>
+          <rect x="205" y="108" width="15" height="24" rx="4" fill="#0A1628" transform="rotate(18 212 120)"/>
+          <text x="180" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#4b3fb5">Alysson</text>
+        </g>
+        <g class="st-jump">
+          <circle cx="110" cy="128" r="11" fill="#8a5a33"/><circle cx="101" cy="117" r="5" fill="#241a12"/><circle cx="119" cy="117" r="5" fill="#241a12"/>
+          <path d="M98 141 q12 -8 24 0 l-4 38 q-8 5 -16 0 z" fill="#f7c948"/>
+          <line x1="124" y1="118" x2="138" y2="84" stroke="#888" stroke-width="1.5"/>
+          <g class="st-balloon"><circle cx="138" cy="74" r="11" fill="#ff6b6b"/></g>
+          <text x="112" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#9a5b16" data-i18n="st2_sis">little sister</text>
+        </g>
+        <g class="st-check"><circle cx="312" cy="96" r="22" fill="#34d399"/><text x="312" y="104" text-anchor="middle" font-size="22" fill="#fff">✓</text></g>
+        <g class="st-bag"><rect x="226" y="160" width="22" height="24" rx="3" fill="#e84393"/><path d="M230 160 q6 -10 14 0" stroke="#c2185b" stroke-width="2" fill="none"/><rect x="252" y="164" width="18" height="20" rx="3" fill="#29ABE2"/><path d="M255 164 q6 -8 12 0" stroke="#1b7fae" stroke-width="2" fill="none"/></g>
+        <g class="st-bag"><rect x="150" y="206" width="160" height="22" rx="11" fill="#34d399"/><text x="230" y="221" text-anchor="middle" font-size="11" font-weight="800" fill="#063" data-i18n="st2_paid">✓ Paid with XenderMoney</text></g>
+      </svg>
+      <div class="st-body">
+        <div class="st-ttl" data-i18n="st2_t">Alysson &amp; her little sister: shopping day, zero cash</div>
+        <p class="st-dsc" data-i18n="st2_d">At the mall, Alysson scans the store's XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister continues without ever touching cash.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- TRIANGULAR ECOSYSTEM -->
 <section id="continents">
   <div class="triangle-intro reveal">
@@ -1489,6 +1608,13 @@
       sec_net:'La Red InnovaAFRIC', net_h:'Una red humana. Cinco aplicaciones.',
       net_sub:'Lo último del ecosistema: cada miembro de la red — cliente, agente de barrio, representante, rider y comercio — tiene su propia app conectada en tiempo real.',
       rc_adv:'💡 Una cuenta abre todo el ecosistema', rci_adv:'💡 Gana el 5% en cada compra de unidades', rr_adv:'💡 Gana el 50% del ahorro de su red', rd_adv:'💡 Cobra en el momento de entregar', rm_adv:'💡 Vende más sin esfuerzo logístico',
+      sec_st:'Historias Reales', st_h:'Hecho para familias reales',
+      st_sub:'Así se siente InnovaAFRIC en la vida diaria — de Madrid a Malabo, del wallet al centro comercial.',
+      st1_t:'Neysson → Jeysson: de España a Malabo en segundos',
+      st1_d:'El hermano mayor, Neysson, trabaja en España. Envía 300 € con XenderMoney — y su hermanito Jeysson recibe 196 800 FCFA al instante en Malabo, listos para gastar o retirar en la Circular de su barrio.',
+      st2_t:'Alysson y su hermanita: día de compras, cero efectivo',
+      st2_d:'En el centro comercial, Alysson escanea el QR XenderMoney de la tienda con su móvil. Un toque, pago confirmado — y la tarde de compras con su hermanita continúa sin tocar un billete.',
+      st2_sis:'hermanita', st2_paid:'✓ Pagado con XenderMoney',
       rc_name:'Cliente', rc_tag:'App XenderMoney',
       rc_desc:'Envía dinero, paga a comercios con QR y pide la compra — y luego ve al rider traerla a casa, en vivo en el mapa.',
       rc_f1:'Wallet en 4 divisas (XAF · XOF · EUR · USD)', rc_f2:'QR personal para recargas en efectivo sin errores', rc_f3:'Seguimiento del pedido con el rider en el mapa',
@@ -1629,6 +1755,13 @@
       sec_net:'The InnovaAFRIC Network', net_h:'One human network. Five apps.',
       net_sub:'The latest addition to the ecosystem: every member of the network — client, neighborhood agent, representative, rider and merchant — has their own real-time connected app.',
       rc_adv:'💡 One account unlocks the whole ecosystem', rci_adv:'💡 Earns 5% on every unit purchase', rr_adv:"💡 Earns 50% of his network's savings", rd_adv:'💡 Gets paid the moment he delivers', rm_adv:'💡 Sells more with zero logistics effort',
+      sec_st:'Real Stories', st_h:'Made for real families',
+      st_sub:'This is how InnovaAFRIC feels in everyday life — from Madrid to Malabo, from the wallet to the mall.',
+      st1_t:'Neysson → Jeysson: from Spain to Malabo in seconds',
+      st1_d:'Big brother Neysson works in Spain. He sends €300 with XenderMoney — and his little brother Jeysson receives 196 800 FCFA instantly in Malabo, ready to spend or withdraw at his neighborhood Circular.',
+      st2_t:'Alysson & her little sister: shopping day, zero cash',
+      st2_d:"At the mall, Alysson scans the store's XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister continues without ever touching cash.",
+      st2_sis:'little sister', st2_paid:'✓ Paid with XenderMoney',
       rc_name:'Client', rc_tag:'XenderMoney App',
       rc_desc:'Sends money, pays merchants by QR and orders groceries — then watches the rider bring it home, live on the map.',
       rc_f1:'Wallet in 4 currencies (XAF · XOF · EUR · USD)', rc_f2:'Personal QR for error-free cash top-ups', rc_f3:'Live order tracking with rider on the map',
@@ -1769,6 +1902,13 @@
       sec_net:'Le Réseau InnovaAFRIC', net_h:'Un réseau humain. Cinq applications.',
       net_sub:'La dernière nouveauté de l\'écosystème : chaque membre du réseau — client, agent de quartier, représentant, livreur et commerce — dispose de sa propre application connectée en temps réel.',
       rc_adv:'💡 Un seul compte ouvre tout l\'écosystème', rci_adv:'💡 Gagne 5% sur chaque achat d\'unités', rr_adv:'💡 Gagne 50% des économies de son réseau', rd_adv:'💡 Payé dès la livraison effectuée', rm_adv:'💡 Vend plus sans effort logistique',
+      sec_st:'Histoires Réelles', st_h:'Conçu pour de vraies familles',
+      st_sub:'Voilà comment se vit InnovaAFRIC au quotidien — de Madrid à Malabo, du wallet au centre commercial.',
+      st1_t:'Neysson → Jeysson : d\'Espagne à Malabo en quelques secondes',
+      st1_d:'Le grand frère Neysson travaille en Espagne. Il envoie 300 € avec XenderMoney — et son petit frère Jeysson reçoit 196 800 FCFA instantanément à Malabo, prêts à dépenser ou à retirer chez la Circulaire de son quartier.',
+      st2_t:'Alysson et sa petite sœur : journée shopping, zéro espèces',
+      st2_d:'Au centre commercial, Alysson scanne le QR XenderMoney de la boutique avec son téléphone. Un geste, paiement confirmé — et l\'après-midi shopping avec sa petite sœur continue sans toucher un billet.',
+      st2_sis:'petite sœur', st2_paid:'✓ Payé avec XenderMoney',
       rc_name:'Client', rc_tag:'App XenderMoney',
       rc_desc:'Envoie de l\'argent, paie les commerces par QR et commande ses courses — puis suit le livreur jusqu\'à sa porte, en direct sur la carte.',
       rc_f1:'Wallet en 4 devises (XAF · XOF · EUR · USD)', rc_f2:'QR personnel pour des recharges en espèces sans erreur', rc_f3:'Suivi de commande en direct avec le livreur sur la carte',
