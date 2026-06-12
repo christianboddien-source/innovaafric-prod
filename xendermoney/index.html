@@ -83,21 +83,28 @@
 
     // ── LOGIN ──
     async function xmLogin(e){
-      e.preventDefault();
-      var email = document.getElementById('xm-login-email').value.trim();
-      var btn = document.getElementById('xm-login-btn');
-      btn.textContent = 'Entrando…'; btn.disabled = true;
-      try {
-        var {data: user, error} = await SB.from('users').select('*').eq('email', email).maybeSingle();
-        if(!user){alert('❌ No encontramos una cuenta con ese email.');btn.textContent='Entrar →';btn.disabled=false;return;}
-        xmSetSession({id: user.id, name: user.name, email: user.email, ia_code: user.ia_code, country: user.country});
-        document.getElementById('xm-login-modal').style.display = 'none';
-        await xmShowDashboard(xmGetSession());
-      } catch(err) {
-        alert('❌ Error: ' + (err.message||'inténtalo de nuevo'));
-        btn.textContent = 'Entrar →'; btn.disabled = false;
-      }
-    }
+  e.preventDefault();
+  var email = document.getElementById('xm-login-email').value.trim();
+  var btn = document.getElementById('xm-login-btn');
+  btn.textContent = 'Entrando…'; btn.disabled = true;
+  try {
+    var {data: user, error} = await SB.from('users').select('*').eq('email', email).maybeSingle();
+    if(!user){alert('❌ No encontramos una cuenta con ese email.');btn.textContent='Entrar →';btn.disabled=false;return;}
+    xmSetSession({id: user.id, name: user.name, email: user.email, ia_code: user.ia_code, country: user.country});
+    // Obtener token de Railway para saldos
+    try {
+      var pass = document.getElementById('xm-login-pass') ? document.getElementById('xm-login-pass').value : '';
+      var tokenRes = await fetch('https://api.innovaafric.com/v1/auth/token', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({grant_type:'password',email,password:pass})});
+      var tokenJson = await tokenRes.json();
+      if(tokenJson.access_token) localStorage.setItem('inno_token', tokenJson.access_token);
+    } catch(te){}
+    document.getElementById('xm-login-modal').style.display = 'none';
+    await xmShowDashboard(xmGetSession());
+  } catch(err) {
+    alert('❌ Error: ' + (err.message||'inténtalo de nuevo'));
+    btn.textContent = 'Entrar →'; btn.disabled = false;
+  }
+}
 
     // ── DASHBOARD ──
     async function xmShowDashboard(session){
