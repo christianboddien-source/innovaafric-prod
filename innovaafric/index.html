@@ -431,6 +431,134 @@
   </div>
 </section>
 
+<!-- LA RED INNOVAAFRIC: 5 APPS -->
+<style>
+#network{padding:90px 6% 70px}
+.rl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:46px}
+.rl-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:22px 18px;text-align:center;transition:transform .25s,border-color .25s}
+.rl-card:hover{transform:translateY(-6px);border-color:var(--rc,#29ABE2)}
+.rl-phone{width:128px;height:248px;margin:0 auto 16px;background:#060b14;border:3px solid #1c2940;border-radius:22px;padding:8px 7px;text-align:left;overflow:hidden}
+.rl-screen{height:100%;display:flex;flex-direction:column;gap:5px;font-size:7.5px;color:#cfe3f5}
+.rl-top{display:flex;align-items:center;gap:4px;font-size:8px;font-weight:800;color:#fff}
+.rl-dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+.rl-bal{border-radius:8px;padding:6px 7px;color:#fff}
+.rl-bal small{display:block;font-size:6px;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.rl-bal b{font-size:11px}
+.rl-row{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:4.5px 6px;display:flex;align-items:center;gap:4px}
+.rl-nav{margin-top:auto;display:flex;justify-content:space-around;font-size:9px;background:rgba(255,255,255,.04);border-radius:7px;padding:4px 2px}
+.rl-name{font-size:17px;font-weight:800;color:#fff;margin-bottom:3px}
+.rl-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--rc,#29ABE2);background:rgba(255,255,255,.05);border-radius:6px;padding:3px 9px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.rl-desc{font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.62);margin-bottom:12px}
+.rl-feats{list-style:none;padding:0;margin:0;text-align:left;font-size:11.5px;color:rgba(255,255,255,.55)}
+.rl-feats li{padding:3px 0}
+.rl-feats li::before{content:'✓ ';color:var(--rc,#29ABE2);font-weight:800}
+</style>
+<section id="network">
+  <div class="reveal" style="text-align:center">
+    <span class="sec-label" data-i18n="sec_net">The InnovaAFRIC Network</span>
+    <h2 class="sec-title" data-i18n="net_h">One human network. Five apps.</h2>
+    <p class="sec-sub" data-i18n="net_sub">The latest addition to the ecosystem: every member of the network — client, neighborhood agent, representative, rider and merchant — has their own real-time connected app.</p>
+  </div>
+  <div class="rl-grid">
+
+    <div class="rl-card reveal" style="--rc:#F5A623">
+      <div class="rl-phone"><div class="rl-screen">
+        <div class="rl-top"><span class="rl-dot" style="background:#F5A623"></span> XenderMoney</div>
+        <div class="rl-bal" style="background:linear-gradient(135deg,#7c4d00,#b97712)"><small data-i18n="mk_bal">Total balance</small><b>300 000 XAF</b></div>
+        <div class="rl-row">📤 <span data-i18n="mk_send">Send money</span></div>
+        <div class="rl-row">📱 <span data-i18n="mk_qr">My top-up QR</span></div>
+        <div class="rl-row">📦 <span data-i18n="mk_track">Track my order live</span></div>
+        <div class="rl-nav">🏠 💰 🛒 📦 👤</div>
+      </div></div>
+      <div class="rl-name" data-i18n="rc_name">Client</div>
+      <span class="rl-tag" data-i18n="rc_tag">XenderMoney App</span>
+      <p class="rl-desc" data-i18n="rc_desc">Sends money, pays merchants by QR and orders groceries — then watches the rider bring it home, live on the map.</p>
+      <ul class="rl-feats">
+        <li data-i18n="rc_f1">Wallet in 4 currencies (XAF · XOF · EUR · USD)</li>
+        <li data-i18n="rc_f2">Personal QR for error-free cash top-ups</li>
+        <li data-i18n="rc_f3">Live order tracking with rider on the map</li>
+      </ul>
+    </div>
+
+    <div class="rl-card reveal" style="--rc:#29ABE2">
+      <div class="rl-phone"><div class="rl-screen">
+        <div class="rl-top"><span class="rl-dot" style="background:#29ABE2"></span> Circular</div>
+        <div class="rl-bal" style="background:linear-gradient(135deg,#0c4a6e,#155e75)"><small data-i18n="mk_units">My value units</small><b>154 000</b></div>
+        <div class="rl-row">📷 <span data-i18n="mk_scan">Scan client QR</span></div>
+        <div class="rl-row">💸 <span data-i18n="mk_topup">Top up client</span></div>
+        <div class="rl-row">🧾 <span data-i18n="mk_close">Daily cash closing</span></div>
+        <div class="rl-nav">🏠 💸 🛒 💰 🧾</div>
+      </div></div>
+      <div class="rl-name" data-i18n="rci_name">Authorized Circular</div>
+      <span class="rl-tag" data-i18n="rci_tag">Neighborhood Agent</span>
+      <p class="rl-desc" data-i18n="rci_desc">The trusted face of the neighborhood: takes cash from clients and tops up their wallet instantly, earning 5% on every unit purchase.</p>
+      <ul class="rl-feats">
+        <li data-i18n="rci_f1">QR scanner — top-ups with zero errors</li>
+        <li data-i18n="rci_f2">Daily cash closing with printable PDF</li>
+        <li data-i18n="rci_f3">Cash out commissions to her own wallet</li>
+      </ul>
+    </div>
+
+    <div class="rl-card reveal" style="--rc:#00C9A7">
+      <div class="rl-phone"><div class="rl-screen">
+        <div class="rl-top"><span class="rl-dot" style="background:#00C9A7"></span> Rep.</div>
+        <div class="rl-bal" style="background:linear-gradient(135deg,#064e3b,#0f766e)"><small data-i18n="mk_comm">Network commissions</small><b>2 500</b></div>
+        <div class="rl-row">⚡ <span data-i18n="mk_circ">My circulars: 12</span></div>
+        <div class="rl-row">🗺️ <span data-i18n="mk_map">Live map of my area</span></div>
+        <div class="rl-row">💬 <span data-i18n="mk_chat">Chat with my network</span></div>
+        <div class="rl-nav">🏠 ⚡ 💰 🗺️</div>
+      </div></div>
+      <div class="rl-name" data-i18n="rr_name">Representative</div>
+      <span class="rl-tag" data-i18n="rr_tag">Network Manager</span>
+      <p class="rl-desc" data-i18n="rr_desc">Builds the network: authorizes circulars in his zone, collects their cash deposits and earns 50% of his network's savings.</p>
+      <ul class="rl-feats">
+        <li data-i18n="rr_f1">Authorize new circulars from the app</li>
+        <li data-i18n="rr_f2">Live map: circulars and riders of his country</li>
+        <li data-i18n="rr_f3">PDF reports and tax-compliant cash out</li>
+      </ul>
+    </div>
+
+    <div class="rl-card reveal" style="--rc:#F59E0B">
+      <div class="rl-phone"><div class="rl-screen">
+        <div class="rl-top"><span class="rl-dot" style="background:#F59E0B"></span> Rider</div>
+        <div class="rl-bal" style="background:linear-gradient(135deg,#713f12,#a16207)"><small data-i18n="mk_deliv">Deliveries completed</small><b>27</b></div>
+        <div class="rl-row">📦 <span data-i18n="mk_order">New order · 1 500 XAF</span></div>
+        <div class="rl-row">🧭 <span data-i18n="mk_navg">Navigate to client</span></div>
+        <div class="rl-row">✅ <span data-i18n="mk_proof">Delivered + photo proof</span></div>
+        <div class="rl-nav">🏠 📦 🗺️</div>
+      </div></div>
+      <div class="rl-name" data-i18n="rd_name">Rider</div>
+      <span class="rl-tag" data-i18n="rd_tag">XenderDelivery App</span>
+      <p class="rl-desc" data-i18n="rd_desc">Goes online, accepts orders from nearby merchants, navigates with GPS and gets paid to his wallet the second he delivers.</p>
+      <ul class="rl-feats">
+        <li data-i18n="rd_f1">Accept orders with one tap</li>
+        <li data-i18n="rd_f2">GPS navigation to every delivery</li>
+        <li data-i18n="rd_f3">Instant automatic payment on delivery</li>
+      </ul>
+    </div>
+
+    <div class="rl-card reveal" style="--rc:#E0921A">
+      <div class="rl-phone"><div class="rl-screen">
+        <div class="rl-top"><span class="rl-dot" style="background:#E0921A"></span> Comercio</div>
+        <div class="rl-bal" style="background:linear-gradient(135deg,#7c2d12,#9a3412)"><small data-i18n="mk_sales">Delivered sales</small><b>184 500 XAF</b></div>
+        <div class="rl-row">🧑‍🍳 <span data-i18n="mk_prep">Order to prepare · 22 000</span></div>
+        <div class="rl-row">📢 <span data-i18n="mk_ready">Ready — notify riders</span></div>
+        <div class="rl-row">💳 <span data-i18n="mk_payqr">My payment QR</span></div>
+        <div class="rl-nav">🏠 📦 💬</div>
+      </div></div>
+      <div class="rl-name" data-i18n="rm_name">Merchant</div>
+      <span class="rl-tag" data-i18n="rm_tag">XenderBigShop Partner</span>
+      <p class="rl-desc" data-i18n="rm_desc">Receives client orders in real time, prepares them and notifies all available riders with a single tap. Refunds are automatic.</p>
+      <ul class="rl-feats">
+        <li data-i18n="rm_f1">Live order board with sound of new orders</li>
+        <li data-i18n="rm_f2">Payment QR — clients pay with XenderMoney</li>
+        <li data-i18n="rm_f3">Cancel with automatic client refund</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
 <!-- TRIANGULAR ECOSYSTEM -->
 <section id="continents">
   <div class="triangle-intro reveal">
@@ -1352,6 +1480,28 @@
 
   const TR = {
     es:{
+      sec_net:'La Red InnovaAFRIC', net_h:'Una red humana. Cinco aplicaciones.',
+      net_sub:'Lo último del ecosistema: cada miembro de la red — cliente, agente de barrio, representante, rider y comercio — tiene su propia app conectada en tiempo real.',
+      rc_name:'Cliente', rc_tag:'App XenderMoney',
+      rc_desc:'Envía dinero, paga a comercios con QR y pide la compra — y luego ve al rider traerla a casa, en vivo en el mapa.',
+      rc_f1:'Wallet en 4 divisas (XAF · XOF · EUR · USD)', rc_f2:'QR personal para recargas en efectivo sin errores', rc_f3:'Seguimiento del pedido con el rider en el mapa',
+      rci_name:'Circular Autorizada', rci_tag:'Agente de Barrio',
+      rci_desc:'La cara de confianza del barrio: cobra en efectivo al cliente y recarga su wallet al instante, ganando el 5% en cada compra de unidades.',
+      rci_f1:'Escáner QR — recargas sin errores', rci_f2:'Cierre de caja diario con PDF imprimible', rci_f3:'Cobra sus comisiones a su propia wallet',
+      rr_name:'Representante', rr_tag:'Gestor de Red',
+      rr_desc:'Construye la red: autoriza circulares en su zona, recibe sus depósitos de efectivo y gana el 50% del ahorro de su red.',
+      rr_f1:'Autoriza nuevas circulares desde la app', rr_f2:'Mapa en vivo: circulares y riders de su país', rr_f3:'Informes PDF y cobro con impuestos al día',
+      rd_name:'Rider', rd_tag:'App XenderDelivery',
+      rd_desc:'Se pone disponible, acepta comandas de los comercios cercanos, navega con GPS y cobra en su wallet al momento de entregar.',
+      rd_f1:'Acepta comandas con un toque', rd_f2:'Navegación GPS hasta cada entrega', rd_f3:'Pago automático e instantáneo al entregar',
+      rm_name:'Comercio', rm_tag:'Socio XenderBigShop',
+      rm_desc:'Recibe los pedidos de los clientes en tiempo real, los prepara y avisa a todos los riders disponibles con un solo toque. Los reembolsos son automáticos.',
+      rm_f1:'Tablero de comandas en tiempo real', rm_f2:'QR de cobro — los clientes pagan con XenderMoney', rm_f3:'Cancelación con reembolso automático al cliente',
+      mk_bal:'Saldo total', mk_send:'Enviar dinero', mk_qr:'Mi QR de recarga', mk_track:'Seguir mi pedido en vivo',
+      mk_units:'Mis unidades de valor', mk_scan:'Escanear QR del cliente', mk_topup:'Recargar cliente', mk_close:'Cierre de caja del día',
+      mk_comm:'Comisiones de red', mk_circ:'Mis circulares: 12', mk_map:'Mapa en vivo de mi zona', mk_chat:'Chat con mi red',
+      mk_deliv:'Entregas completadas', mk_order:'Comanda nueva · 1 500 XAF', mk_navg:'Navegar hasta el cliente', mk_proof:'Entregado + foto de prueba',
+      mk_sales:'Ventas entregadas', mk_prep:'Pedido por preparar · 22 000', mk_ready:'Lista — avisar riders', mk_payqr:'Mi QR de cobro',
       nav_p:'Productos', nav_h:'Cómo funciona', nav_c:'Presencia', nav_cta:'Comenzar',
       hero_badge:'Ecosistema Asia · Europa · África',
       hero_h1:'Conectando <span class="accent-orange">Asia</span>, <span class="accent-blue">Europa</span><br/>y <span class="accent-orange">África</span> — como uno',
@@ -1469,6 +1619,28 @@
       ham_p:'🛒 Productos', ham_h:'⚙️ Cómo funciona', ham_c:'🌍 Nuestra Presencia'
     },
     en:{
+      sec_net:'The InnovaAFRIC Network', net_h:'One human network. Five apps.',
+      net_sub:'The latest addition to the ecosystem: every member of the network — client, neighborhood agent, representative, rider and merchant — has their own real-time connected app.',
+      rc_name:'Client', rc_tag:'XenderMoney App',
+      rc_desc:'Sends money, pays merchants by QR and orders groceries — then watches the rider bring it home, live on the map.',
+      rc_f1:'Wallet in 4 currencies (XAF · XOF · EUR · USD)', rc_f2:'Personal QR for error-free cash top-ups', rc_f3:'Live order tracking with rider on the map',
+      rci_name:'Authorized Circular', rci_tag:'Neighborhood Agent',
+      rci_desc:'The trusted face of the neighborhood: takes cash from clients and tops up their wallet instantly, earning 5% on every unit purchase.',
+      rci_f1:'QR scanner — top-ups with zero errors', rci_f2:'Daily cash closing with printable PDF', rci_f3:'Cash out commissions to her own wallet',
+      rr_name:'Representative', rr_tag:'Network Manager',
+      rr_desc:"Builds the network: authorizes circulars in his zone, collects their cash deposits and earns 50% of his network's savings.",
+      rr_f1:'Authorize new circulars from the app', rr_f2:'Live map: circulars and riders of his country', rr_f3:'PDF reports and tax-compliant cash out',
+      rd_name:'Rider', rd_tag:'XenderDelivery App',
+      rd_desc:'Goes online, accepts orders from nearby merchants, navigates with GPS and gets paid to his wallet the second he delivers.',
+      rd_f1:'Accept orders with one tap', rd_f2:'GPS navigation to every delivery', rd_f3:'Instant automatic payment on delivery',
+      rm_name:'Merchant', rm_tag:'XenderBigShop Partner',
+      rm_desc:'Receives client orders in real time, prepares them and notifies all available riders with a single tap. Refunds are automatic.',
+      rm_f1:'Live order board with sound of new orders', rm_f2:'Payment QR — clients pay with XenderMoney', rm_f3:'Cancel with automatic client refund',
+      mk_bal:'Total balance', mk_send:'Send money', mk_qr:'My top-up QR', mk_track:'Track my order live',
+      mk_units:'My value units', mk_scan:'Scan client QR', mk_topup:'Top up client', mk_close:'Daily cash closing',
+      mk_comm:'Network commissions', mk_circ:'My circulars: 12', mk_map:'Live map of my area', mk_chat:'Chat with my network',
+      mk_deliv:'Deliveries completed', mk_order:'New order · 1 500 XAF', mk_navg:'Navigate to client', mk_proof:'Delivered + photo proof',
+      mk_sales:'Delivered sales', mk_prep:'Order to prepare · 22 000', mk_ready:'Ready — notify riders', mk_payqr:'My payment QR',
       nav_p:'Products', nav_h:'How it works', nav_c:'Our Presence', nav_cta:'Get Started',
       hero_badge:'Asia · Europe · Africa Ecosystem',
       hero_h1:'Connecting <span class="accent-orange">Asia</span>, <span class="accent-blue">Europe</span><br/>& <span class="accent-orange">Africa</span> — as One',
@@ -1586,6 +1758,28 @@
       ham_p:'🛒 Products', ham_h:'⚙️ How it works', ham_c:'🌍 Our Presence'
     },
     fr:{
+      sec_net:'Le Réseau InnovaAFRIC', net_h:'Un réseau humain. Cinq applications.',
+      net_sub:'La dernière nouveauté de l\'écosystème : chaque membre du réseau — client, agent de quartier, représentant, livreur et commerce — dispose de sa propre application connectée en temps réel.',
+      rc_name:'Client', rc_tag:'App XenderMoney',
+      rc_desc:'Envoie de l\'argent, paie les commerces par QR et commande ses courses — puis suit le livreur jusqu\'à sa porte, en direct sur la carte.',
+      rc_f1:'Wallet en 4 devises (XAF · XOF · EUR · USD)', rc_f2:'QR personnel pour des recharges en espèces sans erreur', rc_f3:'Suivi de commande en direct avec le livreur sur la carte',
+      rci_name:'Circulaire Autorisée', rci_tag:'Agente de Quartier',
+      rci_desc:'Le visage de confiance du quartier : encaisse les espèces du client et recharge son wallet instantanément, en gagnant 5% sur chaque achat d\'unités.',
+      rci_f1:'Scanner QR — recharges sans erreur', rci_f2:'Clôture de caisse quotidienne avec PDF imprimable', rci_f3:'Encaisse ses commissions sur son propre wallet',
+      rr_name:'Représentant', rr_tag:'Gestionnaire de Réseau',
+      rr_desc:'Construit le réseau : autorise des circulaires dans sa zone, reçoit leurs dépôts d\'espèces et gagne 50% des économies de son réseau.',
+      rr_f1:'Autorise de nouvelles circulaires depuis l\'app', rr_f2:'Carte en direct : circulaires et livreurs de son pays', rr_f3:'Rapports PDF et encaissement avec impôts à jour',
+      rd_name:'Livreur', rd_tag:'App XenderDelivery',
+      rd_desc:'Se met en ligne, accepte les commandes des commerces proches, navigue au GPS et reçoit son paiement sur son wallet dès la livraison.',
+      rd_f1:'Accepte les commandes en un geste', rd_f2:'Navigation GPS jusqu\'à chaque livraison', rd_f3:'Paiement automatique et instantané à la livraison',
+      rm_name:'Commerce', rm_tag:'Partenaire XenderBigShop',
+      rm_desc:'Reçoit les commandes des clients en temps réel, les prépare et prévient tous les livreurs disponibles d\'un seul geste. Les remboursements sont automatiques.',
+      rm_f1:'Tableau de commandes en temps réel', rm_f2:'QR d\'encaissement — les clients paient avec XenderMoney', rm_f3:'Annulation avec remboursement automatique du client',
+      mk_bal:'Solde total', mk_send:'Envoyer de l\'argent', mk_qr:'Mon QR de recharge', mk_track:'Suivre ma commande en direct',
+      mk_units:'Mes unités de valeur', mk_scan:'Scanner le QR du client', mk_topup:'Recharger client', mk_close:'Clôture de caisse du jour',
+      mk_comm:'Commissions réseau', mk_circ:'Mes circulaires : 12', mk_map:'Carte en direct de ma zone', mk_chat:'Chat avec mon réseau',
+      mk_deliv:'Livraisons terminées', mk_order:'Nouvelle commande · 1 500 XAF', mk_navg:'Naviguer vers le client', mk_proof:'Livré + photo de preuve',
+      mk_sales:'Ventes livrées', mk_prep:'Commande à préparer · 22 000', mk_ready:'Prête — prévenir les livreurs', mk_payqr:'Mon QR d\'encaissement',
       nav_p:'Produits', nav_h:'Comment ça marche', nav_c:'Notre Présence', nav_cta:'Commencer',
       hero_badge:'Écosystème Asie · Europe · Afrique',
       hero_h1:'Relier <span class="accent-orange">l\'Asie</span>, <span class="accent-blue">l\'Europe</span><br/>et <span class="accent-orange">l\'Afrique</span> — en un',
