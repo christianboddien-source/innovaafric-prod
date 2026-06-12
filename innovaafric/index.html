@@ -571,6 +571,7 @@
 .st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;margin-top:44px}
 .st-card{background:#fff;border:1px solid rgba(10,22,40,.09);box-shadow:0 6px 24px rgba(10,22,40,.06);border-radius:18px;overflow:hidden}
 .st-card svg{display:block;width:100%;height:auto}
+.st-photo{display:block;width:100%;height:230px;object-fit:cover}
 .st-body{padding:18px 20px 22px}
 .st-ttl{font-size:16px;font-weight:800;color:#0A1628;margin-bottom:6px}
 .st-dsc{font-size:13px;line-height:1.6;color:rgba(10,22,40,.65)}
@@ -605,6 +606,8 @@
   <div class="st-grid">
 
     <div class="st-card reveal">
+      <img class="st-photo" src="../assets-new/story-neysson-jeysson.jpg" alt="Neysson y Jeysson"
+           onload="this.nextElementSibling.style.display='none'" onerror="this.remove()">
       <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
         <rect width="230" height="240" fill="#dfeefc"/><rect x="230" width="230" height="240" fill="#fdeedd"/>
         <circle cx="50" cy="42" r="16" fill="#f7c948"/>
@@ -641,6 +644,8 @@
     </div>
 
     <div class="st-card reveal">
+      <img class="st-photo" src="../assets-new/story-alysson-madysson.jpg" alt="Alysson y Madysson"
+           onload="this.nextElementSibling.style.display='none'" onerror="this.remove()">
       <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
         <rect width="460" height="240" fill="#f2f0fb"/>
         <rect x="20" y="34" width="420" height="14" rx="7" fill="#6c5ce7"/><text x="230" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="#4b3fb5">🛍️ CENTRO COMERCIAL</text>
@@ -669,14 +674,14 @@
           <path d="M98 141 q12 -8 24 0 l-4 38 q-8 5 -16 0 z" fill="#f7c948"/>
           <line x1="124" y1="118" x2="138" y2="84" stroke="#888" stroke-width="1.5"/>
           <g class="st-balloon"><circle cx="138" cy="74" r="11" fill="#ff6b6b"/></g>
-          <text x="112" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#9a5b16" data-i18n="st2_sis">little sister</text>
+          <text x="112" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#9a5b16">Madysson</text>
         </g>
         <g class="st-check"><circle cx="312" cy="96" r="22" fill="#34d399"/><text x="312" y="104" text-anchor="middle" font-size="22" fill="#fff">✓</text></g>
         <g class="st-bag"><rect x="226" y="160" width="22" height="24" rx="3" fill="#e84393"/><path d="M230 160 q6 -10 14 0" stroke="#c2185b" stroke-width="2" fill="none"/><rect x="252" y="164" width="18" height="20" rx="3" fill="#29ABE2"/><path d="M255 164 q6 -8 12 0" stroke="#1b7fae" stroke-width="2" fill="none"/></g>
         <g class="st-bag"><rect x="150" y="206" width="160" height="22" rx="11" fill="#34d399"/><text x="230" y="221" text-anchor="middle" font-size="11" font-weight="800" fill="#063" data-i18n="st2_paid">✓ Paid with XenderMoney</text></g>
       </svg>
       <div class="st-body">
-        <div class="st-ttl" data-i18n="st2_t">Alysson &amp; her little sister: shopping day, zero cash</div>
+        <div class="st-ttl" data-i18n="st2_t">Alysson &amp; Madysson: shopping day, zero cash</div>
         <p class="st-dsc" data-i18n="st2_d">At the mall, Alysson scans the store's XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister continues without ever touching cash.</p>
       </div>
     </div>
@@ -1612,8 +1617,8 @@
       st_sub:'Así se siente InnovaAFRIC en la vida diaria — de Madrid a Malabo, del wallet al centro comercial.',
       st1_t:'Neysson → Jeysson: de España a Malabo en segundos',
       st1_d:'El hermano mayor, Neysson, trabaja en España. Envía 300 € con XenderMoney — y su hermanito Jeysson recibe 196 800 FCFA al instante en Malabo, listos para gastar o retirar en la Circular de su barrio.',
-      st2_t:'Alysson y su hermanita: día de compras, cero efectivo',
-      st2_d:'En el centro comercial, Alysson escanea el QR XenderMoney de la tienda con su móvil. Un toque, pago confirmado — y la tarde de compras con su hermanita continúa sin tocar un billete.',
+      st2_t:'Alysson y Madysson: día de compras, cero efectivo',
+      st2_d:'En el centro comercial, Alysson escanea el QR XenderMoney de la tienda con su móvil. Un toque, pago confirmado — y la tarde de compras con su hermanita Madysson continúa sin tocar un billete.',
       st2_sis:'hermanita', st2_paid:'✓ Pagado con XenderMoney',
       rc_name:'Cliente', rc_tag:'App XenderMoney',
       rc_desc:'Envía dinero, paga a comercios con QR y pide la compra — y luego ve al rider traerla a casa, en vivo en el mapa.',
@@ -1759,8 +1764,8 @@
       st_sub:'This is how InnovaAFRIC feels in everyday life — from Madrid to Malabo, from the wallet to the mall.',
       st1_t:'Neysson → Jeysson: from Spain to Malabo in seconds',
       st1_d:'Big brother Neysson works in Spain. He sends €300 with XenderMoney — and his little brother Jeysson receives 196 800 FCFA instantly in Malabo, ready to spend or withdraw at his neighborhood Circular.',
-      st2_t:'Alysson & her little sister: shopping day, zero cash',
-      st2_d:"At the mall, Alysson scans the store's XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister continues without ever touching cash.",
+      st2_t:'Alysson & Madysson: shopping day, zero cash',
+      st2_d:"At the mall, Alysson scans the store's XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister Madysson continues without ever touching cash.",
       st2_sis:'little sister', st2_paid:'✓ Paid with XenderMoney',
       rc_name:'Client', rc_tag:'XenderMoney App',
       rc_desc:'Sends money, pays merchants by QR and orders groceries — then watches the rider bring it home, live on the map.',
@@ -1906,8 +1911,8 @@
       st_sub:'Voilà comment se vit InnovaAFRIC au quotidien — de Madrid à Malabo, du wallet au centre commercial.',
       st1_t:'Neysson → Jeysson : d\'Espagne à Malabo en quelques secondes',
       st1_d:'Le grand frère Neysson travaille en Espagne. Il envoie 300 € avec XenderMoney — et son petit frère Jeysson reçoit 196 800 FCFA instantanément à Malabo, prêts à dépenser ou à retirer chez la Circulaire de son quartier.',
-      st2_t:'Alysson et sa petite sœur : journée shopping, zéro espèces',
-      st2_d:'Au centre commercial, Alysson scanne le QR XenderMoney de la boutique avec son téléphone. Un geste, paiement confirmé — et l\'après-midi shopping avec sa petite sœur continue sans toucher un billet.',
+      st2_t:'Alysson et Madysson : journée shopping, zéro espèces',
+      st2_d:'Au centre commercial, Alysson scanne le QR XenderMoney de la boutique avec son téléphone. Un geste, paiement confirmé — et l\'après-midi shopping avec sa petite sœur Madysson continue sans toucher un billet.',
       st2_sis:'petite sœur', st2_paid:'✓ Payé avec XenderMoney',
       rc_name:'Client', rc_tag:'App XenderMoney',
       rc_desc:'Envoie de l\'argent, paie les commerces par QR et commande ses courses — puis suit le livreur jusqu\'à sa porte, en direct sur la carte.',
