@@ -116,15 +116,21 @@
       document.getElementById('xm-dash-code').textContent = session.ia_code||'—';
       // Load wallet balance
       try {
-        var {data: wallets} = await SB.from('wallets').select('*').eq('user_id', session.id);
-        var eur = wallets ? wallets.find(function(w){return w.currency==='EUR';}) : null;
-        var usd = wallets ? wallets.find(function(w){return w.currency==='USD';}) : null;
-        document.getElementById('xm-dash-bal-eur').textContent = eur ? '€' + parseFloat(eur.balance||0).toFixed(2) : '€0.00';
-        document.getElementById('xm-dash-bal-usd').textContent = usd ? '$' + parseFloat(usd.balance||0).toFixed(2) : '$0.00';
-      } catch(e) {
-        document.getElementById('xm-dash-bal-eur').textContent = '€0.00';
-        document.getElementById('xm-dash-bal-usd').textContent = '$0.00';
-      }
+  var apiToken = localStorage.getItem('inno_token');
+  if(apiToken) {
+    var walletRes = await fetch('https://api.innovaafric.com/v1/money/wallet', {headers:{'Authorization':'Bearer '+apiToken}});
+    var walletJson = await walletRes.json();
+    var wd = walletJson.data || walletJson;
+    document.getElementById('xm-dash-bal-eur').textContent = '€' + parseFloat(wd.balanceEur||0).toFixed(2);
+    document.getElementById('xm-dash-bal-usd').textContent = '$' + parseFloat(wd.balanceUsd||0).toFixed(2);
+  } else {
+    document.getElementById('xm-dash-bal-eur').textContent = '€0.00';
+    document.getElementById('xm-dash-bal-usd').textContent = '$0.00';
+  }
+} catch(e) {
+  document.getElementById('xm-dash-bal-eur').textContent = '€0.00';
+  document.getElementById('xm-dash-bal-usd').textContent = '$0.00';
+}
       // Load KYC status
       try {
         var {data: kyc} = await SB.from('kyc_requests').select('status').eq('user_id', session.id).order('submitted_at',{ascending:false}).limit(1).maybeSingle();
