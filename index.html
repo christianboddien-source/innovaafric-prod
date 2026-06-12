@@ -2393,24 +2393,49 @@ function populateUser() {
 var _balanceRefreshTimer = null;
 
 function loadBalance() {
-  if (!_token) return;
-  railGet('/money/wallet').then(function(resp) {
-    if (!resp || !resp.success || !resp.data) return;
-    var w = resp.data;
+  if (_token) {
+    railGet('/money/wallet').then(function(resp) {
+      if (!resp || !resp.success || !resp.data) return loadBalanceFromSupabase();
+      var w = resp.data;
+      _balances = {
+        XAF: Math.round(w.balanceXaf || 0),
+        EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
+        USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
+        XOF: parseFloat((w.balanceXof || 0).toFixed(2))
+      };
+      _balanceXAF = _balances.XAF;
+      localStorage.setItem('inn_balance', JSON.stringify(_balances));
+      autoSelectCurrency();
+      updateBalanceDisplay();
+      refreshBalanceInScreens();
+      updateBalanceTime();
+    }).catch(function(){ loadBalanceFromSupabase(); });
+  } else {
+    loadBalanceFromSupabase();
+  }
+}
+
+function loadBalanceFromSupabase() {
+  if (!_user || !_user.id) return;
+  var url = SB_URL + '/rest/v1/wallets?user_id=eq.' + _user.id + '&select=xaf,eur,usd,xof&limit=1';
+  fetch(url, { headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON } })
+  .then(function(r){ return r.json(); })
+  .then(function(rows) {
+    var w = Array.isArray(rows) && rows[0] ? rows[0] : {};
     _balances = {
-      XAF: Math.round(w.balanceXaf || 0),
-      EUR: parseFloat((w.balanceEur || 0).toFixed(2)),
-      USD: parseFloat((w.balanceUsd || 0).toFixed(2)),
-      XOF: parseFloat((w.balanceXof || 0).toFixed(2))
+      XAF: Math.round(w.xaf || 0),
+      EUR: parseFloat((w.eur || 0).toFixed(2)),
+      USD: parseFloat((w.usd || 0).toFixed(2)),
+      XOF: parseFloat((w.xof || 0).toFixed(2))
     };
     _balanceXAF = _balances.XAF;
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
-    // Auto-seleccionar la moneda con más saldo si XAF es 0
     autoSelectCurrency();
     updateBalanceDisplay();
     refreshBalanceInScreens();
     updateBalanceTime();
   }).catch(function(){});
+}
 }
 
 function autoSelectCurrency() {
