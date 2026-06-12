@@ -308,7 +308,7 @@
   <a href="#products" onclick="toggleHam('ia')" data-i18n="ham_p">🛒 Products</a>
   <a href="#how" onclick="toggleHam('ia')" data-i18n="ham_h">⚙️ How it works</a>
   <a href="#continents" onclick="toggleHam('ia')" data-i18n="ham_c">🌍 Our Presence</a>
-  <a href="#" onclick="openModal('modal-ia');return false;" onclick="toggleHam('ia')" style="background:var(--orange);color:#fff;padding:14px 32px;border-radius:12px;">🚀 Get Started</a>
+  <a href="#" onclick="openModal('modal-ia');return false;" onclick="toggleHam('ia')" style="background:var(--orange);color:#fff;padding:14px 32px;border-radius:12px;" data-i18n="get_started">🚀 Get Started</a>
 </div>
 
 <!-- HERO -->
@@ -388,28 +388,28 @@
     <a href="../xendermoney/" class="prod-card reveal" target="_blank" rel="noopener noreferrer" style="--card-color:#F5A623;">
       <div class="prod-icon" style="background:rgba(245,166,35,0.12);">💰</div>
       <div class="prod-name">Xender<span>Money</span></div>
-      <span class="prod-tag">Wallet · Fintech</span>
+      <span class="prod-tag" data-i18n="pm_tag">Wallet · Fintech</span>
       <p class="prod-desc" data-i18n="pm_desc">Send and receive money instantly across Asia, Europe and Africa. Mobile Money, bank transfers, and card payments in one wallet.</p>
       <div class="prod-link" data-i18n="learn_more">Learn more →</div>
     </a>
     <a href="../xendershop/" class="prod-card reveal" target="_blank" rel="noopener noreferrer" style="--card-color:#00C9A7;">
       <div class="prod-icon" style="background:rgba(0,201,167,0.12);">🛍️</div>
       <div class="prod-name">Xender<span style="color:#00C9A7">Shop</span></div>
-      <span class="prod-tag">E-Commerce · Retail</span>
+      <span class="prod-tag" data-i18n="ps_tag">E-Commerce · Retail</span>
       <p class="prod-desc" data-i18n="ps_desc">Shop global products at local prices. Connected to AliExpress. Pay with XenderMoney or Mobile Money, delivered by XenderDelivery.</p>
       <div class="prod-link" style="color:#00C9A7" data-i18n="learn_more">Learn more →</div>
     </a>
     <a href="../xenderbigshop/" class="prod-card reveal" target="_blank" rel="noopener noreferrer" style="--card-color:#E0921A;">
       <div class="prod-icon" style="background:rgba(224,146,26,0.12);">🏪</div>
       <div class="prod-name">Xender<span style="color:#E0921A">BigShop</span></div>
-      <span class="prod-tag">Marketplace · Multivendor</span>
+      <span class="prod-tag" data-i18n="pb_tag">Marketplace · Multivendor</span>
       <p class="prod-desc" data-i18n="pb_desc">Launch your own online store in minutes. Full vendor panel, subscription plans, integrated checkout and analytics.</p>
       <div class="prod-link" style="color:#E0921A" data-i18n="learn_more">Learn more →</div>
     </a>
     <a href="../xenderdelivery/" class="prod-card reveal" target="_blank" rel="noopener noreferrer" style="--card-color:#F59E0B;">
       <div class="prod-icon" style="background:rgba(245,158,11,0.12);">🛵</div>
       <div class="prod-name">Xender<span style="color:#F59E0B">Delivery</span></div>
-      <span class="prod-tag">Logistics · Last-Mile</span>
+      <span class="prod-tag" data-i18n="pd_tag">Logistics · Last-Mile</span>
       <p class="prod-desc" data-i18n="pd_desc">Fast, reliable last-mile delivery. Register as a driver, manage deliveries, track orders live, and earn more.</p>
       <div class="prod-link" style="color:#F59E0B" data-i18n="learn_more">Learn more →</div>
     </a>
@@ -544,7 +544,7 @@
 
     <div class="rl-card reveal" style="--rc:#E0921A">
       <div class="rl-phone"><div class="rl-screen">
-        <div class="rl-top"><span class="rl-dot" style="background:#E0921A"></span> Comercio</div>
+        <div class="rl-top"><span class="rl-dot" style="background:#E0921A"></span> <span data-i18n="mk_merchant">Comercio</span></div>
         <div class="rl-bal" style="background:linear-gradient(135deg,#7c2d12,#9a3412)"><small data-i18n="mk_sales">Delivered sales</small><b>184 500 XAF</b></div>
         <div class="rl-row">🧑‍🍳 <span data-i18n="mk_prep">Order to prepare · 22 000</span></div>
         <div class="rl-row">📢 <span data-i18n="mk_ready">Ready — notify riders</span></div>
@@ -648,7 +648,7 @@
            onload="this.nextElementSibling.style.display='none'" onerror="this.remove()">
       <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
         <rect width="460" height="240" fill="#f2f0fb"/>
-        <rect x="20" y="34" width="420" height="14" rx="7" fill="#6c5ce7"/><text x="230" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="#4b3fb5">🛍️ CENTRO COMERCIAL</text>
+        <rect x="20" y="34" width="420" height="14" rx="7" fill="#6c5ce7"/><text x="230" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="#4b3fb5" data-i18n="st2_mall">🛍️ CENTRO COMERCIAL</text>
         <rect x="30" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="90" y="104" text-anchor="middle" font-size="26">👗</text>
         <rect x="310" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="370" y="104" text-anchor="middle" font-size="26">👟</text>
         <rect y="190" width="460" height="50" fill="#e4e0f5"/>
@@ -733,7 +733,7 @@
         <li class="asia-li" data-i18n="a4">Consolidated shipping through European quality control hub</li>
         <li class="asia-li" data-i18n="a5">Returns and disputes managed by InnovaAFRIC guarantee</li>
       </ul>
-      <div class="tri-chips">
+      <div class="tri-chips" data-i18n="chips_asia">
         <span class="chip">🇨🇳 China</span><span class="chip">🇯🇵 Japan</span><span class="chip">🇰🇷 Korea</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 India</span><span class="chip">🇹🇭 Thailand</span>
       </div>
     </div>
@@ -752,7 +752,7 @@
         <li class="europe-li" data-i18n="e4">Logistics coordination: Asia → Europe → Africa supply chain</li>
         <li class="europe-li" data-i18n="e5">Asia gateway: factory of the world connected to Africa</li>
       </ul>
-      <div class="tri-chips">
+      <div class="tri-chips" data-i18n="chips_eu">
         <span class="chip">🇪🇸 Spain</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgium</span><span class="chip">🇮🇹 Italy</span><span class="chip">🇩🇪 Germany</span>
       </div>
     </div>
@@ -785,7 +785,7 @@
           <p data-i18n="af_c3_p">XenderDelivery creates jobs for riders while solving Africa's delivery gap. Real-time GPS tracking, insured packages, same-day delivery in major cities.</p>
         </div>
       </div>
-      <div class="tri-chips" style="margin-top:24px;">
+      <div class="tri-chips" style="margin-top:24px;" data-i18n="chips_af">
         <span class="chip">🇨🇲 Cameroon</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Côte d'Ivoire</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇬🇶 Eq. Guinea</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 DRC</span><span class="chip">🇬🇦 Gabon</span>
       </div>
     </div>
@@ -807,23 +807,23 @@
       <div style="width:200px;background:#0F1A2E;border-radius:32px;border:2px solid rgba(245,166,35,0.2);padding:14px;box-shadow:0 24px 60px rgba(0,0,0,0.18);">
         <div style="width:64px;height:18px;background:#080E1A;border-radius:0 0 12px 12px;margin:0 auto 12px;"></div>
         <div style="background:linear-gradient(135deg,#1E3050,#162440);border-radius:20px;padding:16px;">
-          <div style="font-size:9px;color:#8A9AB8;margin-bottom:2px;">Good morning 👋</div>
+          <div style="font-size:9px;color:#8A9AB8;margin-bottom:2px;" data-i18n="app_greet">Good morning 👋</div>
           <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;">Kofi A.</div>
           <div style="background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.2);border-radius:14px;padding:14px;margin-bottom:12px;">
-            <div style="font-size:8px;color:#8A9AB8;letter-spacing:1px;margin-bottom:3px;">TOTAL BALANCE</div>
+            <div style="font-size:8px;color:#8A9AB8;letter-spacing:1px;margin-bottom:3px;" data-i18n="app_total_bal">TOTAL BALANCE</div>
             <div style="font-size:24px;font-weight:900;color:#F5A623;">247,500</div>
-            <div style="font-size:8px;color:#8A9AB8;">XAF · Central African Franc</div>
+            <div style="font-size:8px;color:#8A9AB8;" data-i18n="app_xaf_full">XAF · Central African Franc</div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;">
             <div style="text-align:center;"><div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">📤</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_send">Send</div></div>
             <div style="text-align:center;"><div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">📥</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_rcv">Receive</div></div>
             <div style="text-align:center;"><div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">📱</div><div style="font-size:7px;color:#8A9AB8;">MoMo</div></div>
-            <div style="text-align:center;"><div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">🛍️</div><div style="font-size:7px;color:#8A9AB8;">Shop</div></div>
+            <div style="text-align:center;"><div style="width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 3px;">🛍️</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_shop">Shop</div></div>
           </div>
-          <div style="font-size:8px;color:#8A9AB8;font-weight:700;letter-spacing:1px;margin-bottom:8px;">RECENT</div>
+          <div style="font-size:8px;color:#8A9AB8;font-weight:700;letter-spacing:1px;margin-bottom:8px;" data-i18n="app_recent">RECENT</div>
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(245,166,35,0.15);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#F5A623;flex-shrink:0;">AM</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;color:#fff;">Amara M.</div><div style="font-size:7px;color:#8A9AB8;">Today 09:42</div></div><div style="font-size:9px;font-weight:700;color:#22C55E;">+12,000</div></div>
-            <div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(0,201,167,0.12);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">🛍️</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;color:#fff;">XenderShop</div><div style="font-size:7px;color:#8A9AB8;">Yesterday</div></div><div style="font-size:9px;font-weight:700;color:#C8D0DC;">-8,500</div></div>
+            <div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(245,166,35,0.15);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#F5A623;flex-shrink:0;">AM</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;color:#fff;">Amara M.</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_today">Today 09:42</div></div><div style="font-size:9px;font-weight:700;color:#22C55E;">+12,000</div></div>
+            <div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:50%;background:rgba(0,201,167,0.12);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">🛍️</div><div style="flex:1;"><div style="font-size:9px;font-weight:600;color:#fff;">XenderShop</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_yesterday">Yesterday</div></div><div style="font-size:9px;font-weight:700;color:#C8D0DC;">-8,500</div></div>
           </div>
         </div>
       </div>
@@ -841,7 +841,7 @@
           <div style="font-size:8px;font-weight:700;color:#00C9A7;letter-spacing:1px;margin-bottom:8px;" data-i18n="app_popular">POPULAR</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
             <div style="background:#F0FEFA;border-radius:10px;padding:8px;"><div style="font-size:18px;text-align:center;margin-bottom:4px;">📱</div><div style="font-size:8px;font-weight:600;color:#0D2B22;text-align:center;">Smartphone</div><div style="font-size:9px;font-weight:800;color:#00C9A7;text-align:center;">45,000 XAF</div></div>
-            <div style="background:#F0FEFA;border-radius:10px;padding:8px;"><div style="font-size:18px;text-align:center;margin-bottom:4px;">👟</div><div style="font-size:8px;font-weight:600;color:#0D2B22;text-align:center;">Sneakers</div><div style="font-size:9px;font-weight:800;color:#00C9A7;text-align:center;">12,500 XAF</div></div>
+            <div style="background:#F0FEFA;border-radius:10px;padding:8px;"><div style="font-size:18px;text-align:center;margin-bottom:4px;">👟</div><div style="font-size:8px;font-weight:600;color:#0D2B22;text-align:center;" data-i18n="app_sneakers">Sneakers</div><div style="font-size:9px;font-weight:800;color:#00C9A7;text-align:center;">12,500 XAF</div></div>
           </div>
           <div style="background:#00C9A7;border-radius:10px;padding:10px;text-align:center;"><div style="font-size:9px;font-weight:700;color:#fff;" data-i18n="app_shop_btn">Shop with Mobile Money</div></div>
           <div style="text-align:center;margin-top:8px;font-size:7px;color:#6B9B88;" data-i18n="app_delivery_tag">🚚 Delivered by XenderDelivery</div>
@@ -858,15 +858,15 @@
         <div style="background:#0F1A2E;border-radius:20px;padding:16px;">
           <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:12px;">XenderDelivery 🚚</div>
           <div style="background:#162440;border-radius:12px;padding:10px;margin-bottom:10px;">
-            <div style="font-size:8px;color:#8A9AB8;margin-bottom:4px;">Order #XD-08471</div>
-            <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:4px 8px;display:inline-block;margin-bottom:8px;"><div style="font-size:7px;font-weight:700;color:#F59E0B;">EN ROUTE · 68%</div></div>
+            <div style="font-size:8px;color:#8A9AB8;margin-bottom:4px;" data-i18n="app_order_no">Order #XD-08471</div>
+            <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:4px 8px;display:inline-block;margin-bottom:8px;"><div style="font-size:7px;font-weight:700;color:#F59E0B;" data-i18n="app_enroute">EN ROUTE · 68%</div></div>
             <div style="height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;"><div style="height:100%;width:68%;background:linear-gradient(90deg,#F59E0B,#FBC02D);border-radius:3px;"></div></div>
             <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:7px;color:#8A9AB8;"><span>Abidjan</span><span>Accra</span></div>
           </div>
           <div style="font-size:8px;color:#8A9AB8;font-weight:700;letter-spacing:1px;margin-bottom:6px;" data-i18n="app_your_orders">YOUR ORDERS</div>
           <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;align-items:center;gap:6px;background:#162440;border-radius:8px;padding:7px;"><div style="width:22px;height:22px;border-radius:6px;background:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:9px;">🚚</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;color:#fff;">Smartphone</div><div style="font-size:7px;color:#8A9AB8;">In transit</div></div><div style="font-size:7px;font-weight:700;color:#F59E0B;">~2h</div></div>
-            <div style="display:flex;align-items:center;gap:6px;background:#162440;border-radius:8px;padding:7px;"><div style="width:22px;height:22px;border-radius:6px;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:9px;">✓</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;color:#fff;">Sneakers</div><div style="font-size:7px;color:#8A9AB8;">Delivered</div></div><div style="font-size:7px;font-weight:700;color:#22C55E;">Done</div></div>
+            <div style="display:flex;align-items:center;gap:6px;background:#162440;border-radius:8px;padding:7px;"><div style="width:22px;height:22px;border-radius:6px;background:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:9px;">🚚</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;color:#fff;">Smartphone</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_in_transit">In transit</div></div><div style="font-size:7px;font-weight:700;color:#F59E0B;">~2h</div></div>
+            <div style="display:flex;align-items:center;gap:6px;background:#162440;border-radius:8px;padding:7px;"><div style="width:22px;height:22px;border-radius:6px;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:9px;">✓</div><div style="flex:1;"><div style="font-size:8px;font-weight:600;color:#fff;" data-i18n="app_sneakers">Sneakers</div><div style="font-size:7px;color:#8A9AB8;" data-i18n="app_delivered">Delivered</div></div><div style="font-size:7px;font-weight:700;color:#22C55E;" data-i18n="app_done">Done</div></div>
           </div>
         </div>
       </div>
@@ -1024,16 +1024,16 @@
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px;">
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💸</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_send">Send</div></div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💰</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_rcv">Receive</div></div>
-          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🏦</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Withdraw</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🏦</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_withdraw">Withdraw</div></div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">💱</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">FX</div></div>
-          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">⚡</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Bills</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">⚡</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_bills">Bills</div></div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🫂</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Tontines</div></div>
-          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🌍</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">Live Map</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🌍</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;" data-i18n="app_livemap">Live Map</div></div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 4px;text-align:center;"><div style="font-size:18px;">🏪</div><div style="font-size:9px;color:rgba(240,244,255,0.55);font-weight:600;margin-top:3px;">POS</div></div>
         </div>
         <div style="background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;">
           <span style="font-size:16px;">🔥</span>
-          <div style="flex:1;font-size:10px;font-weight:700;color:#FFD166;">OFERTA DEL DÍA · Kit Solar -15%</div>
+          <div style="flex:1;font-size:10px;font-weight:700;color:#FFD166;" data-i18n="ops_offer">OFERTA DEL DÍA · Kit Solar -15%</div>
           <span style="font-size:10px;color:#FFD166;font-weight:700;">23:45:12</span>
         </div>
       </div>
@@ -1051,26 +1051,26 @@
       </div>
       <div style="padding:16px;">
         <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;margin-bottom:14px;">
-          <span style="font-size:11px;color:rgba(240,244,255,0.45);">Available</span>
+          <span style="font-size:11px;color:rgba(240,244,255,0.45);" data-i18n="ops_avail">Available</span>
           <span style="font-size:13px;font-weight:800;color:#00E5FF;font-family:'Inter',sans-serif;">1,248.50 EUR</span>
         </div>
         <div style="display:flex;gap:6px;margin-bottom:12px;">
-          <div style="flex:1;background:rgba(0,229,255,0.1);border:1.5px solid #00E5FF;border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">🌍</div><div style="font-size:10px;font-weight:600;color:#00E5FF;margin-top:3px;">International</div></div>
-          <div style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">↔️</div><div style="font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);margin-top:3px;">P2P Free</div></div>
+          <div style="flex:1;background:rgba(0,229,255,0.1);border:1.5px solid #00E5FF;border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">🌍</div><div style="font-size:10px;font-weight:600;color:#00E5FF;margin-top:3px;" data-i18n="ops_intl">International</div></div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:11px;text-align:center;"><div style="font-size:16px;">↔️</div><div style="font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);margin-top:3px;" data-i18n="ops_p2p">P2P Free</div></div>
         </div>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:10px;">
           <div style="font-size:11px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;" data-i18n="ops_recipient">Recipient</div>
           <div style="font-size:13px;font-weight:600;color:#F0F4FF;">👤 Marie Dikongué · +237 699 XXX</div>
-          <div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:3px;">🇨🇲 Cameroon · MTN Mobile Money</div>
+          <div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:3px;" data-i18n="ops_rcp_country">🇨🇲 Cameroon · MTN Mobile Money</div>
         </div>
         <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:12px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:11px;color:rgba(240,244,255,0.4);margin-bottom:4px;">Recipient gets</div>
+          <div style="font-size:11px;color:rgba(240,244,255,0.4);margin-bottom:4px;" data-i18n="ops_rcp_gets">Recipient gets</div>
           <div style="font-family:'Inter',sans-serif;font-size:22px;font-weight:800;color:#00E5FF;">65,596 XAF</div>
           <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;">
-            <span style="color:rgba(240,244,255,0.4);">Fee (2%)</span><span style="color:#00FFB2;font-weight:700;">€2.00</span>
+            <span style="color:rgba(240,244,255,0.4);" data-i18n="ops_fee">Fee (2%)</span><span style="color:#00FFB2;font-weight:700;">€2.00</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:3px;">
-            <span style="color:rgba(240,244,255,0.4);">vs WU (-10%)</span><span style="color:#00FFB2;font-weight:700;">Save €8.00</span>
+            <span style="color:rgba(240,244,255,0.4);">vs WU (-10%)</span><span style="color:#00FFB2;font-weight:700;" data-i18n="ops_save">Save €8.00</span>
           </div>
         </div>
         <div style="background:linear-gradient(135deg,#00E5FF,#00B4D8);border-radius:12px;padding:13px;text-align:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#050B18;" data-i18n="ops_send_btn">💸 Confirm Transfer →</div>
@@ -1085,11 +1085,11 @@
     <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
       <div style="background:#0A1628;border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 16px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:16px;">←</span>
-        <span style="font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#F0F4FF;flex:1;">💱 Currency Converter</span>
+        <span style="font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#F0F4FF;flex:1;" data-i18n="ops_conv_h">💱 Currency Converter</span>
       </div>
       <div style="padding:16px;">
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:6px;">
-          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">I have</div>
+          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;" data-i18n="ops_ihave">I have</div>
           <div style="display:flex;gap:8px;align-items:center;">
             <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:700;color:#F0F4FF;flex:1;">100</div>
             <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.25);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#00E5FF;">EUR €</div>
@@ -1097,14 +1097,14 @@
         </div>
         <div style="text-align:center;margin:4px 0;"><div style="width:32px;height:32px;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.25);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:#00E5FF;">⇅</div></div>
         <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:14px;margin-bottom:12px;">
-          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">I get</div>
+          <div style="font-size:10px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;" data-i18n="ops_iget">I get</div>
           <div style="display:flex;gap:8px;align-items:center;">
             <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:700;color:#00E5FF;flex:1;">65,596</div>
             <div style="background:rgba(255,209,102,0.1);border:1px solid rgba(255,209,102,0.3);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#FFD166;">XAF</div>
           </div>
         </div>
         <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:10px;padding:10px;text-align:center;margin-bottom:12px;">
-          <div style="font-size:9px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;">Applied rate</div>
+          <div style="font-size:9px;color:rgba(240,244,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;" data-i18n="ops_applied">Applied rate</div>
           <div style="font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:#00E5FF;">1 EUR = 655.957 XAF</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -1122,23 +1122,23 @@
     <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
       <div style="background:linear-gradient(135deg,rgba(0,137,123,0.2),rgba(230,81,0,0.15));border:1px solid rgba(0,137,123,0.25);border-radius:16px;margin:16px 16px 0;padding:12px 14px;display:flex;align-items:center;gap:10px;">
         <div style="font-size:20px;">🛒</div>
-        <div><div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#E65100;">Shop</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);">× AliExpress · 500M+ products</div></div>
+        <div><div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#E65100;">Shop</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);" data-i18n="ops_500m">× AliExpress · 500M+ products</div></div>
         <div style="margin-left:auto;background:rgba(0,137,123,0.15);border:1px solid rgba(0,137,123,0.3);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:#00897B;">FCFA ▾</div>
       </div>
       <div style="padding:12px 16px;display:flex;gap:6px;overflow-x:auto;">
-        <div style="background:rgba(0,137,123,0.15);border:1px solid rgba(0,137,123,0.4);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:#00897B;white-space:nowrap;">📱 Electronics</div>
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">👗 Fashion</div>
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">🏠 Home</div>
-        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;">⚡ Solar</div>
+        <div style="background:rgba(0,137,123,0.15);border:1px solid rgba(0,137,123,0.4);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:#00897B;white-space:nowrap;" data-i18n="ops_cat1">📱 Electronics</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;" data-i18n="ops_cat2">👗 Fashion</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;" data-i18n="ops_cat3">🏠 Home</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.45);white-space:nowrap;" data-i18n="ops_cat4">⚡ Solar</div>
       </div>
       <div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
           <div style="background:rgba(0,137,123,0.08);height:64px;display:flex;align-items:center;justify-content:center;font-size:32px;">📱</div>
-          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;">Smartphone Pro</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Inter',sans-serif;">32,750 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);">from China 🇨🇳</div></div>
+          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;">Smartphone Pro</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Inter',sans-serif;">32,750 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);" data-i18n="ops_from_china">from China 🇨🇳</div></div>
         </div>
         <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
           <div style="background:rgba(0,137,123,0.08);height:64px;display:flex;align-items:center;justify-content:center;font-size:32px;">⚡</div>
-          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;">Kit Solar Hogar</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Inter',sans-serif;">164,875 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);">-15% hoy 🔥</div></div>
+          <div style="padding:8px;"><div style="font-size:10px;font-weight:600;color:#F0F4FF;margin-bottom:3px;" data-i18n="ops_kit_home">Kit Solar Hogar</div><div style="font-size:13px;font-weight:800;color:#E65100;font-family:'Inter',sans-serif;">164,875 FCFA</div><div style="font-size:9px;color:rgba(240,244,255,0.35);" data-i18n="ops_disc">-15% hoy 🔥</div></div>
         </div>
       </div>
       <div style="padding:0 16px 16px;"><div style="background:linear-gradient(135deg,#00897B,#E65100);border-radius:12px;padding:11px;text-align:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;color:#fff;" data-i18n="ops_cart_btn">Add to Cart · Pay with XenderMoney Wallet</div></div>
@@ -1152,26 +1152,26 @@
     <div class="reveal" style="background:#0F1F3D;border:1px solid rgba(0,229,255,0.15);border-radius:28px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.5);">
       <div style="background:linear-gradient(135deg,rgba(245,124,0,0.2),rgba(26,58,92,0.3));border:1px solid rgba(245,124,0,0.25);border-radius:16px;margin:16px 16px 0;padding:12px 14px;display:flex;align-items:center;gap:10px;">
         <div style="font-size:20px;">🚚</div>
-        <div><div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#F57C00;">Delivery</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);">Live GPS · Order #IA-9284</div></div>
-        <div style="margin-left:auto;background:rgba(0,255,178,0.1);border:1px solid rgba(0,255,178,0.25);border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700;color:#00FFB2;">ON WAY</div>
+        <div><div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:800;color:#F0F4FF;">Xender<span style="color:#F57C00;">Delivery</span></div><div style="font-size:9px;color:rgba(240,244,255,0.45);" data-i18n="ops_order_gps">Live GPS · Order #IA-9284</div></div>
+        <div style="margin-left:auto;background:rgba(0,255,178,0.1);border:1px solid rgba(0,255,178,0.25);border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700;color:#00FFB2;" data-i18n="ops_onway">ON WAY</div>
       </div>
       <div style="padding:14px 16px;">
         <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px;margin-bottom:12px;">
           <div style="display:flex;flex-direction:column;gap:0;">
             <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;position:relative;">
               <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#F57C00,#FFD166);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">📦</div>
-              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;">Order picked up</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;">14:32 · Pharmacy Centrale</div></div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;" data-i18n="ops_pickup">Order picked up</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;">14:32 · Pharmacy Centrale</div></div>
               <div style="margin-left:auto;font-size:10px;color:#00FFB2;font-weight:700;">✓</div>
             </div>
             <div style="margin-left:14px;width:1px;height:16px;background:rgba(255,255,255,0.1);"></div>
             <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;">
               <div style="width:28px;height:28px;border-radius:50%;background:rgba(245,124,0,0.15);border:2px solid #F57C00;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">🏍️</div>
-              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;">Rider in transit</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;">14:41 · 2.3 km away</div></div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:#F0F4FF;" data-i18n="ops_rider_transit">Rider in transit</div><div style="font-size:10px;color:rgba(240,244,255,0.4);margin-top:1px;" data-i18n="ops_km_away">14:41 · 2.3 km away</div></div>
             </div>
             <div style="margin-left:14px;width:1px;height:16px;background:rgba(255,255,255,0.07);"></div>
             <div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;">
               <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;opacity:0.5;">✅</div>
-              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:rgba(240,244,255,0.4);">Delivered</div><div style="font-size:10px;color:rgba(240,244,255,0.25);margin-top:1px;">ETA 15:10</div></div>
+              <div style="padding-top:4px;"><div style="font-size:12px;font-weight:600;color:rgba(240,244,255,0.4);" data-i18n="app_delivered">Delivered</div><div style="font-size:10px;color:rgba(240,244,255,0.25);margin-top:1px;" data-i18n="ops_eta">ETA 15:10</div></div>
             </div>
           </div>
         </div>
@@ -1197,26 +1197,26 @@
       </div>
       <div style="padding:12px 16px;">
         <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
-          <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.35);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:#00E5FF;white-space:nowrap;">All</div>
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Sent</div>
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Received</div>
-          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;">Bills</div>
+          <div style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.35);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:#00E5FF;white-space:nowrap;" data-i18n="ops_all">All</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;" data-i18n="ops_sent_pl">Sent</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;" data-i18n="ops_rcv_pl">Received</div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:rgba(240,244,255,0.4);white-space:nowrap;" data-i18n="app_bills">Bills</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,255,178,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">💰</div>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_dep">Deposit EUR</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 3 · 09:14</div></div>
-            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#00FFB2;font-family:'Inter',sans-serif;">+65,500 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Confirmed</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_dep">Deposit EUR</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;" data-i18n="ops_date1">Jun 3 · 09:14</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#00FFB2;font-family:'Inter',sans-serif;">+65,500 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;" data-i18n="ops_confirmed">Confirmed</div></div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,229,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;">🛒</div>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;">XenderShop</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 2 · 15:30</div></div>
-            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Inter',sans-serif;">-32,750 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Delivered</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;">XenderShop</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;" data-i18n="ops_date2">Jun 2 · 15:30</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Inter',sans-serif;">-32,750 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;" data-i18n="app_delivered">Delivered</div></div>
           </div>
           <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:11px;display:flex;align-items:center;gap:10px;">
             <div style="width:36px;height:36px;border-radius:10px;background:rgba(199,125,255,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">💸</div>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_transf">Transfer · Marie D.</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;">Jun 1 · 11:02</div></div>
-            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Inter',sans-serif;">-15,000 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;">Sent</div></div>
+            <div style="flex:1;"><div style="font-size:12px;font-weight:500;color:#F0F4FF;" data-i18n="ops_transf">Transfer · Marie D.</div><div style="font-size:10px;color:rgba(240,244,255,0.35);margin-top:2px;" data-i18n="ops_date3">Jun 1 · 11:02</div></div>
+            <div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:#FF4D6D;font-family:'Inter',sans-serif;">-15,000 XAF</div><div style="font-size:9px;color:rgba(240,244,255,0.3);margin-top:2px;" data-i18n="ops_sent_one">Sent</div></div>
           </div>
         </div>
         <div style="background:rgba(255,209,102,0.06);border:1px solid rgba(255,209,102,0.15);border-radius:10px;padding:10px 12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;">
@@ -1250,7 +1250,7 @@
       <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi1">Total Volume (24h)</div><div style="color:#FFD166;font-size:20px;font-weight:800;font-family:'Inter',sans-serif;">$2.4M</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +18.3%</div></div>
       <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi2">Active Users</div><div style="color:#00E5FF;font-size:20px;font-weight:800;font-family:'Inter',sans-serif;">142,508</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +4.7%</div></div>
       <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi3">Transactions Today</div><div style="color:#F0F4FF;font-size:20px;font-weight:800;font-family:'Inter',sans-serif;">38,921</div><div style="color:#00FFB2;font-size:10px;margin-top:4px;">↑ +9.1%</div></div>
-      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi4">Countries Active</div><div style="color:#F0F4FF;font-size:20px;font-weight:800;font-family:'Inter',sans-serif;">35</div><div style="color:rgba(240,244,255,0.35);font-size:10px;margin-top:4px;">3 continents</div></div>
+      <div style="background:#050B18;padding:18px 20px;"><div style="color:rgba(240,244,255,0.4);font-size:10px;margin-bottom:6px;" data-i18n="dash_kpi4">Countries Active</div><div style="color:#F0F4FF;font-size:20px;font-weight:800;font-family:'Inter',sans-serif;">35</div><div style="color:rgba(240,244,255,0.35);font-size:10px;margin-top:4px;" data-i18n="dash_3cont">3 continents</div></div>
     </div>
     <div style="padding:22px;display:grid;grid-template-columns:180px 1fr;gap:16px;">
       <div style="display:flex;flex-direction:column;gap:5px;">
@@ -1261,7 +1261,7 @@
         <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod5">📊 Analytics</div>
         <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod6">👥 Users & Roles</div>
         <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.45);font-size:11px;" data-i18n="dash_mod7">🎁 Loyalty</div>
-        <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.2);font-size:11px;">⋯ +23 modules</div>
+        <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:7px 11px;color:rgba(240,244,255,0.2);font-size:11px;" data-i18n="dash_more">⋯ +23 modules</div>
       </div>
       <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px;">
         <div style="color:rgba(240,244,255,0.4);font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;" data-i18n="dash_chart">TRANSFER VOLUME · LAST 7 DAYS</div>
@@ -1383,7 +1383,7 @@
       <p style="font-size:15px;color:var(--navy);line-height:1.75;margin-bottom:20px;" data-i18n="test1_q">"I send money to my family in Cameroon every month. With XenderMoney it arrives in seconds — I used to wait 3 days with other services. It changed everything."</p>
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue-light),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;">JM</div>
-        <div><div style="font-size:14px;font-weight:700;color:var(--navy);" data-i18n="test1_name">Jean-Marie N.</div><div style="font-size:12px;color:var(--grey);">🇫🇷 Paris · Camerounais</div></div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--navy);" data-i18n="test1_name">Jean-Marie N.</div><div style="font-size:12px;color:var(--grey);" data-i18n="test1_role">🇫🇷 Paris · Camerounais</div></div>
       </div>
     </div>
     <div style="background:linear-gradient(140deg,#0D2B4E,#1A4A7A);border-radius:24px;padding:32px;">
@@ -1391,7 +1391,7 @@
       <p style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.75;margin-bottom:20px;" data-i18n="test2_q">"My shop on XenderShop has 3× more sales since I joined. Customers pay with XenderMoney or MoMo and receive in 24h. Before, I only sold locally — now I sell to all of Africa."</p>
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:44px;height:44px;border-radius:50%;background:rgba(245,166,35,0.2);border:2px solid rgba(245,166,35,0.4);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#F5A623;">AK</div>
-        <div><div style="font-size:14px;font-weight:700;color:#fff;" data-i18n="test2_name">Aminata K.</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">🇸🇳 Dakar · Vendeuse en ligne</div></div>
+        <div><div style="font-size:14px;font-weight:700;color:#fff;" data-i18n="test2_name">Aminata K.</div><div style="font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="test2_role">🇸🇳 Dakar · Vendeuse en ligne</div></div>
       </div>
     </div>
     <div style="background:var(--bg);border:1px solid var(--border);border-radius:24px;padding:32px;">
@@ -1399,7 +1399,7 @@
       <p style="font-size:15px;color:var(--navy);line-height:1.75;margin-bottom:20px;" data-i18n="test3_q">"I am a XenderDelivery rider in Douala. In one month I earned more than my old job. The app shows orders in real time and the payment is automatic. I recommend it 100%."</p>
       <div style="display:flex;align-items:center;gap:12px;">
         <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#22C55E,#16A34A);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;">ET</div>
-        <div><div style="font-size:14px;font-weight:700;color:var(--navy);" data-i18n="test3_name">Emmanuel T.</div><div style="font-size:12px;color:var(--grey);">🇨🇲 Douala · XenderDelivery Rider</div></div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--navy);" data-i18n="test3_name">Emmanuel T.</div><div style="font-size:12px;color:var(--grey);" data-i18n="test3_role">🇨🇲 Douala · XenderDelivery Rider</div></div>
       </div>
     </div>
   </div>
@@ -1417,9 +1417,9 @@
     <!-- Q1 2025 - done -->
     <div style="display:grid;grid-template-columns:1fr 40px 1fr;gap:20px;align-items:center;margin-bottom:32px;">
       <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:20px;text-align:right;">
-        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;">Q1 2025 · ✅ LIVE</div>
-        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">XenderMoney Launch</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);">Wallet · Send · MoMo · 10 countries</div>
+        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;" data-i18n="rm1_s">Q1 2025 · ✅ LIVE</div>
+        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;" data-i18n="rm1_t">XenderMoney Launch</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);" data-i18n="rm1_d">Wallet · Send · MoMo · 10 countries</div>
       </div>
       <div style="width:40px;height:40px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:1;flex-shrink:0;">✓</div>
       <div></div>
@@ -1429,17 +1429,17 @@
       <div></div>
       <div style="width:40px;height:40px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:1;flex-shrink:0;">✓</div>
       <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:20px;">
-        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;">Q3 2025 · ✅ LIVE</div>
+        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;" data-i18n="rm2_s">Q3 2025 · ✅ LIVE</div>
         <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">XenderShop &amp; XenderBigShop</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);">Marketplace · Multivendor · 2M+ products</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);" data-i18n="rm2_d">Marketplace · Multivendor · 2M+ products</div>
       </div>
     </div>
     <!-- Q4 2025 - done -->
     <div style="display:grid;grid-template-columns:1fr 40px 1fr;gap:20px;align-items:center;margin-bottom:32px;">
       <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:20px;text-align:right;">
-        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;">Q4 2025 · ✅ LIVE</div>
+        <div style="font-size:11px;font-weight:700;color:#22C55E;letter-spacing:1px;margin-bottom:6px;" data-i18n="rm3_s">Q4 2025 · ✅ LIVE</div>
         <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">XenderDelivery</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);">Real-time tracking · 5,000 riders · 3 continents</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);" data-i18n="rm3_d">Real-time tracking · 5,000 riders · 3 continents</div>
       </div>
       <div style="width:40px;height:40px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:1;flex-shrink:0;">✓</div>
       <div></div>
@@ -1449,17 +1449,17 @@
       <div></div>
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(245,166,35,0.2);border:2px solid #F5A623;display:flex;align-items:center;justify-content:center;font-size:14px;z-index:1;flex-shrink:0;">🔨</div>
       <div style="background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.2);border-radius:16px;padding:20px;">
-        <div style="font-size:11px;font-weight:700;color:#F5A623;letter-spacing:1px;margin-bottom:6px;">Q2 2026 · 🔨 IN BUILD</div>
-        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">XenderPay — B2B Payments</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);">API · Invoice · Cross-border business transfers</div>
+        <div style="font-size:11px;font-weight:700;color:#F5A623;letter-spacing:1px;margin-bottom:6px;" data-i18n="rm4_s">Q2 2026 · 🔨 IN BUILD</div>
+        <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;" data-i18n="rm4_t">XenderPay — B2B Payments</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);" data-i18n="rm4_d">API · Invoice · Cross-border business transfers</div>
       </div>
     </div>
     <!-- Q4 2026 - planned -->
     <div style="display:grid;grid-template-columns:1fr 40px 1fr;gap:20px;align-items:center;">
       <div style="background:rgba(199,125,255,0.06);border:1px solid rgba(199,125,255,0.15);border-radius:16px;padding:20px;text-align:right;">
-        <div style="font-size:11px;font-weight:700;color:#C77DFF;letter-spacing:1px;margin-bottom:6px;">Q4 2026 · 📋 PLANNED</div>
+        <div style="font-size:11px;font-weight:700;color:#C77DFF;letter-spacing:1px;margin-bottom:6px;" data-i18n="rm5_s">Q4 2026 · 📋 PLANNED</div>
         <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;">InnovaAFRIC Super App</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.45);">All services unified · AI assistant · 35+ countries</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);" data-i18n="rm5_d">All services unified · AI assistant · 35+ countries</div>
       </div>
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(199,125,255,0.15);border:2px solid rgba(199,125,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;z-index:1;flex-shrink:0;">🚀</div>
       <div></div>
@@ -1482,10 +1482,10 @@
         <h3 style="font-size:20px;font-weight:900;color:var(--navy);margin-bottom:12px;" data-i18n="inv_box1_h">For Investors</h3>
         <p style="font-size:14px;color:var(--grey);line-height:1.75;margin-bottom:20px;" data-i18n="inv_box1_p">InnovaAFRIC is in active growth phase across 35 countries. We offer equity participation for strategic investors who share our vision of a digitally connected Africa. Angel rounds and Series A details available upon request.</p>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
-          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span>Tricontinental presence — Africa, Europe, LatAm</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span>6 revenue streams: fintech, e-commerce, logistics, SaaS</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span>TAM: $400B+ African digital economy by 2030</li>
-          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span>Founder-led, lean team, profitable unit economics</li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span><span data-i18n="inv_li1">Tricontinental presence — Africa, Europe, LatAm</span></li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span><span data-i18n="inv_li2">6 revenue streams: fintech, e-commerce, logistics, SaaS</span></li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span><span data-i18n="inv_li3">TAM: $400B+ African digital economy by 2030</span></li>
+          <li style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--navy);"><span style="color:var(--blue-light);font-weight:700;">✓</span><span data-i18n="inv_li4">Founder-led, lean team, profitable unit economics</span></li>
         </ul>
         <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 22px;font-size:13px;font-weight:700;text-decoration:none;" data-i18n="inv_box1_btn">Request Investor Deck →</a>
       </div>
@@ -1495,20 +1495,20 @@
         <h3 style="font-size:20px;font-weight:900;color:#fff;margin-bottom:12px;" data-i18n="inv_box2_h">For Press & Media</h3>
         <p style="font-size:14px;color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:20px;" data-i18n="inv_box2_p">InnovaAFRIC is one of the most ambitious African tech stories of our decade. Our founder is available for interviews, panels, and keynote engagements. Press kits and high-res assets available on request.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;">Founded</div><div style="font-size:16px;font-weight:800;color:#F5A623;">2024</div></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;">Headquarters</div><div style="font-size:16px;font-weight:800;color:#42A8E1;">Douala, CM</div></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;">Products</div><div style="font-size:16px;font-weight:800;color:#22C55E;">5 live</div></div>
-          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;">Countries</div><div style="font-size:16px;font-weight:800;color:#C77DFF;">35+</div></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;" data-i18n="inv_founded">Founded</div><div style="font-size:16px;font-weight:800;color:#F5A623;">2024</div></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;" data-i18n="inv_hq">Headquarters</div><div style="font-size:16px;font-weight:800;color:#42A8E1;">Douala, CM</div></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;" data-i18n="inv_products">Products</div><div style="font-size:16px;font-weight:800;color:#22C55E;" data-i18n="inv_5live">5 live</div></div>
+          <div style="background:rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center;"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px;" data-i18n="part_stat1">Countries</div><div style="font-size:16px;font-weight:800;color:#C77DFF;">35+</div></div>
         </div>
         <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;background:#F5A623;color:#0D2B4E;border-radius:10px;padding:12px 22px;font-size:13px;font-weight:700;text-decoration:none;" data-i18n="inv_box2_btn">Request Press Kit →</a>
       </div>
     </div>
     <!-- Key figures -->
     <div style="background:var(--bg2);border-radius:20px;padding:32px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;">
-      <div><div style="font-size:28px;font-weight:900;color:var(--blue-light);">$400B</div><div style="font-size:12px;color:var(--grey);margin-top:4px;">African Digital TAM 2030</div></div>
-      <div><div style="font-size:28px;font-weight:900;color:var(--orange);">1.4B</div><div style="font-size:12px;color:var(--grey);margin-top:4px;">People we can serve</div></div>
-      <div><div style="font-size:28px;font-weight:900;color:#22C55E);">6</div><div style="font-size:12px;color:var(--grey);margin-top:4px;">Revenue streams</div></div>
-      <div><div style="font-size:28px;font-weight:900;color:#C77DFF;">2026</div><div style="font-size:12px;color:var(--grey);margin-top:4px;">Super App target</div></div>
+      <div><div style="font-size:28px;font-weight:900;color:var(--blue-light);">$400B</div><div style="font-size:12px;color:var(--grey);margin-top:4px;" data-i18n="kf1">African Digital TAM 2030</div></div>
+      <div><div style="font-size:28px;font-weight:900;color:var(--orange);">1.4B</div><div style="font-size:12px;color:var(--grey);margin-top:4px;" data-i18n="kf2">People we can serve</div></div>
+      <div><div style="font-size:28px;font-weight:900;color:#22C55E);">6</div><div style="font-size:12px;color:var(--grey);margin-top:4px;" data-i18n="kf3">Revenue streams</div></div>
+      <div><div style="font-size:28px;font-weight:900;color:#C77DFF;">2026</div><div style="font-size:12px;color:var(--grey);margin-top:4px;" data-i18n="kf4">Super App target</div></div>
     </div>
   </div>
 </section>
@@ -1556,13 +1556,13 @@
 
 <!-- NEWSLETTER -->
 <section style="background:linear-gradient(135deg,#2B8DC7 0%,#0D2B4E 100%);padding:60px 5%;text-align:center;">
-  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;">📬 Mantente al día con INNOVAAFRIC</div>
-  <p style="font-size:15px;color:rgba(255,255,255,0.8);margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto;">Recibe actualizaciones sobre nuevas funcionalidades, expansiones de país y noticias del ecosistema</p>
+  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;" data-i18n="nl_h">📬 Mantente al día con INNOVAAFRIC</div>
+  <p style="font-size:15px;color:rgba(255,255,255,0.8);margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto;" data-i18n="nl_p">Recibe actualizaciones sobre nuevas funcionalidades, expansiones de país y noticias del ecosistema</p>
   <form onsubmit="nlInnova(event)" style="display:flex;gap:8px;max-width:460px;margin:0 auto 12px;">
     <input id="nl-innova" type="email" placeholder="tu@email.com" required style="flex:1;padding:13px 18px;border-radius:8px;border:none;font-size:14px;outline:none;"/>
-    <button type="submit" style="background:#F5A623;color:#fff;border:none;border-radius:8px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;">Suscribirse →</button>
+    <button type="submit" style="background:#F5A623;color:#fff;border:none;border-radius:8px;padding:13px 22px;font-size:14px;font-weight:800;cursor:pointer;white-space:nowrap;" data-i18n="nl_btn">Suscribirse →</button>
   </form>
-  <p style="font-size:11px;color:rgba(255,255,255,0.5);">Cero spam · Política de privacidad · Cancela cuando quieras</p>
+  <p style="font-size:11px;color:rgba(255,255,255,0.5);" data-i18n="nl_note">Cero spam · Política de privacidad · Cancela cuando quieras</p>
 </section>
 
 <!-- FOOTER -->
@@ -1610,6 +1610,149 @@
 
   const TR = {
     es:{
+      cur_xof_use:'África Occidental · Senegal, Costa de Marfil, Mali, Burkina Faso, Togo, Benín',
+      get_started:'🚀 Empezar',
+      pm_tag:'Wallet · Fintech',
+      ps_tag:'E-Commerce · Venta Minorista',
+      pb_tag:'Marketplace · Multivendedor',
+      pd_tag:'Logística · Última Milla',
+      mk_merchant:'Comercio',
+      st2_mall:'🛍️ CENTRO COMERCIAL',
+      chips_asia:'<span class="chip">🇨🇳 China</span><span class="chip">🇯🇵 Japón</span><span class="chip">🇰🇷 Corea</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 India</span><span class="chip">🇹🇭 Tailandia</span>',
+      chips_eu:'<span class="chip">🇪🇸 España</span><span class="chip">🇫🇷 Francia</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Bélgica</span><span class="chip">🇮🇹 Italia</span><span class="chip">🇩🇪 Alemania</span>',
+      chips_af:'<span class="chip">🇨🇲 Camerún</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Costa de Marfil</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇬🇶 Guinea Ec.</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Ruanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 RDC</span><span class="chip">🇬🇦 Gabón</span>',
+      app_greet:'Buenos días 👋',
+      app_total_bal:'SALDO TOTAL',
+      app_xaf_full:'XAF · Franco CFA de África Central',
+      app_shop:'Tienda',
+      app_recent:'RECIENTES',
+      app_today:'Hoy 09:42',
+      app_yesterday:'Ayer',
+      app_sneakers:'Zapatillas',
+      app_order_no:'Pedido #XD-08471',
+      app_enroute:'EN CAMINO · 68%',
+      app_in_transit:'En camino',
+      app_delivered:'Entregado',
+      app_done:'Hecho',
+      app_withdraw:'Retirar',
+      app_bills:'Facturas',
+      app_livemap:'Mapa en Vivo',
+      ops_offer:'OFERTA DEL DÍA · Kit Solar -15%',
+      ops_avail:'Disponible',
+      ops_intl:'Internacional',
+      ops_p2p:'P2P Gratis',
+      ops_rcp_country:'🇨🇲 Camerún · MTN Mobile Money',
+      ops_rcp_gets:'El destinatario recibe',
+      ops_fee:'Comisión (2%)',
+      ops_save:'Ahorras 8,00 €',
+      ops_conv_h:'💱 Conversor de Divisas',
+      ops_ihave:'Tengo',
+      ops_iget:'Recibo',
+      ops_applied:'Tasa aplicada',
+      ops_500m:'× AliExpress · 500M+ productos',
+      ops_cat1:'📱 Electrónica',
+      ops_cat2:'👗 Moda',
+      ops_cat3:'🏠 Hogar',
+      ops_cat4:'⚡ Solar',
+      ops_from_china:'desde China 🇨🇳',
+      ops_kit_home:'Kit Solar Hogar',
+      ops_disc:'-15% hoy 🔥',
+      ops_order_gps:'GPS en vivo · Pedido #IA-9284',
+      ops_onway:'EN CAMINO',
+      ops_pickup:'Pedido recogido',
+      ops_rider_transit:'Rider en camino',
+      ops_km_away:'14:41 · a 2,3 km',
+      ops_eta:'Llegada 15:10',
+      ops_all:'Todo',
+      ops_sent_pl:'Enviados',
+      ops_rcv_pl:'Recibidos',
+      ops_date1:'3 jun · 09:14',
+      ops_date2:'2 jun · 15:30',
+      ops_date3:'1 jun · 11:02',
+      ops_confirmed:'Confirmado',
+      ops_sent_one:'Enviado',
+      dash_3cont:'3 continentes',
+      dash_more:'⋯ +23 módulos',
+      test1_role:'🇫🇷 París · Camerunés',
+      test2_role:'🇸🇳 Dakar · Vendedora online',
+      test3_role:'🇨🇲 Douala · Rider de XenderDelivery',
+      rm1_s:'Q1 2025 · ✅ EN VIVO',
+      rm1_t:'Lanzamiento de XenderMoney',
+      rm1_d:'Wallet · Envíos · MoMo · 10 países',
+      rm2_s:'Q3 2025 · ✅ EN VIVO',
+      rm2_d:'Marketplace · Multivendedor · 2M+ productos',
+      rm3_s:'Q4 2025 · ✅ EN VIVO',
+      rm3_d:'Seguimiento en tiempo real · 5.000 riders · 3 continentes',
+      rm4_s:'Q2 2026 · 🔨 EN CONSTRUCCIÓN',
+      rm4_t:'XenderPay — Pagos B2B',
+      rm4_d:'API · Facturación · Transferencias empresariales transfronterizas',
+      rm5_s:'Q4 2026 · 📋 PLANIFICADO',
+      rm5_d:'Todos los servicios unificados · Asistente IA · 35+ países',
+      inv_li1:'Presencia tricontinental — África, Europa, LatAm',
+      inv_li2:'6 líneas de ingresos: fintech, e-commerce, logística, SaaS',
+      inv_li3:'TAM: economía digital africana de $400B+ en 2030',
+      inv_li4:'Liderada por el fundador, equipo ágil, economía unitaria rentable',
+      inv_founded:'Fundada',
+      inv_hq:'Sede',
+      inv_products:'Productos',
+      inv_5live:'5 activos',
+      kf1:'TAM Digital Africano 2030',
+      kf2:'Personas que podemos servir',
+      kf3:'Líneas de ingresos',
+      kf4:'Objetivo Super App',
+      nl_h:'📬 Mantente al día con INNOVAAFRIC',
+      nl_p:'Recibe actualizaciones sobre nuevas funcionalidades, expansiones de país y noticias del ecosistema',
+      nl_btn:'Suscribirse →',
+      nl_note:'Cero spam · Política de privacidad · Cancela cuando quieras',
+      nl_subscribing:'Suscribiendo…',
+      nl_ok:'✅ ¡Suscrito! Recibirás actualizaciones de InnovaAFRIC en',
+      ck_text:'🍪 Usamos cookies esenciales y analíticas para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#" style="color:#42A8E1;text-decoration:underline;">Política de Privacidad</a>.',
+      ck_ess:'Solo esenciales',
+      ck_all:'Aceptar todo ✓',
+      sup_h:'💬 ¿Cómo podemos ayudarte?',
+      sup_wa:'Respuesta en minutos',
+      reg_label:'ÚNETE AL ECOSISTEMA',
+      reg_h:'Crea tu cuenta gratis',
+      reg_p:'Elige tu tipo de cuenta y empieza en minutos.',
+      reg_tab1:'👤 Cliente',
+      reg_tab2:'🏪 Comercio',
+      reg_tab3:'🚴 Rider',
+      reg_fname:'Nombre *',
+      reg_lname:'Apellidos *',
+      reg_phone:'Teléfono *',
+      reg_country:'País *',
+      reg_pass:'Contraseña *',
+      reg_city:'Ciudad *',
+      reg_bizname:'Nombre del negocio *',
+      reg_biztype:'Tipo de negocio *',
+      reg_bizemail:'Email del negocio *',
+      reg_nif:'NIF / Registro mercantil',
+      reg_fullname:'Nombre completo *',
+      reg_vehicle:'Vehículo *',
+      reg_avail:'Disponibilidad *',
+      reg_opt_country1:'<option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>Burkina Faso</option><option>Niger</option><option>Chad</option><option>Gabón</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option>',
+      reg_opt_country2:'<option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option>',
+      reg_opt_biztype:'<option value="">Selecciona tipo</option><option>Restaurante</option><option>Tienda / Boutique</option><option>Farmacia</option><option>Supermercado</option><option>Proveedor mayorista</option><option>Artesano</option><option>Servicio profesional</option><option>Otro</option>',
+      reg_opt_city:'<option value="">Selecciona ciudad</option><option>Yaundé</option><option>Douala</option><option>Dakar</option><option>Abidján</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>París</option><option>Barcelona</option><option>Otra</option>',
+      reg_opt_vehicle:'<option value="">Tipo de vehículo</option><option>🛵 Moto</option><option>🚲 Bicicleta</option><option>🚗 Coche</option><option>🚐 Furgoneta</option><option>🚚 Camión ligero</option>',
+      reg_opt_avail:'<option>Tiempo completo</option><option>Media jornada</option><option>Fines de semana</option><option>Flexible</option>',
+      reg_terms1:' Acepto los <a href="#" style="color:var(--orange);">Términos de servicio</a> y la <a href="#" style="color:var(--orange);">Política de privacidad</a>',
+      reg_terms2:' Acepto los <a href="#" style="color:var(--orange);">Términos para comercios</a>',
+      reg_terms3:' Tengo carné de conducir vigente y acepto las <a href="#" style="color:var(--orange);">Condiciones de rider</a>',
+      reg_btn1:'Crear cuenta gratuita →',
+      reg_btn2:'Registrar mi negocio →',
+      reg_btn3:'Quiero ser Rider →',
+      reg_haveacc:'¿Ya tienes cuenta? <a href="#" style="color:var(--orange);font-weight:700;">Inicia sesión →</a>',
+      reg_ok_cliente:'✅ ¡Cuenta creada! Revisa tu email para verificar.',
+      reg_ok_comercio:'✅ ¡Negocio registrado! Te contactamos en 24h.',
+      reg_ok_rider:'✅ ¡Solicitud enviada! Te contactamos en 48h.',
+      ph_fname:'Tu nombre',
+      ph_lname:'Tus apellidos',
+      ph_pass:'Mín. 8 caracteres',
+      ph_city:'Tu ciudad',
+      ph_bizname:'Nombre de tu empresa',
+      ph_nif:'Número de registro (opcional)',
+      ph_fullname:'Tu nombre completo',
       sec_net:'La Red InnovaAFRIC', net_h:'Una red humana. Cinco aplicaciones.',
       net_sub:'Lo último del ecosistema: cada miembro de la red — cliente, agente de barrio, representante, rider y comercio — tiene su propia app conectada en tiempo real.',
       rc_adv:'💡 Una cuenta abre todo el ecosistema', rci_adv:'💡 Gana el 5% en cada compra de unidades', rr_adv:'💡 Gana el 50% del ahorro de su red', rd_adv:'💡 Cobra en el momento de entregar', rm_adv:'💡 Vende más sin esfuerzo logístico',
@@ -1757,6 +1900,159 @@
       ham_p:'🛒 Productos', ham_h:'⚙️ Cómo funciona', ham_c:'🌍 Nuestra Presencia'
     },
     en:{
+      af_c3_p:'XenderDelivery creates jobs for riders while solving Africa\'s delivery gap. Real-time GPS tracking, insured packages, same-day delivery in major cities.',
+      af_desc:'Africa is not just the end market — it is a producer, an innovator, and a growing middle class hungry for quality products and financial tools. With the highest Mobile Money penetration on the planet, Africa is ready for digital commerce at scale.',
+      cur_xof_use:'West Africa · Senegal, Côte d\'Ivoire, Mali, Burkina Faso, Togo, Benin',
+      eu_desc:'Europe is the nerve centre of the ecosystem: international payments, diaspora services, quality certification and logistics coordination between Asia and Africa. It is also the gateway for the millions of Africans living in Europe who send money home every day.',
+      hero_sub:'InnovaAFRIC is the triangular digital infrastructure that links Asia\'s production, Europe\'s logistics hub, and Africa\'s explosive consumer market — payments, e-commerce and delivery in one unified ecosystem.',
+      inv_h:'Partner with Africa\'s Next Big Platform',
+      part_sub:'We connect with the world\'s most trusted financial networks, payment operators and logistics platforms.',
+      road_h:'What\'s Coming Next',
+      rr_adv:'💡 Earns 50% of his network\'s savings',
+      rr_desc:'Builds the network: authorizes circulars in his zone, collects their cash deposits and earns 50% of his network\'s savings.',
+      st2_d:'At the shopping mall, Alysson scans the store\'s XenderMoney QR with her phone. One tap, payment confirmed — and the shopping afternoon with her little sister Madysson continues without touching a single banknote.',
+      get_started:'🚀 Get Started',
+      pm_tag:'Wallet · Fintech',
+      ps_tag:'E-Commerce · Retail',
+      pb_tag:'Marketplace · Multivendor',
+      pd_tag:'Logistics · Last-Mile',
+      mk_merchant:'Merchant',
+      st2_mall:'🛍️ SHOPPING MALL',
+      chips_asia:'<span class="chip">🇨🇳 China</span><span class="chip">🇯🇵 Japan</span><span class="chip">🇰🇷 Korea</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 India</span><span class="chip">🇹🇭 Thailand</span>',
+      chips_eu:'<span class="chip">🇪🇸 Spain</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgium</span><span class="chip">🇮🇹 Italy</span><span class="chip">🇩🇪 Germany</span>',
+      chips_af:'<span class="chip">🇨🇲 Cameroon</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Côte d\'Ivoire</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇬🇶 Eq. Guinea</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 DRC</span><span class="chip">🇬🇦 Gabon</span>',
+      app_greet:'Good morning 👋',
+      app_total_bal:'TOTAL BALANCE',
+      app_xaf_full:'XAF · Central African Franc',
+      app_shop:'Shop',
+      app_recent:'RECENT',
+      app_today:'Today 09:42',
+      app_yesterday:'Yesterday',
+      app_sneakers:'Sneakers',
+      app_order_no:'Order #XD-08471',
+      app_enroute:'EN ROUTE · 68%',
+      app_in_transit:'In transit',
+      app_delivered:'Delivered',
+      app_done:'Done',
+      app_withdraw:'Withdraw',
+      app_bills:'Bills',
+      app_livemap:'Live Map',
+      ops_offer:'DEAL OF THE DAY · Solar Kit -15%',
+      ops_avail:'Available',
+      ops_intl:'International',
+      ops_p2p:'P2P Free',
+      ops_rcp_country:'🇨🇲 Cameroon · MTN Mobile Money',
+      ops_rcp_gets:'Recipient gets',
+      ops_fee:'Fee (2%)',
+      ops_save:'Save €8.00',
+      ops_conv_h:'💱 Currency Converter',
+      ops_ihave:'I have',
+      ops_iget:'I get',
+      ops_applied:'Applied rate',
+      ops_500m:'× AliExpress · 500M+ products',
+      ops_cat1:'📱 Electronics',
+      ops_cat2:'👗 Fashion',
+      ops_cat3:'🏠 Home',
+      ops_cat4:'⚡ Solar',
+      ops_from_china:'from China 🇨🇳',
+      ops_kit_home:'Home Solar Kit',
+      ops_disc:'-15% today 🔥',
+      ops_order_gps:'Live GPS · Order #IA-9284',
+      ops_onway:'ON WAY',
+      ops_pickup:'Order picked up',
+      ops_rider_transit:'Rider in transit',
+      ops_km_away:'14:41 · 2.3 km away',
+      ops_eta:'ETA 15:10',
+      ops_all:'All',
+      ops_sent_pl:'Sent',
+      ops_rcv_pl:'Received',
+      ops_date1:'Jun 3 · 09:14',
+      ops_date2:'Jun 2 · 15:30',
+      ops_date3:'Jun 1 · 11:02',
+      ops_confirmed:'Confirmed',
+      ops_sent_one:'Sent',
+      dash_3cont:'3 continents',
+      dash_more:'⋯ +23 modules',
+      test1_role:'🇫🇷 Paris · Cameroonian',
+      test2_role:'🇸🇳 Dakar · Online seller',
+      test3_role:'🇨🇲 Douala · XenderDelivery Rider',
+      rm1_s:'Q1 2025 · ✅ LIVE',
+      rm1_t:'XenderMoney Launch',
+      rm1_d:'Wallet · Send · MoMo · 10 countries',
+      rm2_s:'Q3 2025 · ✅ LIVE',
+      rm2_d:'Marketplace · Multivendor · 2M+ products',
+      rm3_s:'Q4 2025 · ✅ LIVE',
+      rm3_d:'Real-time tracking · 5,000 riders · 3 continents',
+      rm4_s:'Q2 2026 · 🔨 IN BUILD',
+      rm4_t:'XenderPay — B2B Payments',
+      rm4_d:'API · Invoice · Cross-border business transfers',
+      rm5_s:'Q4 2026 · 📋 PLANNED',
+      rm5_d:'All services unified · AI assistant · 35+ countries',
+      inv_li1:'Tricontinental presence — Africa, Europe, LatAm',
+      inv_li2:'6 revenue streams: fintech, e-commerce, logistics, SaaS',
+      inv_li3:'TAM: $400B+ African digital economy by 2030',
+      inv_li4:'Founder-led, lean team, profitable unit economics',
+      inv_founded:'Founded',
+      inv_hq:'Headquarters',
+      inv_products:'Products',
+      inv_5live:'5 live',
+      kf1:'African Digital TAM 2030',
+      kf2:'People we can serve',
+      kf3:'Revenue streams',
+      kf4:'Super App target',
+      nl_h:'📬 Stay up to date with INNOVAAFRIC',
+      nl_p:'Get updates about new features, country expansions and ecosystem news',
+      nl_btn:'Subscribe →',
+      nl_note:'Zero spam · Privacy policy · Unsubscribe anytime',
+      nl_subscribing:'Subscribing…',
+      nl_ok:'✅ Subscribed! You will receive InnovaAFRIC updates at',
+      ck_text:'🍪 We use essential and analytics cookies to improve your experience. By continuing to browse you accept our <a href="#" style="color:#42A8E1;text-decoration:underline;">Privacy Policy</a>.',
+      ck_ess:'Essential only',
+      ck_all:'Accept all ✓',
+      sup_h:'💬 How can we help you?',
+      sup_wa:'Reply within minutes',
+      reg_label:'JOIN THE ECOSYSTEM',
+      reg_h:'Create your free account',
+      reg_p:'Choose your account type and start in minutes.',
+      reg_tab1:'👤 Client',
+      reg_tab2:'🏪 Merchant',
+      reg_tab3:'🚴 Rider',
+      reg_fname:'First name *',
+      reg_lname:'Last name *',
+      reg_phone:'Phone *',
+      reg_country:'Country *',
+      reg_pass:'Password *',
+      reg_city:'City *',
+      reg_bizname:'Business name *',
+      reg_biztype:'Business type *',
+      reg_bizemail:'Business email *',
+      reg_nif:'Tax ID / Business registry',
+      reg_fullname:'Full name *',
+      reg_vehicle:'Vehicle *',
+      reg_avail:'Availability *',
+      reg_opt_country1:'<option value="">Select country</option><option>Cameroon</option><option>Senegal</option><option>Côte d\'Ivoire</option><option>Mali</option><option>Guinea</option><option>Burkina Faso</option><option>Niger</option><option>Chad</option><option>Gabon</option><option>Spain</option><option>France</option><option>China</option><option>Other</option>',
+      reg_opt_country2:'<option value="">Select country</option><option>Cameroon</option><option>Senegal</option><option>Côte d\'Ivoire</option><option>Mali</option><option>Guinea</option><option>Spain</option><option>France</option><option>China</option><option>Other</option>',
+      reg_opt_biztype:'<option value="">Select type</option><option>Restaurant</option><option>Shop / Boutique</option><option>Pharmacy</option><option>Supermarket</option><option>Wholesale supplier</option><option>Artisan</option><option>Professional service</option><option>Other</option>',
+      reg_opt_city:'<option value="">Select city</option><option>Yaoundé</option><option>Douala</option><option>Dakar</option><option>Abidjan</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>Paris</option><option>Barcelona</option><option>Other</option>',
+      reg_opt_vehicle:'<option value="">Vehicle type</option><option>🛵 Motorbike</option><option>🚲 Bicycle</option><option>🚗 Car</option><option>🚐 Van</option><option>🚚 Light truck</option>',
+      reg_opt_avail:'<option>Full-time</option><option>Part-time</option><option>Weekends</option><option>Flexible</option>',
+      reg_terms1:' I accept the <a href="#" style="color:var(--orange);">Terms of Service</a> and the <a href="#" style="color:var(--orange);">Privacy Policy</a>',
+      reg_terms2:' I accept the <a href="#" style="color:var(--orange);">Merchant Terms</a>',
+      reg_terms3:' I have a valid driving licence and accept the <a href="#" style="color:var(--orange);">Rider Terms</a>',
+      reg_btn1:'Create free account →',
+      reg_btn2:'Register my business →',
+      reg_btn3:'I want to be a Rider →',
+      reg_haveacc:'Already have an account? <a href="#" style="color:var(--orange);font-weight:700;">Log in →</a>',
+      reg_ok_cliente:'✅ Account created! Check your email to verify.',
+      reg_ok_comercio:'✅ Business registered! We will contact you within 24h.',
+      reg_ok_rider:'✅ Application sent! We will contact you within 48h.',
+      ph_fname:'Your first name',
+      ph_lname:'Your last name',
+      ph_pass:'Min. 8 characters',
+      ph_city:'Your city',
+      ph_bizname:'Your company name',
+      ph_nif:'Registration number (optional)',
+      ph_fullname:'Your full name',
       sec_net:'The InnovaAFRIC Network', net_h:'One human network. Five apps.',
       net_sub:'The latest addition to the ecosystem: every member of the network — client, neighborhood agent, representative, rider and merchant — has their own real-time connected app.',
       rc_adv:'💡 One account unlocks the whole ecosystem', rci_adv:'💡 Earns 5% on every unit purchase', rr_adv:"💡 Earns 50% of his network's savings", rd_adv:'💡 Gets paid the moment he delivers', rm_adv:'💡 Sells more with zero logistics effort',
@@ -1904,6 +2200,197 @@
       ham_p:'🛒 Products', ham_h:'⚙️ How it works', ham_c:'🌍 Our Presence'
     },
     fr:{
+      a4:'Expédition consolidée via le hub européen de contrôle qualité',
+      af_c1_p:'Le Mobile Money (MTN, Orange, Wave) atteint les populations que les banques n\'ont jamais pu toucher. XenderMoney apporte des services fintech à chaque téléphone.',
+      af_c2_p:'XenderShop et XenderBigShop permettent aux consommateurs d\'acheter mondialement et aux entrepreneurs de vendre localement et au-delà des frontières — sans boutique physique.',
+      af_c3_p:'XenderDelivery crée des emplois pour les riders tout en résolvant le défi de la livraison en Afrique. Suivi GPS en temps réel, colis assurés, livraison le jour même dans les grandes villes.',
+      af_desc:'L\'Afrique n\'est pas seulement le marché final — c\'est un producteur, un innovateur et une classe moyenne croissante avide de produits de qualité et d\'outils financiers. Avec la plus forte pénétration du Mobile Money au monde, l\'Afrique est prête pour le commerce numérique à grande échelle.',
+      af_title:'Afrique — 1,4 Milliard de Personnes, une Opportunité Infinie',
+      asia_desc:'L\'Asie est le moteur de la production mondiale. Grâce à InnovaAFRIC, les consommateurs africains accèdent à des millions de produits de fabricants chinois et d\'Asie du Sud-Est à des prix compétitifs — auparavant impossible sans intermédiaires complexes.',
+      contact_inv_d:'Tour Seed ouvert — objectif 580K €. Deck disponible sur demande.',
+      contact_p:'Nous sommes là pour les investisseurs, les partenaires, la presse et tous ceux qui veulent grandir avec l\'Afrique.',
+      cta_p:'Rejoignez des milliers d\'utilisateurs qui utilisent déjà l\'écosystème InnovaAFRIC.',
+      cur_fcfa_use:'Afrique Centrale · Cameroun, Gabon, Guinée Équatoriale, Tchad, Congo, RCA',
+      cur_sub:'InnovaAFRIC opère nativement en USD, EUR, FCFA et XOF — pour les recharges, transferts, paiements et achats dans tout l\'écosystème.',
+      cur_xof_use:'Afrique de l\'Ouest · Sénégal, Côte d\'Ivoire, Mali, Burkina Faso, Togo, Bénin',
+      dash_kpi3:'Transactions Aujourd\'hui',
+      e2:'Virements SEPA — Europe vers Afrique en quelques secondes',
+      e3:'Contrôle qualité et conformité UE avant l\'expédition vers l\'Afrique',
+      erp_m8_p:'Détection de fraude, alertes par seuil, notifications push, SMS et emails automatiques',
+      erp_sub:'InnovaAFRIC est propulsé par un ERP de niveau entreprise qui traite des milliers de transactions simultanément — en temps réel, dans 35 pays.',
+      eu_desc:'L\'Europe est le centre névralgique de l\'écosystème : paiements internationaux, services pour la diaspora, certification qualité et coordination logistique entre l\'Asie et l\'Afrique. C\'est aussi la porte d\'entrée des millions d\'Africains vivant en Europe qui envoient de l\'argent chez eux chaque jour.',
+      fc_bio:'Jeune entrepreneur équato-guinéen, expert en nouvelles technologies et télécommunications, avec une vision qui dépasse les frontières : simplifier la vie quotidienne en Afrique comme la vivent déjà les autres continents.',
+      foot_desc:'Nous construisons l\'infrastructure numérique pour l\'Asie, l\'Europe et l\'Afrique. We Simplify Life.',
+      founder_story:'Son grand rêve : un écosystème numérique complet, accessible à chaque Africain, où envoyer de l\'argent est aussi simple qu\'un SMS, où acheter en ligne n\'est pas un privilège, où chaque entrepreneur peut vendre au monde depuis son téléphone.<br/><br/><strong style="color:var(--navy);">Aujourd\'hui, InnovaAFRIC est déjà une réalité. Demain, ce sera le standard de l\'Afrique.</strong>',
+      hero_sub:'InnovaAFRIC est l\'infrastructure numérique triangulaire qui relie la production asiatique, le hub logistique européen et le marché consommateur africain en pleine explosion — paiements, e-commerce et livraison dans un écosystème unifié.',
+      inv_box1_p:'InnovaAFRIC est en phase de croissance active dans 35 pays. Nous offrons une participation au capital aux investisseurs stratégiques qui partagent notre vision d\'une Afrique connectée numériquement. Détails des tours ange et Série A disponibles sur demande.',
+      inv_box2_p:'InnovaAFRIC est l\'une des histoires tech africaines les plus ambitieuses de notre décennie. Notre fondateur est disponible pour des interviews, panels et conférences. Kits de presse disponibles sur demande.',
+      inv_h:'Grandissez avec la Prochaine Grande Plateforme d\'Afrique',
+      inv_sub:'Nous construisons l\'infrastructure qui propulsera l\'économie numérique de 1,4 milliard de personnes. Nous sommes ouverts aux partenariats stratégiques, à l\'investissement et aux collaborations presse.',
+      ops1_p:'Envoyez de l\'argent à votre famille partout en Afrique en quelques secondes. USD, EUR, FCFA ou XOF — le destinataire voit automatiquement la devise locale.',
+      ops2_p:'Rechargez du crédit mobile, payez l\'électricité, l\'eau et internet pour vous ou un proche — tout opérateur, tout pays, instantanément.',
+      ops3_p:'Explorez des millions de produits AliExpress directement depuis votre téléphone. Payez en FCFA ou XOF. Livré à votre porte par XenderDelivery.',
+      ops4_p:'Payez dans les restaurants, pharmacies, supermarchés et tout commerce affilié avec un simple code QR ou NFC — sans espèces, confirmation instantanée.',
+      ops5_p:'Suivez chaque commande en temps réel sur la carte. Mises à jour GPS toutes les 30 secondes. Notification quand votre rider est proche.',
+      ops6_p:'Chaque dépôt, transfert, achat et paiement — enregistré, catégorisé et exportable. Transparence financière totale dans votre poche.',
+      ops_h:'L\'App en Action',
+      ops_label:'Opérations dans l\'App',
+      ops_sub:'Depuis votre téléphone, gérez votre argent, achetez, payez, suivez les livraisons et gérez votre commerce — dans un seul écosystème.',
+      pb_desc:'Lancez votre boutique en ligne en quelques minutes. Panneau vendeur complet, plans d\'abonnement, paiement intégré et analytiques.',
+      pm_desc:'Envoyez et recevez de l\'argent instantanément en Asie, Europe et Afrique. Mobile Money, virements bancaires et paiements par carte dans un seul wallet.',
+      road_sub:'Nous construisons le futur de la finance africaine — une étape à la fois.',
+      s1d:'Inscrivez-vous en 2 minutes. Un profil pour tous les produits InnovaAFRIC.',
+      s3d:'Ajoutez de l\'argent via Mobile Money, virement bancaire ou carte Stripe.',
+      sec_app:'L\'App',
+      sec_app_sub:'InnovaAFRIC connecte toute votre vie financière et commerciale dans une seule plateforme — wallet, boutique, marketplace et livraison.',
+      sec_how_sub:'Un seul compte débloque tout l\'écosystème.',
+      sec_prod_sub:'Chaque service de la famille InnovaAFRIC est conçu pour éliminer les frictions de votre vie quotidienne.',
+      tag4:'L\'Afrique d\'Abord',
+      test1_q:'"J\'envoie de l\'argent à ma famille au Cameroun chaque mois. Avec XenderMoney, il arrive en quelques secondes — avant j\'attendais 3 jours avec d\'autres services. Ça a tout changé."',
+      test2_q:'"Ma boutique sur XenderShop fait 3× plus de ventes depuis que j\'ai rejoint. Les clients paient avec XenderMoney ou MoMo et reçoivent en 24h. Avant je vendais seulement localement — maintenant je vends dans toute l\'Afrique."',
+      test3_q:'"Je suis livreur XenderDelivery à Douala. En un mois, j\'ai gagné plus qu\'à mon ancien travail. L\'app montre les commandes en temps réel et le paiement est automatique. Je recommande à 100%."',
+      get_started:'🚀 Commencer',
+      pm_tag:'Wallet · Fintech',
+      ps_tag:'E-Commerce · Vente au Détail',
+      pb_tag:'Marketplace · Multivendeur',
+      pd_tag:'Logistique · Dernier Kilomètre',
+      mk_merchant:'Commerce',
+      st2_mall:'🛍️ CENTRE COMMERCIAL',
+      chips_asia:'<span class="chip">🇨🇳 Chine</span><span class="chip">🇯🇵 Japon</span><span class="chip">🇰🇷 Corée</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 Inde</span><span class="chip">🇹🇭 Thaïlande</span>',
+      chips_eu:'<span class="chip">🇪🇸 Espagne</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgique</span><span class="chip">🇮🇹 Italie</span><span class="chip">🇩🇪 Allemagne</span>',
+      chips_af:'<span class="chip">🇨🇲 Cameroun</span><span class="chip">🇸🇳 Sénégal</span><span class="chip">🇨🇮 Côte d\'Ivoire</span><span class="chip">🇬🇳 Guinée</span><span class="chip">🇬🇶 Guinée Éq.</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 RDC</span><span class="chip">🇬🇦 Gabon</span>',
+      app_greet:'Bonjour 👋',
+      app_total_bal:'SOLDE TOTAL',
+      app_xaf_full:'XAF · Franc CFA d\'Afrique Centrale',
+      app_shop:'Boutique',
+      app_recent:'RÉCENTS',
+      app_today:'Aujourd\'hui 09:42',
+      app_yesterday:'Hier',
+      app_sneakers:'Baskets',
+      app_order_no:'Commande #XD-08471',
+      app_enroute:'EN ROUTE · 68%',
+      app_in_transit:'En transit',
+      app_delivered:'Livré',
+      app_done:'Fait',
+      app_withdraw:'Retirer',
+      app_bills:'Factures',
+      app_livemap:'Carte en Direct',
+      ops_offer:'OFFRE DU JOUR · Kit Solaire -15%',
+      ops_avail:'Disponible',
+      ops_intl:'International',
+      ops_p2p:'P2P Gratuit',
+      ops_rcp_country:'🇨🇲 Cameroun · MTN Mobile Money',
+      ops_rcp_gets:'Le destinataire reçoit',
+      ops_fee:'Frais (2%)',
+      ops_save:'Économisez 8,00 €',
+      ops_conv_h:'💱 Convertisseur de Devises',
+      ops_ihave:'J\'ai',
+      ops_iget:'Je reçois',
+      ops_applied:'Taux appliqué',
+      ops_500m:'× AliExpress · 500M+ produits',
+      ops_cat1:'📱 Électronique',
+      ops_cat2:'👗 Mode',
+      ops_cat3:'🏠 Maison',
+      ops_cat4:'⚡ Solaire',
+      ops_from_china:'de Chine 🇨🇳',
+      ops_kit_home:'Kit Solaire Maison',
+      ops_disc:'-15% aujourd\'hui 🔥',
+      ops_order_gps:'GPS en direct · Commande #IA-9284',
+      ops_onway:'EN ROUTE',
+      ops_pickup:'Commande récupérée',
+      ops_rider_transit:'Rider en route',
+      ops_km_away:'14:41 · à 2,3 km',
+      ops_eta:'Arrivée 15:10',
+      ops_all:'Tout',
+      ops_sent_pl:'Envoyés',
+      ops_rcv_pl:'Reçus',
+      ops_date1:'3 juin · 09:14',
+      ops_date2:'2 juin · 15:30',
+      ops_date3:'1 juin · 11:02',
+      ops_confirmed:'Confirmé',
+      ops_sent_one:'Envoyé',
+      dash_3cont:'3 continents',
+      dash_more:'⋯ +23 modules',
+      test1_role:'🇫🇷 Paris · Camerounais',
+      test2_role:'🇸🇳 Dakar · Vendeuse en ligne',
+      test3_role:'🇨🇲 Douala · Rider XenderDelivery',
+      rm1_s:'Q1 2025 · ✅ EN LIGNE',
+      rm1_t:'Lancement de XenderMoney',
+      rm1_d:'Wallet · Envois · MoMo · 10 pays',
+      rm2_s:'Q3 2025 · ✅ EN LIGNE',
+      rm2_d:'Marketplace · Multivendeur · 2M+ produits',
+      rm3_s:'Q4 2025 · ✅ EN LIGNE',
+      rm3_d:'Suivi en temps réel · 5 000 riders · 3 continents',
+      rm4_s:'Q2 2026 · 🔨 EN CONSTRUCTION',
+      rm4_t:'XenderPay — Paiements B2B',
+      rm4_d:'API · Facturation · Transferts d\'entreprise transfrontaliers',
+      rm5_s:'Q4 2026 · 📋 PLANIFIÉ',
+      rm5_d:'Tous les services unifiés · Assistant IA · 35+ pays',
+      inv_li1:'Présence tricontinentale — Afrique, Europe, LatAm',
+      inv_li2:'6 sources de revenus : fintech, e-commerce, logistique, SaaS',
+      inv_li3:'TAM : économie numérique africaine de 400 Md$+ d\'ici 2030',
+      inv_li4:'Dirigée par le fondateur, équipe agile, économie unitaire rentable',
+      inv_founded:'Fondée',
+      inv_hq:'Siège',
+      inv_products:'Produits',
+      inv_5live:'5 actifs',
+      kf1:'TAM Numérique Africain 2030',
+      kf2:'Personnes que nous pouvons servir',
+      kf3:'Sources de revenus',
+      kf4:'Objectif Super App',
+      nl_h:'📬 Restez informé d\'INNOVAAFRIC',
+      nl_p:'Recevez des mises à jour sur les nouvelles fonctionnalités, les expansions de pays et les actualités de l\'écosystème',
+      nl_btn:'S\'abonner →',
+      nl_note:'Zéro spam · Politique de confidentialité · Désabonnez-vous quand vous voulez',
+      nl_subscribing:'Abonnement…',
+      nl_ok:'✅ Abonné ! Vous recevrez les mises à jour d\'InnovaAFRIC à',
+      ck_text:'🍪 Nous utilisons des cookies essentiels et analytiques pour améliorer votre expérience. En poursuivant votre navigation, vous acceptez notre <a href="#" style="color:#42A8E1;text-decoration:underline;">Politique de Confidentialité</a>.',
+      ck_ess:'Essentiels uniquement',
+      ck_all:'Tout accepter ✓',
+      sup_h:'💬 Comment pouvons-nous vous aider ?',
+      sup_wa:'Réponse en quelques minutes',
+      reg_label:'REJOIGNEZ L\'ÉCOSYSTÈME',
+      reg_h:'Créez votre compte gratuit',
+      reg_p:'Choisissez votre type de compte et commencez en quelques minutes.',
+      reg_tab1:'👤 Client',
+      reg_tab2:'🏪 Commerce',
+      reg_tab3:'🚴 Rider',
+      reg_fname:'Prénom *',
+      reg_lname:'Nom *',
+      reg_phone:'Téléphone *',
+      reg_country:'Pays *',
+      reg_pass:'Mot de passe *',
+      reg_city:'Ville *',
+      reg_bizname:'Nom du commerce *',
+      reg_biztype:'Type de commerce *',
+      reg_bizemail:'Email du commerce *',
+      reg_nif:'NIF / Registre du commerce',
+      reg_fullname:'Nom complet *',
+      reg_vehicle:'Véhicule *',
+      reg_avail:'Disponibilité *',
+      reg_opt_country1:'<option value="">Choisissez un pays</option><option>Cameroun</option><option>Sénégal</option><option>Côte d\'Ivoire</option><option>Mali</option><option>Guinée</option><option>Burkina Faso</option><option>Niger</option><option>Tchad</option><option>Gabon</option><option>Espagne</option><option>France</option><option>Chine</option><option>Autre</option>',
+      reg_opt_country2:'<option value="">Choisissez un pays</option><option>Cameroun</option><option>Sénégal</option><option>Côte d\'Ivoire</option><option>Mali</option><option>Guinée</option><option>Espagne</option><option>France</option><option>Chine</option><option>Autre</option>',
+      reg_opt_biztype:'<option value="">Choisissez un type</option><option>Restaurant</option><option>Boutique</option><option>Pharmacie</option><option>Supermarché</option><option>Fournisseur grossiste</option><option>Artisan</option><option>Service professionnel</option><option>Autre</option>',
+      reg_opt_city:'<option value="">Choisissez une ville</option><option>Yaoundé</option><option>Douala</option><option>Dakar</option><option>Abidjan</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>Paris</option><option>Barcelone</option><option>Autre</option>',
+      reg_opt_vehicle:'<option value="">Type de véhicule</option><option>🛵 Moto</option><option>🚲 Vélo</option><option>🚗 Voiture</option><option>🚐 Fourgonnette</option><option>🚚 Camion léger</option>',
+      reg_opt_avail:'<option>Temps plein</option><option>Mi-temps</option><option>Week-ends</option><option>Flexible</option>',
+      reg_terms1:' J\'accepte les <a href="#" style="color:var(--orange);">Conditions de service</a> et la <a href="#" style="color:var(--orange);">Politique de confidentialité</a>',
+      reg_terms2:' J\'accepte les <a href="#" style="color:var(--orange);">Conditions pour commerces</a>',
+      reg_terms3:' J\'ai un permis de conduire valide et j\'accepte les <a href="#" style="color:var(--orange);">Conditions rider</a>',
+      reg_btn1:'Créer un compte gratuit →',
+      reg_btn2:'Enregistrer mon commerce →',
+      reg_btn3:'Je veux être Rider →',
+      reg_haveacc:'Vous avez déjà un compte ? <a href="#" style="color:var(--orange);font-weight:700;">Connectez-vous →</a>',
+      reg_ok_cliente:'✅ Compte créé ! Vérifiez votre email.',
+      reg_ok_comercio:'✅ Commerce enregistré ! Nous vous contactons sous 24h.',
+      reg_ok_rider:'✅ Demande envoyée ! Nous vous contactons sous 48h.',
+      ph_fname:'Votre prénom',
+      ph_lname:'Votre nom',
+      ph_pass:'Min. 8 caractères',
+      ph_city:'Votre ville',
+      ph_bizname:'Le nom de votre entreprise',
+      ph_nif:'Numéro d\'enregistrement (optionnel)',
+      ph_fullname:'Votre nom complet',
       sec_net:'Le Réseau InnovaAFRIC', net_h:'Un réseau humain. Cinq applications.',
       net_sub:'La dernière nouveauté de l\'écosystème : chaque membre du réseau — client, agent de quartier, représentant, livreur et commerce — dispose de sa propre application connectée en temps réel.',
       rc_adv:'💡 Un seul compte ouvre tout l\'écosystème', rci_adv:'💡 Gagne 5% sur chaque achat d\'unités', rr_adv:'💡 Gagne 50% des économies de son réseau', rd_adv:'💡 Payé dès la livraison effectuée', rm_adv:'💡 Vend plus sans effort logistique',
@@ -2082,6 +2569,10 @@
         el.classList.add('lang-fade');
       }
     });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const k = el.getAttribute('data-i18n-ph');
+      if(T[k]!==undefined) el.placeholder = T[k];
+    });
   }
   setLang(LANG);
 
@@ -2099,23 +2590,23 @@
   }
 
   // Newsletter
-  async function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}try{var SB=window.SB||window.supabaseClient;if(SB)await SB.from('newsletter_subscribers').insert({email:em,source:'innovaafric',created_at:new Date().toISOString()});}catch(err){}alert('✅ ¡Suscrito! Recibirás actualizaciones de InnovaAFRIC en '+em);document.getElementById('nl-innova').value='';if(btn){btn.textContent='Suscribirse →';btn.disabled=false;}}
+  async function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent=(TR[LANG]||TR.en).nl_subscribing;btn.disabled=true;}try{var SB=window.SB||window.supabaseClient;if(SB)await SB.from('newsletter_subscribers').insert({email:em,source:'innovaafric',created_at:new Date().toISOString()});}catch(err){}alert((TR[LANG]||TR.en).nl_ok+' '+em);document.getElementById('nl-innova').value='';if(btn){btn.textContent=(TR[LANG]||TR.en).nl_btn;btn.disabled=false;}}
 </script>
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(13,43,78,0.97);backdrop-filter:blur(12px);padding:16px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(66,168,225,0.2);">
-  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;">🍪 Usamos cookies esenciales y analíticas para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#" style="color:#42A8E1;text-decoration:underline;">Política de Privacidad</a>.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;" data-i18n="ck_text">🍪 Usamos cookies esenciales y analíticas para mejorar tu experiencia. Al continuar navegando aceptas nuestra <a href="#" style="color:#42A8E1;text-decoration:underline;">Política de Privacidad</a>.</p>
   <div style="display:flex;gap:10px;flex-shrink:0;">
-    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;">Solo esenciales</button>
-    <button onclick="cookieAccept()" style="background:#2B8DC7;border:none;color:#fff;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar todo ✓</button>
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;" data-i18n="ck_ess">Solo esenciales</button>
+    <button onclick="cookieAccept()" style="background:#2B8DC7;border:none;color:#fff;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;" data-i18n="ck_all">Aceptar todo ✓</button>
   </div>
 </div>
 
 <!-- ═══ FLOATING SUPPORT ═══ -->
 <div style="position:fixed;bottom:24px;right:24px;z-index:9998;display:flex;flex-direction:column;align-items:flex-end;gap:10px;" id="float-support">
   <div id="float-menu" style="display:none;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.15);padding:16px;width:240px;border:1px solid rgba(0,0,0,0.07);">
-    <div style="font-size:13px;font-weight:700;color:#0D2B4E;margin-bottom:12px;">💬 ¿Cómo podemos ayudarte?</div>
-    <a href="https://wa.me/+34600000000" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;margin-bottom:6px;background:#f0fef4;"><span style="font-size:20px;">💬</span><div><div style="font-size:12px;font-weight:700;color:#166534;">WhatsApp</div><div style="font-size:11px;color:#999;">Respuesta en minutos</div></div></a>
+    <div style="font-size:13px;font-weight:700;color:#0D2B4E;margin-bottom:12px;" data-i18n="sup_h">💬 ¿Cómo podemos ayudarte?</div>
+    <a href="https://wa.me/+34600000000" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;margin-bottom:6px;background:#f0fef4;"><span style="font-size:20px;">💬</span><div><div style="font-size:12px;font-weight:700;color:#166534;">WhatsApp</div><div style="font-size:11px;color:#999;" data-i18n="sup_wa">Respuesta en minutos</div></div></a>
     <a href="mailto:support@innovaafric.com" style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;background:#eff6ff;"><span style="font-size:20px;">📧</span><div><div style="font-size:12px;font-weight:700;color:#1e40af;">Email</div><div style="font-size:11px;color:#999;">support@innovaafric.com</div></div></a>
   </div>
   <button onclick="toggleFloat()" style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#2B8DC7,#1A6FA8);border:none;color:#fff;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(43,141,199,0.4);display:flex;align-items:center;justify-content:center;" id="float-btn">💬</button>
@@ -2161,7 +2652,7 @@ function cookieDecline(){localStorage.setItem('cookie_choice','essential');docum
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
 function toggleHam(id){var o=document.getElementById('ham-'+id);var b=document.getElementById('ham-btn-'+id);var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
 function showRegTab(tab){['cliente','comercio','rider'].forEach(function(t){document.getElementById('reg-'+t).style.display=t===tab?'block':'none';var btn=document.getElementById('tab-'+t);if(btn){btn.style.background=t===tab?'var(--navy)':'#edf2f7';btn.style.color=t===tab?'#fff':'var(--navy)';}});}
-function submitReg(e,type){e.preventDefault();var msgs={cliente:'✅ ¡Cuenta creada! Revisa tu email para verificar.',comercio:'✅ ¡Negocio registrado! Te contactamos en 24h.',rider:'✅ ¡Solicitud enviada! Te contactamos en 48h.'};alert(msgs[type]||'✅ Registro completado');}
+function submitReg(e,type){e.preventDefault();var T=TR[LANG]||TR.en;var msgs={cliente:T.reg_ok_cliente,comercio:T.reg_ok_comercio,rider:T.reg_ok_rider};alert(msgs[type]||'✅ OK');}
 </script>
 
 <!-- ═══ SECCIÓN REGISTRO ═══ -->
@@ -2171,56 +2662,56 @@ function submitReg(e,type){e.preventDefault();var msgs={cliente:'✅ ¡Cuenta cr
     <button onclick="closeModal('modal-ia')" style="position:absolute;top:-14px;right:-14px;z-index:10;background:#29ABE2;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;font-weight:900;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.4);">✕</button>
     <section id="registro" style="padding:48px 5%;background:#F8FAFF;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);">
   <div style="max-width:720px;margin:0 auto;text-align:center;">
-    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--orange);text-transform:uppercase;margin-bottom:12px;">ÚNETE AL ECOSISTEMA</div>
-    <h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:12px;color:var(--navy);">Crea tu cuenta gratis</h2>
-    <p style="color:var(--grey);font-size:16px;margin-bottom:32px;">Elige tu tipo de cuenta y empieza en minutos.</p>
+    <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--orange);text-transform:uppercase;margin-bottom:12px;" data-i18n="reg_label">ÚNETE AL ECOSISTEMA</div>
+    <h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:900;letter-spacing:-1.5px;margin-bottom:12px;color:var(--navy);" data-i18n="reg_h">Crea tu cuenta gratis</h2>
+    <p style="color:var(--grey);font-size:16px;margin-bottom:32px;" data-i18n="reg_p">Elige tu tipo de cuenta y empieza en minutos.</p>
     <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;flex-wrap:wrap;">
-      <button onclick="showRegTab('cliente')" id="tab-cliente" style="padding:10px 24px;border-radius:20px;background:var(--navy);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;">👤 Cliente</button>
-      <button onclick="showRegTab('comercio')" id="tab-comercio" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🏪 Comercio</button>
-      <button onclick="showRegTab('rider')" id="tab-rider" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🚴 Rider</button>
+      <button onclick="showRegTab('cliente')" id="tab-cliente" data-i18n="reg_tab1" style="padding:10px 24px;border-radius:20px;background:var(--navy);color:#fff;border:none;font-weight:700;font-size:14px;cursor:pointer;">👤 Cliente</button>
+      <button onclick="showRegTab('comercio')" id="tab-comercio" data-i18n="reg_tab2" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🏪 Comercio</button>
+      <button onclick="showRegTab('rider')" id="tab-rider" data-i18n="reg_tab3" style="padding:10px 24px;border-radius:20px;background:#edf2f7;color:var(--navy);border:none;font-weight:700;font-size:14px;cursor:pointer;">🚴 Rider</button>
     </div>
     <!-- CLIENTE -->
     <div id="reg-cliente" style="background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
       <form onsubmit="submitReg(event,'cliente')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre *</label><input type="text" placeholder="Tu nombre" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Apellidos *</label><input type="text" placeholder="Tus apellidos" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_fname">Nombre *</label><input type="text" placeholder="Tu nombre" data-i18n-ph="ph_fname" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_lname">Apellidos *</label><input type="text" placeholder="Tus apellidos" data-i18n-ph="ph_lname" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>Burkina Faso</option><option>Niger</option><option>Chad</option><option>Gabón</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--navy);"> Acepto los <a href="#" style="color:var(--orange);">Términos de servicio</a> y la <a href="#" style="color:var(--orange);">Política de privacidad</a></label></div>
-        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Crear cuenta gratuita →</button></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_phone">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_country">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_country1"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>Burkina Faso</option><option>Niger</option><option>Chad</option><option>Gabón</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_pass">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" data-i18n-ph="ph_pass" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--navy);"><span data-i18n="reg_terms1"> Acepto los <a href="#" style="color:var(--orange);">Términos de servicio</a> y la <a href="#" style="color:var(--orange);">Política de privacidad</a></span></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;" data-i18n="reg_btn1">Crear cuenta gratuita →</button></div>
       </form>
     </div>
     <!-- COMERCIO -->
     <div id="reg-comercio" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
       <form onsubmit="submitReg(event,'comercio')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre del negocio *</label><input type="text" placeholder="Nombre de tu empresa" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Tipo de negocio *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona tipo</option><option>Restaurante</option><option>Tienda / Boutique</option><option>Farmacia</option><option>Supermercado</option><option>Proveedor mayorista</option><option>Artesano</option><option>Servicio profesional</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email del negocio *</label><input type="email" placeholder="negocio@empresa.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Ciudad *</label><input type="text" placeholder="Tu ciudad" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">NIF / Registro mercantil</label><input type="text" placeholder="Número de registro (opcional)" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--orange);"> Acepto los <a href="#" style="color:var(--orange);">Términos para comercios</a></label></div>
-        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Registrar mi negocio →</button></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_bizname">Nombre del negocio *</label><input type="text" placeholder="Nombre de tu empresa" data-i18n-ph="ph_bizname" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_biztype">Tipo de negocio *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_biztype"><option value="">Selecciona tipo</option><option>Restaurante</option><option>Tienda / Boutique</option><option>Farmacia</option><option>Supermercado</option><option>Proveedor mayorista</option><option>Artesano</option><option>Servicio profesional</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_bizemail">Email del negocio *</label><input type="email" placeholder="negocio@empresa.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_phone">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_country">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_country2"><option value="">Selecciona país</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_city">Ciudad *</label><input type="text" placeholder="Tu ciudad" data-i18n-ph="ph_city" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_nif">NIF / Registro mercantil</label><input type="text" placeholder="Número de registro (opcional)" data-i18n-ph="ph_nif" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_pass">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" data-i18n-ph="ph_pass" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:var(--orange);"><span data-i18n="reg_terms2"> Acepto los <a href="#" style="color:var(--orange);">Términos para comercios</a></span></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:var(--orange);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;" data-i18n="reg_btn2">Registrar mi negocio →</button></div>
       </form>
     </div>
     <!-- RIDER -->
     <div id="reg-rider" style="display:none;background:#fff;border-radius:20px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:left;">
       <form onsubmit="submitReg(event,'rider')" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Nombre completo *</label><input type="text" placeholder="Tu nombre completo" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_fullname">Nombre completo *</label><input type="text" placeholder="Tu nombre completo" data-i18n-ph="ph_fullname" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_phone">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="tu@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Ciudad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Selecciona ciudad</option><option>Yaundé</option><option>Douala</option><option>Dakar</option><option>Abidján</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>París</option><option>Barcelona</option><option>Otra</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Vehículo *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">Tipo de vehículo</option><option>🛵 Moto</option><option>🚲 Bicicleta</option><option>🚗 Coche</option><option>🚐 Furgoneta</option><option>🚚 Camión ligero</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;">Disponibilidad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Tiempo completo</option><option>Media jornada</option><option>Fines de semana</option><option>Flexible</option></select></div>
-        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#10B981;"> Tengo carné de conducir vigente y acepto las <a href="#" style="color:var(--orange);">Condiciones de rider</a></label></div>
-        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#10B981;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;">Quiero ser Rider →</button></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_city">Ciudad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_city"><option value="">Selecciona ciudad</option><option>Yaundé</option><option>Douala</option><option>Dakar</option><option>Abidján</option><option>Bamako</option><option>Conakry</option><option>Madrid</option><option>París</option><option>Barcelona</option><option>Otra</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_vehicle">Vehículo *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_vehicle"><option value="">Tipo de vehículo</option><option>🛵 Moto</option><option>🚲 Bicicleta</option><option>🚗 Coche</option><option>🚐 Furgoneta</option><option>🚚 Camión ligero</option></select></div>
+        <div><label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px;" data-i18n="reg_avail">Disponibilidad *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;" data-i18n="reg_opt_avail"><option>Tiempo completo</option><option>Media jornada</option><option>Fines de semana</option><option>Flexible</option></select></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--grey);cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#10B981;"><span data-i18n="reg_terms3"> Tengo carné de conducir vigente y acepto las <a href="#" style="color:var(--orange);">Condiciones de rider</a></span></label></div>
+        <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#10B981;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;" data-i18n="reg_btn3">Quiero ser Rider →</button></div>
       </form>
     </div>
-    <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--grey);">¿Ya tienes cuenta? <a href="#" style="color:var(--orange);font-weight:700;">Inicia sesión →</a></p>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--grey);" data-i18n="reg_haveacc">¿Ya tienes cuenta? <a href="#" style="color:var(--orange);font-weight:700;">Inicia sesión →</a></p>
   </div>
 </section>
   </div>
