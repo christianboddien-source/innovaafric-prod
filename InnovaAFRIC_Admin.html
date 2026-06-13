@@ -7249,7 +7249,7 @@ function prefillSetup(){
 async function autoLoginFromToken(accessToken){
   try{
     // Validar token contra la API
-    var _apiBase=(typeof RAILWAY_BASE!=='undefined'?RAILWAY_BASE:'https://innovaafric-api-production.up.railway.app/v1');
+    var _apiBase=(typeof RAILWAY_BASE!=='undefined'?RAILWAY_BASE:'https://api.innovaafric.com/v1');
     var r=await fetch(_apiBase+'/auth/validate-token',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+accessToken},
