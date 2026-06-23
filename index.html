@@ -909,21 +909,25 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div class="pill pill-gold" onclick="document.getElementById('retirar-input').value=_balances.XAF">MAX</div>
         </div>
         <div class="section-title">Destino del retiro</div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
-          <div class="card" style="display:flex;align-items:center;gap:12px;border-color:var(--purple);border-radius:14px;cursor:pointer">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+          <div id="ret-m-bank_transfer" class="card ret-method" onclick="selRetMethod('bank_transfer',this)" style="display:flex;align-items:center;gap:12px;border-color:var(--purple);border-radius:14px;cursor:pointer">
             <span style="font-size:22px">🏦</span>
             <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Cuenta bancaria SEPA</div><div style="font-size:10px;color:var(--txt3)">1-2 días hábiles</div></div>
-            <div style="width:18px;height:18px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
+            <div class="ret-check" style="width:18px;height:18px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
           </div>
-          <div class="card" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
+          <div id="ret-m-mtn_money" class="card ret-method" onclick="selRetMethod('mtn_money',this)" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
             <span style="font-size:22px">📱</span>
             <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">MTN Mobile Money</div><div style="font-size:10px;color:var(--txt3)">Inmediato</div></div>
+            <div class="ret-check" style="display:none;width:18px;height:18px;border-radius:50%;background:var(--purple);align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
           </div>
-          <div class="card" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
+          <div id="ret-m-orange_money" class="card ret-method" onclick="selRetMethod('orange_money',this)" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
             <span style="font-size:22px">🟠</span>
             <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Orange Money</div><div style="font-size:10px;color:var(--txt3)">Inmediato</div></div>
+            <div class="ret-check" style="display:none;width:18px;height:18px;border-radius:50%;background:var(--purple);align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
           </div>
         </div>
+        <div class="section-title">Cuenta / número de destino</div>
+        <div class="card" style="border-radius:14px;margin-bottom:14px"><input id="retirar-dest" placeholder="IBAN, nº de móvil o punto autorizado" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
         <div id="retirar-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
         <button class="btn-primary" style="background:linear-gradient(135deg,var(--purple),#7c3aed)" onclick="doRetirar()">Solicitar retiro →</button>
       </div>
@@ -3736,13 +3740,51 @@ function compartirEnlace() {
 }
 
 // ── RETIRAR ─────────────────────────────────────────────
+var _retMethod = 'bank_transfer';
+function selRetMethod(m, el) {
+  _retMethod = m;
+  var cards = document.querySelectorAll('.ret-method');
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].style.borderColor = '';
+    var chk = cards[i].querySelector('.ret-check'); if (chk) chk.style.display = 'none';
+  }
+  el.style.borderColor = 'var(--purple)';
+  var c = el.querySelector('.ret-check'); if (c) c.style.display = 'flex';
+}
 function doRetirar() {
-  var amt = parseFloat(document.getElementById('retirar-input').value);
-  var err = document.getElementById('retirar-err');
+  var amt  = parseFloat(document.getElementById('retirar-input').value);
+  var dest = document.getElementById('retirar-dest').value.trim();
+  var err  = document.getElementById('retirar-err');
+  var btn  = document.querySelector('#s-retirar .btn-primary');
   if (!amt || amt < 5000) { err.textContent = 'El mínimo de retiro es 5 000 XAF'; return; }
   if (amt > _balances.XAF) { err.textContent = 'Saldo insuficiente'; return; }
+  if (!dest) { err.textContent = 'Introduce la cuenta o número de destino'; return; }
+  if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
   err.textContent = '';
-  showToast('Retiro solicitado', 'Tu solicitud de ' + Math.round(amt).toLocaleString('fr-FR') + ' XAF está en proceso');
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<span class="login-spinner"></span>Procesando…';
+  btn.disabled = true;
+  fetch(RAIL_API + '/money/withdraw', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amt, currency: 'XAF', method: _retMethod, destination: dest })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = orig; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'No se pudo procesar el retiro'; return; }
+    var net = resp.data && resp.data.amount_net;
+    _balances.XAF = Math.max(0, _balances.XAF - amt);
+    localStorage.setItem('inn_balance', JSON.stringify(_balances));
+    updateBalanceDisplay(); refreshBalanceInScreens();
+    if (typeof loadTransactions === 'function') loadTransactions();
+    document.getElementById('retirar-input').value = '';
+    document.getElementById('retirar-dest').value = '';
+    var eta = (resp.data && resp.data.estimated_completion) ? ' · llega en ' + resp.data.estimated_completion : '';
+    showToast('Retiro solicitado', 'Recibirás ' + Math.round(net || amt).toLocaleString('fr-FR') + ' XAF' + eta);
+    goScreen('s-wallet');
+  }).catch(function() {
+    btn.innerHTML = orig; btn.disabled = false;
+    err.textContent = 'Error de conexión. Inténtalo de nuevo.';
+  });
 }
 
 // ── REGISTRO → sync Railway ─────────────────────────────
