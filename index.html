@@ -1316,23 +1316,15 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
     </div>
 
     <!-- SCREEN: SOPORTE -->
-    <div class="screen" id="s-soporte">
-      <div class="page-header"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Chat con soporte</div><div style="width:36px"></div></div>
-      <div style="padding:20px 16px">
-        <div style="text-align:center;padding:30px 0">
-          <div style="font-size:48px;margin-bottom:16px">💬</div>
-          <div style="font-size:18px;font-weight:800;color:var(--txt);margin-bottom:8px">Soporte humano</div>
-          <div style="font-size:13px;color:var(--txt3);margin-bottom:24px">Nuestro equipo te responde en menos de 2 horas en horario laboral (Lun–Vie 8:00–18:00 WAT).</div>
+    <div class="screen" id="s-soporte" style="display:flex;flex-direction:column">
+      <div class="page-header" style="flex-shrink:0"><div onclick="goBack()" class="icon-btn">←</div><div class="page-title">Chat con soporte</div><div class="icon-btn" onclick="goScreen('s-innovabot')" title="InnovaBot">🤖</div></div>
+      <div style="margin:6px 14px 8px;padding:8px 12px;border-radius:12px;background:rgba(41,171,226,.07);border:1px solid rgba(41,171,226,.13);font-size:10px;color:var(--blue);flex-shrink:0">💬 Soporte humano · Lun–Vie 8:00–18:00 WAT · soporte@innovaafric.com</div>
+      <div id="soporte-messages" style="flex:1;overflow-y:auto;padding:6px 14px;display:flex;flex-direction:column;gap:8px"></div>
+      <div style="padding:8px 14px 12px;flex-shrink:0">
+        <div class="chat-input">
+          <input id="soporte-input" type="text" placeholder="Escribe tu mensaje…" style="flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')sendSupportMsg()">
+          <div onclick="sendSupportMsg()" style="width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;cursor:pointer">➤</div>
         </div>
-        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:12px">
-          <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px">📧 Soporte por email</div>
-          <div style="font-size:12px;color:var(--blue)">soporte@innovaafric.com</div>
-        </div>
-        <div class="card" style="border-radius:16px;padding:16px;margin-bottom:12px">
-          <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px">📱 WhatsApp Business</div>
-          <div style="font-size:12px;color:var(--blue)">+237 6XX XXX XXX</div>
-        </div>
-        <button class="btn-primary" style="width:100%" onclick="goScreen('s-innovabot')">🤖 Hablar con InnovaBot ahora</button>
       </div>
     </div>
 
@@ -3673,6 +3665,7 @@ goScreen = function(id) {
   if (id === 's-cambiar')       refreshBalanceInScreens();
   if (id === 's-wallet') { refreshBalanceInScreens(); if (!_allTxns.length) loadTransactions(); }
   if (id === 's-fiscal') loadFiscalScreen();
+  if (id === 's-soporte') loadSupport();
   if (id === 's-cuentas-bancarias') loadBancosLista();
   if (id === 's-nuevo-banco') { updateBancoCiudad(); updateBancoSwift(); updateBancoMoneda(); }
   if (id === 's-tontinas')      loadTontinas();
@@ -3728,6 +3721,39 @@ function compartirEnlace() {
 }
 
 // ── RETIRAR ─────────────────────────────────────────────
+// ── CHAT DE SOPORTE (real, vía /chat/messages) ──
+function escSup(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function loadSupport() {
+  var box = document.getElementById('soporte-messages'); if (!box) return;
+  if (!_token) { box.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--txt3);padding:24px">Inicia sesión para chatear con soporte.</div>'; return; }
+  box.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--txt3);padding:20px">Cargando conversación…</div>';
+  railGet('/chat/messages?room=support').then(function(resp){
+    var msgs = (resp && resp.data && (resp.data.messages || resp.data)) || [];
+    renderSupport(msgs);
+  }).catch(function(){ box.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--txt3);padding:20px">No se pudo cargar. Inténtalo de nuevo.</div>'; });
+}
+function renderSupport(msgs) {
+  var box = document.getElementById('soporte-messages'); if (!box) return;
+  if (!msgs.length) { box.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--txt3);padding:24px">Escríbenos y el equipo de soporte te responderá. 💬</div>'; return; }
+  box.innerHTML = msgs.map(function(m){
+    var role = (m.from && m.from.role) || '';
+    var mine = !/support|admin|agent|supervisor/i.test(role);
+    var name = (m.from && m.from.name) || (mine ? 'Tú' : 'Soporte');
+    var t = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' }) : '';
+    if (mine) return '<div style="align-self:flex-end;max-width:80%;background:var(--blue);border-radius:16px 16px 4px 16px;padding:9px 13px;font-size:13px;color:#fff">' + escSup(m.message) + '<div style="font-size:8px;opacity:.7;text-align:right;margin-top:2px">' + t + '</div></div>';
+    return '<div style="align-self:flex-start;max-width:85%;background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 16px 4px;padding:9px 13px"><div style="font-size:9px;font-weight:700;color:var(--blue);margin-bottom:2px">' + escSup(name) + '</div><div style="font-size:13px;color:var(--txt);line-height:1.4">' + escSup(m.message) + '</div><div style="font-size:8px;color:var(--txt3);margin-top:2px">' + t + '</div></div>';
+  }).join('');
+  box.scrollTop = box.scrollHeight;
+}
+function sendSupportMsg() {
+  var inp = document.getElementById('soporte-input');
+  var text = (inp.value || '').trim(); if (!text) return;
+  if (!_token) { showToast('Inicia sesión', 'Necesitas iniciar sesión para escribir a soporte'); return; }
+  inp.value = '';
+  railPost('/chat/messages', { message: text, room: 'support' }).then(function(resp){
+    if (resp && resp.success) loadSupport(); else showToast('Error', (resp && resp.error) || 'No se pudo enviar');
+  }).catch(function(){ showToast('Error', 'Error de conexión'); });
+}
 // ── COMPRA EN TIENDA (crea pedido real con código de seguimiento) ──
 var _shopRendered = [];
 var _buyProduct = null;
