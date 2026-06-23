@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0A0E1A">
 <meta name="mobile-web-app-capable" content="yes">
@@ -218,6 +219,13 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
 
 /* SHARE BUTTON */
 .btn-whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;border-radius:16px;padding:13px;font-size:13px;font-weight:800;width:100%;cursor:pointer;font-family:'Inter',sans-serif}
+/* MAPA CERCA DE MÍ */
+#mapBox{height:56vh;min-height:320px;border-radius:16px;overflow:hidden;border:1px solid rgba(41,171,226,.18);background:var(--bg2)}
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--txt3);margin:0 0 10px;align-items:center}
+.map-pin{font-size:22px;line-height:22px;text-shadow:0 0 4px #000}
+.lf{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;cursor:pointer;user-select:none;transition:.15s;color:var(--txt2)}
+.lf.on{background:rgba(41,171,226,.18);border-color:var(--blue);color:var(--blue)}
+.leaflet-popup-content{color:#111}
 </style>
 </head>
 <body ontouchstart="">
@@ -454,6 +462,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="svc-item" onclick="goScreen('s-tontinas')"><div style="font-size:20px">🤝</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Tontinas</div></div>
         <div class="svc-item" onclick="goScreen('s-qrpay')"><div style="font-size:20px">📱</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Pago QR</div></div>
         <div class="svc-item" onclick="goScreen('s-track')"><div style="font-size:20px">🗺️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Mapa live</div></div>
+        <div class="svc-item" onclick="goScreen('s-map')"><div style="font-size:20px">📍</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Cerca de mí</div></div>
         <div class="svc-item" onclick="goScreen('s-bills')"><div style="font-size:20px">🧾</div><div style="font-size:8px;font-weight:700;color:var(--txt2);margin-top:3px">Facturas</div></div>
         <div class="svc-item" onclick="goScreen('s-pos')"><div style="font-size:20px">🏪</div><div style="font-size:8px;font-weight:700;color:var(--txt2);margin-top:3px">POS</div></div>
         <div class="svc-item" onclick="goScreen('s-seguros')"><div style="font-size:20px">🛡️</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Seguro</div></div>
@@ -975,6 +984,26 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div style="font-size:10px;color:var(--green);font-weight:700">Paga con XenderMoney · sin comisión</div>
         </div>
       </div>
+    </div>
+
+    <!-- SCREEN: MAPA CERCA DE MÍ -->
+    <div class="screen" id="s-map">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">📍 Cerca de mí</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="map-legend">
+          <span>📍 Tú</span>
+          <span class="lf" data-role="circular" onclick="toggleFilter('circular',this)">⚡ Circulares</span>
+          <span class="lf" data-role="comercio" onclick="toggleFilter('comercio',this)">🏪 Comercios</span>
+          <span class="lf" data-role="rider" onclick="toggleFilter('rider',this)">🛵 Riders</span>
+        </div>
+        <div id="mapBox"></div>
+        <div id="mapInfo" style="font-size:11px;color:var(--txt3);margin-top:10px">Activa la ubicación para ver circulares (recarga), comercios y tu rider cerca. Toca una etiqueta para filtrar.</div>
+      </div>
+      <div style="height:14px"></div>
     </div>
 
     <!-- SCREEN: PERFIL -->
@@ -1850,7 +1879,7 @@ var nav_map = {
   's-home':'nb-home','s-wallet':'nb-wallet','s-send':'nb-wallet',
   's-track':'nb-pedidos','s-chat':'nb-pedidos','s-confirm':'nb-pedidos',
   's-recibir':'nb-wallet','s-cambiar':'nb-wallet','s-retirar':'nb-wallet',
-  's-shop':'nb-shop','s-perfil':'nb-perfil'
+  's-shop':'nb-shop','s-perfil':'nb-perfil','s-map':'nb-home'
 };
 
 function goScreen(id) {
@@ -4567,9 +4596,78 @@ afterLogin = function() {
 var _origDoSendOK = null; // patched via toast override
 
 // Patch goScreen for new screens
+// ── MAPA CERCA DE MÍ (circulares / comercios / riders) ──
+let GEO_TIMER = null, MAP = null, MARKERS = [], MAP_TIMER = null, MY_POS = null;
+const MAP_ROLES = new Set();
+const MPIN = { circular: '⚡', comercio: '🏪', rider: '🛵', representante: '🤝', innovaafric: '🏢', cliente: '👤' };
+const LEAFLET_BASE = (typeof RAIL_API === 'string' ? RAIL_API : '').replace(/\/v1$/, '');
+
+function toggleFilter(role, el) {
+  if (MAP_ROLES.has(role)) { MAP_ROLES.delete(role); el.classList.remove('on'); }
+  else { MAP_ROLES.add(role); el.classList.add('on'); }
+  refreshMap();
+}
+function startGeoPing() {
+  if (!navigator.geolocation || GEO_TIMER) return;
+  const send = () => navigator.geolocation.getCurrentPosition(
+    p => { MY_POS = { lat: p.coords.latitude, lng: p.coords.longitude }; if (typeof railPost === 'function') railPost('/locations/ping', MY_POS).catch(() => {}); },
+    () => {}, { enableHighAccuracy: false, maximumAge: 60000, timeout: 10000 }
+  );
+  send();
+  GEO_TIMER = setInterval(send, 20000);
+}
+function loadLeaflet() {
+  return new Promise((resolve, reject) => {
+    if (window.L) return resolve();
+    const css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = LEAFLET_BASE + '/vendor/leaflet/leaflet.css';
+    document.head.appendChild(css);
+    const s = document.createElement('script');
+    s.src = LEAFLET_BASE + '/vendor/leaflet/leaflet.js';
+    s.onload = resolve; s.onerror = () => reject(new Error('No se pudo cargar el mapa'));
+    document.head.appendChild(s);
+  });
+}
+async function openLiveMap() {
+  try {
+    if (!GEO_TIMER) startGeoPing();
+    await loadLeaflet();
+    if (!MAP) {
+      const center = MY_POS || { lat: 3.75, lng: 8.78 }; // Malabo por defecto
+      MAP = L.map('mapBox').setView([center.lat, center.lng], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(MAP);
+    } else { setTimeout(() => MAP.invalidateSize(), 200); }
+    refreshMap();
+    clearInterval(MAP_TIMER);
+    MAP_TIMER = setInterval(refreshMap, 15000);
+  } catch (e) { var mi = document.getElementById('mapInfo'); if (mi) mi.textContent = e.message; }
+}
+async function refreshMap() {
+  if (!MAP) return;
+  try {
+    const resp = await railGet('/locations/nearby');
+    const d = (resp && resp.data) ? resp.data : resp;
+    MARKERS.forEach(m => MAP.removeLayer(m));
+    MARKERS = [];
+    const mk = (lat, lng, emoji, label) => {
+      const m = L.marker([lat, lng], { icon: L.divIcon({ className: 'map-pin', html: emoji, iconSize: [24, 24], iconAnchor: [12, 12] }) }).addTo(MAP).bindPopup(label);
+      MARKERS.push(m);
+    };
+    if (MY_POS) mk(MY_POS.lat, MY_POS.lng, '📍', '<b>Tú</b>');
+    const all = (d && d.people) || [];
+    const list = MAP_ROLES.size ? all.filter(p => MAP_ROLES.has(p.role)) : all;
+    list.forEach(p => mk(p.lat, p.lng, MPIN[p.role] || '•', `<b>${p.name}</b><br>${p.role}${p.city ? ' · ' + p.city : ''}`));
+    var mi = document.getElementById('mapInfo');
+    if (mi) mi.innerHTML = all.length
+      ? `<b>${all.length}</b> contacto(s) cerca${MAP_ROLES.size ? ' · filtrando: ' + [...MAP_ROLES].join(', ') + ' (' + list.length + ')' : ''}. Toca una etiqueta para filtrar.`
+      : 'Nadie activo cerca ahora mismo. Aparecerán las circulares, comercios y riders cuando estén en línea.';
+  } catch (e) {}
+}
+
 var _origGoScreen2 = goScreen;
 goScreen = function(id) {
   _origGoScreen2(id);
+  if (id === 's-map') openLiveMap();
   if (id === 's-publicidad') renderFullAds();
   if (id === 's-notificaciones') { updatePushPermUI(); initNotifCatUI(); }
   if (id === 's-seguridad') {
