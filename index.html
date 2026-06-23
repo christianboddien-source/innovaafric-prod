@@ -210,6 +210,7 @@ body.light-mode{
 }
 body.light-mode .balance-card{background:linear-gradient(145deg,#1a3a6e,#1a5a8a,#0d3a6e) !important}
 body.light-mode .amount-box{background:linear-gradient(145deg,#111827,#1a2235) !important;border-color:rgba(41,171,226,.25)}
+body.light-mode .dark-card{background:linear-gradient(145deg,#111827,#1a2540) !important}
 body.light-mode #notif-panel{background:#fff}
 body.light-mode .screen{background:var(--bg)}
 body.light-mode .statusbar{background:var(--bg)}
@@ -527,7 +528,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="page-title">Mi Wallet</div>
         <div class="icon-btn">⚙️</div>
       </div>
-      <div style="margin:0 14px 14px;padding:18px;border-radius:22px;background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15)">
+      <div class="dark-card" style="margin:0 14px 14px;padding:18px;border-radius:22px;background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
           <div>
             <div style="font-size:10px;color:rgba(255,255,255,.35);letter-spacing:1px;margin-bottom:3px">SALDO DISPONIBLE</div>
@@ -1598,7 +1599,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div style="width:36px"></div>
       </div>
       <div style="padding:0 14px">
-        <div id="invest-detail-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:18px;margin-bottom:14px"></div>
+        <div id="invest-detail-card" class="dark-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:18px;margin-bottom:14px"></div>
         <div class="section-title">¿Cuánto quieres invertir?</div>
         <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
           <input id="invest-amount" type="number" placeholder="5000" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
@@ -1701,7 +1702,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div style="padding:0 14px">
         <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.07);border:1px solid rgba(0,137,123,.2);font-size:11px;color:var(--green);margin-bottom:14px">🏪 Acepta pagos en tu negocio — genera QR de cobro al instante para cualquier importe</div>
         <div class="section-title">Importe a cobrar</div>
-        <div style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15);border-radius:22px;padding:20px;text-align:center;margin-bottom:14px">
+        <div class="dark-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15);border-radius:22px;padding:20px;text-align:center;margin-bottom:14px">
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
             <input id="pos-amount" type="number" placeholder="0" oninput="genPosQR()" style="font-size:38px;font-weight:900;color:#fff;background:none;border:none;outline:none;text-align:center;width:200px;font-family:'Inter',sans-serif">
           </div>
