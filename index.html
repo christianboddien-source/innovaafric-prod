@@ -3098,13 +3098,14 @@ function loadShopProducts(source, cat) {
 
 function renderShopProducts(items) {
   var el = document.getElementById('shop-products-list');
+  _shopRendered = items.slice(0,20);
   el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
-    items.slice(0,20).map(function(p) {
+    _shopRendered.map(function(p, i) {
       var price  = p.price || p.price_eur || 0;
       var currency = p.currency || 'EUR';
       var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency;
       var img = p.image_url || p.image || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop';
-      return '<div class="card" style="border-radius:16px;padding:0;overflow:hidden;cursor:pointer" onclick="showToast(\'' + (p.name||'Producto').replace(/'/g,' ') + '\',\'Precio: ' + sym + price + '\')">' +
+      return '<div class="card" style="border-radius:16px;padding:0;overflow:hidden;cursor:pointer" onclick="openBuy(' + i + ')">' +
         '<img src="' + img + '" style="width:100%;height:80px;object-fit:cover" onerror="this.src=\'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop\'">' +
         '<div style="padding:8px">' +
         '<div style="font-size:10px;font-weight:800;color:var(--txt);margin-bottom:2px">' + (p.name||'Producto') + '</div>' +
@@ -3727,6 +3728,65 @@ function compartirEnlace() {
 }
 
 // ── RETIRAR ─────────────────────────────────────────────
+// ── COMPRA EN TIENDA (crea pedido real con código de seguimiento) ──
+var _shopRendered = [];
+var _buyProduct = null;
+function railPost(path, body) {
+  return fetch(RAIL_API + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify(body || {})
+  }).then(function(r){ return r.json(); });
+}
+function openBuy(i) {
+  var p = _shopRendered[i]; if (!p) return;
+  _buyProduct = p;
+  var price = p.price || p.price_eur || 0;
+  var cur = (['EUR','USD','XAF','XOF'].indexOf(p.currency) > -1) ? p.currency : 'EUR';
+  var sym = cur === 'EUR' ? '€' : cur === 'USD' ? '$' : cur;
+  var ov = document.getElementById('buy-overlay');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'buy-overlay'; document.body.appendChild(ov); }
+  ov.setAttribute('style', 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:9999');
+  ov.innerHTML = '<div style="background:var(--bg);width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:18px 16px 22px;box-shadow:0 -8px 30px rgba(0,0,0,.4)">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:15px;font-weight:900;color:var(--txt)">Comprar producto</div><div onclick="closeBuy()" style="cursor:pointer;font-size:18px;color:var(--txt3)">✕</div></div>'
+    + '<div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">' + (p.name || 'Producto') + '</div>'
+    + '<div style="font-size:13px;color:var(--green);font-weight:800;margin-bottom:12px">' + sym + price + ' / ud · pago en ' + cur + '</div>'
+    + '<div class="section-title">Cantidad</div><div class="card-sm" style="margin-bottom:10px;padding:8px 12px"><input id="buy-qty" type="number" value="1" min="1" style="width:100%;background:none;border:none;outline:none;font-size:14px;color:var(--txt);font-family:\'Inter\',sans-serif"></div>'
+    + '<div class="section-title">Dirección de entrega</div><div class="card-sm" style="margin-bottom:12px;padding:8px 12px"><input id="buy-addr" placeholder="Calle, ciudad, país" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:\'Inter\',sans-serif"></div>'
+    + '<div id="buy-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>'
+    + '<button class="btn-primary" id="buy-btn" onclick="confirmBuy()">Comprar y pagar →</button></div>';
+}
+function closeBuy() { var ov = document.getElementById('buy-overlay'); if (ov) ov.remove(); }
+function confirmBuy() {
+  var p = _buyProduct; if (!p) return;
+  var qty  = parseInt(document.getElementById('buy-qty').value, 10) || 1;
+  var addr = document.getElementById('buy-addr').value.trim();
+  var err  = document.getElementById('buy-err');
+  var btn  = document.getElementById('buy-btn');
+  var cur  = (['EUR','USD','XAF','XOF'].indexOf(p.currency) > -1) ? p.currency : 'EUR';
+  if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
+  if (!addr)   { err.textContent = 'Introduce la dirección de entrega'; return; }
+  err.textContent = ''; btn.innerHTML = '<span class="login-spinner"></span>Procesando…'; btn.disabled = true;
+  railPost('/shop/cart', { product_id: p.id, quantity: qty }).then(function(c) {
+    if (!c || !c.success) { throw new Error((c && c.error) || 'No se pudo añadir al carrito'); }
+    return railPost('/shop/orders', { payment_currency: cur, delivery_address: addr });
+  }).then(function(o) {
+    if (!o || !o.success) { err.textContent = (o && o.error) || 'No se pudo crear el pedido'; btn.innerHTML = 'Comprar y pagar →'; btn.disabled = false; return; }
+    var d = o.data; var trk = d.trackingId || d.tracking_id;
+    if (d.paymentCurrency === 'XAF' && d.paymentAmount) {
+      _balances.XAF = Math.max(0, _balances.XAF - d.paymentAmount);
+      localStorage.setItem('inn_balance', JSON.stringify(_balances));
+      updateBalanceDisplay(); refreshBalanceInScreens();
+    }
+    closeBuy();
+    showToast('Pedido confirmado', 'Código de seguimiento: ' + trk);
+    var ti = document.getElementById('track-id'); if (ti) ti.value = trk;
+    goScreen('s-track'); if (typeof loadTrack === 'function') loadTrack();
+  }).catch(function(e) {
+    err.textContent = (e && e.message) || 'Error de conexión. Inténtalo de nuevo.';
+    var b = document.getElementById('buy-btn'); if (b) { b.innerHTML = 'Comprar y pagar →'; b.disabled = false; }
+  });
+}
 var _trackFlow = ['confirmed','processing_hub','dispatched','in_transit','out_for_delivery','delivered'];
 var _trackLabels = { confirmed:'Pedido confirmado', processing_hub:'En el hub logístico', dispatched:'Despachado', in_transit:'En tránsito', out_for_delivery:'En reparto', delivered:'Entregado' };
 function loadTrack() {
