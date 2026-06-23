@@ -635,6 +635,10 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         </svg>
         <div class="icon-btn">📋</div>
       </div>
+      <div style="padding:0 14px 10px;display:flex;gap:8px">
+        <div class="card-sm" style="flex:1;padding:8px 12px"><input id="track-id" placeholder="Código de pedido (ej. XD-…)" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif" onkeydown="if(event.key==='Enter')loadTrack()"></div>
+        <button class="btn-primary" style="width:auto;padding:10px 16px;border-radius:12px" onclick="loadTrack()">Rastrear</button>
+      </div>
       <div class="map-box">
         <div class="map-grid"></div>
         <div class="map-road" style="top:44%;left:0;right:0;height:3px"></div>
@@ -655,29 +659,12 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div style="position:absolute;top:9%;right:12%;font-size:18px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">🏪</div>
         <div class="map-eta">📍 Rider llega en <span style="color:var(--green)">8 min</span> · 2.3 km</div>
       </div>
-      <div class="status-strip">
-        <div style="font-size:14px;font-weight:900;color:var(--gold);margin-bottom:3px">En camino · 8 min</div>
-        <div style="font-size:10px;color:#c47d00;font-weight:600">Rider: Moussa D. · Pedido #XD-2026-04521</div>
+      <div class="status-strip" id="track-strip" style="display:none">
+        <div id="track-status-main" style="font-size:14px;font-weight:900;color:var(--gold);margin-bottom:3px"></div>
+        <div id="track-status-sub" style="font-size:10px;color:#c47d00;font-weight:600"></div>
       </div>
-      <div class="step-row">
-        <div class="step-circle step-done">✓</div>
-        <div style="flex:1;font-size:12px;font-weight:700;color:var(--txt)">Pedido confirmado</div>
-        <div style="font-size:10px;color:var(--txt3);font-weight:600">14:02</div>
-      </div>
-      <div class="step-row">
-        <div class="step-circle step-done">✓</div>
-        <div style="flex:1;font-size:12px;font-weight:700;color:var(--txt)">Recogido por rider</div>
-        <div style="font-size:10px;color:var(--txt3);font-weight:600">14:15</div>
-      </div>
-      <div class="step-row" style="background:rgba(245,166,35,.04)">
-        <div class="step-circle step-active">🛵</div>
-        <div style="flex:1;font-size:12px;font-weight:800;color:var(--gold)">En camino · llegada ~14:28</div>
-        <div style="font-size:9px;font-weight:800;color:var(--gold)">Live</div>
-      </div>
-      <div class="step-row" style="border-bottom:none">
-        <div class="step-circle step-pending" style="font-size:11px;color:var(--txt3)">4</div>
-        <div style="flex:1;font-size:12px;font-weight:600;color:var(--txt3)">Entregado</div>
-      </div>
+      <div id="track-steps"></div>
+      <div id="track-hint" style="text-align:center;font-size:11px;color:var(--txt3);padding:18px 24px;line-height:1.5">Introduce el código de tu pedido (lo recibes al comprar) y pulsa «Rastrear» para ver el estado en vivo.</div>
       <div style="display:flex;gap:10px;padding:14px 14px 8px">
         <button style="flex:1;background:var(--gold);color:#fff;border:none;border-radius:14px;padding:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif">📞 Llamar rider</button>
         <button style="flex:1;background:var(--bg2);color:var(--txt);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif" onclick="goScreen('s-chat')">💬 Chat</button>
@@ -3740,6 +3727,45 @@ function compartirEnlace() {
 }
 
 // ── RETIRAR ─────────────────────────────────────────────
+var _trackFlow = ['confirmed','processing_hub','dispatched','in_transit','out_for_delivery','delivered'];
+var _trackLabels = { confirmed:'Pedido confirmado', processing_hub:'En el hub logístico', dispatched:'Despachado', in_transit:'En tránsito', out_for_delivery:'En reparto', delivered:'Entregado' };
+function loadTrack() {
+  var id    = document.getElementById('track-id').value.trim();
+  var hint  = document.getElementById('track-hint');
+  var strip = document.getElementById('track-strip');
+  var steps = document.getElementById('track-steps');
+  if (!id) { hint.textContent = 'Introduce un código de seguimiento.'; hint.style.display = 'block'; return; }
+  hint.textContent = 'Buscando…'; hint.style.display = 'block'; strip.style.display = 'none'; steps.innerHTML = '';
+  fetch(RAIL_API + '/delivery/track/' + encodeURIComponent(id))
+    .then(function(r){ return r.json(); })
+    .then(function(resp){
+      if (!resp || !resp.success) { hint.textContent = (resp && resp.error) || 'Pedido no encontrado'; return; }
+      var d = resp.data;
+      hint.style.display = 'none'; strip.style.display = 'block';
+      document.getElementById('track-status-main').textContent = _trackLabels[d.status] || d.status;
+      var loc = (d.current_location && d.current_location.hub) ? ' · ' + d.current_location.hub : '';
+      document.getElementById('track-status-sub').textContent = 'Pedido ' + d.tracking_id + loc;
+      var doneSet = {}; (d.status_history || []).forEach(function(h){ doneSet[h.status] = h.timestamp; });
+      var curIdx = _trackFlow.indexOf(d.status);
+      var html = '';
+      _trackFlow.forEach(function(s, i){
+        var done = doneSet[s] || (curIdx > -1 && i < curIdx);
+        var active = (s === d.status);
+        var circle = active ? '<div class="step-circle step-active">🛵</div>'
+          : (done ? '<div class="step-circle step-done">✓</div>'
+                  : '<div class="step-circle step-pending" style="font-size:11px;color:var(--txt3)">' + (i + 1) + '</div>');
+        var color  = active ? 'var(--gold)' : (done ? 'var(--txt)' : 'var(--txt3)');
+        var weight = active ? 800 : (done ? 700 : 600);
+        var when   = doneSet[s] ? new Date(doneSet[s]).toLocaleDateString('es') : (active ? 'En curso' : '');
+        html += '<div class="step-row"' + (active ? ' style="background:rgba(245,166,35,.04)"' : '') + '>' + circle
+             +  '<div style="flex:1;font-size:12px;font-weight:' + weight + ';color:' + color + '">' + (_trackLabels[s] || s) + '</div>'
+             +  '<div style="font-size:9px;color:var(--txt3);font-weight:700">' + when + '</div></div>';
+      });
+      if (d.estimated_delivery) html += '<div style="text-align:center;font-size:10px;color:var(--txt3);padding:8px">Entrega estimada: ' + d.estimated_delivery + '</div>';
+      steps.innerHTML = html;
+    })
+    .catch(function(){ hint.textContent = 'Error de conexión. Inténtalo de nuevo.'; });
+}
 var _retMethod = 'bank_transfer';
 function selRetMethod(m, el) {
   _retMethod = m;
