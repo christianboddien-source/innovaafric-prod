@@ -1374,13 +1374,13 @@ function setCurrency(cur){
   document.querySelectorAll('.pcard-price').forEach(function(el){
     var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
     var val=base*rate;
-    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('fr-FR');
+    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('es-ES');
     el.innerHTML='<span class="sym">'+sym+'</span>'+disp;
   });
   document.querySelectorAll('.pcard-orig').forEach(function(el){
     var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
     var val=base*rate;
-    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('fr-FR');
+    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('es-ES');
     el.textContent=sym+disp;
   });
 }

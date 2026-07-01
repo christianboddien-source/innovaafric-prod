@@ -1575,7 +1575,7 @@ function fxCalc(){
   var html='';
   Object.keys(rates).forEach(function(to){
     var received=(amt*rates[to]);
-    var disp=received>=1000?received.toLocaleString('en',{maximumFractionDigits:0}):received.toFixed(2);
+    var disp=received>=1000?received.toLocaleString('es-ES',{maximumFractionDigits:0}):received.toFixed(2);
     var chg=FX_CHANGES[to];
     var chgColor=chg.startsWith('-')?'#f87171':'#4ade80';
     html+='<div style="display:grid;grid-template-columns:2fr 2fr 1fr 1fr;padding:14px 20px;border-top:1px solid rgba(255,255,255,0.04);align-items:center;">';

@@ -2338,7 +2338,7 @@ function printReport(type) {
     bodyHTML = header +
       '<h2 style="font-size:16px;font-weight:800;margin-bottom:12px">Extracto de movimientos</h2>' +
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">' +
-      '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO XAF</div><div style="font-size:16px;font-weight:800">' + (bal.XAF||0).toLocaleString('fr-FR') + ' XAF</div></div>' +
+      '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO XAF</div><div style="font-size:16px;font-weight:800">' + (bal.XAF||0).toLocaleString('es-ES') + ' XAF</div></div>' +
       '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO EUR</div><div style="font-size:16px;font-weight:800">€' + (bal.EUR||0) + '</div></div>' +
       '<div style="background:#f3f4f6;border-radius:8px;padding:10px"><div style="font-size:10px;color:#6b7280">SALDO USD</div><div style="font-size:16px;font-weight:800">$' + (bal.USD||0) + '</div></div>' +
       '</div>' +
@@ -2547,12 +2547,12 @@ function refreshBalanceInScreens() {
   var eurV = (_balances.EUR && _balances.EUR > 0) ? _balances.EUR : xaf * _FX.EUR;
   var wEl  = document.getElementById('wallet-xaf');
   var wEur = document.getElementById('wallet-eur');
-  if (wEl)  wEl.textContent  = Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
-  if (wEur) wEur.textContent = '≈ € ' + eurV.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if (wEl)  wEl.textContent  = Math.round(xaf).toLocaleString('es-ES') + ' XAF';
+  if (wEur) wEur.textContent = '≈ € ' + eurV.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
   var rEl = document.getElementById('retirar-saldo');
-  if (rEl) rEl.textContent = _balances.XAF.toLocaleString('fr-FR') + ' XAF';
+  if (rEl) rEl.textContent = _balances.XAF.toLocaleString('es-ES') + ' XAF';
   var cEl = document.getElementById('cambiar-saldo');
-  if (cEl) cEl.textContent = _balances.XAF.toLocaleString('fr-FR');
+  if (cEl) cEl.textContent = _balances.XAF.toLocaleString('es-ES');
 }
 
 // -- On start ----------------------------
@@ -2668,17 +2668,17 @@ function updateBalanceDisplay() {
   if (_balanceHidden) { el.textContent = '••••••'; if (sub) sub.textContent = ''; return; }
   var xaf = _balances.XAF || 0;
   if (_curCurrency === 'XAF') {
-    el.textContent = Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
-    if (sub) sub.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    el.textContent = Math.round(xaf).toLocaleString('es-ES') + ' XAF';
+    if (sub) sub.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
   } else {
     var val = getConvertedBalance(_curCurrency);
     var sym = _symbols[_curCurrency] || _curCurrency;
-    el.textContent = sym + ' ' + val.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
-    if (sub) sub.textContent = '≈ ' + Math.round(xaf).toLocaleString('fr-FR') + ' XAF';
+    el.textContent = sym + ' ' + val.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
+    if (sub) sub.textContent = '≈ ' + Math.round(xaf).toLocaleString('es-ES') + ' XAF';
   }
   // Actualizar también la mini-equivalencia en la home
   var homeEur = document.getElementById('balance-eur-equiv');
-  if (homeEur) homeEur.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  if (homeEur) homeEur.textContent = '≈ € ' + (xaf * _FX.EUR).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
 function toggleBalance() {
@@ -2766,7 +2766,7 @@ function calcFiscal() {
     var totalDeduct  = fee + totalTax;
     var netAmount    = base - totalDeduct;
     var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
-    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
+    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
 
     _fiscalCalcResult = { base, type, country, currency, fee, feeRate, taxBreakdown, totalTax, totalDeduct, netAmount };
 
@@ -2791,7 +2791,7 @@ function calcFiscal() {
     var totalDeduct = fee;
     var netAmount   = base - fee;
     var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '';
-    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
+    var fmt = function(n) { return (sym ? sym + ' ' : '') + parseFloat(n).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + (!sym ? ' ' + currency : ''); };
     _fiscalCalcResult = { base, type, country, currency, fee, feeRate, taxBreakdown:[], totalTax:0, totalDeduct, netAmount };
     resEl.innerHTML =
       '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--txt);padding-bottom:10px;border-bottom:1px solid var(--border2)">' +
@@ -2827,13 +2827,13 @@ function loadFiscalSummary() {
         '<div style="font-size:20px;font-weight:900;color:var(--txt)">' + countSent + '</div></div>' +
       '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
         '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">VOL. ENVIADO</div>' +
-        '<div style="font-size:15px;font-weight:900;color:var(--txt)">' + Math.round(totalSent).toLocaleString('fr-FR') + ' XAF</div></div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--txt)">' + Math.round(totalSent).toLocaleString('es-ES') + ' XAF</div></div>' +
       '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
         '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">COMISIONES PAGADAS</div>' +
-        '<div style="font-size:15px;font-weight:900;color:var(--gold)">' + Math.round(totalFees).toLocaleString('fr-FR') + ' XAF</div></div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--gold)">' + Math.round(totalFees).toLocaleString('es-ES') + ' XAF</div></div>' +
       '<div style="background:var(--bg3);border-radius:10px;padding:12px;text-align:center">' +
         '<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">IMPUESTOS</div>' +
-        '<div style="font-size:15px;font-weight:900;color:var(--red)">' + Math.round(totalTaxes).toLocaleString('fr-FR') + ' XAF</div></div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--red)">' + Math.round(totalTaxes).toLocaleString('es-ES') + ' XAF</div></div>' +
       '</div>' +
       '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border2);display:flex;justify-content:space-between;font-size:12px">' +
         '<span style="color:var(--txt3)">Tasa efectiva media</span>' +
@@ -2851,7 +2851,7 @@ function printFiscalReport() {
   var sym = calc && calc.currency === 'EUR' ? '€' : calc && calc.currency === 'USD' ? '$' : '';
   var fmt = function(n, cur) {
     var s = cur === 'EUR' ? '€ ' : cur === 'USD' ? '$ ' : '';
-    return s + parseFloat(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}) + (s ? '' : ' ' + (cur||'XAF'));
+    return s + parseFloat(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2}) + (s ? '' : ' ' + (cur||'XAF'));
   };
 
   // Build tax rows
@@ -3208,7 +3208,7 @@ function loadTontinas() {
     el.innerHTML = items.map(function(t) {
       var pct = t.members_count && t.max_members ? Math.round(t.members_count/t.max_members*100) : 0;
       var freq = freqLabel[t.frequency] || t.frequency;
-      var amt  = (t.contribution_amount || 0).toLocaleString('fr-FR');
+      var amt  = (t.contribution_amount || 0).toLocaleString('es-ES');
       var statusPill = t.status === 'open' ? 'pill-green' : 'pill-off';
       var statusTxt  = t.status === 'open' ? 'Abierta' : 'Cerrada';
       return [
@@ -3308,7 +3308,7 @@ function openBillPay(providerId) {
   document.getElementById('bill-currency').textContent  = _selectedProvider.currency || 'XAF';
   var sEl = document.getElementById('bill-saldo');
   var cur = _selectedProvider.currency || 'XAF';
-  if (sEl) sEl.textContent = cur === 'XAF' ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : _balances.EUR.toFixed(2) + ' EUR';
+  if (sEl) sEl.textContent = cur === 'XAF' ? _balances.XAF.toLocaleString('es-ES') + ' XAF' : _balances.EUR.toFixed(2) + ' EUR';
   document.getElementById('bill-ref').value    = '';
   document.getElementById('bill-amount').value = '';
   document.getElementById('bill-err').textContent = '';
@@ -3332,7 +3332,7 @@ function doPagarFactura() {
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🧾 Pagar ahora'; btn.disabled = false;
     if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al pagar'); return; }
-    showToast('Pago realizado', _selectedProvider.name + ' — ' + amount.toLocaleString('fr-FR') + ' ' + (_selectedProvider.currency||'XAF'));
+    showToast('Pago realizado', _selectedProvider.name + ' — ' + amount.toLocaleString('es-ES') + ' ' + (_selectedProvider.currency||'XAF'));
     loadTransactions();
     goBack();
   }).catch(function(){ btn.innerHTML = '🧾 Pagar ahora'; btn.disabled = false; err.textContent = 'Error de conexión'; });
@@ -3363,7 +3363,7 @@ function loadSeguros() {
         '<span class="pill pill-purple" style="font-size:9px;background:rgba(168,85,247,.12);color:var(--purple);border-color:rgba(168,85,247,.2)">'+p.category+'</span></div>' +
         '<div style="font-size:11px;color:var(--txt3);margin-bottom:10px">'+(p.description||'Cobertura disponible en tu región')+'</div>' +
         '<div style="display:flex;justify-content:space-between;align-items:center">' +
-        '<div style="font-size:15px;font-weight:900;color:var(--purple)">'+(p.premium||0).toLocaleString('fr-FR')+' '+(p.currency||'XAF')+'<span style="font-size:9px;font-weight:400;color:var(--txt3)">/mes</span></div>' +
+        '<div style="font-size:15px;font-weight:900;color:var(--purple)">'+(p.premium||0).toLocaleString('es-ES')+' '+(p.currency||'XAF')+'<span style="font-size:9px;font-weight:400;color:var(--txt3)">/mes</span></div>' +
         '<button onclick="showToast(\''+p.name+'\',\'Contratación disponible próximamente\')" style="background:var(--purple);color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">Contratar</button></div></div>';
     }).join('');
   }).catch(function(){});
@@ -3406,7 +3406,7 @@ function loadInvest() {
       var total = items.reduce(function(s,i){ return s + (i.amount||0); }, 0);
       el.innerHTML = '<div style="background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.05));border:1px solid rgba(245,166,35,.2);border-radius:16px;padding:14px;margin-bottom:14px">' +
         '<div style="font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Mi cartera</div>' +
-        '<div style="font-size:24px;font-weight:900;color:var(--gold)">'+total.toLocaleString('fr-FR')+' XAF</div>' +
+        '<div style="font-size:24px;font-weight:900;color:var(--gold)">'+total.toLocaleString('es-ES')+' XAF</div>' +
         '<div style="font-size:10px;color:var(--txt3);margin-top:2px">'+items.length+' inversión'+(items.length>1?'es':'')+'</div></div>';
     }).catch(function(){});
   }
@@ -3424,7 +3424,7 @@ function loadInvest() {
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
         '<div style="font-size:14px;font-weight:800;color:var(--txt)">'+f.name+'</div>' +
         '<span style="font-size:15px;font-weight:900;color:var(--gold)">'+(f.returnRate||0)+'%</span></div>' +
-        '<div style="font-size:10px;color:var(--txt3);margin-bottom:8px">'+(f.category||'General')+' · Mín '+(f.minInvest||5000).toLocaleString('fr-FR')+' '+(f.currency||'XAF')+'</div>' +
+        '<div style="font-size:10px;color:var(--txt3);margin-bottom:8px">'+(f.category||'General')+' · Mín '+(f.minInvest||5000).toLocaleString('es-ES')+' '+(f.currency||'XAF')+'</div>' +
         '<div style="height:4px;background:var(--bg3);border-radius:4px"><div style="height:4px;background:var(--gold);border-radius:4px;width:'+Math.min(f.progress||0,100)+'%"></div></div>' +
         '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--txt3);margin-top:4px">' +
         '<span>'+(f.investors||0)+' inversores</span><span>'+Math.min(f.progress||0,100)+'% financiado</span></div></div>';
@@ -3463,7 +3463,7 @@ function doInvertir() {
   var err = document.getElementById('invest-err');
   var btn = document.getElementById('invest-btn');
   if (!amount || amount < (_investFundSelected.minInvest||5000)) {
-    err.textContent = 'Mínimo: '+(_investFundSelected.minInvest||5000).toLocaleString('fr-FR')+' '+(_investFundSelected.currency||'XAF'); return;
+    err.textContent = 'Mínimo: '+(_investFundSelected.minInvest||5000).toLocaleString('es-ES')+' '+(_investFundSelected.currency||'XAF'); return;
   }
   err.textContent = '';
   btn.innerHTML = '<span class="login-spinner"></span>Invirtiendo…'; btn.disabled = true;
@@ -3474,7 +3474,7 @@ function doInvertir() {
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '📊 Invertir ahora'; btn.disabled = false;
     if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al invertir'); return; }
-    showToast('Inversión realizada', amount.toLocaleString('fr-FR')+' '+(_investFundSelected.currency||'XAF')+' invertidos');
+    showToast('Inversión realizada', amount.toLocaleString('es-ES')+' '+(_investFundSelected.currency||'XAF')+' invertidos');
     document.getElementById('invest-amount').value = '';
     loadInvest(); goScreen('s-invest');
   }).catch(function(){ btn.innerHTML = '📊 Invertir ahora'; btn.disabled = false; err.textContent = 'Error de conexión'; });
@@ -3501,7 +3501,7 @@ function loadAhorro() {
         '<div style="height:6px;background:var(--bg3);border-radius:6px;margin-bottom:6px">' +
         '<div style="height:6px;background:var(--green);border-radius:6px;width:'+pct+'%"></div></div>' +
         '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3)">' +
-        '<span>'+(g.current||0).toLocaleString('fr-FR')+' / '+(g.target||0).toLocaleString('fr-FR')+' '+(g.currency||'XAF')+'</span>' +
+        '<span>'+(g.current||0).toLocaleString('es-ES')+' / '+(g.target||0).toLocaleString('es-ES')+' '+(g.currency||'XAF')+'</span>' +
         '<span>'+deadline+'</span></div></div>';
     }).join('');
   }).catch(function(){});
@@ -3526,7 +3526,7 @@ function doCrearAhorro() {
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🎯 Crear meta'; btn.disabled = false;
     if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al crear'); return; }
-    showToast('Meta creada', name + ' · ' + target.toLocaleString('fr-FR') + ' ' + cur);
+    showToast('Meta creada', name + ' · ' + target.toLocaleString('es-ES') + ' ' + cur);
     document.getElementById('aho-name').value = ''; document.getElementById('aho-target').value = '';
     loadAhorro(); goScreen('s-ahorro');
   }).catch(function(){ btn.innerHTML = '🎯 Crear meta'; btn.disabled = false; err.textContent = 'Error de conexión'; });
@@ -3579,7 +3579,7 @@ function doQRPay() {
   }).then(function(r){ return r.json(); }).then(function(resp) {
     if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al pagar'); return; }
     var to = (resp.data && resp.data.recipient && resp.data.recipient.name) || dest;
-    showToast('Pago enviado', amount.toLocaleString('fr-FR') + ' XAF a ' + to);
+    showToast('Pago enviado', amount.toLocaleString('es-ES') + ' XAF a ' + to);
     document.getElementById('qr-email').value = ''; document.getElementById('qr-amount').value = '';
     loadTransactions(); goScreen('s-wallet');
   }).catch(function(){ err.textContent = 'Error de conexión'; });
@@ -3683,7 +3683,7 @@ function genPosQR() {
   }
   var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
   qr.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(link)+'" style="width:100%;height:100%">';
-  if (lbl) lbl.textContent = amount.toLocaleString('fr-FR') + ' ' + _posCur + ' · ' + (_user.name || _user.email);
+  if (lbl) lbl.textContent = amount.toLocaleString('es-ES') + ' ' + _posCur + ' · ' + (_user.name || _user.email);
 }
 
 function compartirPosQR() {
@@ -3769,7 +3769,7 @@ function calcSend() {
   var converted = amt * rate;
   var fee = cur === 'XAF' ? Math.round(amt * 0.015) : parseFloat((amt * 0.015).toFixed(2));
   if (amt > 0) {
-    document.getElementById('send-converted').textContent = destCur === 'XAF' ? Math.round(converted).toLocaleString('fr-FR') : converted.toFixed(2);
+    document.getElementById('send-converted').textContent = destCur === 'XAF' ? Math.round(converted).toLocaleString('es-ES') : converted.toFixed(2);
     document.getElementById('send-fee-label').textContent = 'Comisión: ' + fee + ' ' + cur;
   } else {
     document.getElementById('send-converted').textContent = '—';
@@ -3898,7 +3898,7 @@ var _origGoScreen = goScreen;
 goScreen = function(id) {
   _origGoScreen(id);
   if (id !== 's-qrpay' && typeof stopQRScan === 'function') stopQRScan();
-  if (id === 's-send')          { var sEl = document.getElementById('send-saldo'); if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : '— XAF'; calcSend(); }
+  if (id === 's-send')          { var sEl = document.getElementById('send-saldo'); if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('es-ES') + ' XAF' : '— XAF'; calcSend(); }
   if (id === 's-recibir')       populateRecibir();
   if (id === 's-retirar')       refreshBalanceInScreens();
   if (id === 's-cambiar')       refreshBalanceInScreens();
@@ -4130,7 +4130,7 @@ function doRetirar() {
     document.getElementById('retirar-input').value = '';
     document.getElementById('retirar-dest').value = '';
     var eta = (resp.data && resp.data.estimated_completion) ? ' · llega en ' + resp.data.estimated_completion : '';
-    showToast('Retiro solicitado', 'Recibirás ' + Math.round(net || amt).toLocaleString('fr-FR') + ' XAF' + eta);
+    showToast('Retiro solicitado', 'Recibirás ' + Math.round(net || amt).toLocaleString('es-ES') + ' XAF' + eta);
     goScreen('s-wallet');
   }).catch(function() {
     btn.innerHTML = orig; btn.disabled = false;
@@ -4229,7 +4229,7 @@ function renderTxnList(containerId, items, maxItems) {
     var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
     var cur = isIn ? (txn.currencyReceived || txn.currencySent) : txn.currencySent;
     var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
-    var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('fr-FR') : parseFloat(amt||0).toFixed(2)) + ' ' + cur;
+    var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('es-ES') : parseFloat(amt||0).toFixed(2)) + ' ' + cur;
     var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
     var note = txn.note || (txn.type === 'send' ? 'Envío' : txn.type === 'purchase' ? 'Compra' : txn.type === 'deposit' ? 'Depósito' : 'Transacción');
     html += '<div class="txn-row"><div class="txn-ico" style="background:' + iconBg + '">' + icon + '</div>' +
@@ -4728,7 +4728,7 @@ function shareWalletReport() {
   var text = '💰 *Extracto INNOVAAFRIC*\n' +
     '👤 ' + name + '\n' +
     '📅 ' + date + '\n\n' +
-    '💵 Saldo: *' + Math.round(xaf).toLocaleString('fr-FR') + ' XAF*\n' +
+    '💵 Saldo: *' + Math.round(xaf).toLocaleString('es-ES') + ' XAF*\n' +
     '≈ € ' + eur.toFixed(2) + '\n\n' +
     (_allTxns.length > 0 ? '📊 Últimas transacciones:\n' + _allTxns.slice(0,5).map(function(t){
       var isIn = t.recipientId === (_user && _user.id);
@@ -4748,10 +4748,10 @@ function shareFiscalReport() {
     '👤 ' + name + ' · ' + country + '\n' +
     '📅 Período: ' + date + '\n\n';
   if (calc) {
-    text += '💰 Base gravable: ' + (calc.base||0).toLocaleString('fr-FR') + ' ' + (calc.currency||'XAF') + '\n' +
-      '💼 Comisión (' + ((calc.feeRate||0)*100).toFixed(1) + '%): ' + (calc.fee||0).toLocaleString('fr-FR') + '\n' +
-      '🏛️ Impuestos: ' + (calc.totalTax||0).toLocaleString('fr-FR') + '\n' +
-      '✅ Neto: *' + (calc.net||0).toLocaleString('fr-FR') + ' ' + (calc.currency||'XAF') + '*\n\n';
+    text += '💰 Base gravable: ' + (calc.base||0).toLocaleString('es-ES') + ' ' + (calc.currency||'XAF') + '\n' +
+      '💼 Comisión (' + ((calc.feeRate||0)*100).toFixed(1) + '%): ' + (calc.fee||0).toLocaleString('es-ES') + '\n' +
+      '🏛️ Impuestos: ' + (calc.totalTax||0).toLocaleString('es-ES') + '\n' +
+      '✅ Neto: *' + (calc.net||0).toLocaleString('es-ES') + ' ' + (calc.currency||'XAF') + '*\n\n';
   }
   text += '_Documento generado por INNOVAAFRIC_\nhttps://christianboddien-source.github.io/innovaafric-prod/';
   shareViaWhatsApp(text);
