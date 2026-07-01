@@ -647,6 +647,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('proveedores',this)"><span class="ic">🏭</span><span data-i18n="nav:proveedores">Proveedores</span></div>
     <div class="sb-link" onclick="nav('orders',this)"><span class="ic">📦</span><span data-i18n="nav:orders">Pedidos</span></div>
     <div class="sb-link" onclick="nav('kyc',this)"><span class="ic">🪪</span><span data-i18n="nav:kyc">KYC</span><span class="badge-warn" id="sb-kyc-count" style="display:none">0</span></div>
+    <div class="sb-link" onclick="nav('webs',this)"><span class="ic">🌐</span><span>Webs</span></div>
     <div class="sb-group" data-i18n="grp:Config">Config</div>
     <div class="sb-link" onclick="nav('crear',this)"><span class="ic">➕</span><span data-i18n="nav:crear">Nuevo usuario</span></div>
     <div class="sb-group" data-i18n="grp:Avanzado">Avanzado</div>
@@ -5229,6 +5230,36 @@ select.form-input option{background:var(--s2)}
 </div>
 <!-- ══ fin v27 ═══════════════════════════════════════════════ -->
 
+<div id="pg-webs" style="display:none">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title" style="font-size:15px">🌐 Web-Admin — editar y publicar tus páginas</div>
+      <button class="topbar-btn btn-ghost" onclick="loadWebPages()">↻ Actualizar</button>
+    </div>
+    <div id="webadmin-token-warn" style="display:none;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);color:var(--amber);border-radius:10px;padding:10px 14px;font-size:13px;margin:8px 0 12px"></div>
+    <div style="display:grid;grid-template-columns:270px 1fr;gap:14px">
+      <div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Páginas</div>
+        <div id="webadmin-list"><div class="td-empty">Pulsa Actualizar…</div></div>
+      </div>
+      <div>
+        <div id="webadmin-empty" class="td-empty" style="padding:50px 20px">Elige una página de la izquierda para editar su código.</div>
+        <div id="webadmin-editor" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
+            <div style="font-weight:700" id="webadmin-title">—</div>
+            <div style="display:flex;gap:8px">
+              <button class="topbar-btn btn-ghost" onclick="webPreview()">👁 Vista previa</button>
+              <button class="topbar-btn btn-primary" onclick="publishWebFile()">🚀 Publicar</button>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px" id="webadmin-meta"></div>
+          <textarea id="webadmin-code" spellcheck="false" style="width:100%;height:58vh;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:var(--mono,monospace);font-size:12px;line-height:1.5;white-space:pre;overflow:auto;resize:vertical"></textarea>
+          <div id="webadmin-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="pg-microseguros" style="display:none">
   <div class="card">
     <div class="card-head">
@@ -7417,6 +7448,7 @@ function nav(page,el){
   if(page==='circulares')loadCirculares();
   if(page==='orders')loadOrders();
   if(page==='kyc')loadKYC();
+  if(page==='webs')loadWebPages();
   if(page==='rates'){loadRatesEditor();loadCountryRates();}
   if(page==='support')loadSupport();
   if(page==='campaigns')loadCampaigns();
@@ -8274,6 +8306,50 @@ async function loadOrders(){
     <td><span class="pill pill-${SP[o.status]||'amber'}">${o.status}</span></td>
     <td style="font-size:11px;color:var(--muted)">${fmt_date(o.created_at)}</td>
   </tr>`).join(''):'<tr><td colspan="6" class="td-empty">Sin pedidos aún</td></tr>';
+}
+// ── Web-Admin: editar y publicar páginas ──────────────────
+var _webPages=[], _webCurrent=null;
+async function loadWebPages(){
+  const list=document.getElementById('webadmin-list');
+  const warn=document.getElementById('webadmin-token-warn');
+  if(list)list.innerHTML='<div class="td-empty">Cargando…</div>';
+  const r=await rwAPI('GET','/webadmin/pages');
+  if(!r||!r.success){if(list)list.innerHTML='<div class="td-empty">Error al cargar (revisa conexión)</div>';return;}
+  _webPages=(r.data&&r.data.pages)||[];
+  if(warn){ if(r.data&&!r.data.tokenConfigured){warn.style.display='block';warn.innerHTML='⚠️ Falta el <b>GITHUB_TOKEN</b> en Railway. Puedes ver el código, pero <b>Publicar</b> no funcionará hasta que lo añadas.';}else{warn.style.display='none';} }
+  list.innerHTML=_webPages.map(p=>'<div onclick="openWebEditor(\''+p.id+'\')" style="border:1px solid var(--border);border-radius:10px;margin-bottom:6px;padding:9px 11px;cursor:pointer" onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--border)\'"><div style="font-size:13px;font-weight:600">'+p.label+'</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono,monospace)">'+p.repo+' · '+p.path+'</div></div>').join('');
+}
+async function openWebEditor(id){
+  const st=document.getElementById('webadmin-status');
+  document.getElementById('webadmin-empty').style.display='none';
+  document.getElementById('webadmin-editor').style.display='block';
+  document.getElementById('webadmin-title').textContent='Cargando…';
+  document.getElementById('webadmin-code').value='';
+  if(st)st.textContent='';
+  const r=await rwAPI('GET','/webadmin/file?id='+encodeURIComponent(id));
+  if(!r||!r.success){document.getElementById('webadmin-title').textContent='Error';if(st){st.style.color='var(--red)';st.textContent=(r&&r.error&&(r.error.message||r.error))||'No se pudo cargar';}return;}
+  _webCurrent={id:r.data.id,sha:r.data.sha,path:r.data.path,label:r.data.label};
+  document.getElementById('webadmin-title').textContent='📄 '+r.data.label;
+  document.getElementById('webadmin-meta').textContent=r.data.path+' · '+Number(r.data.size||0).toLocaleString('es',{useGrouping:'always'})+' caracteres';
+  document.getElementById('webadmin-code').value=r.data.content;
+}
+async function publishWebFile(){
+  if(!_webCurrent)return;
+  const st=document.getElementById('webadmin-status');
+  const code=document.getElementById('webadmin-code').value;
+  if(!code||!code.length){if(st){st.style.color='var(--red)';st.textContent='El código está vacío';}return;}
+  if(!confirm('¿Publicar los cambios en "'+_webCurrent.label+'"?\nSe guardará en GitHub y la web se actualizará en ~1 minuto.'))return;
+  if(st){st.style.color='var(--muted)';st.textContent='Publicando…';}
+  const r=await rwAPI('PUT','/webadmin/file',{id:_webCurrent.id,content:code,sha:_webCurrent.sha,message:'web-admin: editar '+_webCurrent.label});
+  if(!r||!r.success){if(st){st.style.color='var(--red)';st.textContent='❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo publicar');}return;}
+  _webCurrent.sha=(r.data&&r.data.newSha)||_webCurrent.sha;
+  if(st){st.style.color='var(--green)';st.textContent='✅ Publicado. La web se actualizará en ~1 min.';}
+  if(typeof logAdminAction==='function')logAdminAction('web_publish','Publicado '+_webCurrent.label);
+}
+function webPreview(){
+  const code=document.getElementById('webadmin-code').value;
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(code);w.document.close();}else{alert('Permite las ventanas emergentes para la vista previa.');}
 }
 async function loadKYC(){
   const tb=document.getElementById('tb-kyc');
