@@ -8314,7 +8314,7 @@ async function loadWebPages(){
   const warn=document.getElementById('webadmin-token-warn');
   if(list)list.innerHTML='<div class="td-empty">Cargando…</div>';
   const r=await rwAPI('GET','/webadmin/pages');
-  if(!r||!r.success){if(list)list.innerHTML='<div class="td-empty">Error al cargar (revisa conexión)</div>';return;}
+  if(!r||!r.success){var em=(r&&r.error&&(r.error.message||r.error))||'sin respuesta del servidor';if(list)list.innerHTML='<div class="td-empty" style="padding:16px;font-size:12px">⚠️ '+em+'<br><span style="color:var(--muted)">Si dice sesión/permiso, cierra sesión y vuelve a entrar al dashboard.</span></div>';return;}
   _webPages=(r.data&&r.data.pages)||[];
   if(warn){ if(r.data&&!r.data.tokenConfigured){warn.style.display='block';warn.innerHTML='⚠️ Falta el <b>GITHUB_TOKEN</b> en Railway. Puedes ver el código, pero <b>Publicar</b> no funcionará hasta que lo añadas.';}else{warn.style.display='none';} }
   list.innerHTML=_webPages.map(p=>'<div onclick="openWebEditor(\''+p.id+'\')" style="border:1px solid var(--border);border-radius:10px;margin-bottom:6px;padding:9px 11px;cursor:pointer" onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--border)\'"><div style="font-size:13px;font-weight:600">'+p.label+'</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono,monospace)">'+p.repo+' · '+p.path+'</div></div>').join('');
