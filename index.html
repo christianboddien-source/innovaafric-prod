@@ -2136,6 +2136,38 @@ function afterLogin() {
   startBalanceAutoRefresh();
   document.getElementById('login-btn').innerHTML = 'Entrar';
   document.getElementById('login-btn').disabled = false;
+  applyDeepLink();
+}
+
+// Deep-link por URL: las apps antiguas del ecosistema redirigen aquí con
+// ?app=money|shop|bigshop|delivery|qr o ?pay=<código IA/email>[&amount=]
+var _deepLink = (function(){
+  try {
+    var p = new URLSearchParams(location.search);
+    return { app: p.get('app'), pay: p.get('pay'), amount: p.get('amount') };
+  } catch(e) { return {}; }
+})();
+
+function applyDeepLink() {
+  if (!_deepLink || (!_deepLink.app && !_deepLink.pay)) return;
+  var d = _deepLink; _deepLink = {}; // aplicar una sola vez
+  setTimeout(function() {
+    if (d.pay) {
+      goScreen('s-send');
+      var el = document.getElementById('send-recipient');
+      if (el) { el.value = d.pay; if (typeof searchRecipients === 'function') searchRecipients(d.pay); }
+      if (d.amount) { var a = document.getElementById('send-amount'); if (a) { a.value = d.amount; if (typeof calcSend === 'function') calcSend(); } }
+      return;
+    }
+    var map = { money:'s-send', send:'s-send', wallet:'s-wallet', shop:'s-shop', bigshop:'s-shop', delivery:'s-track', track:'s-track', qr:'s-qrpay', home:'s-home', pos:'s-pos' };
+    var key = (d.app || '').toLowerCase();
+    var target = map[key];
+    if (target) {
+      goScreen(target);
+      if (key === 'shop'    && typeof shopTab === 'function') shopTab('xender');
+      if (key === 'bigshop' && typeof shopTab === 'function') shopTab('big');
+    }
+  }, 350);
 }
 
 // -- Register helpers --------------------
