@@ -7169,7 +7169,7 @@ function avColor(str){let h=0;for(let c of(str||''))h=c.charCodeAt(0)+h*31;retur
 function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
 function pill(role){return`<span class="pill pill-${ROLE_COLORS[role]||'gray'}">${ROLE_EMOJI[role]||''} ${role}</span>`}
 function fmt_date(d){return new Date(d).toLocaleDateString('es',{day:'numeric',month:'short'})}
-function fmt_datetime(d){return new Date(d).toLocaleString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
+function fmt_datetime(d){return new Date(d).toLocaleString('es', {useGrouping:'always', day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}
 function getUserCurrency(country,userId){
   if(userId){const s=localStorage.getItem('ia_pref_cur_'+userId);if(s&&s!=='auto')return s;}
   return COUNTRY_CURRENCY[country]||'EUR';
@@ -7187,7 +7187,7 @@ function formatUserBalance(w,country,userId){
   if(amount>=1000000)return sym+(amount/1000000).toFixed(2)+'M '+(cur!=='EUR'?cur:'');
   if(amount>=1000&&(cur==='XAF'||cur==='XOF'))return sym+Math.round(amount/1000)+'k '+cur;
   if(cur==='EUR'||cur==='USD'||cur==='GBP')return sym+amount.toFixed(2);
-  return sym+Math.round(amount).toLocaleString('es')+' '+cur;
+  return sym+Math.round(amount).toLocaleString('es', {useGrouping:'always'})+' '+cur;
 }
 function getCurrencyColor(country,userId){
   const cur=getUserCurrency(country,userId);
@@ -7596,7 +7596,7 @@ async function loadDashboard(){
     mstrip.innerHTML=[
       {label:'Nuevos este mes',val:newUsersMonth,sub:(growthPct>=0?'+':'')+growthPct+'% vs mes anterior',color:growthPct>=0?'var(--green)':'var(--red)'},
       {label:'Revenue este mes',val:'€'+revenueMonth.toFixed(0),sub:monthTxns.length+' transacciones',color:'var(--cyan)'},
-      {label:'Ticket medio',val:'€'+avgTicket.toFixed(2),sub:'en '+now.toLocaleString('es',{month:'long'}),color:'var(--amber)'}
+      {label:'Ticket medio',val:'€'+avgTicket.toFixed(2),sub:'en '+now.toLocaleString('es', {useGrouping:'always', month:'long'}),color:'var(--amber)'}
     ].map(function(k){
       return'<div class="kpi-card" style="margin:0"><div class="kpi-lbl">'+k.label+'</div>'
         +'<div class="kpi-val" style="color:'+k.color+';font-size:22px;margin:6px 0">'+k.val+'</div>'
@@ -7828,7 +7828,7 @@ async function openFicha(uid){
       <div class="ficha-block">
         <div class="ficha-block-title">Wallet</div>
         <div class="ficha-row"><span class="label">EUR €</span><span class="value" style="color:var(--cyan);font-family:var(--mono)">€${Number(u.eur||0).toFixed(2)}</span></div>
-        <div class="ficha-row"><span class="label">XAF</span><span class="value" style="color:var(--amber);font-family:var(--mono)">${Math.round(u.xaf||0).toLocaleString('es')}</span></div>
+        <div class="ficha-row"><span class="label">XAF</span><span class="value" style="color:var(--amber);font-family:var(--mono)">${Math.round(u.xaf||0).toLocaleString('es', {useGrouping:'always'})}</span></div>
         <div class="ficha-row"><span class="label">USD $</span><span class="value" style="font-family:var(--mono)">$${Number(u.usd||0).toFixed(2)}</span></div>
         <div class="ficha-row"><span class="label">Puntos</span><span class="value" style="color:var(--purple);font-family:var(--mono)">${u.points||0}</span></div>
         <div class="ficha-row"><span class="label">Moneda local</span><span class="value">${balance}</span></div>
@@ -8052,7 +8052,7 @@ async function loadWallets(){
     tb.innerHTML=(rows||[]).length?(rows||[]).map(w=>`<tr>
       <td><div class="user-cell"><div class="uc-av" style="background:${avColor(w.user?.email||'x')};color:#000">${initials(w.user?.full_name||w.user?.email||'?')}</div><div><div class="uc-name">${w.user?.full_name||'—'}</div><div class="uc-email">${w.user?.email||''}</div></div></div></td>
       <td style="font-family:var(--mono);font-weight:700;color:${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'#f87171':'var(--cyan)'}">€${Number(w.eur).toFixed(2)}${Number(w.eur)>WALLET_LIMITS.EUR.reloadThreshold?'<span title="Techo EUR alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':Number(w.eur)===0?'':' <span style="font-size:9px;color:var(--muted)">/ €3k</span>'}</td>
-      <td style="font-family:var(--mono);color:${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'#f87171':'var(--muted)'}">  ${Math.round(w.xaf).toLocaleString('es')}${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'<span title="Techo XAF alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
+      <td style="font-family:var(--mono);color:${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'#f87171':'var(--muted)'}">  ${Math.round(w.xaf).toLocaleString('es', {useGrouping:'always'})}${Number(w.xaf)>WALLET_LIMITS.XAF.reloadThreshold?'<span title="Techo XAF alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
       <td style="font-family:var(--mono);color:${Number(w.usd)>WALLET_LIMITS.USD.reloadThreshold?'#f87171':'var(--muted)'}">$${Number(w.usd).toFixed(2)}${Number(w.usd)>WALLET_LIMITS.USD.reloadThreshold?'<span title="Techo USD alcanzado" style="font-size:10px;margin-left:4px">🔴</span>':''}</td>
       <td style="font-family:var(--mono);color:var(--amber)">${w.points||0}</td>
       <td style="font-size:11px;color:var(--muted)">${w.updated_at?fmt_date(w.updated_at):'—'}</td>
@@ -8074,13 +8074,13 @@ async function openRecharge(uid,name){
   try{
     const{data:w}=await SB.from('wallets').select('*').eq('user_id',uid).single();
     document.getElementById('cur-eur').textContent=Number(w?.eur||0).toFixed(2);
-    document.getElementById('cur-xaf').textContent=Math.round(w?.xaf||0).toLocaleString('es');
+    document.getElementById('cur-xaf').textContent=Math.round(w?.xaf||0).toLocaleString('es', {useGrouping:'always'});
     document.getElementById('cur-usd').textContent=Number(w?.usd||0).toFixed(2);
   }catch(e){document.getElementById('cur-eur').textContent='0.00';document.getElementById('cur-xaf').textContent='0';document.getElementById('cur-usd').textContent='0.00';}
   // Mostrar el saldo real de Railway si el usuario está sincronizado
   if(user&&user._wallet&&user._railway){
     document.getElementById('cur-eur').textContent=Number(user._wallet.eur||0).toFixed(2);
-    document.getElementById('cur-xaf').textContent=Math.round(user._wallet.xaf||0).toLocaleString('es');
+    document.getElementById('cur-xaf').textContent=Math.round(user._wallet.xaf||0).toLocaleString('es', {useGrouping:'always'});
     document.getElementById('cur-usd').textContent=Number(user._wallet.usd||0).toFixed(2);
   }
   openModal('m-recharge');
@@ -8667,8 +8667,8 @@ function runSimulator(){
   const annual=monthly*12;
   const el=document.getElementById('sim-result');
   const ann=document.getElementById('sim-annual');
-  if(el)el.textContent='€'+monthly.toLocaleString('es',{maximumFractionDigits:0});
-  if(ann)ann.textContent='al mes · €'+annual.toLocaleString('es',{maximumFractionDigits:0})+'/año';
+  if(el)el.textContent='€'+monthly.toLocaleString('es', {useGrouping:'always', maximumFractionDigits:0});
+  if(ann)ann.textContent='al mes · €'+annual.toLocaleString('es', {useGrouping:'always', maximumFractionDigits:0})+'/año';
   loadImpactPanel(txns,avg);
 }
 function loadImpactPanel(txns,avg){
@@ -8677,7 +8677,7 @@ function loadImpactPanel(txns,avg){
   const savedVsWU=totalVol*0.08;
   const families=Math.round(txns*0.7);
   el.innerHTML='<div style="display:flex;flex-direction:column;gap:12px">'
-    +'<div style="background:var(--green-d);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--green)">€'+savedVsWU.toLocaleString('es',{maximumFractionDigits:0})+'</div><div style="font-size:11px;color:var(--muted)">Ahorro vs Western Union</div></div>'
+    +'<div style="background:var(--green-d);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--green)">€'+savedVsWU.toLocaleString('es', {useGrouping:'always', maximumFractionDigits:0})+'</div><div style="font-size:11px;color:var(--muted)">Ahorro vs Western Union</div></div>'
     +'<div style="background:var(--cyan-d);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;font-family:var(--mono);color:var(--cyan)">'+families+'</div><div style="font-size:11px;color:var(--muted)">Familias beneficiadas</div></div>'
     +'</div>';
 }
@@ -9238,13 +9238,13 @@ async function loadBigShopAdmin(){
     if(ordersData&&ordersData.length){
       document.getElementById('bs-orders').textContent=ordersData.length;
       var rev=ordersData.reduce(function(s,o){return s+Number(o.total||0);},0);
-      document.getElementById('bs-rev').textContent='€'+Math.round(rev).toLocaleString('es');
+      document.getElementById('bs-rev').textContent='€'+Math.round(rev).toLocaleString('es', {useGrouping:'always'});
     }else{
       // Derive from vendor sales field
       var totalSales=vendors.reduce(function(s,v){return s+(v.sales||0);},0);
       document.getElementById('bs-orders').textContent=totalSales;
       var totalRev=vendors.reduce(function(s,v){return s+(v.revenue||v.sales*12||0);},0);
-      document.getElementById('bs-rev').textContent='€'+(totalRev||totalSales*12).toLocaleString('es');
+      document.getElementById('bs-rev').textContent='€'+(totalRev||totalSales*12).toLocaleString('es', {useGrouping:'always'});
     }
   }catch(e){
     document.getElementById('bs-orders').textContent=vendors.reduce(function(s,v){return s+(v.sales||0);},0);
@@ -9599,7 +9599,7 @@ function filterTaxHistory(hist){
   var tb=document.getElementById('tb-tax-history');if(!tb)return;
   if(!hist.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin pagos registrados</td></tr>';return;}
   tb.innerHTML=hist.map(function(t){
-    var fmt=function(n){return t.currency==='EUR'?'€'+Number(n).toFixed(2):Math.round(n).toLocaleString('es')+' XAF';};
+    var fmt=function(n){return t.currency==='EUR'?'€'+Number(n).toFixed(2):Math.round(n).toLocaleString('es', {useGrouping:'always'})+' XAF';};
     return'<tr>'
       +'<td style="font-size:12px">'+(COUNTRY_NAMES[t.country]||t.country)+'</td>'
       +'<td><span class="pill pill-cyan" style="font-size:10px">'+t.type+'</span></td>'
@@ -9620,7 +9620,7 @@ function exportTaxReport(){
     +'<p style="color:#666;font-size:12px">Generado: '+new Date().toLocaleDateString('es',{year:'numeric',month:'long',day:'numeric'})+'</p>'
     +'<table><thead><tr><th>País</th><th>Tipo</th><th>Base</th><th>Total</th><th>InnovaAFRIC</th><th>Representante</th><th>Gobierno</th><th>Fecha</th></tr></thead><tbody>'
     +hist.map(function(t){
-      var fmt=function(n){return t.currency==='EUR'?'€'+Number(n).toFixed(2):Math.round(n).toLocaleString('es')+' XAF';};
+      var fmt=function(n){return t.currency==='EUR'?'€'+Number(n).toFixed(2):Math.round(n).toLocaleString('es', {useGrouping:'always'})+' XAF';};
       return'<tr><td>'+(COUNTRY_NAMES[t.country]||t.country)+'</td><td>'+t.type+'</td><td>'+fmt(t.base)+'</td><td class="total">'+fmt(t.total)+'</td><td>'+fmt(t.innovaAmt||0)+'</td><td>'+fmt(t.repAmt||0)+'</td><td>'+fmt(t.govAmt||0)+'</td><td>'+new Date(t.date).toLocaleDateString('es')+'</td></tr>';
     }).join('')
     +'</tbody></table><p style="font-size:10px;color:#999;margin-top:20px;text-align:center">InnovaAFRIC · We Simplify Life</p></body></html>';
@@ -9664,7 +9664,7 @@ function loadPOSAdmin(){
       +'<td style="font-weight:500">'+s.comercio+'</td>'
       +'<td style="font-size:12px">'+s.country+'</td>'
       +'<td style="font-size:12px;color:var(--muted)">'+s.desc+'</td>'
-      +'<td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">'+Number(s.amount).toLocaleString('es')+'</td>'
+      +'<td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">'+Number(s.amount).toLocaleString('es', {useGrouping:'always'})+'</td>'
       +'<td><span class="pill pill-cyan" style="font-size:10px">'+s.currency+'</span></td>'
       +'<td style="font-size:11px;color:var(--muted)">'+new Date(s.time).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})+'</td>'
       +'</tr>';
@@ -10744,8 +10744,8 @@ async function disable2FAUser(userId,btn){
 }
 function fmtAmt(n,cur){
   const v=Number(n||0);
-  if(cur==='EUR'||cur==='USD')return(cur==='EUR'?'€':'$')+v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
-  return v.toLocaleString('es-ES',{maximumFractionDigits:0})+' '+(cur||'');
+  if(cur==='EUR'||cur==='USD')return(cur==='EUR'?'€':'$')+v.toLocaleString('es-ES', {useGrouping:'always', minimumFractionDigits:2,maximumFractionDigits:2});
+  return v.toLocaleString('es-ES', {useGrouping:'always', maximumFractionDigits:0})+' '+(cur||'');
 }
 
 // ── LOANS ─────────────────────────────────────────────────
@@ -10810,7 +10810,7 @@ function renderLoansTable(loans){
   tb.innerHTML=loans.map(l=>`<tr>
     <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${l.id}</td>
     <td style="font-weight:500">${l.user?.name||l.userId||'—'}</td>
-    <td style="font-weight:700;color:var(--amber);font-family:var(--mono)">${Number(l.amount||0).toLocaleString('es')}</td>
+    <td style="font-weight:700;color:var(--amber);font-family:var(--mono)">${Number(l.amount||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td style="font-size:12px">${l.currency||'XAF'}</td>
     <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${l.purpose||'—'}</span></td>
     <td>${loanBadge(l.status)}</td>
@@ -10831,7 +10831,7 @@ function openLoanManage(id,name,amount,currency,status){
   document.getElementById('loan-manage-id').value=id;
   document.getElementById('loan-manage-info').innerHTML=`
     <div style="font-size:13px;font-weight:600;margin-bottom:4px">${name||'Usuario'}</div>
-    <div style="font-size:12px;color:var(--muted)">Importe: ${Number(amount).toLocaleString('es')} ${currency} · Estado actual: ${status}</div>`;
+    <div style="font-size:12px;color:var(--muted)">Importe: ${Number(amount).toLocaleString('es', {useGrouping:'always'})} ${currency} · Estado actual: ${status}</div>`;
   openModal('m-loan-manage');
 }
 async function submitLoanAction(){
@@ -10903,7 +10903,7 @@ function renderTontinasTable(items){
   tb.innerHTML=items.map(t=>`<tr>
     <td style="font-size:10px;color:var(--muted);font-family:var(--mono)">${t.id}</td>
     <td style="font-weight:600">${t.name||'—'}</td>
-    <td style="color:var(--amber);font-family:var(--mono)">${Number(t.contributionAmount||0).toLocaleString('es')}</td>
+    <td style="color:var(--amber);font-family:var(--mono)">${Number(t.contributionAmount||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td>${t.currency||'XAF'}</td>
     <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${t.frequency||'—'}</span></td>
     <td style="text-align:center">${t.maxMembers||'—'}</td>
@@ -10967,8 +10967,8 @@ function renderVCardsTable(items){
     <td>${c.label||'—'}</td>
     <td style="font-family:var(--mono);color:var(--muted)">${c.number||'••••'}</td>
     <td>${c.currency||'XAF'}</td>
-    <td style="color:var(--green);font-weight:700;font-family:var(--mono)">${Number(c.balance||0).toLocaleString('es')}</td>
-    <td style="color:var(--red);font-family:var(--mono)">${Number(c.spentTotal||0).toLocaleString('es')}</td>
+    <td style="color:var(--green);font-weight:700;font-family:var(--mono)">${Number(c.balance||0).toLocaleString('es', {useGrouping:'always'})}</td>
+    <td style="color:var(--red);font-family:var(--mono)">${Number(c.spentTotal||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td>${c.frozen?'<span class="pill pill-amber">Congelada</span>':c.status==='active'?'<span class="pill pill-green">Activa</span>':'<span class="pill pill-red">Cancelada</span>'}</td>
     <td style="font-size:11px;color:var(--muted)">${c.createdAt?fmt_date(c.createdAt):'—'}</td>
   </tr>`).join('');
@@ -10984,11 +10984,11 @@ async function loadAccounting(){
   const entriesOk=rEnt&&rEnt.success;
   if(summaryOk){
     const d=rSum.data;
-    document.getElementById('acc-income').textContent=Number(d.total_income||0).toLocaleString('es');
-    document.getElementById('acc-expenses').textContent=Number(d.total_expenses||0).toLocaleString('es');
+    document.getElementById('acc-income').textContent=Number(d.total_income||0).toLocaleString('es', {useGrouping:'always'});
+    document.getElementById('acc-expenses').textContent=Number(d.total_expenses||0).toLocaleString('es', {useGrouping:'always'});
     const profit=Number(d.net_profit||0);
     const profEl=document.getElementById('acc-profit');
-    profEl.textContent=profit.toLocaleString('es');
+    profEl.textContent=profit.toLocaleString('es', {useGrouping:'always'});
     profEl.style.color=profit>=0?'var(--green)':'var(--red)';
     document.getElementById('acc-entries').textContent=d.entries_count||0;
   }
@@ -11008,10 +11008,10 @@ async function loadAccounting(){
           const income=ALL_ACCOUNTING.filter(function(e){return e.type==='income';}).reduce(function(s,e){return s+e.amount;},0);
           const expenses=ALL_ACCOUNTING.filter(function(e){return e.type==='expense';}).reduce(function(s,e){return s+e.amount;},0);
           const profit=income-expenses;
-          document.getElementById('acc-income').textContent=income.toLocaleString('es');
-          document.getElementById('acc-expenses').textContent=expenses.toLocaleString('es');
+          document.getElementById('acc-income').textContent=income.toLocaleString('es', {useGrouping:'always'});
+          document.getElementById('acc-expenses').textContent=expenses.toLocaleString('es', {useGrouping:'always'});
           const profEl=document.getElementById('acc-profit');
-          if(profEl){profEl.textContent=profit.toLocaleString('es');profEl.style.color=profit>=0?'var(--green)':'var(--red)';}
+          if(profEl){profEl.textContent=profit.toLocaleString('es', {useGrouping:'always'});profEl.style.color=profit>=0?'var(--green)':'var(--red)';}
           document.getElementById('acc-entries').textContent=ALL_ACCOUNTING.length;
         }
         renderAccountingTable(ALL_ACCOUNTING);
@@ -11021,7 +11021,7 @@ async function loadAccounting(){
         const sbTx=await SB.from('transactions').select('amount,fee,status,type,created_at').limit(500);
         const txOk=(sbTx.data||[]).filter(function(t){return t.status!=='failed';});
         const income=txOk.reduce(function(s,t){return s+(Number(t.fee)||Number(t.amount||0)*0.022);},0);
-        document.getElementById('acc-income').textContent=Math.round(income).toLocaleString('es');
+        document.getElementById('acc-income').textContent=Math.round(income).toLocaleString('es', {useGrouping:'always'});
         document.getElementById('acc-expenses').textContent='—';
         document.getElementById('acc-entries').textContent=txOk.length;
         document.getElementById('tb-accounting').innerHTML='<tr><td colspan="7" class="td-empty">Sin entradas contables — ingresos calculados desde transacciones</td></tr>';
@@ -11046,7 +11046,7 @@ function renderAccountingTable(items){
     <td>${accTypeBadge(e.type)}</td>
     <td><span style="background:var(--s3);padding:2px 8px;border-radius:5px;font-size:11px">${e.category||'—'}</span></td>
     <td style="color:var(--subtle)">${e.description||'—'}</td>
-    <td style="font-weight:700;color:${e.type==='income'?'var(--green)':'var(--red)'};font-family:var(--mono)">${Number(e.amount||0).toLocaleString('es')}</td>
+    <td style="font-weight:700;color:${e.type==='income'?'var(--green)':'var(--red)'};font-family:var(--mono)">${Number(e.amount||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td>${e.currency||'XAF'}</td>
     <td style="font-size:11px;color:var(--muted)">${fmt_date(e.date||e.createdAt)}</td>
   </tr>`).join('');
@@ -11120,7 +11120,7 @@ async function loadPayroll(){
   document.getElementById('payroll-total').textContent=s.total||ALL_PAYROLL.length||0;
   document.getElementById('payroll-draft').textContent=s.draft||ALL_PAYROLL.filter(p=>p.status!=='executed').length||0;
   document.getElementById('payroll-executed').textContent=s.executed||ALL_PAYROLL.filter(p=>p.status==='executed').length||0;
-  document.getElementById('payroll-paid').textContent=Number(s.totalPaid||0).toLocaleString('es')+' XAF';
+  document.getElementById('payroll-paid').textContent=Number(s.totalPaid||0).toLocaleString('es', {useGrouping:'always'})+' XAF';
   renderPayrollTable();
 
   }catch(e){console.warn("loadPayroll:",e);try{var el=document.querySelector("[id^='tb-']");if(el)el.innerHTML='<tr><td colspan="10" class="td-empty">Error cargando datos</td></tr>';}catch(_){}}
@@ -11131,7 +11131,7 @@ function renderPayrollTable(){
   tb.innerHTML=ALL_PAYROLL.map(p=>`<tr>
     <td style="font-weight:600">${p.period||'—'}</td>
     <td>${p._count?.items||0} riders</td>
-    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(p.totalAmount||0).toLocaleString('es')}</td>
+    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(p.totalAmount||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td><span class="pill pill-cyan">${p.currency||'XAF'}</span></td>
     <td>${p.status==='executed'?'<span class="pill pill-green">Ejecutada</span>':'<span class="pill pill-amber">Borrador</span>'}</td>
     <td style="font-size:11px;color:var(--muted)">${p.executedAt?fmt_date(p.executedAt):'—'}</td>
@@ -11152,7 +11152,7 @@ async function createPayroll(){
   const r=await rwAPI('POST','/payroll',body);
   if(r.success){
     closeModal('m-new-payroll');
-    toast(`✅ Nómina creada: ${r.data.items?.length||0} riders · ${Number(r.data.totalAmount||0).toLocaleString('es')} ${r.data.currency}`,'success');
+    toast(`✅ Nómina creada: ${r.data.items?.length||0} riders · ${Number(r.data.totalAmount||0).toLocaleString('es', {useGrouping:'always'})} ${r.data.currency}`,'success');
     logAdminAction('create_payroll','Nómina '+body.period);
     loadPayroll();
   }else{toast('Error: '+(r.error?.message||'Railway no disponible'),'error');}
@@ -11163,15 +11163,15 @@ async function viewPayrollDetail(id){
   const run=r.data;
   currentPayrollId=run.id;
   document.getElementById('payroll-detail-title').textContent='💼 Nómina '+run.period+' — '+run.currency;
-  document.getElementById('payroll-detail-total').textContent=Number(run.totalAmount||0).toLocaleString('es')+' '+(run.currency||'XAF');
+  document.getElementById('payroll-detail-total').textContent=Number(run.totalAmount||0).toLocaleString('es', {useGrouping:'always'})+' '+(run.currency||'XAF');
   const btn=document.getElementById('payroll-execute-btn');
   if(btn)btn.style.display=run.status==='executed'?'none':'block';
   const tb=document.getElementById('tb-payroll-detail');
   if(tb)tb.innerHTML=(run.items||[]).map(i=>`<tr>
     <td style="font-weight:600">${i.riderName||'—'}</td>
     <td style="font-family:var(--mono)">${i.deliveries||0}</td>
-    <td style="font-family:var(--mono)">${Number(i.ratePerDelivery||0).toLocaleString('es')}</td>
-    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(i.amount||0).toLocaleString('es')}</td>
+    <td style="font-family:var(--mono)">${Number(i.ratePerDelivery||0).toLocaleString('es', {useGrouping:'always'})}</td>
+    <td style="color:var(--amber);font-weight:700;font-family:var(--mono)">${Number(i.amount||0).toLocaleString('es', {useGrouping:'always'})}</td>
     <td>${i.status==='paid'?'<span class="pill pill-green">Pagado</span>':'<span class="pill pill-amber">Pendiente</span>'}</td>
   </tr>`).join('');
   openModal('m-payroll-detail');
@@ -11680,7 +11680,7 @@ async function loadProveedores(){
         </div>
         <div style="text-align:right">
           <div style="font-family:var(--mono);font-weight:700;color:var(--green);font-size:15px">€${Number(w.eur||0).toFixed(2)}</div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:10px">${Math.round(w.xaf||0).toLocaleString('es')} XAF</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px">${Math.round(w.xaf||0).toLocaleString('es', {useGrouping:'always'})} XAF</div>
           <div style="display:flex;gap:6px;justify-content:flex-end">
             <button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="openFicha('${u.id}')">👤</button>
             <button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="openRecharge('${u.id}','${(u.full_name||'').replace(/'/g,'')}')">💰</button>
@@ -11715,7 +11715,7 @@ async function searchCargoUser(){
       </div>
       <div style="margin-left:auto;text-align:right;font-size:12px;font-family:var(--mono)">
         <div style="color:var(--cyan)">€${Number(w?.eur||0).toFixed(2)}</div>
-        <div style="color:var(--amber)">${Math.round(w?.xaf||0).toLocaleString('es')} XAF</div>
+        <div style="color:var(--amber)">${Math.round(w?.xaf||0).toLocaleString('es', {useGrouping:'always'})} XAF</div>
       </div>
     </div>`;
   }else{
@@ -12015,7 +12015,7 @@ async function checkSyncStatus(){
   document.getElementById('sync-diff').textContent=diff;
 
   const lastSync=localStorage.getItem('ia_last_sync');
-  document.getElementById('sync-last').textContent=lastSync?new Date(lastSync).toLocaleString('es',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca';
+  document.getElementById('sync-last').textContent=lastSync?new Date(lastSync).toLocaleString('es', {useGrouping:'always', day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca';
 
   if(box){
     if(diff===0){
@@ -13286,7 +13286,7 @@ loadDashboard=async function(){
     var revByCur=function(cur){return txlist.filter(function(t){return t.currency===cur;}).reduce(function(s,t){return s+(Number(t.fee)||Number(t.amount)*0.02);},0);};
     el=document.getElementById('k-rev-eur');if(el)el.textContent='€'+revByCur('EUR').toFixed(0);
     el=document.getElementById('k-rev-usd');if(el)el.textContent='$'+revByCur('USD').toFixed(0);
-    el=document.getElementById('k-rev-xaf');if(el)el.textContent=Math.round(revByCur('XAF')).toLocaleString('es');
+    el=document.getElementById('k-rev-xaf');if(el)el.textContent=Math.round(revByCur('XAF')).toLocaleString('es', {useGrouping:'always'});
     el=document.getElementById('k-rev-xof');if(el)el.textContent='0';
     var avg=wlist.length?tEur/wlist.length:0;
     el=document.getElementById('k-avg-eur');if(el)el.textContent='Promedio por usuario: €'+avg.toFixed(2);
@@ -13516,13 +13516,13 @@ async function pagarComisionBanco(){
     if(!bank){toast('Cuenta no encontrada','error');return;}
     bankName=bank.name;bankIban=bank.iban;
   }
-  if(!confirm('¿Enviar '+amount.toLocaleString('es')+' '+currency+' a '+bankName+'?\n'+concept))return;
+  if(!confirm('¿Enviar '+amount.toLocaleString('es', {useGrouping:'always'})+' '+currency+' a '+bankName+'?\n'+concept))return;
   var t={id:'bt_'+Date.now(),userId:uid,userName:user?user.full_name||user.email:'—',bankName:bankName,iban:bankIban,amount,currency,concept,date:new Date().toISOString(),status:'completed'};
   var transfers=JSON.parse(localStorage.getItem('ia_bank_transfers')||'[]');
   transfers.unshift(t);
   localStorage.setItem('ia_bank_transfers',JSON.stringify(transfers));
   try{SB.from('transactions').insert({user_id:uid,type:'bank_transfer',amount,currency,description:'Transferencia bancaria — '+concept,status:'completed'}).then(function(){}).catch(function(){});}catch(e){}
-  toast('✅ Transferencia bancaria registrada: '+amount.toLocaleString('es')+' '+currency,'success');
+  toast('✅ Transferencia bancaria registrada: '+amount.toLocaleString('es', {useGrouping:'always'})+' '+currency,'success');
   logAdminAction('bank_transfer',amount+' '+currency+' → '+bank.name+' ('+concept+')');
   renderBankTransfers();
 }
@@ -13533,7 +13533,7 @@ function renderBankTransfers(){
   el.innerHTML=transfers.slice(0,8).map(function(t){
     return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b1);font-size:12px">'
       +'<div><div style="font-weight:600">'+t.userName+'</div><div style="color:var(--muted);font-size:10px">'+t.bankName+' · '+new Date(t.date).toLocaleDateString('es')+'</div></div>'
-      +'<div style="text-align:right"><div style="font-weight:700;color:var(--cyan);font-family:var(--mono)">'+Number(t.amount).toLocaleString('es')+' '+t.currency+'</div><div style="font-size:10px;color:var(--green)">✅</div></div>'
+      +'<div style="text-align:right"><div style="font-weight:700;color:var(--cyan);font-family:var(--mono)">'+Number(t.amount).toLocaleString('es', {useGrouping:'always'})+' '+t.currency+'</div><div style="font-size:10px;color:var(--green)">✅</div></div>'
       +'</div>';
   }).join('');
 }
@@ -13739,7 +13739,7 @@ function viewEmail(id){
     +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">'
     +'<div><div style="font-size:17px;font-weight:700;margin-bottom:4px">'+e.subject+'</div>'
     +'<div style="font-size:12px;color:var(--muted)">De: '+e.from+' → Para: '+e.to+'</div>'
-    +'<div style="font-size:11px;color:var(--muted)">'+new Date(e.date).toLocaleString('es')+'</div></div>'
+    +'<div style="font-size:11px;color:var(--muted)">'+new Date(e.date).toLocaleString('es', {useGrouping:'always'})+'</div></div>'
     +'<div style="display:flex;gap:6px">'
     +'<button onclick="toggleEmailStar(\''+id+'\')" class="topbar-btn btn-ghost" style="font-size:12px">'+(e.starred?'⭐':'☆')+'</button>'
     +'<button onclick="deleteEmail(\''+id+'\')" class="topbar-btn btn-danger-sm" style="font-size:12px">🗑️</button>'
@@ -13858,7 +13858,7 @@ function exportUsersPDF(){
     +'<table><thead><tr><th>Nombre</th><th>Email</th><th>Código IA</th><th>Rol</th><th>País</th><th>EUR</th><th>XAF</th><th>PIN</th><th>Registro</th></tr></thead><tbody>'
     +ALL_USERS.map(function(u){
       var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
-      return'<tr><td>'+(u.full_name||'—')+'</td><td>'+u.email+'</td><td style="font-family:monospace">'+ia+'</td><td>'+u.role+'</td><td>'+(u.country||'—')+'</td><td>€'+Number(u.eur||0).toFixed(2)+'</td><td>'+Math.round(u.xaf||0).toLocaleString('es')+'</td><td>'+(u.pin_hash?'✓':'—')+'</td><td>'+(u.created_at?new Date(u.created_at).toLocaleDateString('es'):'—')+'</td></tr>';
+      return'<tr><td>'+(u.full_name||'—')+'</td><td>'+u.email+'</td><td style="font-family:monospace">'+ia+'</td><td>'+u.role+'</td><td>'+(u.country||'—')+'</td><td>€'+Number(u.eur||0).toFixed(2)+'</td><td>'+Math.round(u.xaf||0).toLocaleString('es', {useGrouping:'always'})+'</td><td>'+(u.pin_hash?'✓':'—')+'</td><td>'+(u.created_at?new Date(u.created_at).toLocaleDateString('es'):'—')+'</td></tr>';
     }).join('')
     +'</tbody></table><p style="font-size:9px;color:#999;margin-top:16px;text-align:center">InnovaAFRIC · We Simplify Life</p></body></html>';
   var win=window.open('','_blank');if(!win){toast('Activa ventanas emergentes','error');return;}
@@ -13891,7 +13891,7 @@ function exportAuditPDF(){
     +'<h1>📋 InnovaAFRIC · Log de Auditoría</h1><p>'+new Date().toLocaleDateString('es')+' · '+entries.length+' entradas</p>'
     +'<table><thead><tr><th>Fecha</th><th>Acción</th><th>Detalle</th><th>Admin</th></tr></thead>'
     +'<tbody>'+entries.map(function(e){
-      return'<tr><td>'+new Date(e.created_at||e.time).toLocaleString('es')+'</td><td>'+(e.action||'—')+'</td><td>'+(e.detail||'—')+'</td><td>'+(e.admin_email||e.admin||'admin')+'</td></tr>';
+      return'<tr><td>'+new Date(e.created_at||e.time).toLocaleString('es', {useGrouping:'always'})+'</td><td>'+(e.action||'—')+'</td><td>'+(e.detail||'—')+'</td><td>'+(e.admin_email||e.admin||'admin')+'</td></tr>';
     }).join('')+'</tbody></table>'
     +'<p style="font-size:9px;color:#999;text-align:center;margin-top:16px">InnovaAFRIC · We Simplify Life</p></body></html>';
   var win=window.open('','_blank');if(!win){toast('Activa ventanas emergentes','error');return;}
@@ -14082,7 +14082,7 @@ async function loadFraudData(){
         return'<tr><td style="font-family:var(--mono);font-size:10px">'+(t.id||'').substring(0,12)+'</td>'
           +'<td style="font-weight:700;color:var(--red)">€'+Number(t.amount||0).toFixed(2)+'</td>'
           +'<td><span class="pill pill-red">'+( t.type||'—')+'</span></td>'
-          +'<td style="font-size:11px;color:var(--muted)">'+(t.created_at?new Date(t.created_at).toLocaleString('es'):'—')+'</td>'
+          +'<td style="font-size:11px;color:var(--muted)">'+(t.created_at?new Date(t.created_at).toLocaleString('es', {useGrouping:'always'}):'—')+'</td>'
           +'<td><button onclick="runFraudScan()" class="topbar-btn btn-ghost" style="font-size:10px;padding:3px 7px">🔍</button></td>'
           +'</tr>';
       }).join('')||'<tr><td colspan="5" class="td-empty">Sin alertas activas</td></tr>';
@@ -14182,9 +14182,9 @@ async function renderWalletTable(users) {
       +'<div><div class="uc-name">'+flag+' '+(u.full_name||'—')+'</div><div class="uc-email">'+(u.email||'')+'</div>'
       +'<div style="font-size:10px;color:var(--muted)">'+(u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')+'</div></div></div></td>'
       +'<td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">€'+Number(w.eur||0).toFixed(2)+'</td>'
-      +'<td style="font-family:var(--mono);color:var(--amber)">'+Math.round(w.xaf||0).toLocaleString('es')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--amber)">'+Math.round(w.xaf||0).toLocaleString('es', {useGrouping:'always'})+'</td>'
       +'<td style="font-family:var(--mono)">$'+Number(w.usd||0).toFixed(2)+'</td>'
-      +'<td style="font-family:var(--mono);color:var(--purple)">'+Math.round(w.xof||0).toLocaleString('es')+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--purple)">'+Math.round(w.xof||0).toLocaleString('es', {useGrouping:'always'})+'</td>'
       +'<td style="font-family:var(--mono);color:var(--green)">'+(w.points||0)+'</td>'
       +'<td><button class="topbar-btn btn-primary" style="padding:5px 8px;font-size:11px" onclick="openRecharge(\''+(u.id)+'\',\''+(u.full_name||u.email||'').replace(/'/g,'')+'\')">💰</button></td>'
       +'</tr>';
@@ -14310,7 +14310,7 @@ async function loadRidersV21() {
       +'<div style="font-size:10px;color:var(--cyan);font-family:var(--mono)">'+ia+'</div></div></div></td>'
       +'<td style="font-size:12px">'+(u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')+'</td>'
       +'<td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">€'+Number(w.eur||0).toFixed(2)+'</td>'
-      +'<td style="font-family:var(--mono);color:var(--amber)">'+Math.round(w.xaf||0).toLocaleString('es')+' XAF</td>'
+      +'<td style="font-family:var(--mono);color:var(--amber)">'+Math.round(w.xaf||0).toLocaleString('es', {useGrouping:'always'})+' XAF</td>'
       +'<td><span class="pill '+stateConfig.pill+'" style="'+stateConfig.anim+'">'+stateConfig.icon+' '+stateConfig.label+'</span></td>'
       +'<td style="font-size:12px">'+(u.phone||'—')+'</td>'
       +'<td style="display:flex;gap:4px">'
@@ -14668,7 +14668,7 @@ async function loadProveedoresV21(){
       +'</div></div>'
       +'<div style="text-align:right">'
       +'<div style="font-family:var(--mono);font-weight:700;color:var(--green);font-size:15px">€'+Number(w.eur||0).toFixed(2)+'</div>'
-      +'<div style="font-size:11px;color:var(--muted);margin-bottom:10px">'+Math.round(w.xaf||0).toLocaleString('es')+' XAF</div>'
+      +'<div style="font-size:11px;color:var(--muted);margin-bottom:10px">'+Math.round(w.xaf||0).toLocaleString('es', {useGrouping:'always'})+' XAF</div>'
       +'<div style="display:flex;gap:6px;justify-content:flex-end">'
       +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="openFicha(\''+u.id+'\')">👤</button>'
       +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="openRecharge(\''+u.id+'\',\''+(u.full_name||'').replace(/'/g,'')+'\')">💰</button>'
@@ -14749,7 +14749,7 @@ function exportModulePDF(title, headers, rows, filename) {
     +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'
     +'<div style="width:32px;height:32px;background:#06b6d4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#000">IA</div>'
     +'<div><div style="font-size:18px;font-weight:700;color:#0a1628">InnovaAFRIC · '+title+'</div>'
-    +'<div style="font-size:11px;color:#666">Generado: '+new Date().toLocaleString('es',{dateStyle:'long',timeStyle:'short'})+'</div></div></div>'
+    +'<div style="font-size:11px;color:#666">Generado: '+new Date().toLocaleString('es', {useGrouping:'always', dateStyle:'long',timeStyle:'short'})+'</div></div></div>'
     +'<table><thead><tr>'+headers.map(function(h){return'<th>'+h+'</th>';}).join('')+'</tr></thead>'
     +'<tbody>'+rows.map(function(r){return'<tr>'+r.map(function(c){return'<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>'
     +'<div class="footer">InnovaAFRIC · We Simplify Life · innovaafric.com</div>'
@@ -14980,7 +14980,7 @@ function renderWebhooksTable(list){
       +'<td>'+stBadge+'</td>'
       +'<td style="color:'+httpColor+';font-family:JetBrains Mono,monospace">'+w.http_code+'</td>'
       +'<td style="font-family:JetBrains Mono,monospace;color:#94a3b8">'+w.duration_ms+'ms</td>'
-      +'<td style="color:#94a3b8;font-size:12px">'+new Date(w.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+      +'<td style="color:#94a3b8;font-size:12px">'+new Date(w.created_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
       +'<td><button class="btn-sm btn-ghost" onclick="retryWebhook(\''+w.id+'\')">↻ Reintentar</button></td>'
       +'</tr>';
   }).join('');
@@ -15015,7 +15015,7 @@ async function createWebhook(){
 function exportWebhooksCSV(){
   var csv='Evento,URL,Estado,HTTP,Tiempo (ms),Fecha\n';
   ALL_WEBHOOKS.forEach(function(w){
-    csv+='"'+w.event+'","'+w.url+'","'+w.status+'",'+w.http_code+','+w.duration_ms+',"'+new Date(w.created_at).toLocaleString('es')+'"\n';
+    csv+='"'+w.event+'","'+w.url+'","'+w.status+'",'+w.http_code+','+w.duration_ms+',"'+new Date(w.created_at).toLocaleString('es', {useGrouping:'always'})+'"\n';
   });
   var a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
@@ -15071,8 +15071,8 @@ function renderSessionsTable(list){
       +'<td style="font-family:JetBrains Mono,monospace;font-size:12px">'+s.ip+'</td>'
       +'<td>'+devIcon+' '+s.device+'</td>'
       +'<td>'+s.country+'</td>'
-      +'<td style="color:#94a3b8;font-size:12px">'+new Date(s.started_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
-      +'<td style="color:#94a3b8;font-size:12px">'+new Date(s.last_active).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+      +'<td style="color:#94a3b8;font-size:12px">'+new Date(s.started_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+      +'<td style="color:#94a3b8;font-size:12px">'+new Date(s.last_active).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
       +'<td><button class="btn-sm btn-danger" style="background:var(--red);color:#fff;border:none;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px" onclick="forceLogoutSession(\''+s.id+'\',\''+s.user_name+'\')">⚡ Cerrar</button></td>'
       +'</tr>';
   }).join('');
@@ -15290,15 +15290,15 @@ async function generatePLReport(period){
     +'<style>body{font-family:Arial;padding:24px;color:#333}h1{color:#0a1628;font-size:18px}.metric{display:inline-block;margin:8px;padding:12px 20px;background:#f9f9f9;border-radius:8px;text-align:center}.metric .val{font-size:24px;font-weight:700}.metric .lbl{font-size:11px;color:#666;margin-top:4px}table{width:100%;border-collapse:collapse;margin-top:16px}th,td{padding:8px;border-bottom:1px solid #eee;font-size:12px}th{background:#f5f5f5;text-align:left}</style></head><body>'
     +'<h1>📊 InnovaAFRIC · P&L — '+periodLabels[period]+'</h1>'
     +'<p style="color:#666;font-size:12px">'+new Date().toLocaleDateString('es',{year:'numeric',month:'long',day:'numeric'})+'</p>'
-    +'<div><div class="metric"><div class="val" style="color:#10b981">'+revenue.toLocaleString('es')+' €</div><div class="lbl">Ingresos brutos</div></div>'
-    +'<div class="metric"><div class="val" style="color:#ef4444">'+costs.toLocaleString('es')+' €</div><div class="lbl">Costes operativos</div></div>'
-    +'<div class="metric"><div class="val" style="color:#0a1628">'+profit.toLocaleString('es')+' €</div><div class="lbl">Beneficio neto</div></div>'
+    +'<div><div class="metric"><div class="val" style="color:#10b981">'+revenue.toLocaleString('es', {useGrouping:'always'})+' €</div><div class="lbl">Ingresos brutos</div></div>'
+    +'<div class="metric"><div class="val" style="color:#ef4444">'+costs.toLocaleString('es', {useGrouping:'always'})+' €</div><div class="lbl">Costes operativos</div></div>'
+    +'<div class="metric"><div class="val" style="color:#0a1628">'+profit.toLocaleString('es', {useGrouping:'always'})+' €</div><div class="lbl">Beneficio neto</div></div>'
     +'<div class="metric"><div class="val" style="color:#8b5cf6">'+margin+'%</div><div class="lbl">Margen neto</div></div></div>'
     +'<table><thead><tr><th>Concepto</th><th>Importe</th><th>% Total</th></tr></thead><tbody>'
-    +'<tr><td>Comisiones transferencias</td><td>'+Math.round(revenue*0.6).toLocaleString('es')+' €</td><td>60%</td></tr>'
-    +'<tr><td>Comisiones reintegros</td><td>'+Math.round(revenue*0.2).toLocaleString('es')+' €</td><td>20%</td></tr>'
-    +'<tr><td>XenderShop (márgenes)</td><td>'+Math.round(revenue*0.12).toLocaleString('es')+' €</td><td>12%</td></tr>'
-    +'<tr><td>API Partners</td><td>'+Math.round(revenue*0.08).toLocaleString('es')+' €</td><td>8%</td></tr>'
+    +'<tr><td>Comisiones transferencias</td><td>'+Math.round(revenue*0.6).toLocaleString('es', {useGrouping:'always'})+' €</td><td>60%</td></tr>'
+    +'<tr><td>Comisiones reintegros</td><td>'+Math.round(revenue*0.2).toLocaleString('es', {useGrouping:'always'})+' €</td><td>20%</td></tr>'
+    +'<tr><td>XenderShop (márgenes)</td><td>'+Math.round(revenue*0.12).toLocaleString('es', {useGrouping:'always'})+' €</td><td>12%</td></tr>'
+    +'<tr><td>API Partners</td><td>'+Math.round(revenue*0.08).toLocaleString('es', {useGrouping:'always'})+' €</td><td>8%</td></tr>'
     +'</tbody></table>'
     +'<p style="font-size:10px;color:#999;margin-top:20px;text-align:center">InnovaAFRIC · We Simplify Life</p></body></html>';
   var win=window.open('','_blank');if(!win)return;
@@ -15474,7 +15474,7 @@ function loadIntegrationsHub(){
 
 function connectIntegration(id){
   var i=INTEGRATIONS_CATALOG.find(x=>x.id===id);if(!i)return;
-  i.status='conectado';i.lastSync=new Date().toLocaleString('es');
+  i.status='conectado';i.lastSync=new Date().toLocaleString('es', {useGrouping:'always'});
   toast(i.name+' conectado','success');loadIntegrationsHub();
   logAdminAction('connect_integration',i.name);
 }
@@ -15621,7 +15621,7 @@ function renderQBCharts(){
 function syncQuickbooks(){
   toast('Sincronizando con QuickBooks...','info');
   setTimeout(()=>{
-    QB_SYNC_LOG.unshift({ts:new Date().toLocaleString('es'),result:'✅ Sincronización completa — '+QB_ACCOUNTS.length+' cuentas OK'});
+    QB_SYNC_LOG.unshift({ts:new Date().toLocaleString('es', {useGrouping:'always'}),result:'✅ Sincronización completa — '+QB_ACCOUNTS.length+' cuentas OK'});
     toast('Sincronización completada','success');loadQuickbooks();
     logAdminAction('quickbooks_sync','manual');
   },1800);
@@ -16610,7 +16610,7 @@ async function loadCampaigns(){
   var el=document.getElementById('campaigns-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+total+'</div><div class="kpi-lbl">Campañas totales</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">'+sent.toLocaleString('es')+'</div><div class="kpi-lbl">Mensajes enviados</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+sent.toLocaleString('es', {useGrouping:'always'})+'</div><div class="kpi-lbl">Mensajes enviados</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+active+'</div><div class="kpi-lbl">Activas ahora</div></div>'
     +'<div class="kpi-card"><div class="kpi-val">'+avgOpen+'%</div><div class="kpi-lbl">Apertura media</div></div>';
 }
@@ -16789,7 +16789,7 @@ async function loadInbox(){
           type:n.type||'alerta',
           subject:n.title||'Notificación',
           preview:n.body||'',
-          date:n.created_at?new Date(n.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',
+          date:n.created_at?new Date(n.created_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',
           status:n.read?'leido':'no_leido'
         };
       });
@@ -16842,7 +16842,7 @@ function sendInboxMessage(){
     logAdminAction('send_inbox_message',f.to+' — '+f.subject);
   }).catch(()=>{
     var nm={id:'MSG'+(INBOX_DATA.length+1).toString().padStart(3,'0'),user:f.to,type:f.type,
-      subject:f.subject,preview:f.body.slice(0,60),date:new Date().toLocaleString('es'),status:'leido'};
+      subject:f.subject,preview:f.body.slice(0,60),date:new Date().toLocaleString('es', {useGrouping:'always'}),status:'leido'};
     INBOX_DATA.unshift(nm);
     toast('Mensaje enviado (demo)','info');closeModal('m-send-message');loadInbox();
   });
@@ -16867,7 +16867,7 @@ async function loadSMSGateway(){
     if(q.data&&q.data.length){
       SMS_LOG=q.data.map(function(s){
         var u=ALL_USERS&&ALL_USERS.find(function(x){return x.id===s.user_id;});
-        return{id:s.id,user:u?u.full_name||u.email:'Usuario',phone:s.phone||'—',msg:s.message||'—',provider:s.provider||'—',cost:Number(s.cost||0),date:s.created_at?new Date(s.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',status:s.status||'desconocido'};
+        return{id:s.id,user:u?u.full_name||u.email:'Usuario',phone:s.phone||'—',msg:s.message||'—',provider:s.provider||'—',cost:Number(s.cost||0),date:s.created_at?new Date(s.created_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—',status:s.status||'desconocido'};
       });
     }
   }catch(e){}
@@ -16956,7 +16956,7 @@ function sendSMS(){
     logAdminAction('send_sms',f.to);
   }).catch(()=>{
     SMS_LOG.unshift({id:'SMS'+(SMS_LOG.length+1).toString().padStart(3,'0'),user:'Manual',phone:f.to,
-      msg:f.msg.slice(0,40),provider:f.provider,cost:0.07,date:new Date().toLocaleString('es'),status:'entregado'});
+      msg:f.msg.slice(0,40),provider:f.provider,cost:0.07,date:new Date().toLocaleString('es', {useGrouping:'always'}),status:'entregado'});
     toast('SMS enviado (demo)','info');closeModal('m-send-sms');loadSMSGateway();
   });
 }
@@ -17146,7 +17146,7 @@ var _logsVisible=15;
 /* ── INFRA MONITOR ──────────────────────────────────────────── */
 async function checkInfraLive(){
   // Ping servicios reales y actualizar INFRA_SERVICES con latencia real
-  var now=new Date().toLocaleString('es',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  var now=new Date().toLocaleString('es', {useGrouping:'always', hour:'2-digit',minute:'2-digit',second:'2-digit'});
   var checks=[
     {id:'railway-api',url:'https://innovaafric-api-production.up.railway.app/',name:'Railway API'},
     {id:'supabase-db',url:'https://spnfvmvrlexyiljwyola.supabase.co/rest/v1/',name:'Supabase DB'}
@@ -17243,7 +17243,7 @@ async function refreshInfraMonitor(){
     if(apiSvc&&realLat>0){
       apiSvc.latency=realLat;
       apiSvc.status=realLat<2000?'operativo':'degradado';
-      apiSvc.lastCheck=new Date().toLocaleString('es');
+      apiSvc.lastCheck=new Date().toLocaleString('es', {useGrouping:'always'});
     }
     // Ping Supabase for DB latency
     var t1=Date.now();
@@ -17253,15 +17253,15 @@ async function refreshInfraMonitor(){
     if(dbSvc&&dbLat>0){
       dbSvc.latency=dbLat;
       dbSvc.status=dbLat<3000?'operativo':'degradado';
-      dbSvc.lastCheck=new Date().toLocaleString('es');
+      dbSvc.lastCheck=new Date().toLocaleString('es', {useGrouping:'always'});
     }
     // Mark all others as checked now (latency unchanged — no real endpoint to ping)
     INFRA_SERVICES.forEach(function(s){
-      if(!s.lastCheck||s!==apiSvc&&s!==dbSvc)s.lastCheck=new Date().toLocaleString('es');
+      if(!s.lastCheck||s!==apiSvc&&s!==dbSvc)s.lastCheck=new Date().toLocaleString('es', {useGrouping:'always'});
     });
     toast('Monitor actualizado — API: '+realLat+'ms · DB: '+dbLat+'ms','success');
   }catch(e){
-    INFRA_SERVICES.forEach(function(s){s.lastCheck=new Date().toLocaleString('es');});
+    INFRA_SERVICES.forEach(function(s){s.lastCheck=new Date().toLocaleString('es', {useGrouping:'always'});});
     toast('Monitor actualizado (sin conexión)','warning');
   }
   loadInfraMonitor();
@@ -17311,7 +17311,7 @@ function triggerDeploy(){
   if(!svc)return;
   var nd={id:'dep-'+(DEPLOYS_DATA.length+1).toString().padStart(3,'0'),service:svc,branch:'main',
     commit:Math.random().toString(36).slice(2,9),msg:'Manual deploy',author:'admin',
-    duration:0,date:new Date().toLocaleString('es'),status:'building'};
+    duration:0,date:new Date().toLocaleString('es', {useGrouping:'always'}),status:'building'};
   DEPLOYS_DATA.unshift(nd);
   filterDeploys();
   toast('Deploy iniciado para '+svc,'info');
@@ -17487,7 +17487,7 @@ function filterBackups(data){
 
 function triggerBackup(){
   var nb={id:'BKP-'+(BACKUPS_DATA.length+1).toString().padStart(3,'0'),service:'supabase',type:'manual',
-    size:'calculando...',date:new Date().toLocaleString('es'),retention:'90 días',status:'ok'};
+    size:'calculando...',date:new Date().toLocaleString('es', {useGrouping:'always'}),retention:'90 días',status:'ok'};
   BACKUPS_DATA.unshift(nb);
   toast('Backup manual iniciado','info');filterBackups();
   setTimeout(async()=>{
@@ -18662,7 +18662,7 @@ async function loadPromoCodes(){
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+list.length+'</div><div class="kpi-lbl">Códigos totales</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+active+'</div><div class="kpi-lbl">Activos</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">'+totalUses.toLocaleString('es')+'</div><div class="kpi-lbl">Usos totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+totalUses.toLocaleString('es', {useGrouping:'always'})+'</div><div class="kpi-lbl">Usos totales</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:'+(expired>0?'var(--red)':'var(--green)')+'">'+expired+'</div><div class="kpi-lbl">Expirados</div></div>';
 }
 
@@ -18868,7 +18868,7 @@ async function loadMicroseguros(){
   var el=document.getElementById('seg-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+activePlans.length+'</div><div class="kpi-lbl">Planes activos</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">'+(totalHolders||srcP.length).toLocaleString('es')+'</div><div class="kpi-lbl">Asegurados</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+(totalHolders||srcP.length).toLocaleString('es', {useGrouping:'always'})+'</div><div class="kpi-lbl">Asegurados</div></div>'
     +'<div class="kpi-card"><div class="kpi-val">XOF '+(totalPremium/1000000).toFixed(1)+'M</div><div class="kpi-lbl">Prima mensual</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:'+(pendingClaims>0?'var(--amber)':'var(--green)')+'">'+pendingClaims+'</div><div class="kpi-lbl">Reclamaciones pendientes</div></div>';
 }
@@ -19030,10 +19030,10 @@ function filterAhorro(data){
     return'<tr>'
       +'<td><div style="font-weight:500">'+a.user+'</div></td>'
       +'<td>'+a.goal+'</td>'
-      +'<td style="font-family:var(--mono)">'+cur+' '+Number(a.target).toLocaleString('es')+'</td>'
-      +'<td style="font-family:var(--mono);color:var(--cyan)">'+cur+' '+Number(a.saved).toLocaleString('es')+'</td>'
+      +'<td style="font-family:var(--mono)">'+cur+' '+Number(a.target).toLocaleString('es', {useGrouping:'always'})+'</td>'
+      +'<td style="font-family:var(--mono);color:var(--cyan)">'+cur+' '+Number(a.saved).toLocaleString('es', {useGrouping:'always'})+'</td>'
       +'<td><div style="background:#1a2235;border-radius:4px;height:8px;width:80px;display:inline-block;vertical-align:middle"><div style="background:'+barC+';width:'+pct+'%;height:8px;border-radius:4px"></div></div> <small>'+pct+'%</small></td>'
-      +'<td style="font-family:var(--mono)">'+(a.deposit?cur+' '+Number(a.deposit).toLocaleString('es'):'—')+'</td>'
+      +'<td style="font-family:var(--mono)">'+(a.deposit?cur+' '+Number(a.deposit).toLocaleString('es', {useGrouping:'always'}):'—')+'</td>'
       +'<td><span style="background:var(--s2);padding:2px 8px;border-radius:4px;font-size:11px">'+(a.frequency||'mensual')+'</span></td>'
       +'<td><span class="badge '+(colors[a.status]||'badge-gray')+'">'+(a.status||'—')+'</span></td>'
       +'<td style="display:flex;gap:4px">'
@@ -19044,7 +19044,7 @@ function filterAhorro(data){
   var tot=filtered.reduce(function(s,a){return s+Number(a.saved||0);},0);
   var tgt=filtered.reduce(function(s,a){return s+Number(a.target||0);},0);
   var ss=document.getElementById('ah-count-label');
-  if(ss)ss.textContent=filtered.length+' metas · '+(filtered[0]&&filtered[0].currency||'XAF')+' '+tot.toLocaleString('es')+' ahorrado de '+tgt.toLocaleString('es');
+  if(ss)ss.textContent=filtered.length+' metas · '+(filtered[0]&&filtered[0].currency||'XAF')+' '+tot.toLocaleString('es', {useGrouping:'always'})+' ahorrado de '+tgt.toLocaleString('es', {useGrouping:'always'});
 }
 
 function renderAhorroCharts(data){
@@ -19160,7 +19160,7 @@ function filterCreditScores(data){
       +'<td style="color:var(--green)">'+u.repayRate+'%</td>'
       +'<td style="color:var(--amber)">'+(u.defaulted>0?u.defaulted+' impagos':'—')+'</td>'
       +'<td style="color:#94a3b8">'+u.txCount+' TX</td>'
-      +'<td style="color:var(--cyan);font-weight:600">'+maxLoan.toLocaleString('es')+' EUR</td>'
+      +'<td style="color:var(--cyan);font-weight:600">'+maxLoan.toLocaleString('es', {useGrouping:'always'})+' EUR</td>'
       +'<td style="font-size:11px;color:#94a3b8">'+u.updated+'</td>'
       +'<td><button class="btn-xs btn-cyan" onclick="calcCreditScore(\''+u.id+'\')">↻</button></td>'
       +'</tr>';
@@ -19517,7 +19517,7 @@ async function loadCollectiveInvest(){
   var el=document.getElementById('invest-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+stats.funds+'</div><div class="kpi-lbl">Fondos activos</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">'+stats.members.toLocaleString('es')+'</div><div class="kpi-lbl">Inversores</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val">'+stats.members.toLocaleString('es', {useGrouping:'always'})+'</div><div class="kpi-lbl">Inversores</div></div>'
     +'<div class="kpi-card"><div class="kpi-val">XOF '+(stats.aum/1000000).toFixed(1)+'M</div><div class="kpi-lbl">AUM total</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+avgReturn.toFixed(1)+'%</div><div class="kpi-lbl">Retorno promedio</div></div>';
 }
@@ -19744,7 +19744,7 @@ async function runAMLScan(){
       // Rule 3: High velocity (>10 TX in 7 days)
       else if(userTxCount[uid]>10&&amt>500){rule='Alta velocidad de operaciones ('+userTxCount[uid]+' TX en 7d)';severity='high';}
       // Rule 4: Cumulative high amount
-      else if(userTxAmount[uid]>15000&&amt>1000){rule='Volumen acumulado elevado ('+userTxAmount[uid].toLocaleString('es')+' total)';severity='high';}
+      else if(userTxAmount[uid]>15000&&amt>1000){rule='Volumen acumulado elevado ('+userTxAmount[uid].toLocaleString('es', {useGrouping:'always'})+' total)';severity='high';}
       // Rule 5: Failed attempt
       else if(t.status==='failed'&&amt>2000){rule='Intento fallido de importe alto';severity='medium';}
       if(rule&&!alerts.find(function(a){return a.userId===uid&&a.rule===rule;})){
@@ -19759,11 +19759,11 @@ async function runAMLScan(){
         return'<tr>'
           +'<td><div style="font-weight:500">'+a.user+'</div></td>'
           +'<td style="font-size:12px;color:var(--amber)">'+a.rule+'</td>'
-          +'<td style="color:var(--green);font-weight:600">'+a.amount.toLocaleString('es')+' €</td>'
+          +'<td style="color:var(--green);font-weight:600">'+a.amount.toLocaleString('es', {useGrouping:'always'})+' €</td>'
           +'<td>'+a.country+'</td>'
           +'<td><span style="color:'+sevColors[a.severity]+';font-weight:600">'+a.severity.toUpperCase()+'</span></td>'
           +'<td><span style="color:var(--amber)">pending</span></td>'
-          +'<td style="color:#94a3b8;font-size:12px">'+new Date(a.date).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+          +'<td style="color:#94a3b8;font-size:12px">'+new Date(a.date).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
           +'<td style="display:flex;gap:6px">'
           +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-create-sar\')">📋 SAR</button>'
           +'<button class="btn-sm btn-ghost" onclick="openModal(\'m-freeze-account\')">🧊</button>'
@@ -20046,7 +20046,7 @@ async function loadCTRReports(){
   document.getElementById('ctr-total').textContent=ALL_CTR.length;
   document.getElementById('ctr-pending').textContent=pending;
   document.getElementById('ctr-submitted').textContent=submitted;
-  document.getElementById('ctr-volume').textContent=totalVol.toLocaleString('es')+' €';
+  document.getElementById('ctr-volume').textContent=totalVol.toLocaleString('es', {useGrouping:'always'})+' €';
   renderCTRTable(ALL_CTR);
 }
 
@@ -20059,7 +20059,7 @@ function renderCTRTable(list){
       +'<td style="font-family:JetBrains Mono,monospace;font-size:12px;color:var(--cyan)">'+c.ref+'</td>'
       +'<td><div style="font-weight:500">'+c.user+'</div></td>'
       +'<td>'+c.country+'</td>'
-      +'<td style="color:var(--amber);font-weight:600">'+c.amount.toLocaleString('es')+' €</td>'
+      +'<td style="color:var(--amber);font-weight:600">'+c.amount.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="font-size:12px;background:var(--s2);padding:2px 8px;border-radius:4px">'+c.txn_type+'</td>'
       +'<td><span style="color:'+stColors[c.status]+'">'+stLabels[c.status]+'</span></td>'
       +'<td style="color:#94a3b8;font-size:12px">'+c.date+'</td>'
@@ -20105,7 +20105,7 @@ function printCTR(ref){
     +'<table><tr><th>Campo</th><th>Valor</th></tr>'
     +'<tr><td>Usuario</td><td>'+item.user+'</td></tr>'
     +'<tr><td>País</td><td>'+item.country+'</td></tr>'
-    +'<tr><td>Importe</td><td>'+item.amount.toLocaleString('es')+' EUR</td></tr>'
+    +'<tr><td>Importe</td><td>'+item.amount.toLocaleString('es', {useGrouping:'always'})+' EUR</td></tr>'
     +'<tr><td>Tipo transacción</td><td>'+item.txn_type+'</td></tr>'
     +'<tr><td>Fecha</td><td>'+item.date+'</td></tr>'
     +'<tr><td>Estado</td><td>'+item.status+'</td></tr>'
@@ -20124,7 +20124,7 @@ function exportCTRCSV(){
 function generateCTRReport(){
   var pending=ALL_CTR.filter(function(c){return c.status==='pending';});
   if(!pending.length){toast('No hay CTRs pendientes de envío','info');return;}
-  var rows=pending.map(function(c){return '<tr><td>'+c.ref+'</td><td>'+c.user+'</td><td>'+c.country+'</td><td>'+c.amount.toLocaleString('es')+' €</td><td>'+c.date+'</td></tr>';}).join('');
+  var rows=pending.map(function(c){return '<tr><td>'+c.ref+'</td><td>'+c.user+'</td><td>'+c.country+'</td><td>'+c.amount.toLocaleString('es', {useGrouping:'always'})+' €</td><td>'+c.date+'</td></tr>';}).join('');
   var html='<html><head><meta charset="UTF-8"><title>Informe CTR Regulatorio</title>'
     +'<style>body{font-family:Arial;padding:24px}h1{color:#0a1628}table{width:100%;border-collapse:collapse}th,td{padding:8px;border:1px solid #ddd;font-size:12px}th{background:#f5f5f5}</style></head><body>'
     +'<h1>📋 Informe CTR — InnovaAFRIC</h1><p>Período: '+new Date().toLocaleDateString('es')+' | Total: '+pending.length+' reportes</p>'
@@ -20521,9 +20521,9 @@ async function loadFrozenAccounts(){
   var totalBal=ALL_FROZEN.reduce(function(s,f){return s+Number(f.balance||0);},0);
   var avgDays=ALL_FROZEN.length?Math.round(ALL_FROZEN.reduce(function(s,f){return s+(f.days||0);},0)/ALL_FROZEN.length):0;
   document.getElementById('frozen-total').textContent=ALL_FROZEN.length;
-  document.getElementById('frozen-volume').textContent=totalBal.toLocaleString('es')+' €';
+  document.getElementById('frozen-volume').textContent=totalBal.toLocaleString('es', {useGrouping:'always'})+' €';
   document.getElementById('frozen-avg-days').textContent=avgDays+' días';
-  document.getElementById('frozen-count-label').textContent=ALL_FROZEN.length+' cuentas congeladas — '+totalBal.toLocaleString('es')+' € retenidos';
+  document.getElementById('frozen-count-label').textContent=ALL_FROZEN.length+' cuentas congeladas — '+totalBal.toLocaleString('es', {useGrouping:'always'})+' € retenidos';
   renderFrozenTable(ALL_FROZEN);
 }
 
@@ -20534,7 +20534,7 @@ function renderFrozenTable(list){
     return '<tr>'
       +'<td><div style="font-weight:500">'+f.user+'</div></td>'
       +'<td>'+f.country+'</td>'
-      +'<td style="color:var(--red);font-weight:600">'+f.balance.toLocaleString('es')+' €</td>'
+      +'<td style="color:var(--red);font-weight:600">'+f.balance.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="font-size:12px;color:#94a3b8">'+f.reason+'</td>'
       +'<td style="font-size:12px;color:var(--amber)">'+f.authority+'</td>'
       +'<td style="color:#94a3b8;font-size:12px">'+f.date+'</td>'
@@ -20600,7 +20600,7 @@ function exportFrozenReport(i){
     +'<table><tr><th>Campo</th><th>Valor</th></tr>'
     +'<tr><td>Titular</td><td>'+f.user+'</td></tr>'
     +'<tr><td>País</td><td>'+f.country+'</td></tr>'
-    +'<tr><td>Saldo retenido</td><td>'+f.balance.toLocaleString('es')+' EUR</td></tr>'
+    +'<tr><td>Saldo retenido</td><td>'+f.balance.toLocaleString('es', {useGrouping:'always'})+' EUR</td></tr>'
     +'<tr><td>Motivo</td><td>'+f.reason+'</td></tr>'
     +'<tr><td>Autoridad solicitante</td><td>'+f.authority+'</td></tr>'
     +'<tr><td>Fecha congelación</td><td>'+f.date+'</td></tr>'
@@ -20749,7 +20749,7 @@ async function loadHeatmap(){
   for(var hh=0;hh<24;hh++){var hv=matrix.reduce(function(s,r){return s+r[hh];},0);if(hv>peakHourVal){peakHourVal=hv;peakHour=hh;}}
   var stats=document.getElementById('hm-stats');
   if(stats)stats.innerHTML=[
-    ['Total período',totalVal.toLocaleString('es'),'var(--cyan)'],
+    ['Total período',totalVal.toLocaleString('es', {useGrouping:'always'}),'var(--cyan)'],
     ['Día pico',peakDay,'var(--green)'],
     ['Hora pico',peakHour+'h–'+(peakHour+1)+'h','var(--amber)'],
     ['Hora valle',((peakHour+12)%24)+'h–'+((peakHour+13)%24)+'h','#94a3b8']
@@ -21219,7 +21219,7 @@ async function loadForecast(){
   var totalProjected=projected.reduce(function(a,b){return a+b;},0);
   var growthPct=((projected[projected.length-1]-lastVal)/lastVal*100).toFixed(1);
 
-  document.getElementById('fc-projected').textContent=totalProjected.toLocaleString('es')+' €';
+  document.getElementById('fc-projected').textContent=totalProjected.toLocaleString('es', {useGrouping:'always'})+' €';
   document.getElementById('fc-growth').textContent='+'+growthPct+'%';
   document.getElementById('fc-break-even').textContent='Mes '+(Math.floor(projectedMonths/2)+1);
   document.getElementById('fc-confidence').textContent='±'+(Math.round(growthPct*0.6))+'%';
@@ -21237,7 +21237,7 @@ async function loadForecast(){
         {label:'Límite inferior',data:[...Array(12).fill(null),...confidence.map(function(c){return c.low;})],borderColor:'rgba(16,185,129,0.3)',borderDash:[2,4],fill:false}
       ]
     },
-    options:{responsive:true,scales:{x:{ticks:{color:'#94a3b8'}},y:{ticks:{color:'#94a3b8',callback:function(v){return v.toLocaleString('es')+'€';}}}},plugins:{legend:{labels:{color:'#e2e8f0'}}}}
+    options:{responsive:true,scales:{x:{ticks:{color:'#94a3b8'}},y:{ticks:{color:'#94a3b8',callback:function(v){return v.toLocaleString('es', {useGrouping:'always'})+'€';}}}},plugins:{legend:{labels:{color:'#e2e8f0'}}}}
   });
 
   mkChart('forecast-breakdown',{
@@ -21302,10 +21302,10 @@ async function loadFunnel(){
     }
   }
 
-  document.getElementById('fn-registered').textContent=registered.toLocaleString('es');
-  document.getElementById('fn-kyc').textContent=kyc.toLocaleString('es');
-  document.getElementById('fn-first-txn').textContent=firstTxn.toLocaleString('es');
-  document.getElementById('fn-active').textContent=active.toLocaleString('es');
+  document.getElementById('fn-registered').textContent=registered.toLocaleString('es', {useGrouping:'always'});
+  document.getElementById('fn-kyc').textContent=kyc.toLocaleString('es', {useGrouping:'always'});
+  document.getElementById('fn-first-txn').textContent=firstTxn.toLocaleString('es', {useGrouping:'always'});
+  document.getElementById('fn-active').textContent=active.toLocaleString('es', {useGrouping:'always'});
 
   var steps=[
     {label:'Registrados',val:registered,color:'#06b6d4',pct:100},
@@ -21319,7 +21319,7 @@ async function loadFunnel(){
     return '<div style="position:relative">'
       +'<div style="background:'+s.color+';border-radius:8px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;width:'+Math.max(s.pct,20)+'%;min-width:200px;transition:width .5s">'
       +'<span style="font-weight:600;color:#0B0F19">'+s.label+'</span>'
-      +'<span style="font-weight:700;color:#0B0F19">'+s.val.toLocaleString('es')+' ('+s.pct+'%)</span>'
+      +'<span style="font-weight:700;color:#0B0F19">'+s.val.toLocaleString('es', {useGrouping:'always'})+' ('+s.pct+'%)</span>'
       +'</div></div>';
   }).join('<div style="height:6px;width:2px;background:#374151;margin:0 20px"></div>');
 
@@ -21448,9 +21448,9 @@ async function loadCountryRanking(){
     return '<tr>'
       +'<td style="font-weight:700;color:#94a3b8">'+(i+1)+'</td>'
       +'<td><span style="font-size:18px">'+c.flag+'</span> <strong>'+c.name+'</strong></td>'
-      +'<td>'+c.users.toLocaleString('es')+'</td>'
-      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es')+' €</td>'
-      +'<td style="color:var(--amber)">'+c.revenue.toLocaleString('es')+' €</td>'
+      +'<td>'+c.users.toLocaleString('es', {useGrouping:'always'})+'</td>'
+      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es', {useGrouping:'always'})+' €</td>'
+      +'<td style="color:var(--amber)">'+c.revenue.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="color:var(--cyan)">'+c.arpu.toFixed(2)+' €</td>'
       +'<td style="color:'+trendColor+';font-weight:600">+'+c.growth+'%</td>'
       +'<td><div style="display:flex;align-items:center;gap:6px"><div style="background:#1e293b;border-radius:4px;height:6px;width:60px;overflow:hidden"><div style="height:100%;background:'+scoreColor+';width:'+c.score+'%"></div></div><span style="color:'+scoreColor+';font-weight:600">'+c.score+'</span></div></td>'
@@ -21584,7 +21584,7 @@ function renderAdminUsers(list){
     var mods=(u.modules||[]).length;
     var modTotal=ALL_MODULES.length;
     var pct=Math.round((mods/modTotal)*100);
-    var lastLogin=u.last_login?new Date(u.last_login).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca';
+    var lastLogin=u.last_login?new Date(u.last_login).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca';
     var statusBadge=u.blocked
       ?'<span style="color:var(--red);font-size:12px">🚫 Bloqueado</span>'
       :'<span style="color:var(--green);font-size:12px">✅ Activo</span>';
@@ -21768,7 +21768,7 @@ function renderLoginLogs(list){
       +'<td>'+l.country+'</td>'
       +'<td style="font-size:12px;color:#94a3b8">'+l.device+'</td>'
       +'<td><span style="color:'+stColor+'">'+stIcon+' '+l.status+'</span></td>'
-      +'<td style="color:#94a3b8;font-size:12px">'+new Date(l.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
+      +'<td style="color:#94a3b8;font-size:12px">'+new Date(l.created_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</td>'
       +'<td><button class="btn-sm btn-ghost" onclick="blockIPFromLog(\''+l.ip+'\')">🚫 Bloquear IP</button></td>'
       +'</tr>';
   }).join('');
@@ -21795,7 +21795,7 @@ async function blockIPFromLog(ip){
 function exportLoginLogsCSV(){
   var csv='Email,IP,País,Dispositivo,Estado,Fecha\n';
   ALL_LOGIN_LOGS.forEach(function(l){
-    csv+='"'+l.email+'","'+l.ip+'","'+l.country+'","'+l.device+'","'+l.status+'","'+new Date(l.created_at).toLocaleString('es')+'"\n';
+    csv+='"'+l.email+'","'+l.ip+'","'+l.country+'","'+l.device+'","'+l.status+'","'+new Date(l.created_at).toLocaleString('es', {useGrouping:'always'})+'"\n';
   });
   var a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
@@ -22000,7 +22000,7 @@ function exportTimelineCSV(){
   if(!CURRENT_TIMELINE_USER){toast('Busca un usuario primero','error');return;}
   var events=CURRENT_TIMELINE_USER.events||[];
   var csv='Tipo,Descripción,Fecha\n';
-  events.forEach(function(e){csv+='"'+e.type+'","'+e.label+'","'+new Date(e.date).toLocaleString('es')+'"\n';});
+  events.forEach(function(e){csv+='"'+e.type+'","'+e.label+'","'+new Date(e.date).toLocaleString('es', {useGrouping:'always'})+'"\n';});
   var a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='timeline_'+Date.now()+'.csv';
@@ -22235,10 +22235,10 @@ async function loadVIPLimits(){
   tb.innerHTML=ALL_VIP.map(function(v,i){
     return '<tr>'
       +'<td><div style="font-weight:500">'+v.user_name+'</div><div style="font-size:12px;color:#94a3b8">'+v.email+'</div></td>'
-      +'<td style="color:var(--cyan)">'+v.daily_send.toLocaleString('es')+' €</td>'
-      +'<td style="color:var(--cyan)">'+v.monthly_send.toLocaleString('es')+' €</td>'
-      +'<td style="color:var(--cyan)">'+v.daily_cash.toLocaleString('es')+' €</td>'
-      +'<td style="color:var(--cyan)">'+v.max_balance.toLocaleString('es')+' €</td>'
+      +'<td style="color:var(--cyan)">'+v.daily_send.toLocaleString('es', {useGrouping:'always'})+' €</td>'
+      +'<td style="color:var(--cyan)">'+v.monthly_send.toLocaleString('es', {useGrouping:'always'})+' €</td>'
+      +'<td style="color:var(--cyan)">'+v.daily_cash.toLocaleString('es', {useGrouping:'always'})+' €</td>'
+      +'<td style="color:var(--cyan)">'+v.max_balance.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="color:#94a3b8;font-size:12px">'+v.reason+'</td>'
       +'<td style="color:#94a3b8;font-size:12px">'+v.assigned_by+'</td>'
       +'<td><button class="btn-sm btn-danger" style="background:var(--red);color:#fff;border:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:12px" onclick="removeVIP('+i+')">✕</button></td>'
@@ -22309,8 +22309,8 @@ async function loadCountryExpansion(){
       +'<td><strong>'+c.code+'</strong> '+c.name+'</td>'
       +'<td style="color:#94a3b8">'+c.continent+'</td>'
       +'<td><span style="color:'+stColors[c.status]+'">'+stLabels[c.status]+'</span></td>'
-      +'<td>'+c.users.toLocaleString('es')+'</td>'
-      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es')+' €</td>'
+      +'<td>'+c.users.toLocaleString('es', {useGrouping:'always'})+'</td>'
+      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="font-size:12px;color:#94a3b8">'+c.regulator+'</td>'
       +'<td style="font-size:12px;color:var(--cyan)">'+c.milestone+'</td>'
       +'<td><button class="btn-sm btn-ghost" onclick="loadCountrySettingsOverride(\''+c.code+'\')">⚙️</button></td>'
@@ -22423,9 +22423,9 @@ async function loadCorridors(){
     return '<tr>'
       +'<td style="color:#94a3b8;font-weight:600">'+(i+1)+'</td>'
       +'<td><span style="font-size:18px">'+getFlag(c.from)+'</span> '+c.from+' → <span style="font-size:18px">'+getFlag(c.to)+'</span> '+c.to+'</td>'
-      +'<td>'+c.txns.toLocaleString('es')+'</td>'
-      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es')+' €</td>'
-      +'<td style="color:var(--amber)">'+c.commission.toLocaleString('es')+' €</td>'
+      +'<td>'+c.txns.toLocaleString('es', {useGrouping:'always'})+'</td>'
+      +'<td style="color:var(--green)">'+c.volume.toLocaleString('es', {useGrouping:'always'})+' €</td>'
+      +'<td style="color:var(--amber)">'+c.commission.toLocaleString('es', {useGrouping:'always'})+' €</td>'
       +'<td style="color:#94a3b8">'+c.avg_ticket+' €</td>'
       +'<td style="color:'+trendColor+';font-weight:600">'+c.trend+'</td>'
       +'</tr>';
@@ -23215,7 +23215,7 @@ function exportAdminUsersCSV(){
     u.full_name||'',u.email||'',u.role||'',u.country||'',
     (u.modules||[]).length+'/'+ALL_MODULES.length,
     u.blocked?'Bloqueado':'Activo',
-    u.last_login?new Date(u.last_login).toLocaleString('es'):''
+    u.last_login?new Date(u.last_login).toLocaleString('es', {useGrouping:'always'}):''
   ].map(v=>{const s=String(v??'');return s.includes(',')?'"'+s+'"':s;}).join(','))).join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['﻿'+rows],{type:'text/csv;charset=utf-8'}));
@@ -23233,7 +23233,7 @@ function printAdminUsers(){
     <td>${u.country||'—'}</td>
     <td style="text-align:center">${(u.modules||[]).length}/${ALL_MODULES?ALL_MODULES.length:'?'}</td>
     <td style="color:${u.blocked?'#ef4444':'#10b981'}">${u.blocked?'🚫 Bloqueado':'✅ Activo'}</td>
-    <td style="color:#64748b;font-size:11px">${u.last_login?new Date(u.last_login).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca'}</td>
+    <td style="color:#64748b;font-size:11px">${u.last_login?new Date(u.last_login).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Nunca'}</td>
   </tr>`).join('');
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Usuarios Admin — InnovaAFRIC</title>
   <style>body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#1e293b}
@@ -23363,7 +23363,7 @@ function renderXShopOrders(){
       +'<td style="color:#fbbf24;font-weight:600">€'+Number(o.total_eur||o.total||0).toFixed(2)+'</td>'
       +'<td style="color:var(--cyan)">'+Number(o.total_xaf||0).toLocaleString()+' XAF</td>'
       +'<td><span style="color:'+(stColors[status]||'#94a3b8')+'">'+(stIcons[status]||'?')+' '+status+'</span></td>'
-      +'<td style="font-size:11px;color:var(--muted)">'+(o.created_at?new Date(o.created_at).toLocaleString('es',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(o.created_at?new Date(o.created_at).toLocaleString('es', {useGrouping:'always', day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—')+'</td>'
       +'<td style="display:flex;gap:4px">'
       +(status==='pending'?'<button class="btn-sm btn-primary" onclick="updateXShopOrder(\''+o.id+'\',\'processing\')" style="font-size:11px">Procesar</button>':'')
       +(status==='processing'?'<button class="btn-sm btn-cyan" onclick="updateXShopOrder(\''+o.id+'\',\'shipped\')" style="font-size:11px">Enviar</button>':'')
