@@ -18841,6 +18841,24 @@ var SEG_CLAIMS=[
   {id:'C005',plan:'Negocio Micro',user:'Moussa Coulibaly',amount:180000,date:'2026-05-28',status:'rechazado'}
 ];
 
+async function exportMicrosegurosCSV(){
+  try{
+    const{data:subs}=await SB.from('insurance_subscriptions').select('*');
+    const rows=subs||[];
+    if(!rows.length){toast('No hay microseguros para exportar','error');return;}
+    const header='ID,Usuario,Plan,Estado,Prima,Fecha';
+    const lines=[header,...rows.map(s=>[
+      s.id||'', s.user_id||'', s.plan_id||s.plan||'', s.status||'',
+      s.premium||s.amount||s.premium_xaf||'',
+      (s.created_at?new Date(s.created_at).toLocaleDateString('es', {useGrouping:'always'}):'')
+    ].join(','))];
+    const blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    a.href=url;a.download='innovaafric_microseguros_'+new Date().toISOString().split('T')[0]+'.csv';
+    a.click();URL.revokeObjectURL(url);
+    toast('✅ CSV de microseguros exportado','success');
+  }catch(e){toast('Error al exportar: '+((e&&e.message)||e),'error');}
+}
 async function loadMicroseguros(){
   var plans=null,claims=null;
   try{
