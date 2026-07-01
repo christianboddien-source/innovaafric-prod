@@ -8274,38 +8274,41 @@ async function loadKYC(){
   const countEl=document.getElementById('kyc-count');
   const sbCount=document.getElementById('sb-kyc-count');
   try{
-    const{data}=await SB.from('users').select('*').eq('kyc_pending',true).order('created_at',{ascending:false});
-    const pending=(data||[]).length;
+    // Pendientes REALES desde Railway (lo que comprueba el pago), no Supabase
+    const resp=await rwAPI('GET','/kyc/pending');
+    const list=(resp&&resp.success&&Array.isArray(resp.data))?resp.data:[];
+    const pending=list.length;
     if(countEl)countEl.textContent=pending+' pendientes';
     if(sbCount){sbCount.textContent=pending;sbCount.style.display=pending>0?'inline':'none';}
     if(!pending){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr>';return;}
-    tb.innerHTML=(data||[]).map(u=>{
+    tb.innerHTML=list.map(u=>{
       const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
       return`<tr>
-        <td><input type="checkbox" class="kyc-chk" data-uid="${u.id}" data-level="${u.kyc_requested_level||1}" onchange="_updateKYCBulkBar()" style="cursor:pointer"></td>
-        <td><div class="user-cell"><div class="uc-av" style="background:${avColor(u.email)};color:#000">${initials(u.full_name||u.email)}</div><div><div class="uc-name">${u.full_name||'—'}</div><div class="uc-email">${u.email}</div></div></div></td>
+        <td><input type="checkbox" class="kyc-chk" data-uid="${u.id}" data-level="1" onchange="_updateKYCBulkBar()" style="cursor:pointer"></td>
+        <td><div class="user-cell"><div class="uc-av" style="background:${avColor(u.email)};color:#000">${initials(u.name||u.email)}</div><div><div class="uc-name">${u.name||'—'}</div><div class="uc-email">${u.email}</div></div></div></td>
         <td><span style="font-family:var(--mono);font-size:12px;color:var(--cyan)">${ia}</span></td>
-        <td>${u.kyc_requested_level||1}</td>
-        <td style="font-size:12px;color:var(--muted)">${u.kyc_doc_type||'—'}</td>
-        <td style="font-size:11px;color:var(--muted)">${fmt_date(u.updated_at||u.created_at)}</td>
+        <td><span style="font-size:11px;color:var(--amber)">${u.kycStatus||'pending'}</span></td>
+        <td style="font-size:12px;color:var(--muted)">${u.kycDocument||u.country||'—'}</td>
+        <td style="font-size:11px;color:var(--muted)">${fmt_date(u.createdAt)}</td>
         <td style="display:flex;gap:6px">
-          <button class="topbar-btn btn-primary" style="font-size:11px;padding:5px 10px" onclick="approveKYC('${u.id}',${u.kyc_requested_level||1})">✅ Aprobar</button>
+          <button class="topbar-btn btn-primary" style="font-size:11px;padding:5px 10px" onclick="approveKYC('${u.id}')">✅ Aprobar</button>
           <button class="topbar-btn btn-danger-sm" style="font-size:11px;padding:5px 10px" onclick="rejectKYC('${u.id}')">✕ Rechazar</button>
         </td>
       </tr>`;
     }).join('');
-  }catch(e){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr>';}
+  }catch(e){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Error al cargar KYC (revisa conexión)</td></tr>';}
 }
-async function approveKYC(uid,level){
-  const{error}=await SB.from('users').update({kyc_level:level,kyc_pending:false}).eq('id',uid);
-  if(error){toast('Error: '+error.message,'error');return;}
-  toast('✅ KYC nivel '+level+' aprobado','success');
-  logAdminAction('kyc_approve','KYC nivel '+level+' aprobado para '+uid);
+async function approveKYC(uid){
+  const r=await rwAPI('POST','/kyc/'+uid+'/approve',{});
+  if(!r||!r.success){toast('Error: '+((r&&r.error&&(r.error.message||r.error))||'no se pudo aprobar'),'error');return;}
+  toast('✅ KYC verificado — ya puede operar','success');
+  logAdminAction('kyc_approve','KYC verificado para '+uid);
   loadKYC();
 }
 async function rejectKYC(uid){
-  const{error}=await SB.from('users').update({kyc_pending:false}).eq('id',uid);
-  if(error){toast('Error: '+error.message,'error');return;}
+  const reason=prompt('Motivo del rechazo (opcional):')||undefined;
+  const r=await rwAPI('POST','/kyc/'+uid+'/reject',{reason});
+  if(!r||!r.success){toast('Error: '+((r&&r.error&&(r.error.message||r.error))||'no se pudo rechazar'),'error');return;}
   toast('KYC rechazado','error');
   logAdminAction('kyc_reject','KYC rechazado para '+uid);
   loadKYC();
