@@ -1,4 +1,4 @@
-const CACHE = 'innovaafric-v8';
+const CACHE = 'innovaafric-v9';
 const PAGES = ['/'];
 
 self.addEventListener('install', e => {

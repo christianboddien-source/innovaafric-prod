@@ -22,6 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="./vendor/jsQR.min.js"></script>
 
 <style>
 :root{
@@ -612,12 +613,13 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       </div>
       <!-- Recipient -->
       <div style="padding:0 14px;margin-bottom:12px">
-        <div class="section-title">Destinatario (email o ID)</div>
+        <div class="section-title">Destinatario (código IA, email o teléfono)</div>
         <div class="card-sm" style="display:flex;align-items:center;gap:10px;padding:6px 12px">
           <span style="font-size:18px">👤</span>
-          <input id="send-recipient" type="email" placeholder="email@ejemplo.com" style="flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
+          <input id="send-recipient" type="text" autocomplete="off" placeholder="IA-35F6A1, email o teléfono…" oninput="searchRecipients(this.value)" style="flex:1;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
           <div id="send-recipient-check" style="color:var(--txt3);font-size:14px">○</div>
         </div>
+        <div id="send-recipient-list" style="margin-top:6px"></div>
         <div id="send-recipient-name" style="font-size:11px;color:var(--green);margin-top:6px;padding-left:4px;min-height:16px"></div>
       </div>
       <!-- Note -->
@@ -1702,14 +1704,24 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         </div>
         <!-- Scan panel -->
         <div id="qr-panel-scan">
-          <div style="background:var(--bg2);border:2px dashed var(--border);border-radius:20px;padding:30px;text-align:center;margin-bottom:14px">
-            <div style="font-size:48px;margin-bottom:10px">📷</div>
-            <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:6px">Escanear QR de pago</div>
-            <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">Apunta la cámara al código QR del destinatario</div>
-            <button class="btn-primary" onclick="showToast('Cámara QR','El escáner QR estará disponible en la versión nativa. Por ahora introduce el email del destinatario.')">Abrir cámara</button>
+          <div style="background:var(--bg2);border:2px dashed var(--border);border-radius:20px;padding:20px;text-align:center;margin-bottom:14px">
+            <div id="qr-cam-idle">
+              <div style="font-size:48px;margin-bottom:10px">📷</div>
+              <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:6px">Escanear QR de pago</div>
+              <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">Apunta la cámara al código QR del destinatario</div>
+              <button class="btn-primary" onclick="startQRScan()">📷 Abrir cámara</button>
+            </div>
+            <div id="qr-cam-live" style="display:none">
+              <div style="position:relative;width:100%;max-width:260px;margin:0 auto 12px;border-radius:16px;overflow:hidden;background:#000">
+                <video id="qr-video" playsinline muted style="width:100%;display:block"></video>
+                <div style="position:absolute;inset:14px;border:3px solid rgba(41,171,226,.9);border-radius:14px;pointer-events:none"></div>
+              </div>
+              <div id="qr-scan-status" style="font-size:11px;color:var(--txt3);margin-bottom:10px">Buscando código QR…</div>
+              <button class="btn-green" onclick="stopQRScan()">✕ Cerrar cámara</button>
+            </div>
           </div>
-          <div class="section-title">O introduce el email del destinatario</div>
-          <div class="card-sm" style="margin-bottom:14px"><input id="qr-email" type="email" placeholder="email@ejemplo.com" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+          <div class="section-title">O introduce el código IA o email del destinatario</div>
+          <div class="card-sm" style="margin-bottom:14px"><input id="qr-email" type="text" autocomplete="off" placeholder="IA-35F6A1 o email@ejemplo.com" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
           <div class="section-title">Importe (XAF)</div>
           <div class="card-sm" style="margin-bottom:14px"><input id="qr-amount" type="number" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:20px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif"></div>
           <div id="qr-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
@@ -3498,36 +3510,123 @@ function qrTab(tab) {
   document.getElementById('qr-tab-gen').style.color  = tab === 'gen' ? '#fff' : 'var(--txt3)';
   document.getElementById('qr-tab-scan').style.border = 'none';
   document.getElementById('qr-tab-gen').style.border  = tab === 'gen' ? 'none' : '1px solid var(--border)';
+  if (tab !== 'scan' && typeof stopQRScan === 'function') stopQRScan();
   if (tab === 'gen') populateQRGen();
+}
+
+function myIaCode() {
+  if (_user && _user.ia_code) return _user.ia_code;
+  if (_user && _user.id) {
+    var raw = (_user.id || '').replace(/^[a-z]+_/i, '').replace(/-/g, '').slice(0, 6).toUpperCase();
+    if (raw.length >= 4) return 'IA-' + raw;
+  }
+  return '';
 }
 
 function populateQRGen() {
   if (!_user) return;
-  var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email);
+  var code = myIaCode() || _user.email;
   var img = document.getElementById('qrpay-qr-img');
   var hdl = document.getElementById('qrpay-handle');
-  if (img) { img.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(link)+'" style="width:100%;height:100%">'; }
-  if (hdl) hdl.textContent = _user.name || _user.email;
+  if (img) { img.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(code)+'" style="width:100%;height:100%">'; }
+  if (hdl) hdl.textContent = (_user.name || _user.email) + (myIaCode() ? ' · ' + myIaCode() : '');
 }
 
 function doQRPay() {
-  var email  = document.getElementById('qr-email').value.trim();
+  var dest   = document.getElementById('qr-email').value.trim();
   var amount = parseFloat(document.getElementById('qr-amount').value);
   var err    = document.getElementById('qr-err');
-  if (!email) { err.textContent = 'Introduce el email del destinatario'; return; }
+  if (!dest) { err.textContent = 'Introduce el código IA o email del destinatario'; return; }
   if (!amount || amount <= 0) { err.textContent = 'Introduce un importe válido'; return; }
   if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
   err.textContent = '';
   fetch(RAIL_API + '/money/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
-    body: JSON.stringify({ amount: amount, currency: 'XAF', recipient_email: email, dest_currency: 'XAF' })
+    body: JSON.stringify({ amount: amount, currency: 'XAF', recipient_id: dest, dest_currency: 'XAF' })
   }).then(function(r){ return r.json(); }).then(function(resp) {
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al pagar'; return; }
-    showToast('Pago enviado', amount.toLocaleString('fr-FR') + ' XAF a ' + email);
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al pagar'); return; }
+    var to = (resp.data && resp.data.recipient && resp.data.recipient.name) || dest;
+    showToast('Pago enviado', amount.toLocaleString('fr-FR') + ' XAF a ' + to);
     document.getElementById('qr-email').value = ''; document.getElementById('qr-amount').value = '';
     loadTransactions(); goScreen('s-wallet');
   }).catch(function(){ err.textContent = 'Error de conexión'; });
+}
+
+// ── Escáner QR con la cámara (jsQR) ──────────────────────
+var _qrStream = null, _qrRAF = null;
+
+function startQRScan() {
+  var video  = document.getElementById('qr-video');
+  var idle   = document.getElementById('qr-cam-idle');
+  var live   = document.getElementById('qr-cam-live');
+  var status = document.getElementById('qr-scan-status');
+  if (typeof jsQR === 'undefined') { showToast('Escáner no disponible', 'No se pudo cargar el lector QR. Introduce el código a mano.'); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('Cámara no disponible', 'Tu navegador no permite la cámara. Introduce el código a mano.'); return;
+  }
+  idle.style.display = 'none';
+  live.style.display = 'block';
+  status.textContent = 'Iniciando cámara…';
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+    .then(function(stream) {
+      _qrStream = stream;
+      video.srcObject = stream;
+      video.setAttribute('playsinline', true);
+      return video.play();
+    })
+    .then(function() {
+      status.textContent = 'Buscando código QR…';
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d', { willReadFrequently: true });
+      (function tick() {
+        if (!_qrStream) return;
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          var img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          var code = jsQR(img.data, img.width, img.height, { inversionAttempts: 'dontInvert' });
+          if (code && code.data) { onQRDecoded(code.data); return; }
+        }
+        _qrRAF = requestAnimationFrame(tick);
+      })();
+    })
+    .catch(function() {
+      status.textContent = '';
+      stopQRScan();
+      showToast('Permiso denegado', 'No se pudo acceder a la cámara. Introduce el código a mano.');
+    });
+}
+
+function stopQRScan() {
+  if (_qrRAF) { cancelAnimationFrame(_qrRAF); _qrRAF = null; }
+  if (_qrStream) { _qrStream.getTracks().forEach(function(t){ t.stop(); }); _qrStream = null; }
+  var video = document.getElementById('qr-video');
+  if (video) video.srcObject = null;
+  var idle = document.getElementById('qr-cam-idle');
+  var live = document.getElementById('qr-cam-live');
+  if (idle) idle.style.display = 'block';
+  if (live) live.style.display = 'none';
+}
+
+// Extrae el destinatario de lo que codifica el QR:
+// admite una URL con ?pay=..., un código IA (IA-XXXXXX) o un email/código suelto.
+function onQRDecoded(text) {
+  stopQRScan();
+  var dest = (text || '').trim();
+  try {
+    if (/^https?:\/\//i.test(dest)) {
+      var u = new URL(dest);
+      dest = u.searchParams.get('pay') || u.searchParams.get('ia') || u.searchParams.get('email') || dest;
+    }
+  } catch(e) {}
+  var m = dest.match(/IA-?[0-9A-F]{6}/i);
+  if (m) dest = m[0].toUpperCase();
+  document.getElementById('qr-email').value = dest;
+  var amt = document.getElementById('qr-amount');
+  showToast('QR leído', 'Destinatario: ' + dest + '. Indica el importe y pulsa Pagar.');
+  if (amt) amt.focus();
 }
 
 // ── POS ──────────────────────────────────────────────────
@@ -3648,15 +3747,84 @@ function calcSend() {
   document.getElementById('send-rate-label').textContent = rateLabel;
 }
 
+// Devuelve un mensaje de error legible venga como string o como objeto {code,message,details}
+function errMsg(resp, fallback) {
+  var e = resp && resp.error;
+  if (!e) return fallback || 'Error';
+  if (typeof e === 'string') return e;
+  return e.message || e.error || fallback || 'Error';
+}
+
+// ── Autocompletado de destinatario ───────────────────────
+var _sendRecipientId = null;
+var _recipSearchTimer = null;
+
+function clearRecipientSelection() {
+  _sendRecipientId = null;
+  var list = document.getElementById('send-recipient-list');
+  var name = document.getElementById('send-recipient-name');
+  var chk  = document.getElementById('send-recipient-check');
+  if (list) list.innerHTML = '';
+  if (name) name.textContent = '';
+  if (chk)  { chk.textContent = '○'; chk.style.color = 'var(--txt3)'; }
+}
+
+function searchRecipients(q) {
+  q = (q || '').trim();
+  // Al escribir se cancela cualquier selección previa
+  _sendRecipientId = null;
+  var name = document.getElementById('send-recipient-name');
+  var chk  = document.getElementById('send-recipient-check');
+  if (name) name.textContent = '';
+  if (chk)  { chk.textContent = '○'; chk.style.color = 'var(--txt3)'; }
+  var list = document.getElementById('send-recipient-list');
+  if (!list) return;
+  if (q.length < 2) { list.innerHTML = ''; return; }
+  if (!_token) return;
+  clearTimeout(_recipSearchTimer);
+  _recipSearchTimer = setTimeout(function() {
+    fetch(RAIL_API + '/money/recipients?q=' + encodeURIComponent(q), {
+      headers: { 'Authorization': 'Bearer ' + _token }
+    }).then(function(r){ return r.json(); }).then(function(resp) {
+      if (!resp || !resp.success || !resp.data || !resp.data.recipients.length) {
+        list.innerHTML = '<div style="font-size:11px;color:var(--txt3);padding:8px 4px">Sin coincidencias. Revisa el código IA, email o teléfono.</div>';
+        return;
+      }
+      list.innerHTML = resp.data.recipients.map(function(u) {
+        var loc = [u.city, u.country].filter(Boolean).join(' · ');
+        var payload = encodeURIComponent(JSON.stringify({ id: u.id, ia: u.ia, name: u.name }));
+        return '<div onclick="selectRecipient(\'' + payload + '\')" style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:6px;cursor:pointer">'
+          + '<span style="font-size:18px">👤</span>'
+          + '<div style="flex:1;min-width:0">'
+          + '<div style="font-size:13px;font-weight:700;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (u.name || u.ia) + '</div>'
+          + '<div style="font-size:10px;color:var(--txt3)">' + u.ia + (loc ? ' · ' + loc : '') + '</div>'
+          + '</div><span style="color:var(--blue);font-size:16px">→</span></div>';
+      }).join('');
+    }).catch(function(){ list.innerHTML = '<div style="font-size:11px;color:var(--red);padding:8px 4px">Error de conexión al buscar.</div>'; });
+  }, 300);
+}
+
+function selectRecipient(payload) {
+  var u;
+  try { u = JSON.parse(decodeURIComponent(payload)); } catch(e) { return; }
+  _sendRecipientId = u.id;
+  document.getElementById('send-recipient').value = u.ia || u.name || '';
+  document.getElementById('send-recipient-list').innerHTML = '';
+  var name = document.getElementById('send-recipient-name');
+  var chk  = document.getElementById('send-recipient-check');
+  if (name) name.textContent = '✓ ' + (u.name || u.ia);
+  if (chk)  { chk.textContent = '✓'; chk.style.color = 'var(--green)'; }
+}
+
 function doSend() {
   var amt       = parseFloat(document.getElementById('send-amount').value);
   var cur       = document.getElementById('send-cur').value;
-  var recipient = document.getElementById('send-recipient').value.trim();
+  var recipient = _sendRecipientId || document.getElementById('send-recipient').value.trim();
   var note      = document.getElementById('send-note').value.trim();
   var err       = document.getElementById('send-err');
   var btn       = document.getElementById('send-btn');
   if (!amt || amt <= 0) { err.textContent = 'Introduce un importe válido'; return; }
-  if (!recipient) { err.textContent = 'Introduce el email del destinatario'; return; }
+  if (!recipient) { err.textContent = 'Introduce el código IA, email o teléfono del destinatario'; return; }
   if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
   err.textContent = '';
   btn.innerHTML = '<span class="login-spinner"></span>Enviando…';
@@ -3665,12 +3833,12 @@ function doSend() {
   fetch(RAIL_API + '/money/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
-    body: JSON.stringify({ amount: amt, currency: cur, recipient_email: recipient, dest_currency: destCur, reference: note || undefined })
+    body: JSON.stringify({ amount: amt, currency: cur, recipient_id: recipient, dest_currency: destCur, reference: note || undefined })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '💸 Confirmar envío';
     btn.disabled = false;
     if (!resp || !resp.success) {
-      err.textContent = (resp && resp.error) || 'Error al procesar el envío';
+      err.textContent = errMsg(resp, 'Error al procesar el envío');
       return;
     }
     // Actualizar saldo local
@@ -3683,6 +3851,7 @@ function doSend() {
     document.getElementById('send-recipient').value = '';
     document.getElementById('send-note').value = '';
     document.getElementById('send-converted').textContent = '—';
+    clearRecipientSelection();
     showToast('Envío realizado', 'El dinero está en camino ⚡');
     goScreen('s-wallet');
   }).catch(function() {
@@ -3696,6 +3865,7 @@ function doSend() {
 var _origGoScreen = goScreen;
 goScreen = function(id) {
   _origGoScreen(id);
+  if (id !== 's-qrpay' && typeof stopQRScan === 'function') stopQRScan();
   if (id === 's-send')          { var sEl = document.getElementById('send-saldo'); if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('fr-FR') + ' XAF' : '— XAF'; calcSend(); }
   if (id === 's-recibir')       populateRecibir();
   if (id === 's-retirar')       refreshBalanceInScreens();
