@@ -7712,7 +7712,7 @@ function _renderUsersPage(append){
 function _removeUsersLoadMore(){var w=document.getElementById('users-load-more-wrap');if(w)w.innerHTML='';}
 function _renderUserRow(u){
   if(!u.id){return'';}
-  const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+  const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
   const nm=(u.full_name||u.email||'').replace(/'/g,'&apos;');
   const rol=(u.role||'cliente').replace(/'/g,'&apos;');
   const country=(u.country||'GQ').replace(/'/g,'&apos;');
@@ -7766,7 +7766,7 @@ function filterUsers(){
   const q=document.getElementById('user-q').value.toLowerCase();
   const r=document.getElementById('user-role-f').value;
   renderUsers(ALL_USERS.filter(u=>{
-    const ia='ia-'+(u.id||'').replace(/-/g,'').toLowerCase().substring(0,6);
+    const ia='ia-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toLowerCase().substring(0,6);
     return(!q||(u.email||'').toLowerCase().includes(q)||(u.full_name||'').toLowerCase().includes(q)||ia.includes(q)||(u.postal_code||'').includes(q)||(u.street||'').toLowerCase().includes(q))&&(!r||u.role===r);
   }));
 }
@@ -7790,7 +7790,7 @@ async function openFicha(uid){
   document.getElementById('ficha-title').textContent='Ficha: '+(u.full_name||u.email||uid);
   const fc=document.getElementById('ficha-content');
   fc.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
-  const ia='IA-'+(uid||'').replace(/-/g,'').toUpperCase().substring(0,6);
+  const ia='IA-'+(uid||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
   const cur=getUserCurrency(u.country,uid);
   const balance=formatUserBalance(u._wallet||u,u.country,uid);
   const addrFull=[u.street,u.street_number,u.floor,u.postal_code,u.city,u.country].filter(Boolean).join(', ')||'—';
@@ -7875,7 +7875,7 @@ function openEdit(id,name,role,email,country){
   const curSel=document.getElementById('m-edit-currency-sel');
   if(curEl)curEl.textContent='Auto: '+autoCur+(savedManual?' · Manual: '+savedManual:'');
   if(curSel)curSel.value=u.preferred_currency||savedManual||'auto';
-  const ia='IA-'+(id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+  const ia='IA-'+(id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
   const iaEl=document.getElementById('m-edit-ia');if(iaEl)iaEl.textContent='Código: '+ia;
   document.getElementById('m-edit-phone').value=u.phone||'';
   document.getElementById('m-edit-city').value=u.city||'';
@@ -7997,7 +7997,7 @@ async function createUser(){
     await SB.from('wallets').upsert({user_id:uid,eur,xaf:Math.round(eur*655.957),usd:Math.round(eur*1.08),points:0});
     fb.style.background='var(--green-d)';fb.style.color='var(--green)';
     fb.textContent='✅ Usuario '+name+' creado — Rol: '+role+' — Saldo: €'+eur;
-    const iaCode='IA-'+(uid||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    const iaCode='IA-'+(uid||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     const codeEl=document.getElementById('create-ia-code');
     if(codeEl){codeEl.style.display='block';codeEl.textContent='Código IA: '+iaCode+' — Compartir con el usuario';}
     resetCreateForm();
@@ -8280,7 +8280,7 @@ async function loadKYC(){
     if(sbCount){sbCount.textContent=pending;sbCount.style.display=pending>0?'inline':'none';}
     if(!pending){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin solicitudes pendientes</td></tr>';return;}
     tb.innerHTML=(data||[]).map(u=>{
-      const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+      const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
       return`<tr>
         <td><input type="checkbox" class="kyc-chk" data-uid="${u.id}" data-level="${u.kyc_requested_level||1}" onchange="_updateKYCBulkBar()" style="cursor:pointer"></td>
         <td><div class="user-cell"><div class="uc-av" style="background:${avColor(u.email)};color:#000">${initials(u.full_name||u.email)}</div><div><div class="uc-name">${u.full_name||'—'}</div><div class="uc-email">${u.email}</div></div></div></td>
@@ -8871,7 +8871,7 @@ function exportUsersCSV(){
   if(!ALL_USERS||!ALL_USERS.length){toast('No hay usuarios para exportar','error');return;}
   const header='Nombre,Email,Codigo IA,Telefono,Rol,Pais,Ciudad,Codigo Postal,Calle,Numero,Piso,Saldo EUR,Saldo XAF,Puntos,PIN,Fecha';
   const lines=[header,...ALL_USERS.map(u=>{
-    const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     const dt=u.created_at?new Date(u.created_at).toLocaleDateString('es'):'';
     return[u.full_name||'',u.email||'',ia,u.phone||'',u.role||'',u.country||'',u.city||'',u.postal_code||'',u.street||'',u.street_number||'',u.floor||'',Number(u.eur||0).toFixed(2),Math.round(u.xaf||0),u.points||0,u.pin_hash?'SI':'NO',dt].join(',');
   })];
@@ -9466,7 +9466,7 @@ function loadRepresentantes(){
   tb.innerHTML=reps.map(function(u){
     var users=(ALL_USERS||[]).filter(function(x){return x.country===u.country&&x.role==='cliente';}).length;
     var circs=(ALL_USERS||[]).filter(function(x){return x.country===u.country&&x.role==='circular';}).length;
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     return'<tr>'
       +'<td><div class="user-cell"><div class="uc-av" style="background:var(--amber);color:#000">'+initials(u.full_name||u.email)+'</div><div><div class="uc-name">'+(u.full_name||'—')+'</div><div class="uc-email" style="font-family:var(--mono);font-size:10px">'+ia+'</div></div></div></td>'
       +'<td style="font-size:12px">'+(u.country||'—')+' · '+(u.city||'—')+'</td>'
@@ -9488,7 +9488,7 @@ function loadComerciosAdmin(){
   var tb=document.getElementById('tb-comercios');
   if(!coms.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin comercios registrados</td></tr>';return;}
   tb.innerHTML=coms.map(function(u){
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     return'<tr>'
       +'<td><div class="user-cell"><div class="uc-av" style="background:var(--xs-t,#00897B);color:#fff">🏪</div><div><div class="uc-name">'+(u.full_name||'—')+'</div><div class="uc-email" style="font-family:var(--mono);font-size:10px">'+ia+'</div></div></div></td>'
       +'<td style="font-size:12px">'+(u.country||'—')+' · '+(u.city||'—')+'</td>'
@@ -11665,7 +11665,7 @@ async function loadProveedores(){
     if(!data||!data.length){list.innerHTML='<div class="td-empty">Sin proveedores registrados</div>';return;}
     list.innerHTML=data.map(u=>{
       const w=(wallets||[]).find(ww=>ww.user_id===u.id)||{};
-      const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+      const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
       const addr=[u.city,u.country].filter(Boolean).join(', ')||'—';
       return`<div class="prov-card">
         <div class="prov-av" style="background:${avColor(u.email)};color:#000">${initials(u.full_name||u.email)}</div>
@@ -11704,7 +11704,7 @@ async function searchCargoUser(){
   if(data&&data.length){
     const u=data[0];
     document.getElementById('cargo-user-id').value=u.id;
-    const ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    const ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     const{data:w}=await SB.from('wallets').select('eur,xaf,usd,points').eq('user_id',u.id).single().catch(()=>({data:{}}));
     info.style.display='block';
     info.innerHTML=`<div style="display:flex;align-items:center;gap:10px">
@@ -11943,7 +11943,7 @@ function filterCmd(q){
   const userResults=query.length>=2?(ALL_USERS||[]).filter(u=>
     (u.full_name||'').toLowerCase().includes(query)||
     (u.email||'').toLowerCase().includes(query)||
-    ('ia-'+(u.id||'').replace(/-/g,'').toLowerCase().substring(0,6)).includes(query)
+    ('ia-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toLowerCase().substring(0,6)).includes(query)
   ).slice(0,4).map(u=>({type:'user',ic:'👤',label:u.full_name||u.email,desc:u.email,user:u})):[];
 
   cmdFiltered=[
@@ -13612,7 +13612,7 @@ function loadContactos(){
   if(q)filtered=filtered.filter(function(u){return(u.full_name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
   if(!filtered.length){list.innerHTML='<div class="td-empty">'+_i18n('msg:no_contacts')+'</div>';return;}
   list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">'+filtered.map(function(u){
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     var nm=(u.full_name||u.email||'').replace(/'/g,'');
     return'<div class="contact-card">'
       +'<div class="uc-av" style="width:40px;height:40px;font-size:14px;background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
@@ -13857,7 +13857,7 @@ function exportUsersPDF(){
     +'<h1>👥 InnovaAFRIC · Usuarios</h1><p style="color:#666">'+new Date().toLocaleDateString('es')+' · Total: '+ALL_USERS.length+'</p>'
     +'<table><thead><tr><th>Nombre</th><th>Email</th><th>Código IA</th><th>Rol</th><th>País</th><th>EUR</th><th>XAF</th><th>PIN</th><th>Registro</th></tr></thead><tbody>'
     +ALL_USERS.map(function(u){
-      var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+      var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
       return'<tr><td>'+(u.full_name||'—')+'</td><td>'+u.email+'</td><td style="font-family:monospace">'+ia+'</td><td>'+u.role+'</td><td>'+(u.country||'—')+'</td><td>€'+Number(u.eur||0).toFixed(2)+'</td><td>'+Math.round(u.xaf||0).toLocaleString('es')+'</td><td>'+(u.pin_hash?'✓':'—')+'</td><td>'+(u.created_at?new Date(u.created_at).toLocaleDateString('es'):'—')+'</td></tr>';
     }).join('')
     +'</tbody></table><p style="font-size:9px;color:#999;margin-top:16px;text-align:center">InnovaAFRIC · We Simplify Life</p></body></html>';
@@ -14302,7 +14302,7 @@ async function loadRidersV21() {
       ocupado:{pill:'pill-amber',icon:'🟡',label:'En entrega',anim:'animation:pulse 1s infinite'},
       regresando:{pill:'pill-cyan',icon:'🔵',label:'Regresando',anim:''}
     }[state]||{pill:'pill-gray',icon:'⚫',label:state,anim:''};
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     return'<tr>'
       +'<td><div class="user-cell"><div class="uc-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
       +'<div><div class="uc-name">'+flag+' '+(u.full_name||'—')+'</div>'
@@ -14413,7 +14413,7 @@ async function applyKYCFilters() {
     var tb=document.getElementById('tb-kyc');
     if(!list.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin solicitudes KYC para los filtros seleccionados</td></tr>';return;}
     tb.innerHTML=list.map(function(u){
-      var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+      var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
       var flag=FLAG_EMOJI[u.country]||'🌍';
       return'<tr>'
         +'<td><div class="user-cell"><div class="uc-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
@@ -14654,7 +14654,7 @@ async function loadProveedoresV21(){
   var wMap={};(wRes.data||[]).forEach(function(w){wMap[w.user_id]=w;});
   list.innerHTML=users.map(function(u){
     var w=wMap[u.id]||{};
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     var flag=FLAG_EMOJI[u.country]||'🌍';
     return'<div class="prov-card">'
       +'<div class="prov-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
@@ -14695,7 +14695,7 @@ function _doContactFilter(role){
   if(q)filtered=filtered.filter(function(u){return(u.full_name||'').toLowerCase().indexOf(q)>=0||(u.email||'').toLowerCase().indexOf(q)>=0;});
   if(!filtered.length){list.innerHTML='<div class="td-empty">Sin contactos con este filtro</div>';return;}
   list.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px">'+filtered.map(function(u){
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     var nm=(u.full_name||u.email||'').replace(/'/g,'');
     return'<div class="contact-card">'
       +'<div class="uc-av" style="width:40px;height:40px;font-size:14px;background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
@@ -22735,7 +22735,7 @@ function bulkExportSelectedUsers(){
   var selected=ALL_USERS.filter(function(u){return uids.has(u.id);});
   var header='Nombre,Email,Codigo IA,Telefono,Rol,Pais,Saldo EUR,Bloqueado';
   var lines=[header].concat(selected.map(function(u){
-    var ia='IA-'+(u.id||'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
     return[u.full_name||'',u.email||'',ia,u.phone||'',u.role||'',u.country||'',Number(u.eur||0).toFixed(2),u.is_blocked?'SI':'NO'].join(',');
   }));
   var blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});
