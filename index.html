@@ -3220,7 +3220,7 @@ function doCrearTontina() {
     body: JSON.stringify({ name: name, contribution_amount: amount, currency: cur, frequency: freq, max_members: members })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🤝 Crear tontina'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al crear'); return; }
     showToast('Tontina creada', 'Código de invitación: ' + resp.data.invite_code);
     document.getElementById('ton-name').value = '';
     document.getElementById('ton-amount').value = '';
@@ -3299,7 +3299,7 @@ function doPagarFactura() {
     body: JSON.stringify({ provider_id: _selectedProvider.id, amount: amount, reference_number: ref })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🧾 Pagar ahora'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al pagar'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al pagar'); return; }
     showToast('Pago realizado', _selectedProvider.name + ' — ' + amount.toLocaleString('fr-FR') + ' ' + (_selectedProvider.currency||'XAF'));
     loadTransactions();
     goBack();
@@ -3353,7 +3353,7 @@ function doSiniestro() {
     body: JSON.stringify({ plan_id: planId, description: desc, amount_claimed: amount || 0 })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🛡️ Enviar declaración'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al enviar'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al enviar'); return; }
     showToast('Siniestro enviado', 'Tu declaración está en revisión');
     document.getElementById('sin-desc').value = ''; document.getElementById('sin-amount').value = '';
     goBack();
@@ -3441,7 +3441,7 @@ function doInvertir() {
     body: JSON.stringify({ amount: amount })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '📊 Invertir ahora'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al invertir'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al invertir'); return; }
     showToast('Inversión realizada', amount.toLocaleString('fr-FR')+' '+(_investFundSelected.currency||'XAF')+' invertidos');
     document.getElementById('invest-amount').value = '';
     loadInvest(); goScreen('s-invest');
@@ -3493,7 +3493,7 @@ function doCrearAhorro() {
     body: JSON.stringify({ name: name, target: target, currency: cur, deadline: date || undefined, autoSave: auto })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '🎯 Crear meta'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al crear'); return; }
     showToast('Meta creada', name + ' · ' + target.toLocaleString('fr-FR') + ' ' + cur);
     document.getElementById('aho-name').value = ''; document.getElementById('aho-target').value = '';
     loadAhorro(); goScreen('s-ahorro');
@@ -3718,7 +3718,7 @@ function doCrearTarjeta() {
     body: JSON.stringify({ label: label, currency: cur, spending_limit: limit, initial_topup: topup })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = '💳 Crear tarjeta'; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'Error al crear'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'Error al crear'); return; }
     showToast('Tarjeta creada', label + ' · ' + cur);
     document.getElementById('card-label').value = ''; document.getElementById('card-topup').value = '';
     loadCards(); goScreen('s-giftcard');
@@ -3958,7 +3958,7 @@ function sendSupportMsg() {
   if (!_token) { showToast('Inicia sesión', 'Necesitas iniciar sesión para escribir a soporte'); return; }
   inp.value = '';
   railPost('/chat/messages', { message: text, room: 'support' }).then(function(resp){
-    if (resp && resp.success) loadSupport(); else showToast('Error', (resp && resp.error) || 'No se pudo enviar');
+    if (resp && resp.success) loadSupport(); else showToast('Error', errMsg(resp, 'No se pudo enviar'));
   }).catch(function(){ showToast('Error', 'Error de conexión'); });
 }
 // ── COMPRA EN TIENDA (crea pedido real con código de seguimiento) ──
@@ -4004,7 +4004,7 @@ function confirmBuy() {
     if (!c || !c.success) { throw new Error((c && c.error) || 'No se pudo añadir al carrito'); }
     return railPost('/shop/orders', { payment_currency: cur, delivery_address: addr });
   }).then(function(o) {
-    if (!o || !o.success) { err.textContent = (o && o.error) || 'No se pudo crear el pedido'; btn.innerHTML = 'Comprar y pagar →'; btn.disabled = false; return; }
+    if (!o || !o.success) { err.textContent = errMsg(o, 'No se pudo crear el pedido'); btn.innerHTML = 'Comprar y pagar →'; btn.disabled = false; return; }
     var d = o.data; var trk = d.trackingId || d.tracking_id;
     if (d.paymentCurrency === 'XAF' && d.paymentAmount) {
       _balances.XAF = Math.max(0, _balances.XAF - d.paymentAmount);
@@ -4032,7 +4032,7 @@ function loadTrack() {
   fetch(RAIL_API + '/delivery/track/' + encodeURIComponent(id))
     .then(function(r){ return r.json(); })
     .then(function(resp){
-      if (!resp || !resp.success) { hint.textContent = (resp && resp.error) || 'Pedido no encontrado'; return; }
+      if (!resp || !resp.success) { hint.textContent = errMsg(resp, 'Pedido no encontrado'); return; }
       var d = resp.data;
       hint.style.display = 'none'; strip.style.display = 'block';
       document.getElementById('track-status-main').textContent = _trackLabels[d.status] || d.status;
@@ -4089,7 +4089,7 @@ function doRetirar() {
     body: JSON.stringify({ amount: amt, currency: 'XAF', method: _retMethod, destination: dest })
   }).then(function(r){ return r.json(); }).then(function(resp) {
     btn.innerHTML = orig; btn.disabled = false;
-    if (!resp || !resp.success) { err.textContent = (resp && resp.error) || 'No se pudo procesar el retiro'; return; }
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'No se pudo procesar el retiro'); return; }
     var net = resp.data && resp.data.amount_net;
     _balances.XAF = Math.max(0, _balances.XAF - amt);
     localStorage.setItem('inn_balance', JSON.stringify(_balances));
