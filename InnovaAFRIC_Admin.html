@@ -7923,6 +7923,12 @@ async function saveEdit(){
   if(curSel&&curSel.value!=='auto')localStorage.setItem('ia_pref_cur_'+id,curSel.value);
   else localStorage.removeItem('ia_pref_cur_'+id);
   const u=ALL_USERS.find(u=>u.id===id);
+  // Railway = fuente de verdad: reflejar el cambio en el API para que llegue a las apps
+  const railId=(u&&(u._railwayId||(u._railway?u.id:null)))||null;
+  if(railId){
+    const r=await rwAPI('PATCH','/admin/users/'+railId,{name:updates.full_name,phone:updates.phone,country:updates.country,role:updates.role,city:updates.city});
+    if(!r||!r.success){toast('⚠ Guardado en Supabase, pero no se reflejó en Railway: '+((r&&r.error&&(r.error.message||r.error))||'error'),'error');}
+  }
   if(u)Object.assign(u,updates);
   closeModal('m-edit-user');
   toast('✅ Usuario actualizado','success');
