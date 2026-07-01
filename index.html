@@ -593,7 +593,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div class="amount-box">
         <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Tú envías</div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <input id="send-amount" type="number" min="1" placeholder="0" oninput="calcSend()" style="font-size:32px;font-weight:900;color:#fff;background:none;border:none;outline:none;width:0;flex:1;font-family:'Inter',sans-serif">
+          <input id="send-amount" type="text" inputmode="numeric" min="1" placeholder="0" oninput="calcSend()" style="font-size:32px;font-weight:900;color:#fff;background:none;border:none;outline:none;width:0;flex:1;font-family:'Inter',sans-serif">
           <select id="send-cur" onchange="calcSend()" style="background:rgba(41,171,226,.15);color:var(--blue);border:1px solid rgba(41,171,226,.3);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:800;outline:none;font-family:'Inter',sans-serif">
             <option value="XAF">XAF</option>
             <option value="EUR">EUR €</option>
@@ -1423,7 +1423,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
             <div>
               <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">IMPORTE BASE</div>
-              <input id="fiscal-amount" type="number" value="100000" class="input-field" style="width:100%" oninput="calcFiscal()">
+              <input id="fiscal-amount" type="text" inputmode="numeric" value="100000" class="input-field" style="width:100%" oninput="calcFiscal()">
             </div>
             <div>
               <div style="font-size:9px;font-weight:700;color:var(--txt3);margin-bottom:5px">TIPO DE OPERACIÓN</div>
@@ -1503,7 +1503,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="card-sm" style="margin-bottom:10px"><input id="ton-name" type="text" placeholder="Ej: Amigos de Madrid" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
         <div class="section-title">Aportación por turno</div>
         <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <input id="ton-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <input id="ton-amount" type="text" inputmode="numeric" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
           <select id="ton-cur" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:4px 8px;color:var(--txt);font-size:12px;outline:none">
             <option value="XAF">XAF</option><option value="EUR">EUR</option>
           </select>
@@ -1553,7 +1553,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="card-sm" style="margin-bottom:10px"><input id="bill-ref" type="text" placeholder="Nº de contrato, teléfono, etc." style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
         <div class="section-title">Importe</div>
         <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
-          <input id="bill-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <input id="bill-amount" type="text" inputmode="numeric" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
           <span id="bill-currency" style="font-size:12px;font-weight:700;color:var(--txt3)">XAF</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:14px">
@@ -1603,7 +1603,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         </div>
         <div class="section-title">Importe reclamado</div>
         <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
-          <input id="sin-amount" type="number" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:700;color:var(--txt);font-family:'Inter',sans-serif">
+          <input id="sin-amount" type="text" inputmode="numeric" placeholder="0" style="flex:1;background:none;border:none;outline:none;font-size:18px;font-weight:700;color:var(--txt);font-family:'Inter',sans-serif">
           <span style="font-size:12px;color:var(--txt3)">XAF</span>
         </div>
         <div id="sin-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
@@ -1640,7 +1640,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div id="invest-detail-card" class="dark-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(245,166,35,.2);border-radius:20px;padding:18px;margin-bottom:14px"></div>
         <div class="section-title">¿Cuánto quieres invertir?</div>
         <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:14px">
-          <input id="invest-amount" type="number" placeholder="5000" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <input id="invest-amount" type="text" inputmode="numeric" placeholder="5000" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
           <span id="invest-cur-label" style="font-size:12px;font-weight:700;color:var(--txt3)">XAF</span>
         </div>
         <div id="invest-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
@@ -1723,7 +1723,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div class="section-title">O introduce el código IA o email del destinatario</div>
           <div class="card-sm" style="margin-bottom:14px"><input id="qr-email" type="text" autocomplete="off" placeholder="IA-35F6A1 o email@ejemplo.com" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
           <div class="section-title">Importe (XAF)</div>
-          <div class="card-sm" style="margin-bottom:14px"><input id="qr-amount" type="number" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:20px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif"></div>
+          <div class="card-sm" style="margin-bottom:14px"><input id="qr-amount" type="text" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;outline:none;font-size:20px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif"></div>
           <div id="qr-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
           <button class="btn-primary" onclick="doQRPay()">💳 Pagar con QR</button>
         </div>
@@ -1752,7 +1752,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="section-title">Importe a cobrar</div>
         <div class="dark-card" style="background:linear-gradient(145deg,var(--bg2),var(--bg3));border:1px solid rgba(41,171,226,.15);border-radius:22px;padding:20px;text-align:center;margin-bottom:14px">
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
-            <input id="pos-amount" type="number" placeholder="0" oninput="genPosQR()" style="font-size:38px;font-weight:900;color:#fff;background:none;border:none;outline:none;text-align:center;width:200px;font-family:'Inter',sans-serif">
+            <input id="pos-amount" type="text" inputmode="numeric" placeholder="0" oninput="genPosQR()" style="font-size:38px;font-weight:900;color:#fff;background:none;border:none;outline:none;text-align:center;width:200px;font-family:'Inter',sans-serif">
           </div>
           <div style="display:flex;justify-content:center;gap:8px">
             <div id="pos-cur-xaf" class="pill pill-blue" onclick="selPosCur('XAF')" style="cursor:pointer">XAF</div>
@@ -2661,6 +2661,23 @@ function getConvertedBalance(cur) {
   return xaf * (_FX[cur] || 1);
 }
 
+// --- Importes: punto de millar automático al escribir + lectura correcta ---
+function groupThousands(digits){ return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+function fmtAmountInput(el){
+  if (!el) return;
+  var parts = String(el.value).replace(/[^\d,]/g, '').split(',');
+  var intPart = parts[0].replace(/^0+(?=\d)/, '');
+  var dec = parts.length > 1 ? ',' + parts[1].slice(0, 2) : '';
+  el.value = (intPart ? groupThousands(intPart) : '') + dec;
+}
+function parseAmount(v){ return parseFloat(String(v == null ? '' : v).replace(/\./g, '').replace(',', '.')) || 0; }
+window.addEventListener('DOMContentLoaded', function(){
+  ['send-amount','fiscal-amount','ton-amount','bill-amount','sin-amount','invest-amount','qr-amount','pos-amount'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) { el.addEventListener('input', function(){ fmtAmountInput(el); }); fmtAmountInput(el); }
+  });
+});
+
 function updateBalanceDisplay() {
   var el = document.getElementById('balance-amount');
   var sub = document.getElementById('balance-sub');
@@ -3235,7 +3252,7 @@ function selFreq(f) {
 
 function doCrearTontina() {
   var name    = document.getElementById('ton-name').value.trim();
-  var amount  = parseFloat(document.getElementById('ton-amount').value);
+  var amount  = parseAmount(document.getElementById('ton-amount').value);
   var cur     = document.getElementById('ton-cur').value;
   var freq    = document.getElementById('ton-freq').value;
   var members = parseInt(document.getElementById('ton-members').value);
@@ -3318,7 +3335,7 @@ function openBillPay(providerId) {
 function doPagarFactura() {
   if (!_selectedProvider) return;
   var ref    = document.getElementById('bill-ref').value.trim();
-  var amount = parseFloat(document.getElementById('bill-amount').value);
+  var amount = parseAmount(document.getElementById('bill-amount').value);
   var err    = document.getElementById('bill-err');
   var btn    = document.getElementById('bill-btn');
   if (!ref) { err.textContent = 'Introduce el número de referencia'; return; }
@@ -3372,7 +3389,7 @@ function loadSeguros() {
 function doSiniestro() {
   var planId = document.getElementById('sin-plan-id').value;
   var desc   = document.getElementById('sin-desc').value.trim();
-  var amount = parseFloat(document.getElementById('sin-amount').value);
+  var amount = parseAmount(document.getElementById('sin-amount').value);
   var err = document.getElementById('sin-err');
   var btn = document.getElementById('sin-btn');
   if (!planId) { err.textContent = 'Selecciona el tipo de seguro'; return; }
@@ -3459,7 +3476,7 @@ function openInvestDetail(fundId) {
 
 function doInvertir() {
   if (!_investFundSelected) return;
-  var amount = parseFloat(document.getElementById('invest-amount').value);
+  var amount = parseAmount(document.getElementById('invest-amount').value);
   var err = document.getElementById('invest-err');
   var btn = document.getElementById('invest-btn');
   if (!amount || amount < (_investFundSelected.minInvest||5000)) {
@@ -3566,7 +3583,7 @@ function populateQRGen() {
 
 function doQRPay() {
   var dest   = document.getElementById('qr-email').value.trim();
-  var amount = parseFloat(document.getElementById('qr-amount').value);
+  var amount = parseAmount(document.getElementById('qr-amount').value);
   var err    = document.getElementById('qr-err');
   if (!dest) { err.textContent = 'Introduce el código IA o email del destinatario'; return; }
   if (!amount || amount <= 0) { err.textContent = 'Introduce un importe válido'; return; }
@@ -3672,7 +3689,7 @@ function selPosCur(cur) {
 }
 
 function genPosQR() {
-  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  var amount = parseAmount(document.getElementById('pos-amount').value) || 0;
   var qr = document.getElementById('pos-qr-wrap');
   var lbl = document.getElementById('pos-qr-label');
   if (!qr) return;
@@ -3687,7 +3704,7 @@ function genPosQR() {
 }
 
 function compartirPosQR() {
-  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  var amount = parseAmount(document.getElementById('pos-amount').value) || 0;
   if (!amount || !_user) { showToast('POS','Introduce un importe primero'); return; }
   var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
   if (navigator.share) navigator.share({ title: 'Cobrar '+amount+' '+_posCur, url: link }).catch(function(){});
@@ -3695,7 +3712,7 @@ function compartirPosQR() {
 }
 
 function copiarPosLink() {
-  var amount = parseFloat(document.getElementById('pos-amount').value) || 0;
+  var amount = parseAmount(document.getElementById('pos-amount').value) || 0;
   if (!_user) return;
   var link = 'https://christianboddien-source.github.io/innovaafric-prod/?pay=' + encodeURIComponent(_user.email) + '&amount=' + amount + '&cur=' + _posCur;
   navigator.clipboard.writeText(link).then(function(){ showToast('Enlace copiado','Comparte con tu cliente'); }).catch(function(){});
@@ -3761,7 +3778,7 @@ function doCrearTarjeta() {
 var _rates = { EUR_XAF: 655.957, USD_XAF: 608.5, XAF_EUR: 1/655.957, XAF_USD: 1/608.5, EUR_USD: 1.08, USD_EUR: 0.926 };
 
 function calcSend() {
-  var amt = parseFloat(document.getElementById('send-amount').value) || 0;
+  var amt = parseAmount(document.getElementById('send-amount').value) || 0;
   var cur = document.getElementById('send-cur').value;
   var destCur = cur === 'XAF' ? 'EUR' : 'XAF';
   document.getElementById('send-dest-cur').textContent = destCur;
@@ -3849,7 +3866,7 @@ function selectRecipient(payload) {
 }
 
 function doSend() {
-  var amt       = parseFloat(document.getElementById('send-amount').value);
+  var amt       = parseAmount(document.getElementById('send-amount').value);
   var cur       = document.getElementById('send-cur').value;
   var recipient = _sendRecipientId || document.getElementById('send-recipient').value.trim();
   var note      = document.getElementById('send-note').value.trim();
