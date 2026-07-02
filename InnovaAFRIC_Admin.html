@@ -5271,10 +5271,13 @@ select.form-input option{background:var(--s2)}
               <iframe id="web-preview-frame" style="width:100%;height:64vh;border:1px solid var(--border);border-radius:10px;background:#fff"></iframe>
             </div>
             <div>
-              <div style="display:flex;gap:6px;margin-bottom:12px">
-                <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos (fácil)</button>
+              <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+                <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos</button>
                 <button id="webtab-imagenes" onclick="webMode('imagenes')" class="topbar-btn btn-ghost" style="font-size:12px">🖼️ Imágenes</button>
-                <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código (avanzado)</button>
+                <button id="webtab-enlaces" onclick="webMode('enlaces')" class="topbar-btn btn-ghost" style="font-size:12px">🔗 Enlaces</button>
+                <button id="webtab-seo" onclick="webMode('seo')" class="topbar-btn btn-ghost" style="font-size:12px">🔎 SEO</button>
+                <button id="webtab-colores" onclick="webMode('colores')" class="topbar-btn btn-ghost" style="font-size:12px">🎨 Colores</button>
+                <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código</button>
               </div>
               <div id="webadmin-textos">
                 <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px">
@@ -5292,6 +5295,28 @@ select.form-input option{background:var(--s2)}
               <div id="webadmin-imagenes" style="display:none">
                 <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia una imagen pegando otra URL o subiendo un archivo desde tu ordenador. Lo verás en la vista previa; luego pulsa 🚀 Publicar.</div>
                 <div id="webadmin-imgs-list"><div class="td-empty">—</div></div>
+              </div>
+              <div id="webadmin-enlaces" style="display:none">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia a dónde llevan los botones y enlaces de la página. Edita la dirección y pulsa Cambiar; luego 🚀 Publicar.</div>
+                <div id="webadmin-links-list"><div class="td-empty">—</div></div>
+              </div>
+              <div id="webadmin-seo" style="display:none">
+                <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px">
+                  <div style="font-size:13px;font-weight:600;margin-bottom:4px">🔎 SEO — cómo se ve en Google y redes</div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:12px">El título y la descripción que salen en buscadores, y la imagen al compartir el enlace.</div>
+                  <label style="font-size:11px;color:var(--muted)">Título de la página</label>
+                  <input id="seo-title" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <label style="font-size:11px;color:var(--muted)">Descripción</label>
+                  <textarea id="seo-desc" rows="2" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px;resize:vertical"></textarea>
+                  <label style="font-size:11px;color:var(--muted)">Imagen al compartir (URL)</label>
+                  <input id="seo-ogimage" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <button class="topbar-btn btn-primary" style="font-size:13px" onclick="webSeoApply()">✅ Guardar SEO</button>
+                  <div id="seo-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+                </div>
+              </div>
+              <div id="webadmin-colores" style="display:none">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia los colores de la página. Pincha un color, elígelo y se actualiza en la vista previa. Luego 🚀 Publicar.</div>
+                <div id="webadmin-colors-list"><div class="td-empty">—</div></div>
               </div>
               <div id="webadmin-codigo" style="display:none">
                 <textarea id="webadmin-code" spellcheck="false" oninput="webPreviewDebounced()" style="width:100%;height:56vh;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:var(--mono,monospace);font-size:12px;line-height:1.5;white-space:pre;overflow:auto;resize:vertical"></textarea>
@@ -8478,13 +8503,71 @@ async function webRestore(sha,btn){
   if(typeof logAdminAction==='function')logAdminAction('web_restore','Restaurada '+_webCurrent.label);
 }
 function webMode(m){
-  document.getElementById('webadmin-textos').style.display=m==='textos'?'block':'none';
-  document.getElementById('webadmin-imagenes').style.display=m==='imagenes'?'block':'none';
-  document.getElementById('webadmin-codigo').style.display=m==='codigo'?'block':'none';
-  document.getElementById('webtab-textos').className='topbar-btn '+(m==='textos'?'btn-primary':'btn-ghost');
-  document.getElementById('webtab-imagenes').className='topbar-btn '+(m==='imagenes'?'btn-primary':'btn-ghost');
-  document.getElementById('webtab-codigo').className='topbar-btn '+(m==='codigo'?'btn-primary':'btn-ghost');
+  ['textos','imagenes','enlaces','seo','colores','codigo'].forEach(function(x){
+    var panel=document.getElementById('webadmin-'+x);if(panel)panel.style.display=(x===m)?'block':'none';
+    var tab=document.getElementById('webtab-'+x);if(tab)tab.className='topbar-btn '+(x===m?'btn-primary':'btn-ghost');
+  });
   if(m==='imagenes')webImages();
+  if(m==='enlaces')webLinks();
+  if(m==='seo')webSeoLoad();
+  if(m==='colores')webColores();
+}
+function webLinks(){
+  const box=document.getElementById('webadmin-links-list');
+  const code=document.getElementById('webadmin-code').value||'';
+  const items=[]; const seen={}; const re=/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi; let m;
+  while((m=re.exec(code))){ const href=m[1]; if(/^#|^javascript:/i.test(href))continue; if(seen[href])continue; seen[href]=1; items.push({href:href,txt:m[2].replace(/<[^>]+>/g,'').trim().slice(0,50)}); }
+  if(!items.length){box.innerHTML='<div class="td-empty" style="padding:20px">No encontré enlaces editables.</div>';return;}
+  box.innerHTML=items.map(function(it,i){const enc=encodeURIComponent(it.href);
+    return '<div style="border:1px solid var(--border);border-radius:10px;padding:9px;margin-bottom:8px"><div style="font-size:12px;font-weight:600;margin-bottom:4px">'+(it.txt||'(enlace)')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap"><input id="linkurl-'+i+'" value="'+it.href.replace(/"/g,'&quot;')+'" style="flex:1;min-width:140px;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:6px;padding:6px;font-size:11px"><button class="topbar-btn btn-primary" style="font-size:11px" onclick="webLinkChange('+i+',\''+enc+'\')">Cambiar</button></div></div>';
+  }).join('');
+}
+function webLinkChange(i, oldEnc){
+  const oldUrl=decodeURIComponent(oldEnc);
+  const nu=(document.getElementById('linkurl-'+i)||{}).value; if(!nu||!nu.trim())return;
+  const ta=document.getElementById('webadmin-code'); const n=nu.trim();
+  ta.value=ta.value.split('"'+oldUrl+'"').join('"'+n+'"').split("'"+oldUrl+"'").join("'"+n+"'");
+  webPreviewLive();
+  const st=document.getElementById('webadmin-status');if(st){st.style.color='var(--green)';st.textContent='✅ Enlace cambiado. Pulsa 🚀 Publicar.';}
+}
+function webSeoLoad(){
+  const code=document.getElementById('webadmin-code').value||'';
+  const t=code.match(/<title>([\s\S]*?)<\/title>/i);
+  const d=code.match(/<meta[^>]+name=["']description["'][^>]*content=["']([^"']*)["']/i);
+  const og=code.match(/<meta[^>]+property=["']og:image["'][^>]*content=["']([^"']*)["']/i);
+  document.getElementById('seo-title').value=t?t[1].trim():'';
+  document.getElementById('seo-desc').value=d?d[1]:'';
+  document.getElementById('seo-ogimage').value=og?og[1]:'';
+  document.getElementById('seo-status').textContent='';
+}
+function webSeoApply(){
+  const ta=document.getElementById('webadmin-code'); let code=ta.value;
+  const nt=document.getElementById('seo-title').value, nd=document.getElementById('seo-desc').value, nog=document.getElementById('seo-ogimage').value;
+  let changed=0;
+  if(/<title>[\s\S]*?<\/title>/i.test(code)){code=code.replace(/<title>[\s\S]*?<\/title>/i,function(){return '<title>'+nt+'</title>';});changed++;}
+  if(/(<meta[^>]+name=["']description["'][^>]*content=["'])[^"']*(["'])/i.test(code)){code=code.replace(/(<meta[^>]+name=["']description["'][^>]*content=["'])[^"']*(["'])/i,function(_,a,b){return a+nd+b;});changed++;}
+  if(/(<meta[^>]+property=["']og:image["'][^>]*content=["'])[^"']*(["'])/i.test(code)){code=code.replace(/(<meta[^>]+property=["']og:image["'][^>]*content=["'])[^"']*(["'])/i,function(_,a,b){return a+nog+b;});changed++;}
+  code=code.replace(/(<meta[^>]+property=["']og:description["'][^>]*content=["'])[^"']*(["'])/i,function(_,a,b){return a+nd+b;});
+  ta.value=code;webPreviewLive();
+  const st=document.getElementById('seo-status');st.style.color='var(--green)';st.textContent='✅ SEO actualizado ('+changed+' campos). Pulsa 🚀 Publicar.';
+}
+function webColores(){
+  const box=document.getElementById('webadmin-colors-list');
+  const code=document.getElementById('webadmin-code').value||'';
+  const vars=[]; const seen={}; const re=/(--[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})/g; let m;
+  while((m=re.exec(code))){ if(seen[m[1]])continue; seen[m[1]]=1; vars.push({name:m[1],value:m[2]}); }
+  if(!vars.length){box.innerHTML='<div class="td-empty" style="padding:20px">Esta página no tiene colores editables por variables.<br><span style="color:var(--muted)">Pídeme el cambio de color por el chat.</span></div>';return;}
+  box.innerHTML=vars.map(function(v){const hex=v.value.length===4?'#'+v.value[1]+v.value[1]+v.value[2]+v.value[2]+v.value[3]+v.value[3]:v.value.slice(0,7);
+    return '<div style="display:flex;gap:10px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:8px;margin-bottom:6px"><input type="color" value="'+hex+'" onchange="webColorChange(\''+encodeURIComponent(v.name)+'\',\''+encodeURIComponent(v.value)+'\',this.value)" style="width:38px;height:38px;border:none;background:none;cursor:pointer;padding:0"><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+v.name+'</div><div style="font-size:10px;color:var(--muted)">'+v.value+'</div></div></div>';
+  }).join('');
+}
+function webColorChange(nameEnc, oldEnc, newColor){
+  const name=decodeURIComponent(nameEnc), oldVal=decodeURIComponent(oldEnc);
+  const ta=document.getElementById('webadmin-code');
+  const re=new RegExp('('+name+'\\s*:\\s*)'+oldVal.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g');
+  ta.value=ta.value.replace(re,function(_,a){return a+newColor;});
+  webPreviewLive(); webColores();
+  const st=document.getElementById('webadmin-status');if(st){st.style.color='var(--green)';st.textContent='✅ Color cambiado. Pulsa 🚀 Publicar.';}
 }
 function webImages(){
   const box=document.getElementById('webadmin-imgs-list');
