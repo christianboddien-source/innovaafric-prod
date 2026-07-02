@@ -812,6 +812,14 @@ select.form-input option{background:var(--s2)}
         <span id="api-status-lbl">API</span>
       </div>
       <span class="refresh-countdown" id="refresh-countdown" onclick="triggerAutoRefresh()" title="Click para refrescar ahora">↻ 30s</span>
+      <select id="auto-refresh-sel" onchange="setAutoRefreshInterval(this.value)" class="refresh-countdown" title="Frecuencia de auto-actualización" style="cursor:pointer;padding:3px 4px">
+        <option value="30">30 s</option>
+        <option value="60">1 min</option>
+        <option value="300">5 min</option>
+        <option value="900">15 min</option>
+        <option value="1800">30 min</option>
+        <option value="0">Off</option>
+      </select>
       <span id="last-update" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
       <button class="topbar-btn btn-ghost" onclick="toggleTheme()" id="theme-btn" title="Modo claro/oscuro">🌙</button>
       <span id="role-badge" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.18);color:#818cf8;border:1px solid rgba(99,102,241,.3)"></span>
@@ -10696,13 +10704,22 @@ async function checkAPIHealth(){
 checkAPIHealth();
 setInterval(checkAPIHealth,60000);
 
-// ── AUTO REFRESH CON COUNTDOWN ────────────────────────────
-var AUTO_REFRESH_SEC=30;
+// ── AUTO REFRESH CON COUNTDOWN (intervalo configurable) ───
+var AUTO_REFRESH_SEC=parseInt(localStorage.getItem('ar_sec'),10);
+if(isNaN(AUTO_REFRESH_SEC))AUTO_REFRESH_SEC=30;
 var _arTimer=AUTO_REFRESH_SEC;
+function _arFmt(s){
+  if(s<=0)return '↻ off';
+  if(s<60)return '↻ '+s+'s';
+  var m=Math.floor(s/60),ss=s%60;
+  return '↻ '+m+':'+(ss<10?'0':'')+ss;
+}
+function _arHuman(s){ if(s<60)return s+' s'; return Math.floor(s/60)+' min'; }
 var _arInterval=setInterval(function(){
-  _arTimer--;
   var el=document.getElementById('refresh-countdown');
-  if(el)el.textContent='↻ '+_arTimer+'s';
+  if(AUTO_REFRESH_SEC<=0){ if(el)el.textContent='↻ off'; return; }
+  _arTimer--;
+  if(el)el.textContent=_arFmt(_arTimer);
   if(_arTimer<=0){
     _arTimer=AUTO_REFRESH_SEC;
     triggerAutoRefresh();
@@ -10712,6 +10729,23 @@ function triggerAutoRefresh(){
   _arTimer=AUTO_REFRESH_SEC;
   if(typeof refreshCurrent==='function')refreshCurrent();
 }
+function setAutoRefreshInterval(sec){
+  AUTO_REFRESH_SEC=parseInt(sec,10)||0;
+  localStorage.setItem('ar_sec',String(AUTO_REFRESH_SEC));
+  _arTimer=AUTO_REFRESH_SEC;
+  var el=document.getElementById('refresh-countdown');
+  if(el)el.textContent=_arFmt(AUTO_REFRESH_SEC>0?_arTimer:0);
+  var sel=document.getElementById('auto-refresh-sel');
+  if(sel)sel.value=String(AUTO_REFRESH_SEC);
+  if(typeof showToast==='function')showToast(AUTO_REFRESH_SEC>0?('⏱️ Auto-actualización cada '+_arHuman(AUTO_REFRESH_SEC)):'⏸️ Auto-actualización desactivada','success');
+}
+// sincronizar el selector y el chip con el valor guardado al cargar
+(function(){
+  var sel=document.getElementById('auto-refresh-sel');
+  if(sel)sel.value=String(AUTO_REFRESH_SEC);
+  var el=document.getElementById('refresh-countdown');
+  if(el)el.textContent=_arFmt(AUTO_REFRESH_SEC>0?_arTimer:0);
+})();
 
 // ── FAB BOTÓN FLOTANTE ────────────────────────────────────
 function toggleFab(){
