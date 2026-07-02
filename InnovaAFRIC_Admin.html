@@ -10854,7 +10854,11 @@ function exportRiderPaymentCSV(){
   if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
   downloadCSV([['Pedido','Rider','Importe','Fecha','Modo']].concat(rows),'pagos_riders_'+Date.now()+'.csv');
 }
-function exportRiderPaymentPDF(){showToast('📄 Generando PDF pagos riders...');setTimeout(function(){showToast('✅ PDF listo (próximamente)');},1200);}
+function exportRiderPaymentPDF(){
+  var rows=_pdfScrape('#tb-rider-payment',5);
+  if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
+  exportModulePDF('Pagos a Riders',['Pedido','Rider','Importe','Fecha','Modo'],rows,'pagos_riders');
+}
 function exportCircularesCSV(){
   var rows=[];
   document.querySelectorAll('#tb-circulares-admin tr').forEach(function(tr,i){
@@ -10865,7 +10869,11 @@ function exportCircularesCSV(){
   if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
   downloadCSV([['Circular','Barrio/País','Autorizado por','Unidades','Estado']].concat(rows),'circulares_'+Date.now()+'.csv');
 }
-function exportCircularesPDF(){showToast('📄 Generando PDF circulares...');setTimeout(function(){showToast('✅ PDF listo (próximamente)');},1200);}
+function exportCircularesPDF(){
+  var rows=_pdfScrape('#tb-circulares-admin',5);
+  if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
+  exportModulePDF('Circulares',['Circular','Barrio/País','Autorizado por','Unidades','Estado'],rows,'circulares');
+}
 
 function downloadCSV(rows,filename){
   var csv=rows.map(function(r){return r.map(function(c){return'"'+(String(c||'').replace(/"/g,'""'))+'"';}).join(',');}).join('\n');
@@ -11115,7 +11123,11 @@ async function loadComisionSummary(){
     +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--purple);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.rep_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">Representantes</div></div>'
     +'</div>';
 }
-function exportComisionPDF(){showToast('📄 Generando PDF...');setTimeout(()=>showToast('✅ PDF listo (próximamente)'),1200);}
+function exportComisionPDF(){
+  if(!_COM_HISTORY||!_COM_HISTORY.length){showToast('⚠️ Carga el historial primero','error');return;}
+  var rows=_COM_HISTORY.map(function(c){return [(c.created_at||c.date||'').substring(0,10),c.type||'',String(c.base_amount||''),String(c.hacienda||''),String(c.innova||''),String(c.rep||''),String(c.ref||c.id||'')];});
+  exportModulePDF('Comisiones',['Fecha','Tipo','Base','Hacienda','InnovaAFRIC','Representante','Ref'],rows,'comisiones');
+}
 
 // ── PAGOS RIDERS ──────────────────────────────────────────
 async function loadRiderPayment(){
@@ -11171,6 +11183,7 @@ async function loadRepresentantesV34(){
   const rows=(r&&(r.data||r.representatives))||[];
   const repsLocal=(ALL_USERS||[]).filter(u=>u.role==='representante');
   const all=rows.length?rows:repsLocal.map(u=>({id:u.id,name:u.full_name||u.email,country:u.country,city:u.city,units_balance:null,discount_pct:10,active:true}));
+  window._REPS_V34=all;
   document.getElementById('rp-total').textContent=all.length;
   document.getElementById('rp-countries').textContent=new Set(all.map(r=>r.country)).size;
   const totalUnits=all.reduce((s,r)=>s+(Number(r.units_balance)||0),0);
@@ -11241,8 +11254,25 @@ async function loadRepHistorial(){
     +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+(h.ref||h.id||'—').substring(0,12)+'</td>'
     +'</tr>').join('');
 }
-function exportRepresentantesPDF(){showToast('📄 Generando PDF global...');setTimeout(()=>showToast('✅ PDF listo (próximamente)'),1200);}
-function exportRepPDF(id){showToast('📄 Generando PDF rep '+id.substring(0,8)+'...');}
+function exportRepresentantesPDF(){
+  var rows=_pdfScrape('#tb-representantes',6);
+  if(!rows.length){showToast('⚠️ Sin datos para exportar','error');return;}
+  exportModulePDF('Representantes',['Representante','Ubicación','Usuarios','Unidades','Descuento','Estado'],rows,'representantes');
+}
+function exportRepPDF(id){
+  var rep=(window._REPS_V34||[]).find(function(r){return String(r.id)===String(id);});
+  if(!rep){showToast('⚠️ Representante no encontrado','error');return;}
+  var rows=[
+    ['Nombre',rep.name||'—'],
+    ['ID',String(rep.id||'')],
+    ['Ubicación',(rep.country||'—')+' · '+(rep.city||'—')],
+    ['Usuarios en su red',String(rep.users_count!=null?rep.users_count:'—')],
+    ['Unidades disponibles',String(rep.units_balance!=null?rep.units_balance:'—')],
+    ['Descuento',(rep.discount_pct||10)+'%'],
+    ['Estado',rep.active!==false?'Activo':'Inactivo']
+  ];
+  exportModulePDF('Representante · '+(rep.name||''),['Campo','Valor'],rows,'representante_'+String(id).substring(0,8));
+}
 
 // ── 2FA POR USUARIO ───────────────────────────────────────
 var _2FA_USERS=[];
@@ -15373,6 +15403,17 @@ function exportModulePDF(title, headers, rows, filename) {
   win.document.write(html);win.document.close();win.focus();
   setTimeout(function(){win.print();},400);
   toast('📄 PDF generado','success');
+}
+// Scraper común: extrae filas de una tabla saltando spinner/estado-vacío
+function _pdfScrape(sel,maxCols){
+  var rows=[];
+  document.querySelectorAll(sel+' tr').forEach(function(tr){
+    var tds=tr.querySelectorAll('td');
+    if(tds.length<2)return; // saltar filas de estado vacío / carga
+    var cells=[];tds.forEach(function(td){cells.push(td.textContent.trim().replace(/\s+/g,' '));});
+    rows.push(maxCols?cells.slice(0,maxCols):cells);
+  });
+  return rows;
 }
 
 // ── PDF BOTONES EN MÓDULOS ─────────────────────────────────────
