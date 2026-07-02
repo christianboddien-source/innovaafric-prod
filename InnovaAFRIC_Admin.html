@@ -5254,25 +5254,42 @@ select.form-input option{background:var(--s2)}
             </div>
           </div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:10px" id="webadmin-meta"></div>
-          <div style="display:flex;gap:6px;margin-bottom:12px">
-            <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos (fácil)</button>
-            <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código (avanzado)</button>
-          </div>
-          <div id="webadmin-textos">
-            <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px">
-              <div style="font-size:13px;font-weight:600;margin-bottom:4px">✏️ Cambiar un texto de la página</div>
-              <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Escribe el texto tal como aparece en la web y por qué cambiarlo. Pulsa Aplicar y luego 🚀 Publicar.</div>
-              <label style="font-size:11px;color:var(--muted)">Texto actual (lo que quieres cambiar)</label>
-              <input id="web-find" placeholder="Ej: Send money to Africa" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
-              <label style="font-size:11px;color:var(--muted)">Cambiar por</label>
-              <input id="web-replace" placeholder="Ej: Envía dinero a África" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
-              <button class="topbar-btn btn-primary" onclick="webReplace()" style="font-size:13px">✅ Aplicar cambio</button>
-              <div id="web-replace-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;flex-wrap:wrap">
+                <div style="font-size:12px;font-weight:600">👁 Vista previa en vivo</div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <select id="web-preview-mode" onchange="webPreviewLive()" style="background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:11px">
+                    <option value="changes">✏️ Con mis cambios</option>
+                    <option value="published">🌐 Publicado (en vivo)</option>
+                  </select>
+                  <button class="topbar-btn btn-ghost" onclick="webPreviewLive()" style="font-size:11px" title="Refrescar vista previa">↻</button>
+                </div>
+              </div>
+              <iframe id="web-preview-frame" style="width:100%;height:64vh;border:1px solid var(--border);border-radius:10px;background:#fff"></iframe>
             </div>
-            <div style="font-size:11px;color:var(--muted);margin-top:10px">💡 ¿Cambios más grandes (diseño, imágenes, secciones nuevas)? Dímelo por el chat y lo hago yo al instante.</div>
-          </div>
-          <div id="webadmin-codigo" style="display:none">
-            <textarea id="webadmin-code" spellcheck="false" style="width:100%;height:54vh;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:var(--mono,monospace);font-size:12px;line-height:1.5;white-space:pre;overflow:auto;resize:vertical"></textarea>
+            <div>
+              <div style="display:flex;gap:6px;margin-bottom:12px">
+                <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos (fácil)</button>
+                <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código (avanzado)</button>
+              </div>
+              <div id="webadmin-textos">
+                <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px">
+                  <div style="font-size:13px;font-weight:600;margin-bottom:4px">✏️ Cambiar un texto de la página</div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego 🚀 Publicar.</div>
+                  <label style="font-size:11px;color:var(--muted)">Texto actual (lo que quieres cambiar)</label>
+                  <input id="web-find" placeholder="Ej: Send money to Africa" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <label style="font-size:11px;color:var(--muted)">Cambiar por</label>
+                  <input id="web-replace" placeholder="Ej: Envía dinero a África" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <button class="topbar-btn btn-primary" onclick="webReplace()" style="font-size:13px">✅ Aplicar cambio</button>
+                  <div id="web-replace-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+                </div>
+                <div style="font-size:11px;color:var(--muted);margin-top:10px">💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.</div>
+              </div>
+              <div id="webadmin-codigo" style="display:none">
+                <textarea id="webadmin-code" spellcheck="false" oninput="webPreviewDebounced()" style="width:100%;height:56vh;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:var(--mono,monospace);font-size:12px;line-height:1.5;white-space:pre;overflow:auto;resize:vertical"></textarea>
+              </div>
+            </div>
           </div>
           <div id="webadmin-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
         </div>
@@ -8348,7 +8365,7 @@ async function openWebEditor(id){
   if(st)st.textContent='';
   const r=await rwAPI('GET','/webadmin/file?id='+encodeURIComponent(id));
   if(!r||!r.success){document.getElementById('webadmin-title').textContent='Error';if(st){st.style.color='var(--red)';st.textContent=(r&&r.error&&(r.error.message||r.error))||'No se pudo cargar';}return;}
-  _webCurrent={id:r.data.id,sha:r.data.sha,path:r.data.path,label:r.data.label};
+  _webCurrent={id:r.data.id,sha:r.data.sha,path:r.data.path,label:r.data.label,url:r.data.url};
   document.getElementById('webadmin-title').textContent='📄 '+r.data.label;
   document.getElementById('webadmin-meta').textContent=r.data.path+' · '+Number(r.data.size||0).toLocaleString('es',{useGrouping:'always'})+' caracteres';
   document.getElementById('webadmin-code').value=r.data.content;
@@ -8356,6 +8373,8 @@ async function openWebEditor(id){
   document.getElementById('web-find').value='';
   document.getElementById('web-replace').value='';
   document.getElementById('web-replace-status').textContent='';
+  var pm=document.getElementById('web-preview-mode');if(pm)pm.value='changes';
+  webPreviewLive();
 }
 async function publishWebFile(){
   if(!_webCurrent)return;
@@ -8375,6 +8394,26 @@ function webPreview(){
   const w=window.open('','_blank');
   if(w){w.document.open();w.document.write(code);w.document.close();}else{alert('Permite las ventanas emergentes para la vista previa.');}
 }
+function webPreviewLive(){
+  const iframe=document.getElementById('web-preview-frame');
+  if(!iframe||!_webCurrent)return;
+  const mode=(document.getElementById('web-preview-mode')||{}).value||'changes';
+  if(mode==='published'){
+    iframe.removeAttribute('srcdoc');
+    iframe.src=_webCurrent.url||'about:blank';
+  }else{
+    const code=document.getElementById('webadmin-code').value||'';
+    const base='<base href="'+(_webCurrent.url||'')+'">';
+    const html=/<head[^>]*>/i.test(code)?code.replace(/(<head[^>]*>)/i,'$1'+base):base+code;
+    iframe.removeAttribute('src');
+    iframe.srcdoc=html;
+  }
+}
+var _webPrevTimer=null;
+function webPreviewDebounced(){
+  clearTimeout(_webPrevTimer);
+  _webPrevTimer=setTimeout(function(){ if((document.getElementById('web-preview-mode')||{}).value!=='published') webPreviewLive(); },600);
+}
 function webMode(m){
   document.getElementById('webadmin-textos').style.display=m==='textos'?'block':'none';
   document.getElementById('webadmin-codigo').style.display=m==='codigo'?'block':'none';
@@ -8391,7 +8430,9 @@ function webReplace(){
   if(code.indexOf(find)===-1){st.style.color='var(--amber,#fbbf24)';st.textContent='⚠️ No encontré ese texto exacto. Revisa que esté igual (mayúsculas, tildes, espacios).';return;}
   const count=code.split(find).length-1;
   ta.value=code.split(find).join(repl);
-  st.style.color='var(--green)';st.textContent='✅ Cambiado en '+count+' sitio(s). Ahora pulsa 🚀 Publicar para que salga en la web.';
+  st.style.color='var(--green)';st.textContent='✅ Cambiado en '+count+' sitio(s). Míralo en la vista previa y pulsa 🚀 Publicar.';
+  var pm=document.getElementById('web-preview-mode');if(pm)pm.value='changes';
+  webPreviewLive();
 }
 async function revertWebFile(){
   if(!_webCurrent)return;
@@ -8400,7 +8441,7 @@ async function revertWebFile(){
   if(st){st.style.color='var(--muted)';st.textContent='Revirtiendo…';}
   const r=await rwAPI('POST','/webadmin/revert',{id:_webCurrent.id});
   if(!r||!r.success){if(st){st.style.color='var(--red)';st.textContent='❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo revertir');}return;}
-  if(r.data&&typeof r.data.content==='string')document.getElementById('webadmin-code').value=r.data.content;
+  if(r.data&&typeof r.data.content==='string'){document.getElementById('webadmin-code').value=r.data.content;webPreviewLive();}
   _webCurrent.sha=(r.data&&r.data.newSha)||_webCurrent.sha;
   if(st){st.style.color='var(--green)';st.textContent='✅ Revertido a la versión anterior. La web se actualizará en ~1 min.';}
   if(typeof logAdminAction==='function')logAdminAction('web_revert','Revertido '+_webCurrent.label);
