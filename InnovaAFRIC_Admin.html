@@ -641,6 +641,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('users',this)"><span class="ic">👥</span><span data-i18n="nav:users">Usuarios</span><span class="badge-count" id="sb-users-count">0</span></div>
     <div class="sb-link" onclick="nav('wallets',this)"><span class="ic">💳</span><span data-i18n="nav:wallets">Wallets</span></div>
     <div class="sb-link" onclick="nav('transactions',this)"><span class="ic">💸</span><span data-i18n="nav:transactions">Transacciones</span></div>
+    <div class="sb-link" onclick="nav('retiros',this)"><span class="ic">💵</span><span data-i18n="nav:retiros">Retiros</span><span class="badge-warn" id="sb-retiros-count" style="display:none">0</span></div>
     <div class="sb-group" data-i18n="grp:Operaciones">Operaciones</div>
     <div class="sb-link" onclick="nav('riders',this)"><span class="ic">🛵</span><span data-i18n="nav:riders">Riders</span></div>
     <div class="sb-link" onclick="nav('circulares',this)"><span class="ic">🏢</span><span data-i18n="nav:circulares">Circulares</span></div>
@@ -5230,6 +5231,24 @@ select.form-input option{background:var(--s2)}
 </div>
 <!-- ══ fin v27 ═══════════════════════════════════════════════ -->
 
+<div id="pg-retiros" style="display:none">
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title" style="font-size:15px">💵 <span data-i18n="ret:title">Retiros — solicitudes de cobro</span></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span id="ret-count" style="font-size:12px;color:var(--muted)"></span>
+        <button class="topbar-btn btn-ghost" onclick="loadRetiros()">↻</button>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:6px 0 12px" data-i18n="ret:help">Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.</div>
+    <div class="table-wrap" style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th data-i18n="ret:th_user">Usuario</th><th data-i18n="ret:th_amount">Importe</th><th data-i18n="ret:th_method">Método</th><th data-i18n="ret:th_dest">Destino</th><th data-i18n="ret:th_status">Estado</th><th data-i18n="ret:th_date">Fecha</th><th></th></tr></thead>
+        <tbody id="tb-retiros"><tr><td colspan="7" class="td-empty">—</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 <div id="pg-webs" style="display:none">
   <div class="card">
     <div class="card-head">
@@ -7520,6 +7539,7 @@ function nav(page,el){
   if(page==='circulares')loadCirculares();
   if(page==='orders')loadOrders();
   if(page==='kyc')loadKYC();
+  if(page==='retiros')loadRetiros();
   if(page==='webs')loadWebPages();
   if(page==='rates'){loadRatesEditor();loadCountryRates();}
   if(page==='support')loadSupport();
@@ -8379,6 +8399,45 @@ async function loadOrders(){
     <td style="font-size:11px;color:var(--muted)">${fmt_date(o.created_at)}</td>
   </tr>`).join(''):'<tr><td colspan="6" class="td-empty">Sin pedidos aún</td></tr>';
 }
+// ── Retiros — solicitudes de cobro (Railway) ──────────────
+async function loadRetiros(){
+  const tb=document.getElementById('tb-retiros');
+  const cnt=document.getElementById('ret-count');
+  const badge=document.getElementById('sb-retiros-count');
+  if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Cargando…</td></tr>';
+  const r=await rwAPI('GET','/admin/withdrawals');
+  if(!r||!r.success){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Error: '+((r&&r.error&&(r.error.message||r.error))||'sin respuesta')+'</td></tr>';return;}
+  const list=(r.data&&r.data.withdrawals)||[];
+  const pend=(r.data&&r.data.pending)||0;
+  if(cnt)cnt.textContent=list.length+' retiro(s) · '+pend+' pendiente(s)';
+  if(badge){if(pend>0){badge.style.display='inline';badge.textContent=pend;}else{badge.style.display='none';}}
+  const mLbl={bank_transfer:'🏦 Banco',authorized_point:'💵 Metálico',orange_money:'📱 Orange',mtn_money:'📱 MTN'};
+  const sLbl={processing:'⏳ Pendiente',pending:'⏳ Pendiente',completed:'✅ Pagado',failed:'❌ Fallido'};
+  if(!list.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">No hay retiros todavía.</td></tr>';return;}
+  tb.innerHTML=list.map(function(w){
+    const d=w.createdAt?new Date(w.createdAt).toLocaleString('es',{useGrouping:'always'}):'';
+    const paid=(w.status==='completed');
+    return '<tr>'
+      +'<td><div style="font-size:12px;font-weight:600">'+(w.name||'—')+'</div><div style="font-size:10px;color:var(--muted)">'+(w.email||'')+(w.role?' · '+w.role:'')+'</div></td>'
+      +'<td><b>'+Number(w.amount||0).toLocaleString('es',{useGrouping:'always'})+' '+(w.currency||'XAF')+'</b><div style="font-size:10px;color:var(--muted)">neto '+Number(w.amount_net||0).toLocaleString('es',{useGrouping:'always'})+'</div></td>'
+      +'<td style="font-size:12px">'+(mLbl[w.method]||w.method)+'</td>'
+      +'<td style="font-size:11px;color:var(--muted);max-width:180px;word-break:break-all">'+(w.destination||'—')+'</td>'
+      +'<td style="font-size:12px">'+(sLbl[w.status]||w.status)+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+d+'</td>'
+      +'<td>'+(paid?'—':'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">Marcar pagado</button>')+'</td>'
+      +'</tr>';
+  }).join('');
+}
+async function markRetiroPaid(id,btn){
+  if(!confirm('¿Marcar este retiro como PAGADO? Confirma que ya has hecho la transferencia al usuario.'))return;
+  if(btn){btn.textContent='…';btn.disabled=true;}
+  const r=await rwAPI('POST','/admin/withdrawals/'+id+'/complete',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));if(btn){btn.textContent='Marcar pagado';btn.disabled=false;}return;}
+  if(typeof toast==='function')toast('✅ Retiro marcado como pagado','success');
+  if(typeof logAdminAction==='function')logAdminAction('withdraw_paid','Retiro '+id+' pagado');
+  loadRetiros();
+}
+
 // ── Web-Admin: editar y publicar páginas ──────────────────
 var _webPages=[], _webCurrent=null;
 async function loadWebPages(){
@@ -13476,7 +13535,8 @@ var UI_TEXT_TR={
       'web:txt_new':'Cambiar por','web:txt_new_ph':'Ej: Envía dinero a África','web:txt_apply':'Aplicar cambio',
       'web:pm_changes':'✏️ Con mis cambios','web:pm_published':'🌐 Publicado (en vivo)','web:mobile':'Móvil','web:desktop':'PC',
       'web:big_note':'💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.',
-      'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas'},
+      'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas',
+      'nav:retiros':'Retiros','ret:title':'Retiros — solicitudes de cobro','ret:help':'Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.','ret:th_user':'Usuario','ret:th_amount':'Importe','ret:th_method':'Método','ret:th_dest':'Destino','ret:th_status':'Estado','ret:th_date':'Fecha'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
       'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code',
@@ -13486,7 +13546,8 @@ var UI_TEXT_TR={
       'web:txt_new':'Change to','web:txt_new_ph':'e.g. Envía dinero a África','web:txt_apply':'Apply change',
       'web:pm_changes':'✏️ With my changes','web:pm_published':'🌐 Published (live)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Bigger changes (design, images, sections)? Tell me in the chat and I do it instantly.',
-      'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages'},
+      'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages',
+      'nav:retiros':'Withdrawals','ret:title':'Withdrawals — payout requests','ret:help':'Payouts requested by circulars, reps, riders and merchants. Mark as paid once you have made the transfer.','ret:th_user':'User','ret:th_amount':'Amount','ret:th_method':'Method','ret:th_dest':'Destination','ret:th_status':'Status','ret:th_date':'Date'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
       'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code',
@@ -13496,7 +13557,8 @@ var UI_TEXT_TR={
       'web:txt_new':'Remplacer par','web:txt_new_ph':'Ex : Envía dinero a África','web:txt_apply':'Appliquer',
       'web:pm_changes':'✏️ Avec mes modifs','web:pm_published':'🌐 Publié (en direct)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Changements plus grands (design, images, sections) ? Dites-le moi dans le chat et je le fais aussitôt.',
-      'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages'}
+      'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages',
+      'nav:retiros':'Retraits','ret:title':'Retraits — demandes de paiement','ret:help':'Paiements demandés par circulars, représentants, riders et commerces. Marquez comme payé une fois le virement effectué.','ret:th_user':'Utilisateur','ret:th_amount':'Montant','ret:th_method':'Méthode','ret:th_dest':'Destination','ret:th_status':'Statut','ret:th_date':'Date'}
   };
   if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
 })();
