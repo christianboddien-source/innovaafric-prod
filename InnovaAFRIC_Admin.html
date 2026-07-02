@@ -1108,8 +1108,11 @@ select.form-input option{background:var(--s2)}
             <option value="">Todos los tipos</option>
             <option value="send">Envíos</option>
             <option value="p2p">P2P</option>
-            <option value="cashout">Reintegros</option>
+            <option value="cashout">Reintegros (a banco/metálico)</option>
+            <option value="traslados">Traslados (comisiones/unidades)</option>
             <option value="qr_pay">QR Pay</option>
+            <option value="topup">Recargas</option>
+            <option value="rider">Pagos a riders</option>
           </select>
           <button class="topbar-btn btn-ghost" onclick="exportTxnsCSV()">📥 CSV</button>
           <button class="topbar-btn btn-ghost" onclick="exportTxnsPDF()">📄 PDF</button>
@@ -8298,55 +8301,34 @@ async function doRechargeAll(){
 }
 
 // ── TRANSACTIONS ──────────────────────────────────────────
-async function loadTransactions(append){
-  if(!append){_txnOffset=0;ALL_TXNS=[];}
-  var PAGE=50;
-  try{
-    var type=(document.getElementById('filter-txn-type')||{}).value||'';
-    var q=SB.from('transactions').select('*,user:user_id(full_name,email)',{count:'exact'}).order('created_at',{ascending:false}).range(_txnOffset,_txnOffset+PAGE-1);
-    if(type)q=q.eq('type',type);
-    var res=await q;
-    var data=res.data||[];
-    var count=res.count||0;
-    _txnTotal=count;
-    if(!append)ALL_TXNS=data;
-    else ALL_TXNS=ALL_TXNS.concat(data);
-    _txnOffset+=data.length;
-    var lbl=document.getElementById('txns-count-label');
-    if(lbl)lbl.textContent=_txnTotal+' transacciones totales — mostrando '+ALL_TXNS.length;
-    var SP={completed:'green',pending:'amber',processing:'cyan',failed:'red'};
-    var tb=document.getElementById('tb-txns');
-    if(tb)tb.innerHTML=ALL_TXNS.length?ALL_TXNS.map(function(t){return'<tr>'
-      +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+(t.ref_code||'—').substring(0,14)+'</td>'
-      +'<td style="font-size:12px">'+(t.user?t.user.full_name||t.user.email:'—')+'</td>'
-      +'<td><span class="pill pill-cyan">'+t.type+'</span></td>'
-      +'<td style="font-family:var(--mono);font-weight:600">'+Number(t.amount).toFixed(2)+' '+t.currency+'</td>'
-      +'<td style="font-family:var(--mono);color:var(--green)">€'+Number(t.fee||0).toFixed(2)+'</td>'
-      +'<td><span class="pill pill-'+(SP[t.status]||'gray')+'">'+t.status+'</span></td>'
-      +'<td style="font-size:11px;color:var(--muted)">'+fmt_date(t.created_at)+'</td>'
-      +'</tr>';}).join(''):'<tr><td colspan="7" class="td-empty">Sin transacciones</td></tr>';
-    // Load-more button
-    var wrap=document.getElementById('txns-load-more-wrap');
-    if(!wrap){
-      var tbl=tb?tb.closest('table'):null;
-      if(tbl&&tbl.parentElement){
-        wrap=document.createElement('div');
-        wrap.id='txns-load-more-wrap';
-        wrap.style.cssText='text-align:center;padding:12px 0';
-        tbl.parentElement.insertBefore(wrap,tbl.nextSibling);
-      }
-    }
-    if(wrap){
-      if(ALL_TXNS.length<_txnTotal){
-        wrap.innerHTML='<button class="topbar-btn btn-ghost" onclick="loadTransactions(true)" style="font-size:13px;padding:8px 20px">Cargar más ('+(Number(_txnTotal-ALL_TXNS.length).toLocaleString())+' restantes)</button>';
-      }else{
-        wrap.innerHTML='<span style="font-size:12px;color:#64748b">Mostrando todas las transacciones</span>';
-      }
-    }
-  }catch(e){
-    var cont=document.getElementById('tb-txns');
-    showRetryBanner(cont?cont.closest('section,div[class]')||cont.parentElement:document.body,'Error al cargar transacciones: '+e.message,loadTransactions);
-  }
+async function loadTransactions(){
+  const tb=document.getElementById('tb-txns');
+  const lbl=document.getElementById('txns-count-label');
+  if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Cargando…</td></tr>';
+  const filt=(document.getElementById('filter-txn-type')||{}).value||'';
+  // El filtro del dashboard agrupa varios tipos de Railway
+  const groups={ send:['send'], p2p:['p2p'], cashout:['withdraw'], traslados:['circular_cashout','rep_cashout'], qr_pay:['qr_payment'], topup:['topup'], rider:['rider_payment','rider'] };
+  const allow=groups[filt]||null;
+  // Solo transacciones de DINERO (excluye eventos de auditoría: login, kyc, geo, sms…)
+  const moneyTypes=new Set(['send','p2p','withdraw','qr_payment','circular_cashout','rep_cashout','topup','rider_payment','rider','refund']);
+  const r=await rwAPI('GET','/admin/transactions?limit=500');
+  if(!r||!r.success){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Error: '+((r&&r.error&&(r.error.message||r.error))||'sin respuesta del servidor')+'</td></tr>';return;}
+  let items=((r.data&&r.data.items)||[]).filter(t=>moneyTypes.has(t.type));
+  if(allow){const s=new Set(allow);items=items.filter(t=>s.has(t.type));}
+  ALL_TXNS=items;
+  if(lbl)lbl.textContent=items.length+' transacciones'+(filt?' (filtradas)':'');
+  const SP={completed:'green',pending:'amber',processing:'cyan',failed:'red'};
+  const TL={send:'💸 Envío',p2p:'🤝 P2P',withdraw:'💵 Retiro',qr_payment:'📱 QR',circular_cashout:'🔄 Traslado circular',rep_cashout:'🔄 Traslado rep',topup:'⬆️ Recarga',rider_payment:'🛵 Pago rider',rider:'🛵 Rider',refund:'↩️ Reembolso'};
+  if(tb)tb.innerHTML=items.length?items.map(function(t){return '<tr>'
+    +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+String(t.id||'—').substring(0,14)+'</td>'
+    +'<td style="font-size:12px">'+(t.userName||t.userEmail||'—')+'</td>'
+    +'<td><span class="pill pill-cyan">'+(TL[t.type]||t.type)+'</span></td>'
+    +'<td style="font-family:var(--mono);font-weight:600">'+Number(t.amountSent||0).toLocaleString('es',{useGrouping:'always'})+' '+(t.currencySent||'XAF')+'</td>'
+    +'<td style="font-family:var(--mono);color:var(--green)">'+Number(t.fee||0).toLocaleString('es',{useGrouping:'always'})+'</td>'
+    +'<td><span class="pill pill-'+(SP[t.status]||'gray')+'">'+t.status+'</span></td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+fmt_date(t.createdAt)+'</td>'
+    +'</tr>';}).join(''):'<tr><td colspan="7" class="td-empty">Sin transacciones</td></tr>';
+  const wrap=document.getElementById('txns-load-more-wrap');if(wrap)wrap.innerHTML='';
 }
 async function viewUserTxns(uid,name){
   openModal('m-user-txns');
