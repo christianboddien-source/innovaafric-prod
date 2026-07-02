@@ -5322,6 +5322,7 @@ select.form-input option{background:var(--s2)}
               <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
                 <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 <span data-i18n="web:tab_texts">Textos</span></button>
                 <button id="webtab-imagenes" onclick="webMode('imagenes')" class="topbar-btn btn-ghost" style="font-size:12px">🖼️ <span data-i18n="web:tab_images">Imágenes</span></button>
+                <button id="webtab-bloques" onclick="webMode('bloques')" class="topbar-btn btn-ghost" style="font-size:12px">🧱 <span data-i18n="web:tab_blocks">Bloques</span></button>
                 <button id="webtab-enlaces" onclick="webMode('enlaces')" class="topbar-btn btn-ghost" style="font-size:12px">🔗 <span data-i18n="web:tab_links">Enlaces</span></button>
                 <button id="webtab-seo" onclick="webMode('seo')" class="topbar-btn btn-ghost" style="font-size:12px">🔎 <span data-i18n="web:tab_seo">SEO</span></button>
                 <button id="webtab-colores" onclick="webMode('colores')" class="topbar-btn btn-ghost" style="font-size:12px">🎨 <span data-i18n="web:tab_colors">Colores</span></button>
@@ -5343,6 +5344,10 @@ select.form-input option{background:var(--s2)}
               <div id="webadmin-imagenes" style="display:none">
                 <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia una imagen pegando otra URL o subiendo un archivo desde tu ordenador. Lo verás en la vista previa; luego pulsa 🚀 Publicar.</div>
                 <div id="webadmin-imgs-list"><div class="td-empty">—</div></div>
+              </div>
+              <div id="webadmin-bloques" style="display:none">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:10px" data-i18n="web:blocks_help">Añade secciones prediseñadas al final de la página. Luego edita sus textos en la pestaña 📝 Textos y pulsa 🚀 Publicar.</div>
+                <div id="webadmin-blocks-list"><div class="td-empty">—</div></div>
               </div>
               <div id="webadmin-enlaces" style="display:none">
                 <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia a dónde llevan los botones y enlaces de la página. Edita la dirección y pulsa Cambiar; luego 🚀 Publicar.</div>
@@ -8649,14 +8654,77 @@ async function webRestore(sha,btn){
   if(typeof logAdminAction==='function')logAdminAction('web_restore','Restaurada '+_webCurrent.label);
 }
 function webMode(m){
-  ['textos','imagenes','enlaces','seo','colores','codigo'].forEach(function(x){
+  ['textos','imagenes','bloques','enlaces','seo','colores','codigo'].forEach(function(x){
     var panel=document.getElementById('webadmin-'+x);if(panel)panel.style.display=(x===m)?'block':'none';
     var tab=document.getElementById('webtab-'+x);if(tab)tab.className='topbar-btn '+(x===m?'btn-primary':'btn-ghost');
   });
   if(m==='imagenes')webImages();
+  if(m==='bloques')webBlocks();
   if(m==='enlaces')webLinks();
   if(m==='seo')webSeoLoad();
   if(m==='colores')webColores();
+}
+// ── Bloques prediseñados (secciones de marca insertables) ──
+var WEB_BLOCKS=[
+  {id:'cta',name:'🎯 Llamada a la acción',html:
+'\n<section data-ia-block="cta" style="background:linear-gradient(135deg,#0e7490,#22d3ee);padding:64px 6%;text-align:center;color:#fff">\n'
++'  <h2 style="font-size:clamp(22px,3vw,34px);font-weight:900;margin:0 0 12px">Empieza hoy con InnovaAFRIC</h2>\n'
++'  <p style="font-size:16px;opacity:.92;max-width:640px;margin:0 auto 24px">Únete a miles de usuarios en toda África. Rápido, seguro y sin comisiones ocultas.</p>\n'
++'  <a href="#" style="display:inline-block;background:#fff;color:#0e7490;font-weight:800;text-decoration:none;padding:14px 28px;border-radius:12px">Crear cuenta gratis →</a>\n'
++'</section>\n'},
+  {id:'features',name:'⭐ Características (3 columnas)',html:
+'\n<section data-ia-block="features" style="background:#0b1220;padding:64px 6%;color:#e8eefc">\n'
++'  <h2 style="text-align:center;font-size:clamp(20px,2.6vw,30px);font-weight:900;margin:0 0 36px">Por qué elegirnos</h2>\n'
++'  <div style="display:flex;gap:20px;flex-wrap:wrap;max-width:1000px;margin:0 auto">\n'
++'    <div style="flex:1;min-width:220px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px"><div style="font-size:30px;margin-bottom:10px">⚡</div><h3 style="margin:0 0 8px;font-size:18px">Instantáneo</h3><p style="margin:0;font-size:14px;opacity:.7">Transferencias en segundos, 24/7.</p></div>\n'
++'    <div style="flex:1;min-width:220px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px"><div style="font-size:30px;margin-bottom:10px">🔒</div><h3 style="margin:0 0 8px;font-size:18px">Seguro</h3><p style="margin:0;font-size:14px;opacity:.7">Cifrado de nivel bancario y KYC.</p></div>\n'
++'    <div style="flex:1;min-width:220px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px"><div style="font-size:30px;margin-bottom:10px">🌍</div><h3 style="margin:0 0 8px;font-size:18px">Panafricano</h3><p style="margin:0;font-size:14px;opacity:.7">Presente en 8+ países de África.</p></div>\n'
++'  </div>\n</section>\n'},
+  {id:'faq',name:'❓ Preguntas frecuentes',html:
+'\n<section data-ia-block="faq" style="background:#0f1626;padding:64px 6%;color:#e8eefc">\n'
++'  <h2 style="text-align:center;font-size:clamp(20px,2.6vw,30px);font-weight:900;margin:0 0 28px">Preguntas frecuentes</h2>\n'
++'  <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px">\n'
++'    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px"><h3 style="margin:0 0 6px;font-size:16px">¿Cuánto cuesta abrir una cuenta?</h3><p style="margin:0;font-size:14px;opacity:.7">Nada. Abrir tu cuenta es totalmente gratis y solo tarda 2 minutos.</p></div>\n'
++'    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px"><h3 style="margin:0 0 6px;font-size:16px">¿En cuánto tiempo llega el dinero?</h3><p style="margin:0;font-size:14px;opacity:.7">Las transferencias son instantáneas en la mayoría de casos.</p></div>\n'
++'    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px"><h3 style="margin:0 0 6px;font-size:16px">¿Es seguro?</h3><p style="margin:0;font-size:14px;opacity:.7">Sí. Usamos cifrado de nivel bancario y verificación KYC en cada cuenta.</p></div>\n'
++'  </div>\n</section>\n'},
+  {id:'testimonial',name:'💬 Testimonio',html:
+'\n<section data-ia-block="testimonial" style="background:#0b1220;padding:64px 6%;text-align:center;color:#e8eefc">\n'
++'  <div style="font-size:40px;color:#22d3ee;line-height:1">“</div>\n'
++'  <p style="font-size:clamp(16px,2.2vw,22px);font-weight:600;max-width:720px;margin:0 auto 18px">Con InnovaAFRIC envío dinero a mi familia en segundos y sin comisiones sorpresa. Ha cambiado mi forma de gestionar mi negocio.</p>\n'
++'  <div style="font-size:14px;opacity:.7">— Amina D., Yaundé</div>\n'
++'</section>\n'},
+  {id:'contact',name:'✉️ Contacto',html:
+'\n<section data-ia-block="contact" style="background:linear-gradient(135deg,#0f1626,#132038);padding:56px 6%;text-align:center;color:#e8eefc">\n'
++'  <h2 style="font-size:clamp(20px,2.6vw,28px);font-weight:900;margin:0 0 10px">¿Necesitas ayuda?</h2>\n'
++'  <p style="font-size:15px;opacity:.75;margin:0 0 20px">Nuestro equipo te responde en menos de 24 horas.</p>\n'
++'  <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">\n'
++'    <a href="mailto:soporte@innovaafric.com" style="background:#22d3ee;color:#04222b;font-weight:800;text-decoration:none;padding:12px 22px;border-radius:10px">✉️ soporte@innovaafric.com</a>\n'
++'    <a href="#" style="background:rgba(255,255,255,.06);color:#e8eefc;text-decoration:none;padding:12px 22px;border-radius:10px;border:1px solid rgba(255,255,255,.15)">💬 WhatsApp</a>\n'
++'  </div>\n</section>\n'},
+  {id:'spacer',name:'␣ Separador (espacio)',html:'\n<section data-ia-block="spacer" style="height:60px"></section>\n'}
+];
+function webBlocks(){
+  var box=document.getElementById('webadmin-blocks-list');
+  if(!box)return;
+  box.innerHTML=WEB_BLOCKS.map(function(b){
+    return '<div style="border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px">'
+      +'<div style="font-size:13px;font-weight:600">'+b.name+'</div>'
+      +'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="webInsertBlock(\''+b.id+'\')">➕ Insertar</button></div>';
+  }).join('');
+}
+function webInsertBlock(id){
+  var b=WEB_BLOCKS.find(function(x){return x.id===id;});
+  if(!b)return;
+  var ta=document.getElementById('webadmin-code'); if(!ta)return;
+  var code=ta.value||'';
+  var idx=code.search(/<\/body\s*>/i);
+  if(idx>=0){ code=code.slice(0,idx)+b.html+code.slice(idx); }
+  else { code=code+b.html; }
+  ta.value=code;
+  if(typeof webPreviewLive==='function')webPreviewLive();
+  var st=document.getElementById('webadmin-status');
+  if(st)st.textContent='🧱 Bloque añadido al final de la página. Míralo en la vista previa; edita sus textos en 📝 Textos y pulsa 🚀 Publicar.';
 }
 function webLinks(){
   const box=document.getElementById('webadmin-links-list');
@@ -13684,7 +13752,7 @@ var UI_TEXT_TR={
   var W={
     es:{'nav:webs':'Webs','web:title':'Web-Admin — editar y publicar tus páginas',
       'web:close':'Cerrar','web:history':'Historial','web:download':'Descargar','web:revert':'Revertir','web:publish':'Publicar',
-      'web:tab_texts':'Textos','web:tab_images':'Imágenes','web:tab_links':'Enlaces','web:tab_seo':'SEO','web:tab_colors':'Colores','web:tab_code':'Código',
+      'web:tab_texts':'Textos','web:tab_images':'Imágenes','web:tab_links':'Enlaces','web:tab_seo':'SEO','web:tab_colors':'Colores','web:tab_code':'Código','web:tab_blocks':'Bloques','web:blocks_help':'Añade secciones prediseñadas al final de la página. Luego edita sus textos en la pestaña 📝 Textos y pulsa 🚀 Publicar.',
       'web:preview_live':'Vista previa en vivo','web:txt_h':'Cambiar un texto de la página',
       'web:txt_help':'Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego Publicar.',
       'web:txt_current':'Texto actual (lo que quieres cambiar)','web:txt_current_ph':'Ej: Send money to Africa',
@@ -13706,7 +13774,7 @@ var UI_TEXT_TR={
       'ret:mark_paid':'Marcar pagado','ret:none':'No hay retiros todavía.','ret:loading':'Cargando…','ret:count':'retiro(s)','ret:pending':'pendiente(s)'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
-      'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code',
+      'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code','web:tab_blocks':'Blocks','web:blocks_help':'Add ready-made sections to the end of the page. Then edit their text in the 📝 Texts tab and click 🚀 Publish.',
       'web:preview_live':'Live preview','web:txt_h':'Change a text on the page',
       'web:txt_help':'Type the text exactly as it appears on the site. Click Apply (you will see it in the preview), then Publish.',
       'web:txt_current':'Current text (what you want to change)','web:txt_current_ph':'e.g. Send money to Africa',
@@ -13728,7 +13796,7 @@ var UI_TEXT_TR={
       'ret:mark_paid':'Mark paid','ret:none':'No withdrawals yet.','ret:loading':'Loading…','ret:count':'withdrawal(s)','ret:pending':'pending'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
-      'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code',
+      'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code','web:tab_blocks':'Blocs','web:blocks_help':'Ajoutez des sections prédéfinies à la fin de la page. Modifiez ensuite leurs textes dans l\'onglet 📝 Textes et cliquez sur 🚀 Publier.',
       'web:preview_live':'Aperçu en direct','web:txt_h':'Modifier un texte de la page',
       'web:txt_help':'Écrivez le texte tel qu\'il apparaît sur le site. Cliquez sur Appliquer (visible dans l\'aperçu), puis Publier.',
       'web:txt_current':'Texte actuel (à modifier)','web:txt_current_ph':'Ex : Send money to Africa',
