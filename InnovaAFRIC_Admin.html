@@ -5239,11 +5239,11 @@ select.form-input option{background:var(--s2)}
     <div id="webadmin-token-warn" style="display:none;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);color:var(--amber);border-radius:10px;padding:10px 14px;font-size:13px;margin:8px 0 12px"></div>
     <div style="display:grid;grid-template-columns:270px 1fr;gap:14px">
       <div>
-        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Páginas</div>
-        <div id="webadmin-list"><div class="td-empty">Pulsa Actualizar…</div></div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px" data-i18n="web:pages_label">Páginas</div>
+        <div id="webadmin-list"><div class="td-empty" data-i18n="web:list_hint">Pulsa Actualizar…</div></div>
       </div>
       <div>
-        <div id="webadmin-empty" class="td-empty" style="padding:50px 20px">Elige una página de la izquierda para editar su código.</div>
+        <div id="webadmin-empty" class="td-empty" style="padding:50px 20px" data-i18n="web:empty">Elige una página de la izquierda para editar su código.</div>
         <div id="webadmin-editor" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
             <div style="display:flex;align-items:center;gap:10px;min-width:0">
@@ -5264,10 +5264,10 @@ select.form-input option{background:var(--s2)}
                 <div style="font-size:12px;font-weight:600">👁 <span data-i18n="web:preview_live">Vista previa en vivo</span></div>
                 <div style="display:flex;gap:6px;align-items:center">
                   <select id="web-preview-mode" onchange="webPreviewLive()" style="background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:11px">
-                    <option value="changes">✏️ Con mis cambios</option>
-                    <option value="published">🌐 Publicado (en vivo)</option>
+                    <option value="changes" data-i18n="web:pm_changes">✏️ Con mis cambios</option>
+                    <option value="published" data-i18n="web:pm_published">🌐 Publicado (en vivo)</option>
                   </select>
-                  <button id="web-mobile-btn" class="topbar-btn btn-ghost" onclick="webToggleMobile()" style="font-size:11px" title="Ver en móvil / PC">📱 Móvil</button>
+                  <button id="web-mobile-btn" class="topbar-btn btn-ghost" onclick="webToggleMobile()" style="font-size:11px" title="Ver en móvil / PC">📱 <span id="web-mobile-lbl" data-i18n="web:mobile">Móvil</span></button>
                   <button class="topbar-btn btn-ghost" onclick="webPreviewLive()" style="font-size:11px" title="Refrescar vista previa">↻</button>
                 </div>
               </div>
@@ -5293,7 +5293,7 @@ select.form-input option{background:var(--s2)}
                   <button class="topbar-btn btn-primary" onclick="webReplace()" style="font-size:13px">✅ <span data-i18n="web:txt_apply">Aplicar cambio</span></button>
                   <div id="web-replace-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
                 </div>
-                <div style="font-size:11px;color:var(--muted);margin-top:10px">💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:10px" data-i18n="web:big_note">💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.</div>
               </div>
               <div id="webadmin-imagenes" style="display:none">
                 <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia una imagen pegando otra URL o subiendo un archivo desde tu ordenador. Lo verás en la vista previa; luego pulsa 🚀 Publicar.</div>
@@ -8461,7 +8461,9 @@ function webToggleMobile(){
   _webMobile=!_webMobile;
   const f=document.getElementById('web-preview-frame');
   if(f){f.style.width=_webMobile?'390px':'100%';f.style.margin=_webMobile?'0 auto':'0';f.style.display='block';}
-  const b=document.getElementById('web-mobile-btn');if(b)b.textContent=_webMobile?'🖥️ PC':'📱 Móvil';
+  const b=document.getElementById('web-mobile-btn');const lbl=document.getElementById('web-mobile-lbl');
+  if(b&&b.childNodes[0])b.childNodes[0].nodeValue=_webMobile?'🖥️ ':'📱 ';
+  if(lbl){lbl.setAttribute('data-i18n',_webMobile?'web:desktop':'web:mobile');lbl.textContent=(typeof _i18n==='function')?_i18n(_webMobile?'web:desktop':'web:mobile'):(_webMobile?'PC':'Móvil');}
 }
 function webDownload(){
   if(!_webCurrent)return;
@@ -13471,21 +13473,30 @@ var UI_TEXT_TR={
       'web:preview_live':'Vista previa en vivo','web:txt_h':'Cambiar un texto de la página',
       'web:txt_help':'Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego Publicar.',
       'web:txt_current':'Texto actual (lo que quieres cambiar)','web:txt_current_ph':'Ej: Send money to Africa',
-      'web:txt_new':'Cambiar por','web:txt_new_ph':'Ej: Envía dinero a África','web:txt_apply':'Aplicar cambio'},
+      'web:txt_new':'Cambiar por','web:txt_new_ph':'Ej: Envía dinero a África','web:txt_apply':'Aplicar cambio',
+      'web:pm_changes':'✏️ Con mis cambios','web:pm_published':'🌐 Publicado (en vivo)','web:mobile':'Móvil','web:desktop':'PC',
+      'web:big_note':'💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.',
+      'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
       'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code',
       'web:preview_live':'Live preview','web:txt_h':'Change a text on the page',
       'web:txt_help':'Type the text exactly as it appears on the site. Click Apply (you will see it in the preview), then Publish.',
       'web:txt_current':'Current text (what you want to change)','web:txt_current_ph':'e.g. Send money to Africa',
-      'web:txt_new':'Change to','web:txt_new_ph':'e.g. Envía dinero a África','web:txt_apply':'Apply change'},
+      'web:txt_new':'Change to','web:txt_new_ph':'e.g. Envía dinero a África','web:txt_apply':'Apply change',
+      'web:pm_changes':'✏️ With my changes','web:pm_published':'🌐 Published (live)','web:mobile':'Mobile','web:desktop':'PC',
+      'web:big_note':'💡 Bigger changes (design, images, sections)? Tell me in the chat and I do it instantly.',
+      'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
       'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code',
       'web:preview_live':'Aperçu en direct','web:txt_h':'Modifier un texte de la page',
       'web:txt_help':'Écrivez le texte tel qu\'il apparaît sur le site. Cliquez sur Appliquer (visible dans l\'aperçu), puis Publier.',
       'web:txt_current':'Texte actuel (à modifier)','web:txt_current_ph':'Ex : Send money to Africa',
-      'web:txt_new':'Remplacer par','web:txt_new_ph':'Ex : Envía dinero a África','web:txt_apply':'Appliquer'}
+      'web:txt_new':'Remplacer par','web:txt_new_ph':'Ex : Envía dinero a África','web:txt_apply':'Appliquer',
+      'web:pm_changes':'✏️ Avec mes modifs','web:pm_published':'🌐 Publié (en direct)','web:mobile':'Mobile','web:desktop':'PC',
+      'web:big_note':'💡 Changements plus grands (design, images, sections) ? Dites-le moi dans le chat et je le fais aussitôt.',
+      'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages'}
   };
   if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
 })();
