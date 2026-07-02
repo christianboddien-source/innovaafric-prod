@@ -1133,6 +1133,7 @@ setInterval(tick,1000);
 // ── LANGUAGE ──
 var XS_TR={
   es:{
+    ck_txt:'🍪 Usamos cookies para personalizar tu experiencia de compra. <a href="#" style="color:#FF7A00;text-decoration:underline;">Política de privacidad</a>.', ck_dec:'Rechazar', ck_acc:'Aceptar ✓',
     topbar:'Bienvenido a XenderShop — Compra global, paga en Africa 🌍 &nbsp;|&nbsp; Envío gratis en pedidos +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Descarga la app</a>',
     nav_account:'Cuenta', nav_cart:'Carrito', nav_wishlist:'Deseos',
     search_ph:'Buscar en millones de productos…',
@@ -1192,6 +1193,7 @@ var XS_TR={
     sold_lbl:'vendidos', ver_mas:'Ver más →', ship_plus:'✈ Envío gratis +'
   },
   en:{
+    ck_txt:'🍪 We use cookies to personalize your shopping experience. <a href="#" style="color:#FF7A00;text-decoration:underline;">Privacy Policy</a>.', ck_dec:'Decline', ck_acc:'Accept ✓',
     topbar:'Welcome to XenderShop — Shop globally, pay in Africa 🌍 &nbsp;|&nbsp; Free shipping on orders +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Download the app</a>',
     nav_account:'Account', nav_cart:'Cart', nav_wishlist:'Wishlist',
     search_ph:'Search in millions of products…',
@@ -1251,6 +1253,7 @@ var XS_TR={
     sold_lbl:'sold', ver_mas:'View more →', ship_plus:'✈ Free shipping +'
   },
   fr:{
+    ck_txt:'🍪 Nous utilisons des cookies pour personnaliser votre expérience d\'achat. <a href="#" style="color:#FF7A00;text-decoration:underline;">Politique de confidentialité</a>.', ck_dec:'Refuser', ck_acc:'Accepter ✓',
     topbar:'Bienvenue sur XenderShop — Achetez global, payez en Afrique 🌍 &nbsp;|&nbsp; Livraison gratuite dès +€30 &nbsp;|&nbsp; <a href="#" style="color:#ff6a3d;">Télécharger l\'app</a>',
     nav_account:'Compte', nav_cart:'Panier', nav_wishlist:'Favoris',
     search_ph:'Rechercher dans des millions de produits…',
@@ -1505,10 +1508,10 @@ async function nlSubmit(e){e.preventDefault();var em=document.getElementById('nl
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(26,26,26,0.97);backdrop-filter:blur(12px);padding:14px 5%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:2px solid #FF4010;">
-  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;">🍪 Usamos cookies para personalizar tu experiencia de compra. <a href="#" style="color:#FF7A00;text-decoration:underline;">Política de privacidad</a>.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.75);margin:0;max-width:700px;" data-i18n="ck_txt">🍪 Usamos cookies para personalizar tu experiencia de compra. <a href="#" style="color:#FF7A00;text-decoration:underline;">Política de privacidad</a>.</p>
   <div style="display:flex;gap:10px;flex-shrink:0;">
-    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;">Rechazar</button>
-    <button onclick="cookieAccept()" style="background:#FF4010;border:none;color:#fff;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar ✓</button>
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:6px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;" data-i18n="ck_dec">Rechazar</button>
+    <button onclick="cookieAccept()" style="background:#FF4010;border:none;color:#fff;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;" data-i18n="ck_acc">Aceptar ✓</button>
   </div>
 </div>
 

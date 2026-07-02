@@ -1260,6 +1260,8 @@ function toggleFaq(header){
 <script>
 const TR = {
   es:{
+    dl_h:'Gestiona tu tienda desde el móvil', dl_sub:'Panel de vendedor completo en iOS y Android.',
+    ck_txt:'🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#E0921A;text-decoration:underline;">Política de Privacidad</a>.', ck_dec:'Rechazar', ck_acc:'Aceptar ✓',
     announce_text:'XenderBigShop — Abre tu restaurante, farmacia o boutique online en 48 horas · Marketplace B2B #1 de África',
     nav_biz:'Tipos de Negocio', nav_how:'Cómo funciona', nav_feat:'Funciones', nav_plans:'Planes', nav_eco:'Ecosistema', nav_start:'Abrir mi Tienda',
     hero_badge:'MARKETPLACE MULTI-VENDOR · AFRICA',
@@ -1340,6 +1342,8 @@ const TR = {
     foot_copy:'© 2026 XenderBigShop · Ecosistema InnovaAFRIC'
   },
   en:{
+    dl_h:'Manage your store from your phone', dl_sub:'Full seller dashboard on iOS and Android.',
+    ck_txt:'🍪 We use cookies to improve your experience. <a href="#" style="color:#E0921A;text-decoration:underline;">Privacy Policy</a>.', ck_dec:'Decline', ck_acc:'Accept ✓',
     announce_text:"XenderBigShop — Open your restaurant, pharmacy or boutique online in 48 hours · Africa's #1 B2B Marketplace",
     nav_biz:'Business Types', nav_how:'How it works', nav_feat:'Features', nav_plans:'Plans', nav_eco:'Ecosystem', nav_start:'Open My Store',
     hero_badge:'MULTI-VENDOR MARKETPLACE · AFRICA',
@@ -1420,6 +1424,8 @@ const TR = {
     foot_copy:'© 2026 XenderBigShop · InnovaAFRIC Ecosystem'
   },
   fr:{
+    dl_h:'Gérez votre boutique depuis le mobile', dl_sub:'Tableau de bord vendeur complet sur iOS et Android.',
+    ck_txt:'🍪 Nous utilisons des cookies pour améliorer votre expérience. <a href="#" style="color:#E0921A;text-decoration:underline;">Politique de confidentialité</a>.', ck_dec:'Refuser', ck_acc:'Accepter ✓',
     announce_text:"XenderBigShop — Ouvrez votre restaurant, pharmacie ou boutique en ligne en 48h · Marketplace B2B #1 d'Afrique",
     nav_biz:"Types d'Entreprise", nav_how:'Comment ça marche', nav_feat:'Fonctionnalités', nav_plans:'Plans', nav_eco:'Écosystème', nav_start:'Ouvrir ma Boutique',
     hero_badge:'MARKETPLACE MULTI-VENDEUR · AFRIQUE',
@@ -1527,8 +1533,8 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 <section style="background:linear-gradient(135deg,#3D1C00,#6B3A00);padding:56px 6%;text-align:center;">
   <div style="max-width:700px;margin:0 auto;">
     <div style="font-size:28px;margin-bottom:12px;">📱</div>
-    <h2 style="font-size:clamp(18px,2.5vw,26px);font-weight:900;color:#FFF8EE;margin-bottom:10px;">Gestiona tu tienda desde el móvil</h2>
-    <p style="font-size:14px;color:rgba(255,248,238,0.55);margin-bottom:24px;">Panel de vendedor completo en iOS y Android.</p>
+    <h2 style="font-size:clamp(18px,2.5vw,26px);font-weight:900;color:#FFF8EE;margin-bottom:10px;" data-i18n="dl_h">Gestiona tu tienda desde el móvil</h2>
+    <p style="font-size:14px;color:rgba(255,248,238,0.55);margin-bottom:24px;" data-i18n="dl_sub">Panel de vendedor completo en iOS y Android.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
       <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(224,146,26,0.3);border-radius:12px;padding:12px 22px;text-decoration:none;color:#FFF8EE;"><span style="font-size:22px;">🍎</span><div style="text-align:left;"><div style="font-size:9px;color:rgba(255,248,238,0.4);">Download on the</div><div style="font-size:14px;font-weight:800;">App Store</div></div></a>
       <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(224,146,26,0.3);border-radius:12px;padding:12px 22px;text-decoration:none;color:#FFF8EE;"><span style="font-size:22px;">🤖</span><div style="text-align:left;"><div style="font-size:9px;color:rgba(255,248,238,0.4);">Get it on</div><div style="font-size:14px;font-weight:800;">Google Play</div></div></a>
@@ -1538,10 +1544,10 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(61,28,0,0.97);backdrop-filter:blur(12px);padding:14px 5%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:2px solid #E0921A;">
-  <p style="font-size:13px;color:rgba(255,248,238,0.75);margin:0;max-width:700px;">🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#E0921A;text-decoration:underline;">Política de Privacidad</a>.</p>
+  <p style="font-size:13px;color:rgba(255,248,238,0.75);margin:0;max-width:700px;" data-i18n="ck_txt">🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#E0921A;text-decoration:underline;">Política de Privacidad</a>.</p>
   <div style="display:flex;gap:10px;">
-    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;">Rechazar</button>
-    <button onclick="cookieAccept()" style="background:#E0921A;border:none;color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar ✓</button>
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;" data-i18n="ck_dec">Rechazar</button>
+    <button onclick="cookieAccept()" style="background:#E0921A;border:none;color:#fff;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;" data-i18n="ck_acc">Aceptar ✓</button>
   </div>
 </div>
 

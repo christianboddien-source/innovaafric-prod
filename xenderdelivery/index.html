@@ -914,6 +914,8 @@ function rdCalc(v){
 <script>
 const TR={
   es:{
+    dl_h:'Descarga XenderDelivery App', dl_sub:'Rastrea tus pedidos o conviértete en rider — todo desde tu móvil.',
+    ck_txt:'🍪 Cookies para mejorar tu experiencia. <a href="#" style="color:#F59E0B;text-decoration:underline;">Política de Privacidad</a>.', ck_dec:'Rechazar', ck_acc:'Aceptar ✓',
     nav_feat:"Servicios",nav_zones:"Zonas",nav_riders:"Riders",nav_eco:"Ecosistema",nav_join:"Ser Rider",
     hero_badge:"DELIVERY · AFRICA",hero_h1:"Entrega <em>rápida</em> en toda África",
     hero_p:"XenderDelivery conecta a comercios con una red de riders verificados. Entregas el mismo día, seguimiento en tiempo real.",
@@ -953,6 +955,8 @@ const TR={
     cta_btn1:"Empezar a Enviar",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
   },
   en:{
+    dl_h:'Download the XenderDelivery App', dl_sub:'Track your orders or become a rider — all from your phone.',
+    ck_txt:'🍪 Cookies to improve your experience. <a href="#" style="color:#F59E0B;text-decoration:underline;">Privacy Policy</a>.', ck_dec:'Decline', ck_acc:'Accept ✓',
     nav_feat:"Services",nav_zones:"Zones",nav_riders:"Riders",nav_eco:"Ecosystem",nav_join:"Become Rider",
     hero_badge:"DELIVERY · AFRICA",hero_h1:"<em>Fast</em> delivery across Africa",
     hero_p:"XenderDelivery connects businesses with a network of verified riders. Same-day delivery, real-time tracking.",
@@ -992,6 +996,8 @@ const TR={
     cta_btn1:"Start Shipping",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
   },
   fr:{
+    dl_h:'Téléchargez l\'app XenderDelivery', dl_sub:'Suivez vos commandes ou devenez rider — tout depuis votre mobile.',
+    ck_txt:'🍪 Cookies pour améliorer votre expérience. <a href="#" style="color:#F59E0B;text-decoration:underline;">Politique de confidentialité</a>.', ck_dec:'Refuser', ck_acc:'Accepter ✓',
     nav_feat:"Services",nav_zones:"Zones",nav_riders:"Riders",nav_eco:"Écosystème",nav_join:"Devenir Rider",
     hero_badge:"LIVRAISON · AFRIQUE",hero_h1:"Livraison <em>rapide</em> partout en Afrique",
     hero_p:"XenderDelivery connecte les commerces à un réseau de riders vérifiés. Livraison le jour même, suivi en temps réel.",
@@ -1081,8 +1087,8 @@ function calcPrice(){
 <section style="background:linear-gradient(135deg,#0B1525,#162440);padding:56px 6%;text-align:center;">
   <div style="max-width:700px;margin:0 auto;">
     <div style="font-size:28px;margin-bottom:12px;">🚚</div>
-    <h2 style="font-size:clamp(18px,2.5vw,26px);font-weight:900;color:#F0F4FF;margin-bottom:10px;">Descarga XenderDelivery App</h2>
-    <p style="font-size:14px;color:rgba(240,244,255,0.45);margin-bottom:24px;">Rastrea tus pedidos o conviértete en rider — todo desde tu móvil.</p>
+    <h2 style="font-size:clamp(18px,2.5vw,26px);font-weight:900;color:#F0F4FF;margin-bottom:10px;" data-i18n="dl_h">Descarga XenderDelivery App</h2>
+    <p style="font-size:14px;color:rgba(240,244,255,0.45);margin-bottom:24px;" data-i18n="dl_sub">Rastrea tus pedidos o conviértete en rider — todo desde tu móvil.</p>
     <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
       <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px 22px;text-decoration:none;color:#F0F4FF;"><span style="font-size:22px;">🍎</span><div style="text-align:left;"><div style="font-size:9px;color:rgba(240,244,255,0.4);">Download on the</div><div style="font-size:14px;font-weight:800;">App Store</div></div></a>
       <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:12px 22px;text-decoration:none;color:#F0F4FF;"><span style="font-size:22px;">🤖</span><div style="text-align:left;"><div style="font-size:9px;color:rgba(240,244,255,0.4);">Get it on</div><div style="font-size:14px;font-weight:800;">Google Play</div></div></a>
@@ -1092,10 +1098,10 @@ function calcPrice(){
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(11,21,37,0.97);backdrop-filter:blur(12px);padding:14px 5%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:2px solid #F59E0B;">
-  <p style="font-size:13px;color:rgba(240,244,255,0.7);margin:0;max-width:700px;">🍪 Cookies para mejorar tu experiencia. <a href="#" style="color:#F59E0B;text-decoration:underline;">Política de Privacidad</a>.</p>
+  <p style="font-size:13px;color:rgba(240,244,255,0.7);margin:0;max-width:700px;" data-i18n="ck_txt">🍪 Cookies para mejorar tu experiencia. <a href="#" style="color:#F59E0B;text-decoration:underline;">Política de Privacidad</a>.</p>
   <div style="display:flex;gap:10px;">
-    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;">Rechazar</button>
-    <button onclick="cookieAccept()" style="background:#F59E0B;border:none;color:#050B18;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;">Aceptar ✓</button>
+    <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer;" data-i18n="ck_dec">Rechazar</button>
+    <button onclick="cookieAccept()" style="background:#F59E0B;border:none;color:#050B18;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;" data-i18n="ck_acc">Aceptar ✓</button>
   </div>
 </div>
 
