@@ -819,7 +819,9 @@ select.form-input option{background:var(--s2)}
         <option value="900">15 min</option>
         <option value="1800">30 min</option>
         <option value="0">Off</option>
+        <option value="custom">✎ Personalizar…</option>
       </select>
+      <span class="refresh-countdown" onclick="promptAutoRefresh()" title="Definir mi propio tiempo de auto-actualización" style="cursor:pointer">✎</span>
       <span id="last-update" style="font-size:11px;color:var(--muted);font-family:var(--mono)"></span>
       <button class="topbar-btn btn-ghost" onclick="toggleTheme()" id="theme-btn" title="Modo claro/oscuro">🌙</button>
       <span id="role-badge" style="display:none;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,.18);color:#818cf8;border:1px solid rgba(99,102,241,.3)"></span>
@@ -10714,7 +10716,32 @@ function _arFmt(s){
   var m=Math.floor(s/60),ss=s%60;
   return '↻ '+m+':'+(ss<10?'0':'')+ss;
 }
-function _arHuman(s){ if(s<60)return s+' s'; return Math.floor(s/60)+' min'; }
+function _arHuman(s){ if(s<=0)return 'Off'; if(s<60)return s+' s'; var m=Math.floor(s/60),ss=s%60; return ss?(m+' min '+ss+' s'):(m+' min'); }
+function _arSyncSelect(){
+  var sel=document.getElementById('auto-refresh-sel'); if(!sel)return;
+  var val=String(AUTO_REFRESH_SEC);
+  // quitar cualquier opción personalizada previa
+  Array.prototype.slice.call(sel.querySelectorAll('option[data-custom="1"]')).forEach(function(o){o.remove();});
+  var isPreset=Array.prototype.some.call(sel.options,function(o){return o.value===val;});
+  if(!isPreset){
+    var o=document.createElement('option');
+    o.value=val; o.setAttribute('data-custom','1');
+    o.textContent='✎ '+_arHuman(AUTO_REFRESH_SEC);
+    sel.insertBefore(o,sel.firstChild);
+  }
+  sel.value=val;
+}
+function promptAutoRefresh(){
+  var cur=AUTO_REFRESH_SEC>0?(AUTO_REFRESH_SEC/60):0;
+  var v=prompt('¿Cada cuántos MINUTOS quieres auto-actualizar el dashboard?\n(admite decimales, p.ej. 0.5 = 30s · 0 = desactivar)', String(cur));
+  if(v===null){ _arSyncSelect(); return; }
+  v=String(v).replace(',','.').trim();
+  var min=parseFloat(v);
+  if(isNaN(min)||min<0){ if(typeof showToast==='function')showToast('⚠️ Valor no válido','error'); _arSyncSelect(); return; }
+  var sec=Math.round(min*60);
+  if(sec>0&&sec<5)sec=5; // mínimo de seguridad 5s
+  setAutoRefreshInterval(sec);
+}
 var _arInterval=setInterval(function(){
   var el=document.getElementById('refresh-countdown');
   if(AUTO_REFRESH_SEC<=0){ if(el)el.textContent='↻ off'; return; }
@@ -10730,19 +10757,18 @@ function triggerAutoRefresh(){
   if(typeof refreshCurrent==='function')refreshCurrent();
 }
 function setAutoRefreshInterval(sec){
+  if(sec==='custom'){ promptAutoRefresh(); return; }
   AUTO_REFRESH_SEC=parseInt(sec,10)||0;
   localStorage.setItem('ar_sec',String(AUTO_REFRESH_SEC));
   _arTimer=AUTO_REFRESH_SEC;
   var el=document.getElementById('refresh-countdown');
   if(el)el.textContent=_arFmt(AUTO_REFRESH_SEC>0?_arTimer:0);
-  var sel=document.getElementById('auto-refresh-sel');
-  if(sel)sel.value=String(AUTO_REFRESH_SEC);
+  _arSyncSelect();
   if(typeof showToast==='function')showToast(AUTO_REFRESH_SEC>0?('⏱️ Auto-actualización cada '+_arHuman(AUTO_REFRESH_SEC)):'⏸️ Auto-actualización desactivada','success');
 }
 // sincronizar el selector y el chip con el valor guardado al cargar
 (function(){
-  var sel=document.getElementById('auto-refresh-sel');
-  if(sel)sel.value=String(AUTO_REFRESH_SEC);
+  _arSyncSelect();
   var el=document.getElementById('refresh-countdown');
   if(el)el.textContent=_arFmt(AUTO_REFRESH_SEC>0?_arTimer:0);
 })();
