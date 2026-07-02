@@ -1104,20 +1104,20 @@ select.form-input option{background:var(--s2)}
     <div id="pg-transactions" style="display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <input id="txn-search" oninput="renderTxns()" placeholder="🔎 Buscar por IA, email, nombre o teléfono…" class="filter-select" style="min-width:250px">
+          <input id="txn-search" oninput="renderTxns()" data-i18n-ph="txn:search_ph" placeholder="🔎 Buscar por IA, email, nombre o teléfono…" class="filter-select" style="min-width:250px">
           <select id="filter-txn-type" onchange="renderTxns()" class="filter-select">
-            <option value="">Todos los tipos</option>
-            <option value="send">Envíos</option>
-            <option value="p2p">P2P</option>
-            <option value="cashout">Reintegros (a banco/metálico)</option>
-            <option value="traslados">Traslados (comisiones/unidades)</option>
-            <option value="qr_pay">QR Pay</option>
-            <option value="topup">Recargas</option>
-            <option value="rider">Pagos a riders</option>
+            <option value="" data-i18n="txn:f_all">Todos los tipos</option>
+            <option value="send" data-i18n="txn:f_send">Envíos</option>
+            <option value="p2p" data-i18n="txn:f_p2p">P2P</option>
+            <option value="cashout" data-i18n="txn:f_cashout">Reintegros (a banco/metálico)</option>
+            <option value="traslados" data-i18n="txn:f_traslados">Traslados (comisiones/unidades)</option>
+            <option value="qr_pay" data-i18n="txn:f_qr">QR Pay</option>
+            <option value="topup" data-i18n="txn:f_topup">Recargas</option>
+            <option value="rider" data-i18n="txn:f_rider">Pagos a riders</option>
           </select>
-          <input type="date" id="txn-from" onchange="renderTxns()" class="filter-select" title="Desde">
-          <input type="date" id="txn-to" onchange="renderTxns()" class="filter-select" title="Hasta">
-          <button class="topbar-btn btn-ghost" onclick="clearTxnFilters()" title="Limpiar filtros">✕</button>
+          <input type="date" id="txn-from" onchange="renderTxns()" class="filter-select" data-i18n-title="txn:from" title="Desde">
+          <input type="date" id="txn-to" onchange="renderTxns()" class="filter-select" data-i18n-title="txn:to" title="Hasta">
+          <button class="topbar-btn btn-ghost" onclick="clearTxnFilters()" data-i18n-title="txn:clear" title="Limpiar filtros">✕</button>
         </div>
         <div style="display:flex;gap:8px">
           <button class="topbar-btn btn-ghost" onclick="exportTxnsCSV()">📥 CSV</button>
@@ -1125,7 +1125,7 @@ select.form-input option{background:var(--s2)}
         </div>
       </div>
       <div class="card" id="txn-chart-card">
-        <div class="card-title" style="font-size:14px;margin-bottom:12px">📊 Resumen por tipo de operación</div>
+        <div class="card-title" data-i18n="txn:chart_title" style="font-size:14px;margin-bottom:12px">📊 Resumen por tipo de operación</div>
         <div id="txn-chart"><div class="td-empty">—</div></div>
       </div>
       <div class="card">
@@ -8322,6 +8322,8 @@ async function loadTransactions(){
   renderTxns();
 }
 function txnIa(id){return 'IA-'+String(id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);}
+function _txnTL(type){var K={send:'txn:tl_send',p2p:'txn:tl_p2p',withdraw:'txn:tl_withdraw',qr_payment:'txn:tl_qr',circular_cashout:'txn:tl_circular',rep_cashout:'txn:tl_rep',topup:'txn:tl_topup',rider_payment:'txn:tl_rider_pay',rider:'txn:tl_rider',refund:'txn:tl_refund'};return (K[type]&&typeof _i18n==='function')?_i18n(K[type]):type;}
+function _txnStatus(s){var K={completed:'txn:st_completed',pending:'txn:st_pending',processing:'txn:st_processing',failed:'txn:st_failed',voided:'txn:st_voided'};return (K[s]&&typeof _i18n==='function')?_i18n(K[s]):s;}
 function renderTxns(){
   const tb=document.getElementById('tb-txns');
   const lbl=document.getElementById('txns-count-label');
@@ -8338,29 +8340,27 @@ function renderTxns(){
   if(from)items=items.filter(t=>t.createdAt&&new Date(t.createdAt)>=new Date(from+'T00:00:00'));
   if(to)items=items.filter(t=>t.createdAt&&new Date(t.createdAt)<=new Date(to+'T23:59:59'));
   ALL_TXNS=items;
-  if(lbl)lbl.textContent=items.length+' transacciones'+((filt||q||from||to)?' (filtradas)':'');
+  if(lbl)lbl.textContent=items.length+' '+_i18n(items.length===1?'txn:count_one':'txn:count')+((filt||q||from||to)?_i18n('txn:filtered'):'');
   const SP={completed:'green',pending:'amber',processing:'cyan',failed:'red',voided:'gray'};
-  const TL={send:'💸 Envío',p2p:'🤝 P2P',withdraw:'💵 Retiro',qr_payment:'📱 QR',circular_cashout:'🔄 Traslado circular',rep_cashout:'🔄 Traslado rep',topup:'⬆️ Recarga',rider_payment:'🛵 Pago rider',rider:'🛵 Rider',refund:'↩️ Reembolso'};
   if(tb)tb.innerHTML=items.length?items.map(function(t){return '<tr>'
     +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+String(t.id||'—').substring(0,14)+'</td>'
     +'<td style="font-size:12px"><div>'+(t.userName||t.userEmail||'—')+'</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">'+txnIa(t.userId)+'</div></td>'
-    +'<td><span class="pill pill-cyan">'+(TL[t.type]||t.type)+'</span></td>'
+    +'<td><span class="pill pill-cyan">'+_txnTL(t.type)+'</span></td>'
     +'<td style="font-family:var(--mono);font-weight:600">'+Number(t.amountSent||0).toLocaleString('es',{useGrouping:'always'})+' '+(t.currencySent||'XAF')+'</td>'
     +'<td style="font-family:var(--mono);color:var(--green)">'+Number(t.fee||0).toLocaleString('es',{useGrouping:'always'})+'</td>'
-    +'<td><span class="pill pill-'+(SP[t.status]||'gray')+'">'+t.status+'</span></td>'
+    +'<td><span class="pill pill-'+(SP[t.status]||'gray')+'">'+_txnStatus(t.status)+'</span></td>'
     +'<td style="font-size:11px;color:var(--muted)">'+fmt_date(t.createdAt)+'</td>'
-    +'</tr>';}).join(''):'<tr><td colspan="7" class="td-empty">Sin transacciones con esos filtros</td></tr>';
+    +'</tr>';}).join(''):'<tr><td colspan="7" class="td-empty">'+_i18n('txn:none')+'</td></tr>';
   renderTxnChart(items);
 }
 function renderTxnChart(items){
   const box=document.getElementById('txn-chart');if(!box)return;
-  const TL={send:'💸 Envíos',p2p:'🤝 P2P',withdraw:'💵 Retiros',qr_payment:'📱 QR',circular_cashout:'🔄 Traslado circular',rep_cashout:'🔄 Traslado rep',topup:'⬆️ Recargas',rider_payment:'🛵 Pagos rider',rider:'🛵 Rider',refund:'↩️ Reembolsos'};
   const agg={}; items.forEach(function(t){ if(!agg[t.type])agg[t.type]={n:0,sum:0}; agg[t.type].n++; agg[t.type].sum+=Number(t.amountSent||0); });
   const rows=Object.entries(agg).sort((a,b)=>b[1].sum-a[1].sum);
-  if(!rows.length){box.innerHTML='<div class="td-empty">Sin datos para el gráfico</div>';return;}
+  if(!rows.length){box.innerHTML='<div class="td-empty">'+_i18n('txn:chart_none')+'</div>';return;}
   const max=Math.max.apply(null,rows.map(r=>r[1].sum).concat([1]));
   box.innerHTML=rows.map(function(r){const pct=Math.round(r[1].sum/max*100);
-    return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>'+(TL[r[0]]||r[0])+' <span style="color:var(--muted)">('+r[1].n+')</span></span><b>'+Math.round(r[1].sum).toLocaleString('es',{useGrouping:'always'})+' XAF</b></div><div style="height:9px;background:var(--card2,#1a2234);border-radius:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--accent-dark,#0e7490),var(--accent,#22d3ee))"></div></div></div>';
+    return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>'+_txnTL(r[0])+' <span style="color:var(--muted)">('+r[1].n+')</span></span><b>'+Math.round(r[1].sum).toLocaleString('es',{useGrouping:'always'})+' XAF</b></div><div style="height:9px;background:var(--card2,#1a2234);border-radius:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--accent-dark,#0e7490),var(--accent,#22d3ee))"></div></div></div>';
   }).join('');
 }
 function clearTxnFilters(){
@@ -8424,16 +8424,25 @@ async function loadRetiros(){
   const tb=document.getElementById('tb-retiros');
   const cnt=document.getElementById('ret-count');
   const badge=document.getElementById('sb-retiros-count');
-  if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Cargando…</td></tr>';
+  if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">'+_i18n('ret:loading')+'</td></tr>';
   const r=await rwAPI('GET','/admin/withdrawals');
   if(!r||!r.success){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Error: '+((r&&r.error&&(r.error.message||r.error))||'sin respuesta')+'</td></tr>';return;}
   const list=(r.data&&r.data.withdrawals)||[];
   const pend=(r.data&&r.data.pending)||0;
-  if(cnt)cnt.textContent=list.length+' retiro(s) · '+pend+' pendiente(s)';
+  window._retirosLast={list:list,pend:pend};
+  renderRetiros();
+}
+function renderRetiros(){
+  const tb=document.getElementById('tb-retiros');
+  const cnt=document.getElementById('ret-count');
+  const badge=document.getElementById('sb-retiros-count');
+  const cache=window._retirosLast; if(!cache||!tb)return;
+  const list=cache.list||[], pend=cache.pend||0;
+  if(cnt)cnt.textContent=list.length+' '+_i18n('ret:count')+' · '+pend+' '+_i18n('ret:pending');
   if(badge){if(pend>0){badge.style.display='inline';badge.textContent=pend;}else{badge.style.display='none';}}
-  const mLbl={bank_transfer:'🏦 Banco',authorized_point:'💵 Metálico',orange_money:'📱 Orange',mtn_money:'📱 MTN'};
-  const sLbl={processing:'⏳ Pendiente',pending:'⏳ Pendiente',completed:'✅ Pagado',failed:'❌ Fallido'};
-  if(!list.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">No hay retiros todavía.</td></tr>';return;}
+  const mLbl={bank_transfer:_i18n('ret:m_bank'),authorized_point:_i18n('ret:m_point'),orange_money:_i18n('ret:m_orange'),mtn_money:_i18n('ret:m_mtn')};
+  const sLbl={processing:_i18n('ret:s_pending'),pending:_i18n('ret:s_pending'),completed:_i18n('ret:s_paid'),failed:_i18n('ret:s_failed')};
+  if(!list.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">'+_i18n('ret:none')+'</td></tr>';return;}
   tb.innerHTML=list.map(function(w){
     const d=w.createdAt?new Date(w.createdAt).toLocaleString('es',{useGrouping:'always'}):'';
     const paid=(w.status==='completed');
@@ -8444,7 +8453,7 @@ async function loadRetiros(){
       +'<td style="font-size:11px;color:var(--muted);max-width:180px;word-break:break-all">'+(w.destination||'—')+'</td>'
       +'<td style="font-size:12px">'+(sLbl[w.status]||w.status)+'</td>'
       +'<td style="font-size:11px;color:var(--muted)">'+d+'</td>'
-      +'<td>'+(paid?'—':'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">Marcar pagado</button>')+'</td>'
+      +'<td>'+(paid?'—':'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">'+_i18n('ret:mark_paid')+'</button>')+'</td>'
       +'</tr>';
   }).join('');
 }
@@ -8452,7 +8461,7 @@ async function markRetiroPaid(id,btn){
   if(!confirm('¿Marcar este retiro como PAGADO? Confirma que ya has hecho la transferencia al usuario.'))return;
   if(btn){btn.textContent='…';btn.disabled=true;}
   const r=await rwAPI('POST','/admin/withdrawals/'+id+'/complete',{});
-  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));if(btn){btn.textContent='Marcar pagado';btn.disabled=false;}return;}
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));if(btn){btn.textContent=_i18n('ret:mark_paid');btn.disabled=false;}return;}
   if(typeof toast==='function')toast('✅ Retiro marcado como pagado','success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_paid','Retiro '+id+' pagado');
   loadRetiros();
@@ -13556,7 +13565,18 @@ var UI_TEXT_TR={
       'web:pm_changes':'✏️ Con mis cambios','web:pm_published':'🌐 Publicado (en vivo)','web:mobile':'Móvil','web:desktop':'PC',
       'web:big_note':'💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.',
       'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas',
-      'nav:retiros':'Retiros','ret:title':'Retiros — solicitudes de cobro','ret:help':'Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.','ret:th_user':'Usuario','ret:th_amount':'Importe','ret:th_method':'Método','ret:th_dest':'Destino','ret:th_status':'Estado','ret:th_date':'Fecha'},
+      'nav:retiros':'Retiros','ret:title':'Retiros — solicitudes de cobro','ret:help':'Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.','ret:th_user':'Usuario','ret:th_amount':'Importe','ret:th_method':'Método','ret:th_dest':'Destino','ret:th_status':'Estado','ret:th_date':'Fecha',
+      'txn:search_ph':'🔎 Buscar por IA, email, nombre o teléfono…',
+      'txn:f_all':'Todos los tipos','txn:f_send':'Envíos','txn:f_p2p':'P2P','txn:f_cashout':'Reintegros (a banco/metálico)','txn:f_traslados':'Traslados (comisiones/unidades)','txn:f_qr':'QR Pay','txn:f_topup':'Recargas','txn:f_rider':'Pagos a riders',
+      'txn:from':'Desde','txn:to':'Hasta','txn:clear':'Limpiar filtros',
+      'txn:chart_title':'📊 Resumen por tipo de operación',
+      'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
+      'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
+      'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
+      'txn:st_completed':'Completado','txn:st_pending':'Pendiente','txn:st_processing':'En proceso','txn:st_failed':'Fallido','txn:st_voided':'Anulado',
+      'ret:m_bank':'🏦 Banco','ret:m_point':'💵 Metálico','ret:m_orange':'📱 Orange','ret:m_mtn':'📱 MTN',
+      'ret:s_pending':'⏳ Pendiente','ret:s_paid':'✅ Pagado','ret:s_failed':'❌ Fallido',
+      'ret:mark_paid':'Marcar pagado','ret:none':'No hay retiros todavía.','ret:loading':'Cargando…','ret:count':'retiro(s)','ret:pending':'pendiente(s)'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
       'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code',
@@ -13567,7 +13587,18 @@ var UI_TEXT_TR={
       'web:pm_changes':'✏️ With my changes','web:pm_published':'🌐 Published (live)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Bigger changes (design, images, sections)? Tell me in the chat and I do it instantly.',
       'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages',
-      'nav:retiros':'Withdrawals','ret:title':'Withdrawals — payout requests','ret:help':'Payouts requested by circulars, reps, riders and merchants. Mark as paid once you have made the transfer.','ret:th_user':'User','ret:th_amount':'Amount','ret:th_method':'Method','ret:th_dest':'Destination','ret:th_status':'Status','ret:th_date':'Date'},
+      'nav:retiros':'Withdrawals','ret:title':'Withdrawals — payout requests','ret:help':'Payouts requested by circulars, reps, riders and merchants. Mark as paid once you have made the transfer.','ret:th_user':'User','ret:th_amount':'Amount','ret:th_method':'Method','ret:th_dest':'Destination','ret:th_status':'Status','ret:th_date':'Date',
+      'txn:search_ph':'🔎 Search by IA, email, name or phone…',
+      'txn:f_all':'All types','txn:f_send':'Transfers','txn:f_p2p':'P2P','txn:f_cashout':'Withdrawals (bank/cash)','txn:f_traslados':'Transfers (commissions/units)','txn:f_qr':'QR Pay','txn:f_topup':'Top-ups','txn:f_rider':'Rider payments',
+      'txn:from':'From','txn:to':'To','txn:clear':'Clear filters',
+      'txn:chart_title':'📊 Summary by operation type',
+      'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
+      'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
+      'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
+      'txn:st_completed':'Completed','txn:st_pending':'Pending','txn:st_processing':'Processing','txn:st_failed':'Failed','txn:st_voided':'Voided',
+      'ret:m_bank':'🏦 Bank','ret:m_point':'💵 Cash','ret:m_orange':'📱 Orange','ret:m_mtn':'📱 MTN',
+      'ret:s_pending':'⏳ Pending','ret:s_paid':'✅ Paid','ret:s_failed':'❌ Failed',
+      'ret:mark_paid':'Mark paid','ret:none':'No withdrawals yet.','ret:loading':'Loading…','ret:count':'withdrawal(s)','ret:pending':'pending'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
       'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code',
@@ -13578,7 +13609,18 @@ var UI_TEXT_TR={
       'web:pm_changes':'✏️ Avec mes modifs','web:pm_published':'🌐 Publié (en direct)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Changements plus grands (design, images, sections) ? Dites-le moi dans le chat et je le fais aussitôt.',
       'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages',
-      'nav:retiros':'Retraits','ret:title':'Retraits — demandes de paiement','ret:help':'Paiements demandés par circulars, représentants, riders et commerces. Marquez comme payé une fois le virement effectué.','ret:th_user':'Utilisateur','ret:th_amount':'Montant','ret:th_method':'Méthode','ret:th_dest':'Destination','ret:th_status':'Statut','ret:th_date':'Date'}
+      'nav:retiros':'Retraits','ret:title':'Retraits — demandes de paiement','ret:help':'Paiements demandés par circulars, représentants, riders et commerces. Marquez comme payé une fois le virement effectué.','ret:th_user':'Utilisateur','ret:th_amount':'Montant','ret:th_method':'Méthode','ret:th_dest':'Destination','ret:th_status':'Statut','ret:th_date':'Date',
+      'txn:search_ph':'🔎 Chercher par IA, email, nom ou téléphone…',
+      'txn:f_all':'Tous les types','txn:f_send':'Envois','txn:f_p2p':'P2P','txn:f_cashout':'Retraits (banque/espèces)','txn:f_traslados':'Transferts (commissions/unités)','txn:f_qr':'QR Pay','txn:f_topup':'Recharges','txn:f_rider':'Paiements riders',
+      'txn:from':'Du','txn:to':'Au','txn:clear':'Effacer les filtres',
+      'txn:chart_title':'📊 Résumé par type d\'opération',
+      'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
+      'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
+      'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
+      'txn:st_completed':'Complété','txn:st_pending':'En attente','txn:st_processing':'En cours','txn:st_failed':'Échoué','txn:st_voided':'Annulé',
+      'ret:m_bank':'🏦 Banque','ret:m_point':'💵 Espèces','ret:m_orange':'📱 Orange','ret:m_mtn':'📱 MTN',
+      'ret:s_pending':'⏳ En attente','ret:s_paid':'✅ Payé','ret:s_failed':'❌ Échoué',
+      'ret:mark_paid':'Marquer payé','ret:none':'Aucun retrait pour le moment.','ret:loading':'Chargement…','ret:count':'retrait(s)','ret:pending':'en attente'}
   };
   if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
 })();
@@ -13595,6 +13637,11 @@ function applyAdminLang(){
   document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
     var k=el.getAttribute('data-i18n-ph');
     if(T[k]!==undefined&&typeof T[k]==='string'){el.placeholder=T[k];}
+  });
+  // ── Tooltips con data-i18n-title ──
+  document.querySelectorAll('[data-i18n-title]').forEach(function(el){
+    var k=el.getAttribute('data-i18n-title');
+    if(T[k]!==undefined&&typeof T[k]==='string'){el.title=T[k];}
   });
   // ── Search placeholder ──
   var gs=document.getElementById('global-search');if(gs)gs.placeholder=T['search:ph']||gs.placeholder;
@@ -13630,6 +13677,9 @@ function applyAdminLang(){
   document.querySelectorAll('.back-btn').forEach(function(b){if(T['btn:back'])b.textContent=T['btn:back'];});
   // ── Traducción de contenido interno de módulos (card-title, card-sub, section headings) ──
   _applyPageContentTranslation(ADMIN_LANG);
+  // ── Re-render de tablas dinámicas para que cambien de idioma en vivo ──
+  try{ if(typeof ALL_TXNS_RAW!=='undefined'&&ALL_TXNS_RAW&&ALL_TXNS_RAW.length&&typeof renderTxns==='function')renderTxns(); }catch(e){}
+  try{ if(window._retirosLast&&typeof renderRetiros==='function')renderRetiros(); }catch(e){}
 }
 
 function _applyPageContentTranslation(lang){
