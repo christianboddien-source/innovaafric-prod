@@ -5283,6 +5283,18 @@ select.form-input option{background:var(--s2)}
       </div>
     </div>
     <div id="webadmin-token-warn" style="display:none;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);color:var(--amber);border-radius:10px;padding:10px 14px;font-size:13px;margin:8px 0 12px"></div>
+    <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">📢 <span data-i18n="web:ann_title">Aviso en tus webs</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px" data-i18n="web:ann_help">Publica una barra de aviso arriba en TODAS tus webs (los visitantes pueden cerrarla). Ideal para promociones o novedades.</div>
+      <input id="ann-text" data-i18n-ph="web:ann_text_ph" placeholder="Texto del aviso (ej: 🎉 Nueva función disponible)" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:9px;font-size:13px;margin-bottom:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="ann-link" placeholder="Enlace (opcional): https://…" style="flex:1;min-width:180px;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:9px;font-size:12px">
+        <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px">Color <input type="color" id="ann-color" value="#0e7490" style="width:38px;height:30px;border:none;background:none;cursor:pointer"></label>
+        <button class="topbar-btn btn-primary" onclick="webPublishAnnounce(true)" style="font-size:12px">📢 <span data-i18n="web:ann_publish">Publicar aviso</span></button>
+        <button class="topbar-btn btn-ghost" onclick="webPublishAnnounce(false)" style="font-size:12px">🚫 <span data-i18n="web:ann_remove">Quitar</span></button>
+      </div>
+      <div id="ann-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+    </div>
     <div style="display:grid;grid-template-columns:270px 1fr;gap:14px">
       <div>
         <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px" data-i18n="web:pages_label">Páginas</div>
@@ -8496,6 +8508,7 @@ async function loadWebPages(){
   if(!r||!r.success){var em=(r&&r.error&&(r.error.message||r.error))||'sin respuesta del servidor';if(list)list.innerHTML='<div class="td-empty" style="padding:16px;font-size:12px">⚠️ '+em+'<br><span style="color:var(--muted)">Si dice sesión/permiso, cierra sesión y vuelve a entrar al dashboard.</span></div>';return;}
   _webPages=(r.data&&r.data.pages)||[];
   if(warn){ if(r.data&&!r.data.tokenConfigured){warn.style.display='block';warn.innerHTML='⚠️ Falta el <b>GITHUB_TOKEN</b> en Railway. Puedes ver el código, pero <b>Publicar</b> no funcionará hasta que lo añadas.';}else{warn.style.display='none';} }
+  webLoadAnnounce();
   list.innerHTML=_webPages.map(p=>'<div style="border:1px solid var(--border);border-radius:10px;margin-bottom:6px;padding:9px 11px;display:flex;align-items:center;gap:8px" onmouseover="this.style.borderColor=\'var(--cyan)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'
     +'<div onclick="openWebEditor(\''+p.id+'\')" style="flex:1;min-width:0;cursor:pointer"><div style="font-size:13px;font-weight:600">'+(p.custom?'✦ ':'')+p.label+'</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono,monospace);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.repo+' · '+p.path+'</div></div>'
     +(p.custom?'<button class="topbar-btn btn-ghost" style="padding:3px 7px;font-size:12px;color:var(--red)" title="Eliminar página" onclick="webDeletePage(\''+p.id+'\',\''+(p.path||'').replace(/\x27/g,'')+'\')">🗑</button>':'')
@@ -8514,6 +8527,26 @@ async function webBackup(){
     setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
     showToast('💾 Copia descargada ('+((r.data&&r.data.count)||0)+' páginas)','success');
   }catch(e){showToast('❌ No se pudo descargar','error');}
+}
+async function webLoadAnnounce(){
+  var r=await rwAPI('GET','/webadmin/announce');
+  if(!r||!r.success)return;
+  var a=(r.data&&r.data.announce)||{};
+  var t=document.getElementById('ann-text'); if(t)t.value=a.text||'';
+  var l=document.getElementById('ann-link'); if(l)l.value=a.link||'';
+  var c=document.getElementById('ann-color'); if(c&&a.color)c.value=a.color;
+  var st=document.getElementById('ann-status'); if(st){st.textContent=a.active?'✅ Hay un aviso activo ahora mismo en tus webs.':'⚪ No hay ningún aviso activo.';st.style.color=a.active?'var(--green)':'var(--muted)';}
+}
+async function webPublishAnnounce(active){
+  var text=((document.getElementById('ann-text')||{}).value||'').trim();
+  var link=((document.getElementById('ann-link')||{}).value||'').trim();
+  var color=(document.getElementById('ann-color')||{}).value||'#0e7490';
+  if(active&&!text){showToast('⚠️ Escribe el texto del aviso','error');return;}
+  var st=document.getElementById('ann-status'); if(st){st.style.color='var(--muted)';st.textContent='⏳ Publicando…';}
+  var r=await rwAPI('POST','/webadmin/announce',{active:active,text:text,link:link,color:color});
+  if(!r||!r.success){if(st){st.style.color='var(--red)';st.textContent='❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo');}return;}
+  if(st){st.style.color=active?'var(--green)':'var(--muted)';st.textContent=active?'✅ Aviso publicado en todas tus webs (puede tardar ~1 min en verse).':'🚫 Aviso quitado de las webs.';}
+  showToast(active?'📢 Aviso publicado':'🚫 Aviso quitado','success');
 }
 async function webNewPage(){
   var dup=confirm('¿Duplicar una página existente?\n\nAceptar = Duplicar una que ya tienes\nCancelar = Crear una página en blanco');
@@ -13774,7 +13807,7 @@ var UI_TEXT_TR={
       'web:txt_new':'Cambiar por','web:txt_new_ph':'Ej: Envía dinero a África','web:txt_apply':'Aplicar cambio',
       'web:pm_changes':'✏️ Con mis cambios','web:pm_published':'🌐 Publicado (en vivo)','web:mobile':'Móvil','web:desktop':'PC',
       'web:big_note':'💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.',
-      'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas','web:new_page':'➕ Nueva / Duplicar','web:refresh':'Actualizar','web:backup':'Copia',
+      'web:list_hint':'Pulsa Actualizar…','web:empty':'Elige una página de la izquierda para editar su código.','web:pages_label':'Páginas','web:new_page':'➕ Nueva / Duplicar','web:refresh':'Actualizar','web:backup':'Copia','web:ann_title':'Aviso en tus webs','web:ann_help':'Publica una barra de aviso arriba en TODAS tus webs (los visitantes pueden cerrarla). Ideal para promociones o novedades.','web:ann_text_ph':'Texto del aviso (ej: 🎉 Nueva función disponible)','web:ann_publish':'Publicar aviso','web:ann_remove':'Quitar',
       'nav:retiros':'Retiros','ret:title':'Retiros — solicitudes de cobro','ret:help':'Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.','ret:th_user':'Usuario','ret:th_amount':'Importe','ret:th_method':'Método','ret:th_dest':'Destino','ret:th_status':'Estado','ret:th_date':'Fecha',
       'txn:search_ph':'🔎 Buscar por IA, email, nombre o teléfono…',
       'txn:f_all':'Todos los tipos','txn:f_send':'Envíos','txn:f_p2p':'P2P','txn:f_cashout':'Reintegros (a banco/metálico)','txn:f_traslados':'Traslados (comisiones/unidades)','txn:f_qr':'QR Pay','txn:f_topup':'Recargas','txn:f_rider':'Pagos a riders',
@@ -13796,7 +13829,7 @@ var UI_TEXT_TR={
       'web:txt_new':'Change to','web:txt_new_ph':'e.g. Envía dinero a África','web:txt_apply':'Apply change',
       'web:pm_changes':'✏️ With my changes','web:pm_published':'🌐 Published (live)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Bigger changes (design, images, sections)? Tell me in the chat and I do it instantly.',
-      'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages','web:new_page':'➕ New / Duplicate','web:refresh':'Refresh','web:backup':'Backup',
+      'web:list_hint':'Click Refresh…','web:empty':'Pick a page on the left to edit its code.','web:pages_label':'Pages','web:new_page':'➕ New / Duplicate','web:refresh':'Refresh','web:backup':'Backup','web:ann_title':'Announcement on your sites','web:ann_help':'Publish an announcement bar at the top of ALL your sites (visitors can close it). Great for promos or news.','web:ann_text_ph':'Announcement text (e.g. 🎉 New feature available)','web:ann_publish':'Publish announcement','web:ann_remove':'Remove',
       'nav:retiros':'Withdrawals','ret:title':'Withdrawals — payout requests','ret:help':'Payouts requested by circulars, reps, riders and merchants. Mark as paid once you have made the transfer.','ret:th_user':'User','ret:th_amount':'Amount','ret:th_method':'Method','ret:th_dest':'Destination','ret:th_status':'Status','ret:th_date':'Date',
       'txn:search_ph':'🔎 Search by IA, email, name or phone…',
       'txn:f_all':'All types','txn:f_send':'Transfers','txn:f_p2p':'P2P','txn:f_cashout':'Withdrawals (bank/cash)','txn:f_traslados':'Transfers (commissions/units)','txn:f_qr':'QR Pay','txn:f_topup':'Top-ups','txn:f_rider':'Rider payments',
@@ -13818,7 +13851,7 @@ var UI_TEXT_TR={
       'web:txt_new':'Remplacer par','web:txt_new_ph':'Ex : Envía dinero a África','web:txt_apply':'Appliquer',
       'web:pm_changes':'✏️ Avec mes modifs','web:pm_published':'🌐 Publié (en direct)','web:mobile':'Mobile','web:desktop':'PC',
       'web:big_note':'💡 Changements plus grands (design, images, sections) ? Dites-le moi dans le chat et je le fais aussitôt.',
-      'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages','web:new_page':'➕ Nouvelle / Dupliquer','web:refresh':'Actualiser','web:backup':'Sauvegarde',
+      'web:list_hint':'Cliquez sur Actualiser…','web:empty':'Choisissez une page à gauche pour éditer son code.','web:pages_label':'Pages','web:new_page':'➕ Nouvelle / Dupliquer','web:refresh':'Actualiser','web:backup':'Sauvegarde','web:ann_title':'Annonce sur vos sites','web:ann_help':'Publiez une barre d\'annonce en haut de TOUS vos sites (les visiteurs peuvent la fermer). Idéal pour les promos ou nouveautés.','web:ann_text_ph':'Texte de l\'annonce (ex : 🎉 Nouvelle fonction disponible)','web:ann_publish':'Publier l\'annonce','web:ann_remove':'Retirer',
       'nav:retiros':'Retraits','ret:title':'Retraits — demandes de paiement','ret:help':'Paiements demandés par circulars, représentants, riders et commerces. Marquez comme payé une fois le virement effectué.','ret:th_user':'Utilisateur','ret:th_amount':'Montant','ret:th_method':'Méthode','ret:th_dest':'Destination','ret:th_status':'Statut','ret:th_date':'Date',
       'txn:search_ph':'🔎 Chercher par IA, email, nom ou téléphone…',
       'txn:f_all':'Tous les types','txn:f_send':'Envois','txn:f_p2p':'P2P','txn:f_cashout':'Retraits (banque/espèces)','txn:f_traslados':'Transferts (commissions/unités)','txn:f_qr':'QR Pay','txn:f_topup':'Recharges','txn:f_rider':'Paiements riders',

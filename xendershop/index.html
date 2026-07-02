@@ -1650,6 +1650,29 @@ if(typeof openModal==='undefined'){function openModal(id){document.getElementByI
 .ptick span{font-size:10px;font-weight:700;color:var(--red);text-align:center;white-space:nowrap;}
 @keyframes ticker-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 </style>
+<!-- ═══ AVISO GLOBAL (gestionado desde el panel Webs del dashboard) ═══ -->
+<script>
+(function(){try{
+  fetch('https://christianboddien-source.github.io/innovaafric-prod/webadmin-announce.json?t='+Date.now())
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(a){
+      if(!a||!a.active||!a.text)return;
+      var key=String(a.updatedAt||a.text);
+      try{ if(localStorage.getItem('ia_announce_dismissed')===key)return; }catch(e){}
+      var link=(typeof a.link==='string'&&/^(https?:\/\/|\/|#)/i.test(a.link))?a.link:'';
+      var bar=document.createElement('div');
+      bar.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:'+(a.color||'#0e7490')+';color:#fff;padding:11px 46px 11px 16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.35;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.28)';
+      var span=document.createElement('span');
+      if(link){var al=document.createElement('a');al.href=link;al.textContent=a.text;al.style.color='#fff';al.style.textDecoration='underline';span.appendChild(al);}else{span.textContent=a.text;}
+      bar.appendChild(span);
+      var x=document.createElement('span');x.textContent='✕';x.setAttribute('aria-label','cerrar');
+      x.style.cssText='position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-weight:700;opacity:.85';
+      x.onclick=function(){bar.remove();try{localStorage.setItem('ia_announce_dismissed',key);}catch(e){}};
+      bar.appendChild(x);
+      document.body.appendChild(bar);
+    }).catch(function(){});
+}catch(e){}})();
+</script>
 </body>
 </html>
 
