@@ -5271,6 +5271,7 @@ select.form-input option{background:var(--s2)}
             <div>
               <div style="display:flex;gap:6px;margin-bottom:12px">
                 <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos (fácil)</button>
+                <button id="webtab-imagenes" onclick="webMode('imagenes')" class="topbar-btn btn-ghost" style="font-size:12px">🖼️ Imágenes</button>
                 <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código (avanzado)</button>
               </div>
               <div id="webadmin-textos">
@@ -5285,6 +5286,10 @@ select.form-input option{background:var(--s2)}
                   <div id="web-replace-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
                 </div>
                 <div style="font-size:11px;color:var(--muted);margin-top:10px">💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.</div>
+              </div>
+              <div id="webadmin-imagenes" style="display:none">
+                <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Cambia una imagen pegando otra URL o subiendo un archivo desde tu ordenador. Lo verás en la vista previa; luego pulsa 🚀 Publicar.</div>
+                <div id="webadmin-imgs-list"><div class="td-empty">—</div></div>
               </div>
               <div id="webadmin-codigo" style="display:none">
                 <textarea id="webadmin-code" spellcheck="false" oninput="webPreviewDebounced()" style="width:100%;height:56vh;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:10px;padding:12px;font-family:var(--mono,monospace);font-size:12px;line-height:1.5;white-space:pre;overflow:auto;resize:vertical"></textarea>
@@ -8416,9 +8421,58 @@ function webPreviewDebounced(){
 }
 function webMode(m){
   document.getElementById('webadmin-textos').style.display=m==='textos'?'block':'none';
+  document.getElementById('webadmin-imagenes').style.display=m==='imagenes'?'block':'none';
   document.getElementById('webadmin-codigo').style.display=m==='codigo'?'block':'none';
   document.getElementById('webtab-textos').className='topbar-btn '+(m==='textos'?'btn-primary':'btn-ghost');
+  document.getElementById('webtab-imagenes').className='topbar-btn '+(m==='imagenes'?'btn-primary':'btn-ghost');
   document.getElementById('webtab-codigo').className='topbar-btn '+(m==='codigo'?'btn-primary':'btn-ghost');
+  if(m==='imagenes')webImages();
+}
+function webImages(){
+  const box=document.getElementById('webadmin-imgs-list');
+  const code=document.getElementById('webadmin-code').value||'';
+  const urls=[]; const re=/<img[^>]+src=["']([^"']+)["']/gi; let m;
+  while((m=re.exec(code))){ if(m[1]&&urls.indexOf(m[1])===-1) urls.push(m[1]); }
+  if(!urls.length){box.innerHTML='<div class="td-empty" style="padding:20px">No encontré imágenes &lt;img&gt; en esta página.<br><span style="color:var(--muted)">Para fondos u otros casos, pídemelo por el chat.</span></div>';return;}
+  const baseUrl=(_webCurrent&&_webCurrent.url)||'';
+  box.innerHTML=urls.map(function(u,i){
+    const abs=/^https?:\/\//.test(u)?u:(baseUrl+u.replace(/^\.?\//,''));
+    const enc=encodeURIComponent(u);
+    return '<div style="display:flex;gap:10px;align-items:center;border:1px solid var(--border);border-radius:10px;padding:8px;margin-bottom:8px">'
+      +'<img src="'+abs+'" style="width:56px;height:56px;object-fit:cover;border-radius:8px;background:#fff;flex-shrink:0" onerror="this.style.opacity=.25">'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:10px;color:var(--muted);word-break:break-all;margin-bottom:6px">'+u+'</div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+      +'<input id="imgurl-'+i+'" placeholder="Pega otra URL de imagen…" style="flex:1;min-width:110px;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:6px;padding:6px;font-size:11px">'
+      +'<button class="topbar-btn btn-ghost" style="font-size:11px" onclick="webImgReplaceUrl('+i+',\''+enc+'\')">Cambiar URL</button>'
+      +'<label class="topbar-btn btn-primary" style="font-size:11px;cursor:pointer">📤 Subir<input type="file" accept="image/*" style="display:none" onchange="webImgUpload(this,\''+enc+'\')"></label>'
+      +'</div></div></div>';
+  }).join('');
+}
+function webImgReplaceUrl(i, oldEnc){
+  const oldUrl=decodeURIComponent(oldEnc);
+  const nu=(document.getElementById('imgurl-'+i)||{}).value; if(!nu||!nu.trim())return;
+  const ta=document.getElementById('webadmin-code');
+  ta.value=ta.value.split(oldUrl).join(nu.trim());
+  webPreviewLive(); webImages();
+  const st=document.getElementById('webadmin-status');if(st){st.style.color='var(--green)';st.textContent='✅ Imagen cambiada. Pulsa 🚀 Publicar.';}
+}
+function webImgUpload(input, oldEnc){
+  const f=input.files&&input.files[0]; if(!f)return;
+  const st=document.getElementById('webadmin-status');
+  if(f.size>10*1024*1024){if(st){st.style.color='var(--red)';st.textContent='La imagen es muy grande (máx 10 MB).';}return;}
+  const reader=new FileReader();
+  reader.onload=async function(){
+    if(st){st.style.color='var(--muted)';st.textContent='Subiendo imagen…';}
+    const r=await rwAPI('POST','/webadmin/image',{filename:f.name,dataBase64:reader.result});
+    if(!r||!r.success){if(st){st.style.color='var(--red)';st.textContent='❌ '+((r&&r.error&&(r.error.message||r.error))||'no se pudo subir');}return;}
+    const oldUrl=decodeURIComponent(oldEnc);
+    const ta=document.getElementById('webadmin-code');
+    ta.value=ta.value.split(oldUrl).join(r.data.url);
+    if(st){st.style.color='var(--green)';st.textContent='✅ Imagen subida y cambiada. Pulsa 🚀 Publicar.';}
+    webPreviewLive(); webImages();
+  };
+  reader.readAsDataURL(f);
 }
 function webReplace(){
   const find=document.getElementById('web-find').value;
