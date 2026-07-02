@@ -647,7 +647,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('proveedores',this)"><span class="ic">🏭</span><span data-i18n="nav:proveedores">Proveedores</span></div>
     <div class="sb-link" onclick="nav('orders',this)"><span class="ic">📦</span><span data-i18n="nav:orders">Pedidos</span></div>
     <div class="sb-link" onclick="nav('kyc',this)"><span class="ic">🪪</span><span data-i18n="nav:kyc">KYC</span><span class="badge-warn" id="sb-kyc-count" style="display:none">0</span></div>
-    <div class="sb-link" onclick="nav('webs',this)"><span class="ic">🌐</span><span>Webs</span></div>
+    <div class="sb-link" onclick="nav('webs',this)"><span class="ic">🌐</span><span data-i18n="nav:webs">Webs</span></div>
     <div class="sb-group" data-i18n="grp:Config">Config</div>
     <div class="sb-link" onclick="nav('crear',this)"><span class="ic">➕</span><span data-i18n="nav:crear">Nuevo usuario</span></div>
     <div class="sb-group" data-i18n="grp:Avanzado">Avanzado</div>
@@ -5233,7 +5233,7 @@ select.form-input option{background:var(--s2)}
 <div id="pg-webs" style="display:none">
   <div class="card">
     <div class="card-head">
-      <div class="card-title" style="font-size:15px">🌐 Web-Admin — editar y publicar tus páginas</div>
+      <div class="card-title" style="font-size:15px">🌐 <span data-i18n="web:title">Web-Admin — editar y publicar tus páginas</span></div>
       <button class="topbar-btn btn-ghost" onclick="loadWebPages()">↻ Actualizar</button>
     </div>
     <div id="webadmin-token-warn" style="display:none;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.4);color:var(--amber);border-radius:10px;padding:10px 14px;font-size:13px;margin:8px 0 12px"></div>
@@ -5246,19 +5246,22 @@ select.form-input option{background:var(--s2)}
         <div id="webadmin-empty" class="td-empty" style="padding:50px 20px">Elige una página de la izquierda para editar su código.</div>
         <div id="webadmin-editor" style="display:none">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
-            <div style="font-weight:700" id="webadmin-title">—</div>
+            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+              <button class="topbar-btn btn-ghost" onclick="webCloseEditor()" title="Cerrar editor">← <span data-i18n="web:close">Cerrar</span></button>
+              <div style="font-weight:700" id="webadmin-title">—</div>
+            </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="topbar-btn btn-ghost" onclick="webHistory()">🕐 Historial</button>
-              <button class="topbar-btn btn-ghost" onclick="webDownload()">💾 Descargar</button>
-              <button class="topbar-btn btn-ghost" onclick="revertWebFile()">↩ Revertir</button>
-              <button class="topbar-btn btn-primary" onclick="publishWebFile()">🚀 Publicar</button>
+              <button class="topbar-btn btn-ghost" onclick="webHistory()">🕐 <span data-i18n="web:history">Historial</span></button>
+              <button class="topbar-btn btn-ghost" onclick="webDownload()">💾 <span data-i18n="web:download">Descargar</span></button>
+              <button class="topbar-btn btn-ghost" onclick="revertWebFile()">↩ <span data-i18n="web:revert">Revertir</span></button>
+              <button class="topbar-btn btn-primary" onclick="publishWebFile()">🚀 <span data-i18n="web:publish">Publicar</span></button>
             </div>
           </div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:10px" id="webadmin-meta"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;flex-wrap:wrap">
-                <div style="font-size:12px;font-weight:600">👁 Vista previa en vivo</div>
+                <div style="font-size:12px;font-weight:600">👁 <span data-i18n="web:preview_live">Vista previa en vivo</span></div>
                 <div style="display:flex;gap:6px;align-items:center">
                   <select id="web-preview-mode" onchange="webPreviewLive()" style="background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:11px">
                     <option value="changes">✏️ Con mis cambios</option>
@@ -5272,22 +5275,22 @@ select.form-input option{background:var(--s2)}
             </div>
             <div>
               <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-                <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 Textos</button>
-                <button id="webtab-imagenes" onclick="webMode('imagenes')" class="topbar-btn btn-ghost" style="font-size:12px">🖼️ Imágenes</button>
-                <button id="webtab-enlaces" onclick="webMode('enlaces')" class="topbar-btn btn-ghost" style="font-size:12px">🔗 Enlaces</button>
-                <button id="webtab-seo" onclick="webMode('seo')" class="topbar-btn btn-ghost" style="font-size:12px">🔎 SEO</button>
-                <button id="webtab-colores" onclick="webMode('colores')" class="topbar-btn btn-ghost" style="font-size:12px">🎨 Colores</button>
-                <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; Código</button>
+                <button id="webtab-textos" onclick="webMode('textos')" class="topbar-btn btn-primary" style="font-size:12px">📝 <span data-i18n="web:tab_texts">Textos</span></button>
+                <button id="webtab-imagenes" onclick="webMode('imagenes')" class="topbar-btn btn-ghost" style="font-size:12px">🖼️ <span data-i18n="web:tab_images">Imágenes</span></button>
+                <button id="webtab-enlaces" onclick="webMode('enlaces')" class="topbar-btn btn-ghost" style="font-size:12px">🔗 <span data-i18n="web:tab_links">Enlaces</span></button>
+                <button id="webtab-seo" onclick="webMode('seo')" class="topbar-btn btn-ghost" style="font-size:12px">🔎 <span data-i18n="web:tab_seo">SEO</span></button>
+                <button id="webtab-colores" onclick="webMode('colores')" class="topbar-btn btn-ghost" style="font-size:12px">🎨 <span data-i18n="web:tab_colors">Colores</span></button>
+                <button id="webtab-codigo" onclick="webMode('codigo')" class="topbar-btn btn-ghost" style="font-size:12px">&lt;/&gt; <span data-i18n="web:tab_code">Código</span></button>
               </div>
               <div id="webadmin-textos">
                 <div style="background:var(--card2,#1a2234);border:1px solid var(--border);border-radius:12px;padding:14px">
-                  <div style="font-size:13px;font-weight:600;margin-bottom:4px">✏️ Cambiar un texto de la página</div>
-                  <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego 🚀 Publicar.</div>
-                  <label style="font-size:11px;color:var(--muted)">Texto actual (lo que quieres cambiar)</label>
-                  <input id="web-find" placeholder="Ej: Send money to Africa" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
-                  <label style="font-size:11px;color:var(--muted)">Cambiar por</label>
-                  <input id="web-replace" placeholder="Ej: Envía dinero a África" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
-                  <button class="topbar-btn btn-primary" onclick="webReplace()" style="font-size:13px">✅ Aplicar cambio</button>
+                  <div style="font-size:13px;font-weight:600;margin-bottom:4px">✏️ <span data-i18n="web:txt_h">Cambiar un texto de la página</span></div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:12px" data-i18n="web:txt_help">Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego 🚀 Publicar.</div>
+                  <label style="font-size:11px;color:var(--muted)" data-i18n="web:txt_current">Texto actual (lo que quieres cambiar)</label>
+                  <input id="web-find" data-i18n-ph="web:txt_current_ph" placeholder="Ej: Send money to Africa" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <label style="font-size:11px;color:var(--muted)" data-i18n="web:txt_new">Cambiar por</label>
+                  <input id="web-replace" data-i18n-ph="web:txt_new_ph" placeholder="Ej: Envía dinero a África" style="width:100%;background:#0b0f17;color:#cbd6ea;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;margin:4px 0 10px">
+                  <button class="topbar-btn btn-primary" onclick="webReplace()" style="font-size:13px">✅ <span data-i18n="web:txt_apply">Aplicar cambio</span></button>
                   <div id="web-replace-status" style="font-size:12px;margin-top:8px;min-height:16px"></div>
                 </div>
                 <div style="font-size:11px;color:var(--muted);margin-top:10px">💡 ¿Cambios más grandes (diseño, imágenes, secciones)? Dímelo por el chat y lo hago yo al instante.</div>
@@ -8420,6 +8423,12 @@ async function publishWebFile(){
   _webCurrent.sha=(r.data&&r.data.newSha)||_webCurrent.sha;
   if(st){st.style.color='var(--green)';st.textContent='✅ Publicado. La web se actualizará en ~1 min.';}
   if(typeof logAdminAction==='function')logAdminAction('web_publish','Publicado '+_webCurrent.label);
+}
+function webCloseEditor(){
+  const ed=document.getElementById('webadmin-editor');if(ed)ed.style.display='none';
+  const em=document.getElementById('webadmin-empty');if(em)em.style.display='block';
+  const f=document.getElementById('web-preview-frame');if(f){f.removeAttribute('srcdoc');f.removeAttribute('src');}
+  _webCurrent=null;
 }
 function webPreview(){
   const code=document.getElementById('webadmin-code').value;
@@ -13453,6 +13462,33 @@ var UI_TEXT_TR={
   }
 };
 
+// ── Traducciones del Web-Admin (Webs) — ES/EN/FR ──
+;(function(){
+  var W={
+    es:{'nav:webs':'Webs','web:title':'Web-Admin — editar y publicar tus páginas',
+      'web:close':'Cerrar','web:history':'Historial','web:download':'Descargar','web:revert':'Revertir','web:publish':'Publicar',
+      'web:tab_texts':'Textos','web:tab_images':'Imágenes','web:tab_links':'Enlaces','web:tab_seo':'SEO','web:tab_colors':'Colores','web:tab_code':'Código',
+      'web:preview_live':'Vista previa en vivo','web:txt_h':'Cambiar un texto de la página',
+      'web:txt_help':'Escribe el texto tal como aparece en la web. Pulsa Aplicar (lo verás en la vista previa) y luego Publicar.',
+      'web:txt_current':'Texto actual (lo que quieres cambiar)','web:txt_current_ph':'Ej: Send money to Africa',
+      'web:txt_new':'Cambiar por','web:txt_new_ph':'Ej: Envía dinero a África','web:txt_apply':'Aplicar cambio'},
+    en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
+      'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
+      'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code',
+      'web:preview_live':'Live preview','web:txt_h':'Change a text on the page',
+      'web:txt_help':'Type the text exactly as it appears on the site. Click Apply (you will see it in the preview), then Publish.',
+      'web:txt_current':'Current text (what you want to change)','web:txt_current_ph':'e.g. Send money to Africa',
+      'web:txt_new':'Change to','web:txt_new_ph':'e.g. Envía dinero a África','web:txt_apply':'Apply change'},
+    fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
+      'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
+      'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code',
+      'web:preview_live':'Aperçu en direct','web:txt_h':'Modifier un texte de la page',
+      'web:txt_help':'Écrivez le texte tel qu\'il apparaît sur le site. Cliquez sur Appliquer (visible dans l\'aperçu), puis Publier.',
+      'web:txt_current':'Texte actuel (à modifier)','web:txt_current_ph':'Ex : Send money to Africa',
+      'web:txt_new':'Remplacer par','web:txt_new_ph':'Ex : Envía dinero a África','web:txt_apply':'Appliquer'}
+  };
+  if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
+})();
 function _i18n(key){var T=ADMIN_TR[ADMIN_LANG]||ADMIN_TR.es;return T[key]||key;}
 
 function applyAdminLang(){
