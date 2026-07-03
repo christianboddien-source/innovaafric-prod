@@ -5234,7 +5234,7 @@ select.form-input option{background:var(--s2)}
   </div>
   <div class="table-wrap">
     <table class="tbl">
-      <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>País</th><th>Ventas mes</th><th>Comisión</th><th>KYC</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <thead><tr><th>Nombre</th><th>Categoría</th><th>País</th><th>Ciudad</th><th>Contacto</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody id="tb-merchants"></tbody>
     </table>
   </div>
@@ -20108,41 +20108,21 @@ async function submitComercioApp(){
 
 /* ── MERCHANTS ──────────────────────────────────────────────── */
 async function loadMerchants(){
-  var src=null;
-  try{
-    var apiM=await rwAPI('GET','/merchants').catch(function(){return null;});
-    if(apiM&&apiM.length){src=apiM;}
-    else{
-      var sbM=await SB.from('merchants').select('id,name,category,country,monthly_sales,commission_rate,kyc_status,status,created_at').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
-      if(sbM.data&&sbM.data.length){
-        src=sbM.data.map(function(m){
-          return{
-            id:m.id,name:m.name,cat:m.category||'retail',country:m.country||'—',
-            sales:Number(m.monthly_sales||0),
-            commission:Number(m.commission_rate||2.5),
-            kyc:m.kyc_status||'pendiente',
-            status:m.status||'pendiente'
-          };
-        });
-        MERCHANTS_DATA.length=0;
-        src.forEach(function(m){MERCHANTS_DATA.push(m);});
-      }
-    }
-  }catch(e){}
-  var list=src||MERCHANTS_DATA;
-  filterMerchants(list);
-  var stats=list.reduce(function(a,m){
-    return{total:a.total+1,active:a.active+(m.status==='activo'?1:0),vol:a.vol+(m.sales||0),pending:a.pending+(m.kyc==='pendiente'?1:0)};
-  },{total:0,active:0,vol:0,pending:0});
+  var src=[];
+  try{ var r=await rwAPI('GET','/merchants'); if(r&&r.success&&Array.isArray(r.data)) src=r.data; }catch(e){}
+  MERCHANTS_DATA.length=0;
+  src.forEach(function(m){ MERCHANTS_DATA.push({
+    id:m.id, name:m.name, category:m.category||'—', country:m.country||'—', city:m.city||'',
+    contact:m.contact||'', phone:m.phone||'', currency:m.currency||'XAF', status:m.status||'activo'
+  }); });
+  filterMerchants(MERCHANTS_DATA);
+  var stats=MERCHANTS_DATA.reduce(function(a,m){return{total:a.total+1,active:a.active+(m.status==='activo'?1:0),susp:a.susp+(m.status==='suspendido'?1:0)};},{total:0,active:0,susp:0});
   var el=document.getElementById('merchant-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+stats.total+'</div><div class="kpi-lbl">Comercios totales</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">'+stats.active+'</div><div class="kpi-lbl">Activos</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">XOF '+(stats.vol/1000000).toFixed(1)+'M</div><div class="kpi-lbl">Volumen mensual</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(stats.pending>0?'var(--amber)':'var(--green)')+'">'+stats.pending+'</div><div class="kpi-lbl">Pendientes KYC</div></div>';
-  var badge=document.getElementById('sb-refunds-count');
-  var pendingRef=REFUNDS_DATA.filter(function(r){return r.status==='pendiente';}).length;
-  if(badge&&pendingRef>0){badge.textContent=pendingRef;badge.style.display='inline';}
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+stats.active+'</div><div class="kpi-lbl">Activos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--red)">'+stats.susp+'</div><div class="kpi-lbl">Suspendidos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--cyan)">'+(new Set(MERCHANTS_DATA.map(function(m){return m.country;})).size)+'</div><div class="kpi-lbl">Países</div></div>';
 }
 
 function filterMerchants(data){
@@ -20150,81 +20130,70 @@ function filterMerchants(data){
   var q=(document.getElementById('merchant-search')||{}).value||'';
   var st=(document.getElementById('merchant-status')||{}).value||'';
   var cat=(document.getElementById('merchant-category')||{}).value||'';
-  var filtered=data.filter(m=>{
-    return(!q||m.name.toLowerCase().includes(q.toLowerCase())||m.country.toLowerCase().includes(q.toLowerCase()))
-      &&(!st||m.status===st)&&(!cat||m.cat===cat);
+  var filtered=data.filter(function(m){
+    return(!q||(m.name||'').toLowerCase().includes(q.toLowerCase())||(m.country||'').toLowerCase().includes(q.toLowerCase()))
+      &&(!st||m.status===st)&&(!cat||m.category===cat);
   });
   var tb=document.getElementById('tb-merchants');
   if(!tb)return;
-  var kycC={verificado:'badge-green',pendiente:'badge-amber',rechazado:'badge-red'};
   var stC={activo:'badge-green',pendiente:'badge-amber',suspendido:'badge-red'};
-  tb.innerHTML=filtered.map(m=>`<tr>
-    <td>${m.id}</td><td><strong>${m.name}</strong></td><td>${m.cat}</td><td>${m.country}</td>
-    <td>XOF ${m.sales.toLocaleString()}</td><td>${m.commission}%</td>
-    <td><span class="badge ${kycC[m.kyc]||'badge-gray'}">${m.kyc}</span></td>
-    <td><span class="badge ${stC[m.status]||'badge-gray'}">${m.status}</span></td>
-    <td>
-      <button class="btn-xs btn-cyan" onclick="viewMerchant('${m.id}')">Ver</button>
-      ${m.status==='activo'?`<button class="btn-xs btn-red" onclick="suspendMerchant('${m.id}')">Suspender</button>`:''}
-      ${m.status==='suspendido'?`<button class="btn-xs btn-green" onclick="activateMerchant('${m.id}')">Activar</button>`:''}
-    </td>
-  </tr>`).join('');
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin comercios — crea el primero con "+ Nuevo comercio"</td></tr>';return;}
+  tb.innerHTML=filtered.map(function(m){return '<tr>'
+    +'<td><strong>'+(m.name||'—')+'</strong></td><td>'+(m.category||'—')+'</td><td>'+(m.country||'—')+'</td><td>'+(m.city||'—')+'</td>'
+    +'<td>'+(m.contact||'—')+(m.phone?('<div style="font-size:.7rem;color:var(--muted)">'+m.phone+'</div>'):'')+'</td>'
+    +'<td><span class="badge '+(stC[m.status]||'badge-gray')+'">'+(m.status||'—')+'</span></td>'
+    +'<td><button class="btn-xs btn-cyan" onclick="viewMerchant(\''+m.id+'\')">Ver</button> '
+    +(m.status==='activo'?'<button class="btn-xs btn-red" onclick="suspendMerchant(\''+m.id+'\')">Suspender</button>':'<button class="btn-xs btn-green" onclick="activateMerchant(\''+m.id+'\')">Activar</button>')
+    +'</td></tr>';}).join('');
 }
 
-function createMerchant(){
-  var f={name:document.getElementById('merch-name').value,cat:document.getElementById('merch-cat').value,
-    country:document.getElementById('merch-country').value,email:document.getElementById('merch-email').value,
-    phone:document.getElementById('merch-phone').value,commission:document.getElementById('merch-commission').value};
-  if(!f.name||!f.email){toast('Nombre y email son obligatorios','warning');return;}
-  rwAPI('POST','/merchants',f).then(()=>{
-    toast('Comercio creado','success');closeModal('m-create-merchant');loadMerchants();
-    logAdminAction('create_merchant',f.name);
-  }).catch(()=>sbSave('merchants',f,'/merchants',loadMerchants,'m-create-merchant','Comercio creado'));
+async function createMerchant(){
+  var name=((document.getElementById('merch-name')||{}).value||'').trim();
+  var category=(document.getElementById('merch-cat')||{}).value||'';
+  var country=(document.getElementById('merch-country')||{}).value||'';
+  var contact=((document.getElementById('merch-email')||{}).value||'').trim();
+  var phone=((document.getElementById('merch-phone')||{}).value||'').trim();
+  if(!name||!category||!country){toast('Nombre, categoría y país son obligatorios','warning');return;}
+  var r=await rwAPI('POST','/merchants',{name:name,category:category,country:country,contact:contact||null,phone:phone||null});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo crear'));return;}
+  toast('✅ Comercio creado','success'); closeModal('m-create-merchant'); loadMerchants();
+  if(typeof logAdminAction==='function')logAdminAction('create_merchant',name);
 }
-
-function suspendMerchant(id){
-  var m=MERCHANTS_DATA.find(x=>x.id===id);if(!m)return;
-  m.status='suspendido';
-  rwAPI('PATCH','/merchants/'+id,{status:'suspendido'}).catch(()=>{});
-  toast('Comercio suspendido','warning');filterMerchants();
-  logAdminAction('suspend_merchant',id);
+async function suspendMerchant(id){
+  if(!confirm('¿Suspender este comercio?'))return;
+  var r=await rwAPI('PUT','/merchants/'+id+'/suspend',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Comercio suspendido','warning'); if(typeof logAdminAction==='function')logAdminAction('suspend_merchant',id); loadMerchants();
 }
-function activateMerchant(id){
-  var m=MERCHANTS_DATA.find(x=>x.id===id);if(!m)return;
-  m.status='activo';
-  rwAPI('PATCH','/merchants/'+id,{status:'activo'}).catch(()=>{});
-  toast('Comercio activado','success');filterMerchants();
-  logAdminAction('activate_merchant',id);
+async function activateMerchant(id){
+  var r=await rwAPI('PATCH','/merchants/'+id,{status:'activo'});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Comercio activado','success'); if(typeof logAdminAction==='function')logAdminAction('activate_merchant',id); loadMerchants();
 }
 function viewMerchant(id){
-  var m=(typeof MERCHANTS_DATA!=='undefined'?MERCHANTS_DATA:[]).find(function(x){return x.id===id;});
+  var m=(MERCHANTS_DATA||[]).find(function(x){return x.id===id;});
   if(!m){toast('Comercio no encontrado','warning');return;}
   showDetailPanel('Comercio: '+m.name,[
     {label:'Nombre',value:m.name,bold:true},
-    {label:'Categoría',value:m.cat||m.category||'—'},
-    {label:'País',value:m.country},
-    {label:'Email',value:m.email||'—'},
+    {label:'Categoría',value:m.category||'—'},
+    {label:'País',value:m.country||'—'},
+    {label:'Ciudad',value:m.city||'—'},
+    {label:'Contacto',value:m.contact||'—'},
     {label:'Teléfono',value:m.phone||'—'},
-    {label:'Ventas totales',value:'XOF '+(m.sales||0).toLocaleString()},
-    {label:'Comisión',value:(m.commission||0)+'%'},
-    {label:'KYC',value:m.kyc||'—'},
+    {label:'Moneda',value:m.currency||'—'},
     {label:'Estado',value:m.status}
   ],[
-    {label:'Suspender comercio',cls:'topbar-btn btn-danger-sm',fn:'suspendMerchant(\''+id+'\');document.getElementById(\'_detail-panel\').remove()'},
+    {label:(m.status==='activo'?'Suspender':'Activar')+' comercio',cls:'topbar-btn btn-ghost',fn:(m.status==='activo'?'suspendMerchant':'activateMerchant')+'(\''+id+'\');document.getElementById(\'_detail-panel\').remove()'},
     {label:'Exportar PDF',cls:'topbar-btn btn-ghost',fn:'exportMerchantsPDF()'}
   ]);
 }
-
 function exportMerchantsCSV(){
-  var rows=[['ID','Nombre','Categoría','País','Ventas','Comisión','KYC','Estado']];
-  MERCHANTS_DATA.forEach(m=>rows.push([m.id,m.name,m.cat,m.country,m.sales,m.commission+'%',m.kyc,m.status]));
-  var csv=rows.map(r=>r.join(',')).join('\n');
-  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='merchants.csv';a.click();toast('CSV exportado','success');
+  exportCSV('innovaafric_comercios',['Nombre','Categoria','Pais','Ciudad','Contacto','Telefono','Moneda','Estado'],
+    (MERCHANTS_DATA||[]).map(function(m){return [m.name,m.category,m.country,m.city,m.contact,m.phone,m.currency,m.status];}));
 }
 function exportMerchantsPDF(){
-  var rows=MERCHANTS_DATA.map(m=>[m.id,m.name,m.country,'XOF '+m.sales.toLocaleString(),m.status]);
-  exportModulePDF('Comercios InnovaAFRIC',['ID','Nombre','País','Ventas','Estado'],rows,'merchants.pdf');
+  exportTablePDF('🏪 InnovaAFRIC · Comercios',['Nombre','Categoría','País','Ciudad','Estado'],
+    (MERCHANTS_DATA||[]).map(function(m){return [m.name,m.category,m.country,m.city,m.status];}));
 }
 
 /* ── REFUNDS ────────────────────────────────────────────────── */
