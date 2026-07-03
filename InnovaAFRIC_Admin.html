@@ -8673,14 +8673,13 @@ function renderRetChart(list){
 }
 async function markRetiroPaid(id,btn){
   var w=_retFind(id);
-  if(w && _retIsHighValue(w)){ var ap=_amlGet(id); if(!(ap.a1&&ap.a2)){ alert(_i18n('ret:aml_block')); return; } }
+  if(w && _retIsHighValue(w) && _amlCount(w)<2){ alert(_i18n('ret:aml_block')); return; }
   if(!confirm('¿Marcar este retiro como PAGADO? Confirma que ya has hecho la transferencia al usuario.'))return;
   if(btn){btn.textContent='…';btn.disabled=true;}
   const r=await rwAPI('POST','/admin/withdrawals/'+id+'/complete',{});
   if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));if(btn){btn.textContent=_i18n('ret:mark_paid');btn.disabled=false;}return;}
   if(typeof toast==='function')toast('✅ Retiro marcado como pagado','success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_paid','Retiro '+id+' pagado');
-  _amlClear(id);
   loadRetiros();
 }
 
@@ -8729,12 +8728,12 @@ async function markRetirosBulk(){
   if(!ids.length){toast('Selecciona al menos un retiro','warning');return;}
   // Excluir retiros de alto importe sin la doble aprobación AML completa
   var blocked=[];
-  ids=ids.filter(function(id){ var w=_retFind(id); if(w&&_retIsHighValue(w)){ var ap=_amlGet(id); if(!(ap.a1&&ap.a2)){ blocked.push(id); return false; } } return true; });
+  ids=ids.filter(function(id){ var w=_retFind(id); if(w&&_retIsHighValue(w)&&_amlCount(w)<2){ blocked.push(id); return false; } return true; });
   if(!ids.length){ alert(_i18n('ret:aml_bulk_block')); return; }
   if(!confirm('¿Marcar '+ids.length+' retiro(s) como PAGADOS?\nConfirma que ya has hecho las transferencias.'+(blocked.length?('\n\n⚠️ '+blocked.length+' excluidos (requieren doble aprobación).'):'')))return;
   var ok=0,fail=0;
   for(var i=0;i<ids.length;i++){
-    try{ var r=await rwAPI('POST','/admin/withdrawals/'+ids[i]+'/complete',{}); if(r&&r.success){ok++;_amlClear(ids[i]);} else fail++; }
+    try{ var r=await rwAPI('POST','/admin/withdrawals/'+ids[i]+'/complete',{}); if(r&&r.success){ok++;} else fail++; }
     catch(e){ fail++; }
   }
   if(typeof toast==='function')toast('✅ '+ok+' pagado(s)'+(fail?(' · '+fail+' con error'):'')+(blocked.length?(' · '+blocked.length+' bloqueados AML'):''), (fail||blocked.length)?'warning':'success');
@@ -8791,23 +8790,18 @@ function _retFind(id){
   for(var i=0;i<pools.length;i++){ if(pools[i]){ var m=pools[i].filter(function(x){return String(x.id||'')===String(id);})[0]; if(m)return m; } }
   return null;
 }
-function _amlAll(){ try{return JSON.parse(localStorage.getItem('ia_ret_aml')||'{}');}catch(e){return {};} }
-function _amlGet(id){ return _amlAll()[id]||{}; }
-function _amlSave(all){ try{localStorage.setItem('ia_ret_aml',JSON.stringify(all));}catch(e){} }
-function _amlClear(id){ var all=_amlAll(); if(all[id]){ delete all[id]; _amlSave(all); } }
-function amlApprove(id){
-  var all=_amlAll(); var rec=all[id]||{};
+// Aprobaciones AML leídas del servidor (w.aml_approvals viene de GET /withdrawals)
+function _amlApprovers(w){ if(!w||!Array.isArray(w.aml_approvals))return []; var seen={},out=[]; w.aml_approvals.forEach(function(a){var k=(a.by||'').toLowerCase(); if(k&&!seen[k]){seen[k]=1;out.push(a.by);}}); return out; }
+function _amlCount(w){ return _amlApprovers(w).length; }
+async function amlApprove(id){
   var who=(prompt(_i18n('ret:aml_prompt'))||'').trim();
   if(!who)return;
-  if(!rec.a1){ rec.a1={by:who,at:new Date().toISOString()}; }
-  else if(!rec.a2){
-    if(who.toLowerCase()===(rec.a1.by||'').toLowerCase()){ alert(_i18n('ret:aml_diff')); return; }
-    rec.a2={by:who,at:new Date().toISOString()};
-  } else { return; }
-  all[id]=rec; _amlSave(all);
-  if(typeof logAdminAction==='function')logAdminAction('withdraw_aml_approval','Retiro '+id+' aprobado por '+who+(rec.a2?' (2/2)':' (1/2)'));
-  toast(rec.a2?_i18n('ret:aml_ready'):_i18n('ret:aml_1of2'),'success');
-  if(document.getElementById('rf-country')&&typeof applyRetiroFilters==='function')applyRetiroFilters(); else renderRetiros();
+  var r=await rwAPI('POST','/admin/withdrawals/'+id+'/approve',{approver:who});
+  if(!r||!r.success){ alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo')); return; }
+  var d=r.data||{};
+  if(typeof logAdminAction==='function')logAdminAction('withdraw_aml_approval','Retiro '+id+' aprobado por '+who+' ('+(d.approvals||'?')+'/'+(d.required||2)+')');
+  toast(d.complete?_i18n('ret:aml_ready'):_i18n('ret:aml_1of2'),'success');
+  loadRetiros();
 }
 function _retActionCell(w){
   if(w.status==='completed') return '<td>—</td>';
@@ -8816,10 +8810,10 @@ function _retActionCell(w){
   var rej='<button class="topbar-btn btn-ghost" style="font-size:11px;color:var(--red);border-color:var(--red-d,#7f1d1d)" onclick="openRetReject(\''+w.id+'\')">'+_i18n('ret:reject')+'</button>';
   var pay='<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">'+_i18n('ret:mark_paid')+'</button>';
   if(pend && _retIsHighValue(w)){
-    var ap=_amlGet(w.id);
-    if(!ap.a1) return '<td style="white-space:nowrap"><button class="topbar-btn btn-ghost" style="font-size:11px" title="'+_i18n('ret:aml_hint')+'" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve1')+'</button> '+rej+'</td>';
-    if(!ap.a2) return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+_i18n('ret:aml_by')+' '+(ap.a1.by||'')+'">✔ 1/2</span> <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve2')+'</button> '+rej+'</td>';
-    return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+(ap.a1.by||'')+' + '+(ap.a2.by||'')+'">✔ 2/2</span> '+pay+'</td>';
+    var who=_amlApprovers(w), n=who.length;
+    if(n===0) return '<td style="white-space:nowrap"><button class="topbar-btn btn-ghost" style="font-size:11px" title="'+_i18n('ret:aml_hint')+'" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve1')+'</button> '+rej+'</td>';
+    if(n===1) return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+_i18n('ret:aml_by')+' '+who[0]+'">✔ 1/2</span> <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve2')+'</button> '+rej+'</td>';
+    return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+who.join(' + ')+'">✔ 2/2</span> '+pay+'</td>';
   }
   return '<td style="white-space:nowrap">'+pay+' '+rej+'</td>';
 }
@@ -8836,7 +8830,6 @@ async function doRetReject(){
   if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
   if(typeof toast==='function')toast('🚫 '+_i18n('ret:reject_done'),'success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_rejected','Retiro '+id+' rechazado: '+reason);
-  _amlClear(id);
   closeModal('m-ret-reject');
   loadRetiros();
 }
