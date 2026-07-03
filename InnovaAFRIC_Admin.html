@@ -7446,6 +7446,28 @@ select.form-input option{background:var(--s2)}
   }catch(e){}
 })();
 
+// ── FIX v35: el query builder de Supabase (PostgREST) es "thenable" pero NO
+// tiene .catch/.finally. Decenas de módulos usan query.catch(...) y lanzaban
+// "catch is not a function" → la tabla se quedaba en spinner infinito y las
+// KPIs sin cargar. Parcheamos el prototipo del builder en cuanto SB exista. ──
+(function patchSBThenable(){
+  function tryPatch(){
+    try{
+      if(typeof SB==='undefined' || !SB) return false;
+      var q=SB.from('users').select('id').limit(1);
+      var proto=Object.getPrototypeOf(q);
+      while(proto && !Object.prototype.hasOwnProperty.call(proto,'then')) proto=Object.getPrototypeOf(proto);
+      if(!proto) return false;
+      if(typeof proto.catch!=='function'){ proto.catch=function(onRej){ return this.then(undefined,onRej); }; }
+      if(typeof proto.finally!=='function'){ proto.finally=function(cb){ return this.then(function(v){ if(cb)cb(); return v; }, function(e){ if(cb)cb(); throw e; }); }; }
+      return true;
+    }catch(e){ return false; }
+  }
+  if(tryPatch()) return;
+  var iv=setInterval(function(){ if(tryPatch()) clearInterval(iv); }, 200);
+  setTimeout(function(){ clearInterval(iv); }, 60000);
+})();
+
 const SB_URL='https://spnfvmvrlexyiljwyola.supabase.co';
 const SB_KEY='sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
 let SB=null, ALL_USERS=[], CURRENT_PAGE='dashboard';
