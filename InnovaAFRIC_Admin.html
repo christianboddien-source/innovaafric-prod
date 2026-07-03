@@ -1767,6 +1767,11 @@ select.form-input option{background:var(--s2)}
 
     <!-- PROVEEDORES -->
     <div id="pg-proveedores" style="display:none">
+      <div id="prov-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="prov:kpi_count">Nº proveedores</div><div style="font-size:20px;font-weight:800;color:var(--cyan)" id="prov-kpi-count">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="prov:kpi_eur">Saldo total</div><div style="font-size:20px;font-weight:800;color:var(--green)">€<span id="prov-kpi-eur">—</span></div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="prov:kpi_xaf">Saldo XAF</div><div style="font-size:20px;font-weight:800;color:var(--amber)" id="prov-kpi-xaf">—</div></div>
+      </div>
       <div class="card">
         <div class="card-head">
           <div><div class="card-title">🏭 Proveedores</div><div class="card-sub">Gestión de proveedores registrados</div></div>
@@ -3004,6 +3009,35 @@ select.form-input option{background:var(--s2)}
     </div>
     <div class="form-actions">
       <button class="btn-block btn-ghost" onclick="closeModal('m-order-detail')" data-i18n="txnd:close">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUEVO PROVEEDOR (v37) -->
+<div class="modal-overlay" id="m-new-proveedor-v21" onclick="if(event.target===this)closeModal('m-new-proveedor-v21')">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">🏭 <span data-i18n="prov:new_title">Nuevo proveedor</span></div>
+    <div class="modal-sub" data-i18n="prov:new_sub">Crea un proveedor (rol proveedor) con su wallet.</div>
+    <div class="form-row">
+      <div><label class="form-label" data-i18n="prov:f_name">Nombre / Empresa *</label><input class="form-input" id="np-name"></div>
+      <div><label class="form-label" data-i18n="prov:f_email">Email *</label><input class="form-input" id="np-email" type="email"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label" data-i18n="prov:f_pwd">Contraseña *</label><input class="form-input" id="np-pwd" type="password"></div>
+      <div><label class="form-label" data-i18n="prov:f_phone">Teléfono</label><input class="form-input" id="np-phone"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label" data-i18n="prov:f_country">País</label><select class="form-input" id="np-country"></select></div>
+      <div><label class="form-label" data-i18n="prov:f_city">Ciudad</label><input class="form-input" id="np-city"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label" data-i18n="prov:f_eur">Saldo inicial EUR</label><input class="form-input" id="np-eur" type="number" value="0" min="0"></div>
+      <div></div>
+    </div>
+    <div id="np-feedback" style="display:none;margin:8px 0;padding:8px 12px;border-radius:8px;font-size:13px"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="saveProveedorV21()" data-i18n="prov:new_save">✓ Crear proveedor</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-new-proveedor-v21')" data-i18n="ret:reject_cancel">Cancelar</button>
     </div>
   </div>
 </div>
@@ -14408,6 +14442,7 @@ var UI_TEXT_TR={
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En entrega','rid:kpi_eur':'Saldo total',
       'ord:actions':'Acciones','ord:act_confirm':'✔ Confirmar','ord:act_ship':'🚚 En reparto','ord:act_deliver':'✅ Entregado','ord:act_cancel':'❌ Cancelar','ord:act_refund':'↩️ Reembolsar','ord:act_assign':'🛵 Asignar','ord:status_done':'Estado actualizado','ord:pick_rider':'Elige un rider','ord:assign_done':'Rider asignado','ord:refund_prompt':'Motivo del reembolso:','ord:refund_done':'Pedido reembolsado',
       'rid:ficha_title':'Ficha del rider','rid:f_name':'Nombre','rid:f_phone':'Teléfono','rid:f_loc':'Ubicación','rid:f_zone':'Zona','rid:f_status':'Estado','rid:f_deliveries':'Entregas','rid:f_rating':'Valoración','rid:f_rank':'Ranking','rid:f_wallet':'Saldo wallet','rid:f_notreg':'Este rider aún no está en la red de reparto (sin entregas/rating).','rid:f_recharge':'💰 Recargar wallet','rid:f_payments':'💸 Cola de pagos',
+      'prov:new_btn':'+ Nuevo proveedor','prov:new_title':'Nuevo proveedor','prov:new_sub':'Crea un proveedor (rol proveedor) con su wallet.','prov:f_name':'Nombre / Empresa *','prov:f_email':'Email *','prov:f_pwd':'Contraseña *','prov:f_phone':'Teléfono','prov:f_country':'País','prov:f_city':'Ciudad','prov:f_eur':'Saldo inicial EUR','prov:new_save':'✓ Crear proveedor','prov:need':'Nombre, email y contraseña son obligatorios','prov:creating':'Creando proveedor…','prov:created':'proveedor creado','prov:kpi_count':'Nº proveedores','prov:kpi_eur':'Saldo total','prov:kpi_xaf':'Saldo XAF',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
       'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
       'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
@@ -14446,6 +14481,7 @@ var UI_TEXT_TR={
       'rid:kpi_total':'Total riders','rid:kpi_free':'Free','rid:kpi_busy':'On delivery','rid:kpi_eur':'Total balance',
       'ord:actions':'Actions','ord:act_confirm':'✔ Confirm','ord:act_ship':'🚚 Out for delivery','ord:act_deliver':'✅ Delivered','ord:act_cancel':'❌ Cancel','ord:act_refund':'↩️ Refund','ord:act_assign':'🛵 Assign','ord:status_done':'Status updated','ord:pick_rider':'Pick a rider','ord:assign_done':'Rider assigned','ord:refund_prompt':'Refund reason:','ord:refund_done':'Order refunded',
       'rid:ficha_title':'Rider profile','rid:f_name':'Name','rid:f_phone':'Phone','rid:f_loc':'Location','rid:f_zone':'Zone','rid:f_status':'Status','rid:f_deliveries':'Deliveries','rid:f_rating':'Rating','rid:f_rank':'Ranking','rid:f_wallet':'Wallet balance','rid:f_notreg':'This rider is not in the delivery network yet (no deliveries/rating).','rid:f_recharge':'💰 Top up wallet','rid:f_payments':'💸 Payment queue',
+      'prov:new_btn':'+ New provider','prov:new_title':'New provider','prov:new_sub':'Create a provider (provider role) with its wallet.','prov:f_name':'Name / Company *','prov:f_email':'Email *','prov:f_pwd':'Password *','prov:f_phone':'Phone','prov:f_country':'Country','prov:f_city':'City','prov:f_eur':'Initial EUR balance','prov:new_save':'✓ Create provider','prov:need':'Name, email and password are required','prov:creating':'Creating provider…','prov:created':'provider created','prov:kpi_count':'Providers','prov:kpi_eur':'Total balance','prov:kpi_xaf':'XAF balance',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
       'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
       'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
@@ -14484,6 +14520,7 @@ var UI_TEXT_TR={
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En livraison','rid:kpi_eur':'Solde total',
       'ord:actions':'Actions','ord:act_confirm':'✔ Confirmer','ord:act_ship':'🚚 En livraison','ord:act_deliver':'✅ Livrée','ord:act_cancel':'❌ Annuler','ord:act_refund':'↩️ Rembourser','ord:act_assign':'🛵 Assigner','ord:status_done':'Statut mis à jour','ord:pick_rider':'Choisis un rider','ord:assign_done':'Rider assigné','ord:refund_prompt':'Motif du remboursement :','ord:refund_done':'Commande remboursée',
       'rid:ficha_title':'Fiche du rider','rid:f_name':'Nom','rid:f_phone':'Téléphone','rid:f_loc':'Localisation','rid:f_zone':'Zone','rid:f_status':'Statut','rid:f_deliveries':'Livraisons','rid:f_rating':'Note','rid:f_rank':'Classement','rid:f_wallet':'Solde wallet','rid:f_notreg':'Ce rider n\'est pas encore dans le réseau de livraison (pas de livraisons/note).','rid:f_recharge':'💰 Recharger wallet','rid:f_payments':'💸 File de paiements',
+      'prov:new_btn':'+ Nouveau fournisseur','prov:new_title':'Nouveau fournisseur','prov:new_sub':'Créez un fournisseur (rôle fournisseur) avec son wallet.','prov:f_name':'Nom / Entreprise *','prov:f_email':'Email *','prov:f_pwd':'Mot de passe *','prov:f_phone':'Téléphone','prov:f_country':'Pays','prov:f_city':'Ville','prov:f_eur':'Solde initial EUR','prov:new_save':'✓ Créer le fournisseur','prov:need':'Nom, email et mot de passe sont obligatoires','prov:creating':'Création du fournisseur…','prov:created':'fournisseur créé','prov:kpi_count':'Fournisseurs','prov:kpi_eur':'Solde total','prov:kpi_xaf':'Solde XAF',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
       'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
       'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
@@ -16277,17 +16314,63 @@ loadAuditLog=async function(){
 filterLog=filterLogV21;
 
 // ── PROVEEDORES MEJORADO — Crear + Filtros ─────────────────────
+function renderProvKPIs(list){
+  list=list||[];
+  var eur=list.reduce(function(s,p){return s+Number((p.w||{}).eur||0);},0);
+  var xaf=list.reduce(function(s,p){return s+Number((p.w||{}).xaf||0);},0);
+  var setk=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  setk('prov-kpi-count',list.length);
+  setk('prov-kpi-eur',eur.toFixed(2));
+  setk('prov-kpi-xaf',Math.round(xaf).toLocaleString('es',{useGrouping:'always'}));
+}
+function openNewProveedor(){
+  var sel=document.getElementById('np-country');
+  if(sel && !sel.options.length && typeof COUNTRY_NAMES_V21!=='undefined'){
+    sel.innerHTML=Object.keys(COUNTRY_NAMES_V21).map(function(c){return '<option value="'+c+'"'+(c==='GQ'?' selected':'')+'>'+((typeof FLAG_EMOJI!=='undefined'&&FLAG_EMOJI[c])||'')+' '+COUNTRY_NAMES_V21[c]+'</option>';}).join('');
+  }
+  ['np-name','np-email','np-pwd','np-phone','np-city'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  var eur=document.getElementById('np-eur'); if(eur)eur.value=0;
+  var fb=document.getElementById('np-feedback'); if(fb)fb.style.display='none';
+  openModal('m-new-proveedor-v21');
+}
+async function saveProveedorV21(){
+  var name=((document.getElementById('np-name')||{}).value||'').trim();
+  var email=((document.getElementById('np-email')||{}).value||'').trim();
+  var pwd=(document.getElementById('np-pwd')||{}).value||'';
+  var phone=((document.getElementById('np-phone')||{}).value||'').trim();
+  var country=(document.getElementById('np-country')||{}).value||'GQ';
+  var city=((document.getElementById('np-city')||{}).value||'').trim();
+  var eur=Number((document.getElementById('np-eur')||{}).value)||0;
+  var fb=document.getElementById('np-feedback');
+  var setfb=function(msg,ok){ if(!fb)return; fb.style.display='block'; fb.style.background=(ok===true?'var(--green-d)':(ok===false?'var(--red-d)':'var(--s2)')); fb.style.color=(ok===true?'var(--green)':(ok===false?'var(--red)':'var(--muted)')); fb.textContent=msg; };
+  if(!name||!email||!pwd){ toast(_i18n('prov:need'),'error'); return; }
+  setfb(_i18n('prov:creating'));
+  try{
+    var res=await SB.auth.signUp({email:email,password:pwd});
+    if(res.error)throw new Error(res.error.message);
+    var uid=res.data.user.id;
+    await SB.from('users').upsert({ id:uid, email:email, full_name:name, role:'proveedor', country:country, phone:phone||null, city:city||null });
+    await SB.from('wallets').upsert({ user_id:uid, eur:eur, xaf:Math.round(eur*655.957), usd:Math.round(eur*1.08), points:0 });
+    setfb('✅ '+_i18n('prov:created')+' — '+name, true);
+    if(typeof toast==='function')toast('✅ '+name+' — '+_i18n('prov:created'),'success');
+    if(typeof logAdminAction==='function')logAdminAction('create_proveedor','Proveedor '+name+' creado');
+    setTimeout(function(){ closeModal('m-new-proveedor-v21'); loadProveedores(); },900);
+  }catch(e){ setfb('Error: '+e.message, false); if(typeof toast==='function')toast('Error: '+e.message,'error'); }
+}
 function initProveedorFilters(){
-  var card=document.querySelector('#pg-proveedores .card');
+  var listEl=document.getElementById('proveedores-list');
+  var card=listEl?listEl.closest('.card'):document.querySelector('#pg-proveedores .card');
   if(!card||document.getElementById('prov-country-filter-v21'))return;
   var head=card.querySelector('.card-head');
-  // Añadir botón crear proveedor al card-head
-  var actDiv=head.querySelector('.card-actions')||head;
+  // Añadir botón crear proveedor al card-head (dentro del grupo de botones)
+  var actDiv=head.querySelector('div[style*="display:flex"]')||head;
   var newBtn=document.createElement('button');
   newBtn.className='topbar-btn btn-primary';
-  newBtn.onclick=function(){openModal('m-new-proveedor-v21');};
+  newBtn.style.fontSize='12px';
+  newBtn.onclick=function(){openNewProveedor();};
+  newBtn.setAttribute('data-i18n','prov:new_btn');
   newBtn.textContent='+ Nuevo proveedor';
-  actDiv.appendChild(newBtn);
+  actDiv.insertBefore(newBtn, actDiv.firstChild);
   // Filtros
   var div=document.createElement('div');
   div.className='filter-bar';
@@ -16323,10 +16406,11 @@ async function loadProveedoresV21(){
   if(country)users=users.filter(function(u){return u.country===country;});
   if(city)users=users.filter(function(u){return u.city===city;});
   if(q)users=users.filter(function(u){return(u.full_name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
-  if(!users.length){window._provLast=[];list.innerHTML='<div class="td-empty">Sin proveedores para los filtros seleccionados</div>';return;}
+  if(!users.length){window._provLast=[];renderProvKPIs([]);list.innerHTML='<div class="td-empty">Sin proveedores para los filtros seleccionados</div>';return;}
   var wRes=await SB.from('wallets').select('user_id,eur,xaf').in('user_id',users.map(function(u){return u.id;})).catch(()=>({data:[]}));
   var wMap={};(wRes.data||[]).forEach(function(w){wMap[w.user_id]=w;});
   window._provLast=users.map(function(u){return {u:u,w:wMap[u.id]||{}};});
+  renderProvKPIs(window._provLast);
   list.innerHTML=users.map(function(u){
     var w=wMap[u.id]||{};
     var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
