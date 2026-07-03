@@ -1180,8 +1180,14 @@ select.form-input option{background:var(--s2)}
 
     <!-- RIDERS -->
     <div id="pg-riders" style="display:none">
+      <div id="riders-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px">
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="rid:kpi_total">Total riders</div><div style="font-size:20px;font-weight:800;color:var(--cyan)" id="rid-kpi-total">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="rid:kpi_free">Libres</div><div style="font-size:20px;font-weight:800;color:var(--green)" id="rid-kpi-free">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="rid:kpi_busy">En entrega</div><div style="font-size:20px;font-weight:800;color:var(--amber)" id="rid-kpi-busy">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="rid:kpi_eur">Saldo total</div><div style="font-size:20px;font-weight:800;color:var(--purple)">€<span id="rid-kpi-eur">—</span></div></div>
+      </div>
       <div class="card">
-        <div class="card-head"><div class="card-title">Red de Riders</div></div>
+        <div class="card-head"><div><div class="card-title">🛵 Red de Riders</div></div><div style="display:flex;gap:6px"><button class="topbar-btn btn-ghost" onclick="exportRidersCSV()">📥 CSV</button><button class="topbar-btn btn-ghost" onclick="exportRidersListPDF()">📄 PDF</button></div></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Rider</th><th>Nivel</th><th>Entregas</th><th>Rating</th><th>Estado</th></tr></thead>
@@ -1194,7 +1200,7 @@ select.form-input option{background:var(--s2)}
     <!-- CIRCULARES -->
     <div id="pg-circulares" style="display:none">
       <div class="card">
-        <div class="card-head"><div class="card-title">Circulares Autorizadas</div></div>
+        <div class="card-head"><div><div class="card-title">Circulares Autorizadas</div></div><div style="display:flex;gap:6px"><button class="topbar-btn btn-ghost" onclick="exportCircBasicCSV()">📥 CSV</button><button class="topbar-btn btn-ghost" onclick="exportCircBasicPDF()">📄 PDF</button></div></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Circular</th><th>Territorio</th><th>Estado</th><th>Comisión %</th></tr></thead>
@@ -1206,11 +1212,33 @@ select.form-input option{background:var(--s2)}
 
     <!-- ORDERS -->
     <div id="pg-orders" style="display:none">
+      <div id="orders-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px">
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ord:kpi_total">Total pedidos</div><div style="font-size:20px;font-weight:800;color:var(--cyan)" id="ord-kpi-total">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ord:kpi_progress">En curso</div><div style="font-size:20px;font-weight:800;color:var(--amber)" id="ord-kpi-progress">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ord:kpi_delivered">Entregados</div><div style="font-size:20px;font-weight:800;color:var(--green)" id="ord-kpi-delivered">—</div></div>
+        <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ord:kpi_volume">Volumen</div><div style="font-size:20px;font-weight:800;color:var(--purple)">€<span id="ord-kpi-volume">—</span></div></div>
+      </div>
       <div class="card">
-        <div class="card-head"><div class="card-title">Pedidos</div></div>
+        <div class="card-head">
+          <div><div class="card-title">📦 <span data-i18n="ord:title">Pedidos</span></div><div class="card-sub" id="orders-count">Cargando…</div></div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <select id="ord-status-f" class="filter-select" onchange="renderOrders()">
+              <option value="" data-i18n="ord:f_all">Todos los estados</option>
+              <option value="pending" data-i18n="ord:s_pending">⏳ Pendiente</option>
+              <option value="confirmed" data-i18n="ord:s_confirmed">✔ Confirmado</option>
+              <option value="preparing" data-i18n="ord:s_preparing">👨‍🍳 Preparando</option>
+              <option value="shipped" data-i18n="ord:s_shipped">🚚 En reparto</option>
+              <option value="delivered" data-i18n="ord:s_delivered">✅ Entregado</option>
+              <option value="cancelled" data-i18n="ord:s_cancelled">❌ Cancelado</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="exportOrdersCSV()">📥 CSV</button>
+            <button class="topbar-btn btn-ghost" onclick="exportOrdersPDF()">📄 PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="loadOrders()">↻</button>
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Código</th><th>Usuario</th><th>Tipo</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead>
+            <thead><tr><th data-i18n="ord:th_code">Código</th><th data-i18n="ord:th_user">Usuario</th><th data-i18n="ord:th_type">Tipo</th><th data-i18n="ord:th_total">Total</th><th data-i18n="ord:th_status">Estado</th><th data-i18n="ord:th_date">Fecha</th></tr></thead>
             <tbody id="tb-orders"><tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr></tbody>
           </table>
         </div>
@@ -1742,7 +1770,7 @@ select.form-input option{background:var(--s2)}
       <div class="card">
         <div class="card-head">
           <div><div class="card-title">🏭 Proveedores</div><div class="card-sub">Gestión de proveedores registrados</div></div>
-          <button class="topbar-btn btn-ghost" onclick="loadProveedores()">↻</button>
+          <div style="display:flex;gap:6px"><button class="topbar-btn btn-ghost" onclick="exportProveedoresCSV()">📥 CSV</button><button class="topbar-btn btn-ghost" onclick="exportProvListPDF()">📄 PDF</button><button class="topbar-btn btn-ghost" onclick="loadProveedores()">↻</button></div>
         </div>
         <div style="padding:16px 20px" id="proveedores-list"><div class="loading-cell"><div class="spin"></div></div></div>
       </div>
@@ -2951,6 +2979,17 @@ select.form-input option{background:var(--s2)}
     <div id="m-txn-detail-body" style="margin:10px 0"></div>
     <div class="form-actions">
       <button class="btn-block btn-ghost" onclick="closeModal('m-txn-detail')" data-i18n="txnd:close">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETALLE PEDIDO (v35) -->
+<div class="modal-overlay" id="m-order-detail" onclick="if(event.target===this)closeModal('m-order-detail')">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-title">📦 <span data-i18n="ord:detail_title">Detalle del pedido</span></div>
+    <div id="m-order-detail-body" style="margin:10px 0"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-ghost" onclick="closeModal('m-order-detail')" data-i18n="txnd:close">Cerrar</button>
     </div>
   </div>
 </div>
@@ -7891,6 +7930,11 @@ async function loadDashboard(){
 }
 
 // ── USERS ─────────────────────────────────────────────────
+// Asegura que ALL_USERS esté cargado (usado por módulos Riders/Proveedores).
+async function ensureUsers(){
+  if(ALL_USERS && ALL_USERS.length) return;
+  try{ await loadUsers(); }catch(e){}
+}
 async function loadUsers(){
   try{
     const{data:users}=await SB.from('users').select('*',{count:'exact'}).order('created_at',{ascending:false});
@@ -8598,6 +8642,7 @@ async function loadRiders(){
 }
 async function loadCirculares(){
   const{data}=await SB.from('circulares').select('*,user:user_id(full_name,email)').catch(()=>({data:[]}));
+  window._circLast=data||[];
   document.getElementById('tb-circulares').innerHTML=(data||[]).length?(data||[]).map(c=>`<tr>
     <td><div class="uc-name">${c.user?.full_name||'—'}</div><div class="uc-email">${c.user?.email||''}</div></td>
     <td>${c.city||'—'}, ${c.country||'—'}</td>
@@ -8605,17 +8650,77 @@ async function loadCirculares(){
     <td style="font-family:var(--mono)">${c.commission_pct||1}%</td>
   </tr>`).join(''):'<tr><td colspan="4" class="td-empty">Sin circulares registradas</td></tr>';
 }
+function exportCircBasicCSV(){
+  var list=window._circLast||[];
+  exportCSV('innovaafric_circulares', ['Nombre','Email','Ciudad','Pais','Estado','Comision_%'],
+    list.map(function(c){var u=c.user||{};return [ (u.full_name||''), (u.email||''), (c.city||''), (c.country||''), (c.status||''), (c.commission_pct||1) ];}));
+}
+function exportCircBasicPDF(){
+  var list=window._circLast||[];
+  exportTablePDF('🏢 InnovaAFRIC · Circulares', ['Nombre','Email','Territorio','Estado','Comisión %'],
+    list.map(function(c){var u=c.user||{};return [ (u.full_name||'—'), (u.email||''), ((c.city||'—')+', '+(c.country||'—')), (c.status||'—'), (c.commission_pct||1)+'%' ];}));
+}
 async function loadOrders(){
+  var tb=document.getElementById('tb-orders');
+  if(tb)tb.innerHTML='<tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr>';
   const{data}=await SB.from('orders').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).catch(()=>({data:[]}));
-  const SP={delivered:'green',pending:'amber',confirmed:'cyan',cancelled:'red'};
-  document.getElementById('tb-orders').innerHTML=(data||[]).length?(data||[]).map(o=>`<tr>
-    <td style="font-family:var(--mono);font-size:11px">${o.tracking_code||'—'}</td>
-    <td style="font-size:12px">${o.user?.full_name||'—'}</td>
-    <td><span class="pill pill-cyan">${o.type}</span></td>
-    <td style="font-family:var(--mono);font-weight:600">€${Number(o.total_eur||0).toFixed(2)}</td>
-    <td><span class="pill pill-${SP[o.status]||'amber'}">${o.status}</span></td>
-    <td style="font-size:11px;color:var(--muted)">${fmt_date(o.created_at)}</td>
-  </tr>`).join(''):'<tr><td colspan="6" class="td-empty">Sin pedidos aún</td></tr>';
+  window._ordersLast=data||[];
+  renderOrders();
+}
+function renderOrders(){
+  var tb=document.getElementById('tb-orders'); if(!tb)return;
+  var all=window._ordersLast||[];
+  var sf=(document.getElementById('ord-status-f')||{}).value||'';
+  var list=sf?all.filter(function(o){return (o.status||'')===sf;}):all;
+  window._ordersFiltered=list;
+  var done=all.filter(function(o){return o.status==='delivered';}).length;
+  var prog=all.filter(function(o){return ['pending','confirmed','preparing','shipped'].indexOf(o.status)>=0;}).length;
+  var vol=all.reduce(function(s,o){return s+Number(o.total_eur||0);},0);
+  var setk=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  setk('ord-kpi-total',all.length); setk('ord-kpi-progress',prog); setk('ord-kpi-delivered',done);
+  setk('ord-kpi-volume',Math.round(vol).toLocaleString('es',{useGrouping:'always'}));
+  var cnt=document.getElementById('orders-count'); if(cnt)cnt.textContent=list.length+' '+_i18n('ord:count')+(sf?' · '+_i18n('ord:filtered'):'');
+  var SP={delivered:'green',pending:'amber',confirmed:'cyan',preparing:'amber',shipped:'cyan',cancelled:'red'};
+  if(!list.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">'+_i18n('ord:none')+'</td></tr>';return;}
+  tb.innerHTML=list.map(function(o){return '<tr style="cursor:pointer" onclick="openOrderDetail(\''+(o.id||'')+'\')" title="Ver detalle">'
+    +'<td style="font-family:var(--mono);font-size:11px">'+(o.tracking_code||o.id||'—')+'</td>'
+    +'<td style="font-size:12px">'+((o.user&&o.user.full_name)||(o.user&&o.user.email)||'—')+'</td>'
+    +'<td><span class="pill pill-cyan">'+(o.type||'—')+'</span></td>'
+    +'<td style="font-family:var(--mono);font-weight:600">€'+Number(o.total_eur||0).toFixed(2)+'</td>'
+    +'<td><span class="pill pill-'+(SP[o.status]||'gray')+'">'+(o.status||'—')+'</span></td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+fmt_date(o.created_at)+'</td>'
+    +'</tr>';}).join('');
+}
+function openOrderDetail(id){
+  var o=(window._ordersLast||[]).filter(function(x){return String(x.id||'')===String(id);})[0];
+  if(!o){toast('Pedido no encontrado','warning');return;}
+  var row=function(k,v){return '<div style="display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--b1)"><span style="color:var(--muted);font-size:12px">'+k+'</span><span style="font-size:13px;font-weight:600;text-align:right;word-break:break-all">'+v+'</span></div>';};
+  var items='';
+  if(Array.isArray(o.items)&&o.items.length){ items=o.items.map(function(it){return '• '+(it.name||it.product||'—')+' ×'+(it.qty||it.quantity||1);}).join('<br>'); }
+  var body=document.getElementById('m-order-detail-body');
+  if(body)body.innerHTML=
+     row(_i18n('ord:th_code'), o.tracking_code||o.id||'—')
+    +row(_i18n('ord:th_user'), ((o.user&&o.user.full_name)||'—')+((o.user&&o.user.email)?'<div style="font-size:10px;color:var(--muted)">'+o.user.email+'</div>':''))
+    +row(_i18n('ord:th_type'), o.type||'—')
+    +row(_i18n('ord:th_total'), '€'+Number(o.total_eur||0).toFixed(2)+(o.total_xaf?(' · '+Math.round(o.total_xaf).toLocaleString('es')+' XAF'):''))
+    +row(_i18n('ord:th_status'), o.status||'—')
+    +(o.delivery_address?row(_i18n('ord:address'), o.delivery_address):'')
+    +(o.rider_id?row('Rider', o.rider_id):'')
+    +(items?row(_i18n('ord:items'), items):'')
+    +(o.notes?row(_i18n('ord:notes'), o.notes):'')
+    +row(_i18n('ord:th_date'), fmt_date(o.created_at));
+  openModal('m-order-detail');
+}
+function exportOrdersCSV(){
+  var list=window._ordersFiltered||window._ordersLast||[];
+  exportCSV('innovaafric_pedidos',
+    ['Codigo','Usuario','Email','Tipo','Total_EUR','Total_XAF','Estado','Direccion','Fecha'],
+    list.map(function(o){return [ (o.tracking_code||o.id||''), ((o.user&&o.user.full_name)||''), ((o.user&&o.user.email)||''), (o.type||''), Number(o.total_eur||0), Number(o.total_xaf||0), (o.status||''), (o.delivery_address||''), (o.created_at?new Date(o.created_at).toLocaleString('es'):'') ];}));
+}
+function exportOrdersPDF(){
+  var list=window._ordersFiltered||window._ordersLast||[];
+  exportTablePDF('📦 InnovaAFRIC · Pedidos', ['Código','Usuario','Tipo','Total €','Estado','Fecha'],
+    list.map(function(o){return [ (o.tracking_code||o.id||'—'), ((o.user&&o.user.full_name)||(o.user&&o.user.email)||'—'), (o.type||'—'), '€'+Number(o.total_eur||0).toFixed(2), (o.status||'—'), (o.created_at?new Date(o.created_at).toLocaleString('es'):'—') ];}), _i18n('ord:title'));
 }
 // ── Retiros — solicitudes de cobro (Railway) ──────────────
 async function loadRetiros(){
@@ -9855,6 +9960,30 @@ function exportUsersCSV(){
   a.click();URL.revokeObjectURL(url);
   toast('✅ CSV exportado con campos de dirección','success');
   logAdminAction('export','Usuarios exportados a CSV');
+}
+// ── Export genéricos reutilizables (CSV / PDF) ─────────────
+function _csvEscape(v){ v=(v==null?'':String(v)); return /[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+function exportCSV(filename, headers, rows){
+  if(!rows||!rows.length){toast('No hay datos para exportar','warning');return;}
+  var lines=[headers.map(_csvEscape).join(',')].concat(rows.map(function(r){return r.map(_csvEscape).join(',');}));
+  var blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=filename+'_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  toast('CSV exportado: '+rows.length+' filas','success');
+}
+function exportTablePDF(title, headers, rows, subtitle){
+  if(!rows||!rows.length){toast('No hay datos para exportar','warning');return;}
+  var esc=function(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var html='<html><head><meta charset="UTF-8"><title>'+esc(title)+'</title>'
+    +'<style>body{font-family:Arial;padding:20px;font-size:10px}h1{font-size:16px;color:#0a1628}table{width:100%;border-collapse:collapse}th,td{padding:4px 6px;border-bottom:1px solid #eee;text-align:left}th{background:#f5f5f5}</style></head><body>'
+    +'<h1>'+esc(title)+'</h1><p>'+new Date().toLocaleDateString('es')+(subtitle?(' · '+esc(subtitle)):'')+' · '+rows.length+' registros</p>'
+    +'<table><thead><tr>'+headers.map(function(h){return'<th>'+esc(h)+'</th>';}).join('')+'</tr></thead><tbody>'
+    +rows.map(function(r){return'<tr>'+r.map(function(c){return'<td>'+esc(c)+'</td>';}).join('')+'</tr>';}).join('')
+    +'</tbody></table><p style="font-size:9px;color:#999;text-align:center;margin-top:16px">InnovaAFRIC · We Simplify Life</p></body></html>';
+  var win=window.open('','_blank'); if(!win){toast('Activa ventanas emergentes','error');return;}
+  win.document.write(html); win.document.close(); win.focus(); setTimeout(function(){win.print();},400);
+  toast('Abriendo PDF','success');
 }
 function exportTxnsCSV(){
   var src=ALL_TXNS&&ALL_TXNS.length?ALL_TXNS:[];
@@ -14152,6 +14281,8 @@ var UI_TEXT_TR={
       'txn:f_all_curr':'💱 Todas las monedas','txn:f_all_countries':'🌍 Todos los países',
       'txn:kpi_volume':'Volumen total','txn:kpi_fees':'Comisiones','txn:kpi_avg':'Ticket medio','txn:kpi_count':'Nº transacciones','txn:time_title':'📈 Evolución temporal (volumen por día)',
       'txnd:title':'Detalle de transacción','txnd:ref':'Referencia','txnd:user':'Usuario','txnd:phone':'Teléfono','txnd:type':'Tipo','txnd:amount':'Importe','txnd:fee':'Comisión','txnd:received':'Recibido','txnd:rate':'Tasa','txnd:status':'Estado','txnd:date':'Fecha','txnd:desc':'Descripción','txnd:close':'Cerrar',
+      'ord:title':'Pedidos','ord:detail_title':'Detalle del pedido','ord:kpi_total':'Total pedidos','ord:kpi_progress':'En curso','ord:kpi_delivered':'Entregados','ord:kpi_volume':'Volumen','ord:f_all':'Todos los estados','ord:s_pending':'⏳ Pendiente','ord:s_confirmed':'✔ Confirmado','ord:s_preparing':'👨‍🍳 Preparando','ord:s_shipped':'🚚 En reparto','ord:s_delivered':'✅ Entregado','ord:s_cancelled':'❌ Cancelado','ord:th_code':'Código','ord:th_user':'Usuario','ord:th_type':'Tipo','ord:th_total':'Total','ord:th_status':'Estado','ord:th_date':'Fecha','ord:count':'pedidos','ord:filtered':'filtrados','ord:none':'Sin pedidos','ord:address':'Dirección','ord:items':'Artículos','ord:notes':'Notas',
+      'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En entrega','rid:kpi_eur':'Saldo total',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
       'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
       'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
@@ -14186,6 +14317,8 @@ var UI_TEXT_TR={
       'txn:f_all_curr':'💱 All currencies','txn:f_all_countries':'🌍 All countries',
       'txn:kpi_volume':'Total volume','txn:kpi_fees':'Fees','txn:kpi_avg':'Avg ticket','txn:kpi_count':'Transactions','txn:time_title':'📈 Timeline (volume per day)',
       'txnd:title':'Transaction detail','txnd:ref':'Reference','txnd:user':'User','txnd:phone':'Phone','txnd:type':'Type','txnd:amount':'Amount','txnd:fee':'Fee','txnd:received':'Received','txnd:rate':'Rate','txnd:status':'Status','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Close',
+      'ord:title':'Orders','ord:detail_title':'Order detail','ord:kpi_total':'Total orders','ord:kpi_progress':'In progress','ord:kpi_delivered':'Delivered','ord:kpi_volume':'Volume','ord:f_all':'All statuses','ord:s_pending':'⏳ Pending','ord:s_confirmed':'✔ Confirmed','ord:s_preparing':'👨‍🍳 Preparing','ord:s_shipped':'🚚 Out for delivery','ord:s_delivered':'✅ Delivered','ord:s_cancelled':'❌ Cancelled','ord:th_code':'Code','ord:th_user':'User','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Status','ord:th_date':'Date','ord:count':'orders','ord:filtered':'filtered','ord:none':'No orders','ord:address':'Address','ord:items':'Items','ord:notes':'Notes',
+      'rid:kpi_total':'Total riders','rid:kpi_free':'Free','rid:kpi_busy':'On delivery','rid:kpi_eur':'Total balance',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
       'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
       'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
@@ -14220,6 +14353,8 @@ var UI_TEXT_TR={
       'txn:f_all_curr':'💱 Toutes les devises','txn:f_all_countries':'🌍 Tous les pays',
       'txn:kpi_volume':'Volume total','txn:kpi_fees':'Commissions','txn:kpi_avg':'Panier moyen','txn:kpi_count':'Nb transactions','txn:time_title':'📈 Évolution (volume par jour)',
       'txnd:title':'Détail de la transaction','txnd:ref':'Référence','txnd:user':'Utilisateur','txnd:phone':'Téléphone','txnd:type':'Type','txnd:amount':'Montant','txnd:fee':'Commission','txnd:received':'Reçu','txnd:rate':'Taux','txnd:status':'Statut','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Fermer',
+      'ord:title':'Commandes','ord:detail_title':'Détail de la commande','ord:kpi_total':'Total commandes','ord:kpi_progress':'En cours','ord:kpi_delivered':'Livrées','ord:kpi_volume':'Volume','ord:f_all':'Tous les statuts','ord:s_pending':'⏳ En attente','ord:s_confirmed':'✔ Confirmée','ord:s_preparing':'👨‍🍳 Préparation','ord:s_shipped':'🚚 En livraison','ord:s_delivered':'✅ Livrée','ord:s_cancelled':'❌ Annulée','ord:th_code':'Code','ord:th_user':'Utilisateur','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Statut','ord:th_date':'Date','ord:count':'commandes','ord:filtered':'filtrées','ord:none':'Aucune commande','ord:address':'Adresse','ord:items':'Articles','ord:notes':'Notes',
+      'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En livraison','rid:kpi_eur':'Solde total',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
       'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
       'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
@@ -15633,8 +15768,10 @@ async function loadRidersV21() {
   var wMap={}; (wRes.data||[]).forEach(function(w){wMap[w.user_id]=w;});
   // Datos de estado (simulado con localStorage en esta versión)
   var riderStates=JSON.parse(localStorage.getItem('ia_rider_states')||'{}');
-  if(!riders.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin riders registrados</td></tr>';return;}
+  if(!riders.length){renderRidersKPIs([],{},{});window._ridersLast=[];tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin riders registrados</td></tr>';return;}
   var filtered = status ? riders.filter(function(u){return (riderStates[u.id]||'libre')===status;}) : riders;
+  renderRidersKPIs(riders, riderStates, wMap);
+  window._ridersLast=filtered.map(function(u){return {u:u,w:wMap[u.id]||{},state:riderStates[u.id]||'libre'};});
   tb.innerHTML=filtered.map(function(u){
     var w=wMap[u.id]||{};
     var state=riderStates[u.id]||'libre';
@@ -15673,8 +15810,29 @@ function setRiderState(uid, state) {
   toast('Rider → '+state,'info');
 }
 
+function renderRidersKPIs(riders, states, wMap){
+  var setk=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  var free=riders.filter(function(u){return (states[u.id]||'libre')==='libre';}).length;
+  var busy=riders.filter(function(u){return (states[u.id]||'libre')==='ocupado';}).length;
+  var eur=riders.reduce(function(s,u){return s+Number((wMap[u.id]||{}).eur||0);},0);
+  setk('rid-kpi-total',riders.length); setk('rid-kpi-free',free); setk('rid-kpi-busy',busy);
+  setk('rid-kpi-eur',eur.toFixed(2));
+}
+function exportRidersCSV(){
+  var list=window._ridersLast||[];
+  exportCSV('innovaafric_riders',
+    ['Nombre','Email','Telefono','Pais','Ciudad','Estado','Saldo_EUR','Saldo_XAF'],
+    list.map(function(r){var u=r.u,w=r.w;return [ (u.full_name||''), (u.email||''), (u.phone||''), (COUNTRY_NAMES_V21[u.country]||u.country||''), (u.city||''), r.state, Number(w.eur||0), Math.round(w.xaf||0) ];}));
+}
+function exportRidersListPDF(){
+  var list=window._ridersLast||[];
+  var sLbl={libre:'Libre',ocupado:'En entrega',regresando:'Regresando'};
+  exportTablePDF('🛵 InnovaAFRIC · Riders', ['Nombre','Email','Ubicación','Estado','Saldo €','Saldo XAF'],
+    list.map(function(r){var u=r.u,w=r.w;return [ (u.full_name||'—'), (u.email||''), ((u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')), (sLbl[r.state]||r.state), '€'+Number(w.eur||0).toFixed(2), Math.round(w.xaf||0).toLocaleString('es') ];}), 'Red de Riders');
+}
 function initRiderFilters() {
-  var card = document.querySelector('#pg-riders .card');
+  var tbr = document.getElementById('tb-riders');
+  var card = tbr ? tbr.closest('.card') : document.querySelector('#pg-riders .card');
   if(!card || document.getElementById('rider-country-f')) return;
   var head = card.querySelector('.card-head');
   var div = document.createElement('div');
@@ -15980,6 +16138,16 @@ function initProveedorFilters(){
   });
 }
 
+function exportProveedoresCSV(){
+  var list=window._provLast||[];
+  exportCSV('innovaafric_proveedores', ['Nombre','Email','Telefono','Pais','Ciudad','Saldo_EUR','Saldo_XAF'],
+    list.map(function(p){var u=p.u,w=p.w;return [ (u.full_name||''), (u.email||''), (u.phone||''), (COUNTRY_NAMES_V21[u.country]||u.country||''), (u.city||''), Number(w.eur||0), Math.round(w.xaf||0) ];}));
+}
+function exportProvListPDF(){
+  var list=window._provLast||[];
+  exportTablePDF('🏭 InnovaAFRIC · Proveedores', ['Nombre','Email','Ubicación','Saldo €','Saldo XAF'],
+    list.map(function(p){var u=p.u,w=p.w;return [ (u.full_name||'—'), (u.email||''), ((u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')), '€'+Number(w.eur||0).toFixed(2), Math.round(w.xaf||0).toLocaleString('es') ];}));
+}
 async function loadProveedoresV21(){
   var list=document.getElementById('proveedores-list');if(!list)return;
   list.innerHTML='<div class="loading-cell"><div class="spin"></div></div>';
@@ -15991,9 +16159,10 @@ async function loadProveedoresV21(){
   if(country)users=users.filter(function(u){return u.country===country;});
   if(city)users=users.filter(function(u){return u.city===city;});
   if(q)users=users.filter(function(u){return(u.full_name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
-  if(!users.length){list.innerHTML='<div class="td-empty">Sin proveedores para los filtros seleccionados</div>';return;}
+  if(!users.length){window._provLast=[];list.innerHTML='<div class="td-empty">Sin proveedores para los filtros seleccionados</div>';return;}
   var wRes=await SB.from('wallets').select('user_id,eur,xaf').in('user_id',users.map(function(u){return u.id;})).catch(()=>({data:[]}));
   var wMap={};(wRes.data||[]).forEach(function(w){wMap[w.user_id]=w;});
+  window._provLast=users.map(function(u){return {u:u,w:wMap[u.id]||{}};});
   list.innerHTML=users.map(function(u){
     var w=wMap[u.id]||{};
     var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
