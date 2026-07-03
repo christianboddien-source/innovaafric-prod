@@ -1125,6 +1125,11 @@ select.form-input option{background:var(--s2)}
             <option value="topup" data-i18n="txn:f_topup">Recargas</option>
             <option value="rider" data-i18n="txn:f_rider">Pagos a riders</option>
           </select>
+          <select id="txn-currency" onchange="renderTxns()" class="filter-select">
+            <option value="" data-i18n="txn:f_all_curr">💱 Todas las monedas</option>
+            <option value="EUR">EUR €</option><option value="USD">USD $</option><option value="XAF">XAF</option><option value="XOF">XOF</option>
+          </select>
+          <select id="txn-country" onchange="renderTxns()" class="filter-select"><option value="" data-i18n="txn:f_all_countries">🌍 Todos los países</option></select>
           <input type="date" id="txn-from" onchange="renderTxns()" class="filter-select" data-i18n-title="txn:from" title="Desde">
           <input type="date" id="txn-to" onchange="renderTxns()" class="filter-select" data-i18n-title="txn:to" title="Hasta">
           <button class="topbar-btn btn-ghost" onclick="clearTxnFilters()" data-i18n-title="txn:clear" title="Limpiar filtros">✕</button>
@@ -2946,6 +2951,21 @@ select.form-input option{background:var(--s2)}
     <div id="m-txn-detail-body" style="margin:10px 0"></div>
     <div class="form-actions">
       <button class="btn-block btn-ghost" onclick="closeModal('m-txn-detail')" data-i18n="txnd:close">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECHAZAR RETIRO (v34.1) -->
+<div class="modal-overlay" id="m-ret-reject" onclick="if(event.target===this)closeModal('m-ret-reject')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🚫 <span data-i18n="ret:reject_title">Rechazar retiro</span></div>
+    <div class="modal-sub" data-i18n="ret:reject_sub">Se marcará como fallido y se reembolsará el importe al wallet del usuario.</div>
+    <input type="hidden" id="ret-reject-id">
+    <label class="form-label" data-i18n="ret:reject_reason_lbl" style="margin-top:8px">Motivo del rechazo</label>
+    <textarea class="form-input" id="ret-reject-reason" rows="3" data-i18n-ph="ret:reject_reason_ph" placeholder="Ej: datos bancarios incorrectos, sospecha de fraude…"></textarea>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" style="background:var(--red);border-color:var(--red)" onclick="doRetReject()" data-i18n="ret:reject_confirm">Rechazar y reembolsar</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-ret-reject')" data-i18n="ret:reject_cancel">Cancelar</button>
     </div>
   </div>
 </div>
@@ -8438,6 +8458,8 @@ function renderTxns(){
   const q=(((document.getElementById('txn-search')||{}).value)||'').trim().toLowerCase();
   const from=((document.getElementById('txn-from')||{}).value)||'';
   const to=((document.getElementById('txn-to')||{}).value)||'';
+  const cur=(document.getElementById('txn-currency')||{}).value||'';
+  const ctry=(document.getElementById('txn-country')||{}).value||'';
   const groups={ send:['send'], p2p:['p2p'], cashout:['withdraw'], traslados:['circular_cashout','rep_cashout'], qr_pay:['qr_payment'], topup:['topup'], rider:['rider_payment','rider'] };
   const allow=groups[filt]?new Set(groups[filt]):null;
   let items=ALL_TXNS_RAW.slice();
@@ -8446,8 +8468,10 @@ function renderTxns(){
     return (t.userName||'').toLowerCase().includes(q)||(t.userEmail||'').toLowerCase().includes(q)||(t.userPhone||'').toLowerCase().includes(q)||ia.includes(q)||String(t.userId||'').toLowerCase().includes(q); });
   if(from)items=items.filter(t=>t.createdAt&&new Date(t.createdAt)>=new Date(from+'T00:00:00'));
   if(to)items=items.filter(t=>t.createdAt&&new Date(t.createdAt)<=new Date(to+'T23:59:59'));
+  if(cur)items=items.filter(function(t){return (t.currencySent||'')===cur;});
+  if(ctry){ var _uC={}; (ALL_USERS||[]).forEach(function(u){_uC[u.id]=u.country;}); items=items.filter(function(t){return _uC[t.userId]===ctry;}); }
   ALL_TXNS=items;
-  if(lbl)lbl.textContent=items.length+' '+_i18n(items.length===1?'txn:count_one':'txn:count')+((filt||q||from||to)?_i18n('txn:filtered'):'');
+  if(lbl)lbl.textContent=items.length+' '+_i18n(items.length===1?'txn:count_one':'txn:count')+((filt||q||from||to||cur||ctry)?_i18n('txn:filtered'):'');
   const SP={completed:'green',pending:'amber',processing:'cyan',failed:'red',voided:'gray'};
   if(tb)tb.innerHTML=items.length?items.map(function(t){return '<tr style="cursor:pointer" onclick="openTxnDetail(\''+String(t.id||'')+'\')" title="Ver detalle">'
     +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+String(t.id||'—').substring(0,14)+'</td>'
@@ -8538,7 +8562,7 @@ function openTxnDetail(id){
   openModal('m-txn-detail');
 }
 function clearTxnFilters(){
-  ['txn-search','txn-from','txn-to'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  ['txn-search','txn-from','txn-to','txn-currency','txn-country'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   var t=document.getElementById('filter-txn-type');if(t)t.value='';
   renderTxns();
 }
@@ -8625,14 +8649,14 @@ function renderRetiros(){
     const d=w.createdAt?new Date(w.createdAt).toLocaleString('es',{useGrouping:'always'}):'';
     const paid=(w.status==='completed');
     return '<tr>'
-      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+(paid?' disabled':'')+' onclick="onRetChkChange()"></td>'
+      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+((w.status!=='processing'&&w.status!=='pending')?' disabled':'')+' onclick="onRetChkChange()"></td>'
       +'<td><div style="font-size:12px;font-weight:600">'+(w.name||'—')+'</div><div style="font-size:10px;color:var(--muted)">'+(w.email||'')+(w.role?' · '+w.role:'')+'</div></td>'
       +'<td><b>'+Number(w.amount||0).toLocaleString('es',{useGrouping:'always'})+' '+(w.currency||'XAF')+'</b><div style="font-size:10px;color:var(--muted)">neto '+Number(w.amount_net||0).toLocaleString('es',{useGrouping:'always'})+'</div></td>'
       +'<td style="font-size:12px">'+(mLbl[w.method]||w.method)+'</td>'
       +'<td style="font-size:11px;color:var(--muted);max-width:180px;word-break:break-all">'+(w.destination||'—')+'</td>'
       +'<td style="font-size:12px">'+(sLbl[w.status]||w.status)+'</td>'
       +'<td style="font-size:11px;color:var(--muted)">'+d+'</td>'
-      +'<td>'+(paid?'—':'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">'+_i18n('ret:mark_paid')+'</button>')+'</td>'
+      +_retActionCell(w)
       +'</tr>';
   }).join('');
 }
@@ -8648,12 +8672,15 @@ function renderRetChart(list){
   }).join('');
 }
 async function markRetiroPaid(id,btn){
+  var w=_retFind(id);
+  if(w && _retIsHighValue(w)){ var ap=_amlGet(id); if(!(ap.a1&&ap.a2)){ alert(_i18n('ret:aml_block')); return; } }
   if(!confirm('¿Marcar este retiro como PAGADO? Confirma que ya has hecho la transferencia al usuario.'))return;
   if(btn){btn.textContent='…';btn.disabled=true;}
   const r=await rwAPI('POST','/admin/withdrawals/'+id+'/complete',{});
   if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));if(btn){btn.textContent=_i18n('ret:mark_paid');btn.disabled=false;}return;}
   if(typeof toast==='function')toast('✅ Retiro marcado como pagado','success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_paid','Retiro '+id+' pagado');
+  _amlClear(id);
   loadRetiros();
 }
 
@@ -8700,13 +8727,17 @@ function retResetSelectionUI(){
 async function markRetirosBulk(){
   var ids=retSelectedIds();
   if(!ids.length){toast('Selecciona al menos un retiro','warning');return;}
-  if(!confirm('¿Marcar '+ids.length+' retiro(s) como PAGADOS?\nConfirma que ya has hecho las transferencias.'))return;
+  // Excluir retiros de alto importe sin la doble aprobación AML completa
+  var blocked=[];
+  ids=ids.filter(function(id){ var w=_retFind(id); if(w&&_retIsHighValue(w)){ var ap=_amlGet(id); if(!(ap.a1&&ap.a2)){ blocked.push(id); return false; } } return true; });
+  if(!ids.length){ alert(_i18n('ret:aml_bulk_block')); return; }
+  if(!confirm('¿Marcar '+ids.length+' retiro(s) como PAGADOS?\nConfirma que ya has hecho las transferencias.'+(blocked.length?('\n\n⚠️ '+blocked.length+' excluidos (requieren doble aprobación).'):'')))return;
   var ok=0,fail=0;
   for(var i=0;i<ids.length;i++){
-    try{ var r=await rwAPI('POST','/admin/withdrawals/'+ids[i]+'/complete',{}); if(r&&r.success)ok++; else fail++; }
+    try{ var r=await rwAPI('POST','/admin/withdrawals/'+ids[i]+'/complete',{}); if(r&&r.success){ok++;_amlClear(ids[i]);} else fail++; }
     catch(e){ fail++; }
   }
-  if(typeof toast==='function')toast('✅ '+ok+' pagado(s)'+(fail?(' · '+fail+' con error'):''), fail?'warning':'success');
+  if(typeof toast==='function')toast('✅ '+ok+' pagado(s)'+(fail?(' · '+fail+' con error'):'')+(blocked.length?(' · '+blocked.length+' bloqueados AML'):''), (fail||blocked.length)?'warning':'success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_paid_bulk',ok+' retiros pagados en lote');
   loadRetiros();
 }
@@ -8750,6 +8781,64 @@ function exportRetirosPDF(){
   var win=window.open('','_blank');if(!win){toast('Activa ventanas emergentes','error');return;}
   win.document.write(html);win.document.close();win.focus();setTimeout(function(){win.print();},400);
   toast('Abriendo PDF de retiros','success');
+}
+
+// ── Retiros v34.1: rechazo con motivo + doble aprobación AML ──
+var AML_THRESHOLDS={XAF:500000,XOF:500000,EUR:800,USD:850,GHS:8000,NGN:800000};
+function _retIsHighValue(w){ if(!w)return false; var th=AML_THRESHOLDS[w.currency]||500000; return Number(w.amount||0)>=th; }
+function _retFind(id){
+  var pools=[window._retirosFiltered,(window._retirosLast&&window._retirosLast.list)];
+  for(var i=0;i<pools.length;i++){ if(pools[i]){ var m=pools[i].filter(function(x){return String(x.id||'')===String(id);})[0]; if(m)return m; } }
+  return null;
+}
+function _amlAll(){ try{return JSON.parse(localStorage.getItem('ia_ret_aml')||'{}');}catch(e){return {};} }
+function _amlGet(id){ return _amlAll()[id]||{}; }
+function _amlSave(all){ try{localStorage.setItem('ia_ret_aml',JSON.stringify(all));}catch(e){} }
+function _amlClear(id){ var all=_amlAll(); if(all[id]){ delete all[id]; _amlSave(all); } }
+function amlApprove(id){
+  var all=_amlAll(); var rec=all[id]||{};
+  var who=(prompt(_i18n('ret:aml_prompt'))||'').trim();
+  if(!who)return;
+  if(!rec.a1){ rec.a1={by:who,at:new Date().toISOString()}; }
+  else if(!rec.a2){
+    if(who.toLowerCase()===(rec.a1.by||'').toLowerCase()){ alert(_i18n('ret:aml_diff')); return; }
+    rec.a2={by:who,at:new Date().toISOString()};
+  } else { return; }
+  all[id]=rec; _amlSave(all);
+  if(typeof logAdminAction==='function')logAdminAction('withdraw_aml_approval','Retiro '+id+' aprobado por '+who+(rec.a2?' (2/2)':' (1/2)'));
+  toast(rec.a2?_i18n('ret:aml_ready'):_i18n('ret:aml_1of2'),'success');
+  if(document.getElementById('rf-country')&&typeof applyRetiroFilters==='function')applyRetiroFilters(); else renderRetiros();
+}
+function _retActionCell(w){
+  if(w.status==='completed') return '<td>—</td>';
+  if(w.status==='failed')    return '<td style="font-size:10px;color:var(--red)">'+_i18n('ret:rejected')+'</td>';
+  var pend=(w.status==='processing'||w.status==='pending');
+  var rej='<button class="topbar-btn btn-ghost" style="font-size:11px;color:var(--red);border-color:var(--red-d,#7f1d1d)" onclick="openRetReject(\''+w.id+'\')">'+_i18n('ret:reject')+'</button>';
+  var pay='<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">'+_i18n('ret:mark_paid')+'</button>';
+  if(pend && _retIsHighValue(w)){
+    var ap=_amlGet(w.id);
+    if(!ap.a1) return '<td style="white-space:nowrap"><button class="topbar-btn btn-ghost" style="font-size:11px" title="'+_i18n('ret:aml_hint')+'" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve1')+'</button> '+rej+'</td>';
+    if(!ap.a2) return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+_i18n('ret:aml_by')+' '+(ap.a1.by||'')+'">✔ 1/2</span> <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="amlApprove(\''+w.id+'\')">🛡️ '+_i18n('ret:aml_approve2')+'</button> '+rej+'</td>';
+    return '<td style="white-space:nowrap"><span style="font-size:10px;color:var(--green)" title="'+(ap.a1.by||'')+' + '+(ap.a2.by||'')+'">✔ 2/2</span> '+pay+'</td>';
+  }
+  return '<td style="white-space:nowrap">'+pay+' '+rej+'</td>';
+}
+function openRetReject(id){
+  var el=document.getElementById('ret-reject-id'); if(el)el.value=id;
+  var ta=document.getElementById('ret-reject-reason'); if(ta)ta.value='';
+  openModal('m-ret-reject');
+}
+async function doRetReject(){
+  var id=(document.getElementById('ret-reject-id')||{}).value;
+  var reason=((document.getElementById('ret-reject-reason')||{}).value||'').trim();
+  if(!reason){toast(_i18n('ret:reject_need'),'warning');return;}
+  var r=await rwAPI('POST','/admin/withdrawals/'+id+'/reject',{reason:reason});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  if(typeof toast==='function')toast('🚫 '+_i18n('ret:reject_done'),'success');
+  if(typeof logAdminAction==='function')logAdminAction('withdraw_rejected','Retiro '+id+' rechazado: '+reason);
+  _amlClear(id);
+  closeModal('m-ret-reject');
+  loadRetiros();
 }
 
 // ── Web-Admin: editar y publicar páginas ──────────────────
@@ -14067,6 +14156,7 @@ var UI_TEXT_TR={
       'txn:f_all':'Todos los tipos','txn:f_send':'Envíos','txn:f_p2p':'P2P','txn:f_cashout':'Reintegros (a banco/metálico)','txn:f_traslados':'Traslados (comisiones/unidades)','txn:f_qr':'QR Pay','txn:f_topup':'Recargas','txn:f_rider':'Pagos a riders',
       'txn:from':'Desde','txn:to':'Hasta','txn:clear':'Limpiar filtros',
       'txn:chart_title':'📊 Resumen por tipo de operación',
+      'txn:f_all_curr':'💱 Todas las monedas','txn:f_all_countries':'🌍 Todos los países',
       'txn:kpi_volume':'Volumen total','txn:kpi_fees':'Comisiones','txn:kpi_avg':'Ticket medio','txn:kpi_count':'Nº transacciones','txn:time_title':'📈 Evolución temporal (volumen por día)',
       'txnd:title':'Detalle de transacción','txnd:ref':'Referencia','txnd:user':'Usuario','txnd:phone':'Teléfono','txnd:type':'Tipo','txnd:amount':'Importe','txnd:fee':'Comisión','txnd:received':'Recibido','txnd:rate':'Tasa','txnd:status':'Estado','txnd:date':'Fecha','txnd:desc':'Descripción','txnd:close':'Cerrar',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
@@ -14082,7 +14172,9 @@ var UI_TEXT_TR={
       'ret:chart_title':'📊 Resumen por método de cobro','ret:chart_none':'Sin datos para el gráfico',
       'ret:kpi_pending_amt':'Pendiente de pago','ret:kpi_paid_amt':'Pagado','ret:kpi_pending_n':'Nº pendientes','ret:kpi_total_n':'Total solicitudes',
       'ret:f_all_roles':'👥 Todos los roles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Representante','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Comercio',
-      'ret:bulk_selected':'seleccionados','ret:bulk_pay':'Marcar seleccionados como pagados','ret:bulk_clear':'Quitar selección'},
+      'ret:bulk_selected':'seleccionados','ret:bulk_pay':'Marcar seleccionados como pagados','ret:bulk_clear':'Quitar selección',
+      'ret:reject':'Rechazar','ret:rejected':'❌ Rechazado','ret:reject_title':'Rechazar retiro','ret:reject_sub':'Se marcará como fallido y se reembolsará el importe al wallet del usuario.','ret:reject_reason_lbl':'Motivo del rechazo','ret:reject_reason_ph':'Ej: datos bancarios incorrectos, sospecha de fraude…','ret:reject_confirm':'Rechazar y reembolsar','ret:reject_cancel':'Cancelar','ret:reject_need':'Escribe el motivo del rechazo','ret:reject_done':'Retiro rechazado y reembolsado',
+      'ret:aml_approve1':'Aprobar 1/2','ret:aml_approve2':'Aprobar 2/2','ret:aml_prompt':'Nombre del aprobador (control AML):','ret:aml_diff':'La segunda aprobación debe ser de una persona distinta.','ret:aml_ready':'Doble aprobación completa — ya puedes marcar pagado','ret:aml_1of2':'Aprobación 1/2 registrada — requiere un segundo aprobador','ret:aml_block':'Este retiro de alto importe requiere doble aprobación antes de pagar.','ret:aml_bulk_block':'Los retiros seleccionados de alto importe requieren doble aprobación.','ret:aml_hint':'Retiro de alto importe: requiere doble aprobación','ret:aml_by':'por'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
       'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code','web:tab_blocks':'Blocks','web:blocks_help':'Add ready-made sections to the end of the page. Then edit their text in the 📝 Texts tab and click 🚀 Publish.',
@@ -14098,6 +14190,7 @@ var UI_TEXT_TR={
       'txn:f_all':'All types','txn:f_send':'Transfers','txn:f_p2p':'P2P','txn:f_cashout':'Withdrawals (bank/cash)','txn:f_traslados':'Transfers (commissions/units)','txn:f_qr':'QR Pay','txn:f_topup':'Top-ups','txn:f_rider':'Rider payments',
       'txn:from':'From','txn:to':'To','txn:clear':'Clear filters',
       'txn:chart_title':'📊 Summary by operation type',
+      'txn:f_all_curr':'💱 All currencies','txn:f_all_countries':'🌍 All countries',
       'txn:kpi_volume':'Total volume','txn:kpi_fees':'Fees','txn:kpi_avg':'Avg ticket','txn:kpi_count':'Transactions','txn:time_title':'📈 Timeline (volume per day)',
       'txnd:title':'Transaction detail','txnd:ref':'Reference','txnd:user':'User','txnd:phone':'Phone','txnd:type':'Type','txnd:amount':'Amount','txnd:fee':'Fee','txnd:received':'Received','txnd:rate':'Rate','txnd:status':'Status','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Close',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
@@ -14113,7 +14206,9 @@ var UI_TEXT_TR={
       'ret:chart_title':'📊 Summary by payout method','ret:chart_none':'No data for the chart',
       'ret:kpi_pending_amt':'Pending payout','ret:kpi_paid_amt':'Paid','ret:kpi_pending_n':'Pending count','ret:kpi_total_n':'Total requests',
       'ret:f_all_roles':'👥 All roles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Representative','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Merchant',
-      'ret:bulk_selected':'selected','ret:bulk_pay':'Mark selected as paid','ret:bulk_clear':'Clear selection'},
+      'ret:bulk_selected':'selected','ret:bulk_pay':'Mark selected as paid','ret:bulk_clear':'Clear selection',
+      'ret:reject':'Reject','ret:rejected':'❌ Rejected','ret:reject_title':'Reject withdrawal','ret:reject_sub':'It will be marked as failed and the amount refunded to the user wallet.','ret:reject_reason_lbl':'Rejection reason','ret:reject_reason_ph':'e.g. wrong bank details, suspected fraud…','ret:reject_confirm':'Reject and refund','ret:reject_cancel':'Cancel','ret:reject_need':'Enter the rejection reason','ret:reject_done':'Withdrawal rejected and refunded',
+      'ret:aml_approve1':'Approve 1/2','ret:aml_approve2':'Approve 2/2','ret:aml_prompt':'Approver name (AML control):','ret:aml_diff':'The second approval must be by a different person.','ret:aml_ready':'Dual approval complete — you can now mark as paid','ret:aml_1of2':'Approval 1/2 recorded — a second approver is required','ret:aml_block':'This high-value withdrawal requires dual approval before payout.','ret:aml_bulk_block':'The selected high-value withdrawals require dual approval.','ret:aml_hint':'High-value withdrawal: requires dual approval','ret:aml_by':'by'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
       'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code','web:tab_blocks':'Blocs','web:blocks_help':'Ajoutez des sections prédéfinies à la fin de la page. Modifiez ensuite leurs textes dans l\'onglet 📝 Textes et cliquez sur 🚀 Publier.',
@@ -14129,6 +14224,7 @@ var UI_TEXT_TR={
       'txn:f_all':'Tous les types','txn:f_send':'Envois','txn:f_p2p':'P2P','txn:f_cashout':'Retraits (banque/espèces)','txn:f_traslados':'Transferts (commissions/unités)','txn:f_qr':'QR Pay','txn:f_topup':'Recharges','txn:f_rider':'Paiements riders',
       'txn:from':'Du','txn:to':'Au','txn:clear':'Effacer les filtres',
       'txn:chart_title':'📊 Résumé par type d\'opération',
+      'txn:f_all_curr':'💱 Toutes les devises','txn:f_all_countries':'🌍 Tous les pays',
       'txn:kpi_volume':'Volume total','txn:kpi_fees':'Commissions','txn:kpi_avg':'Panier moyen','txn:kpi_count':'Nb transactions','txn:time_title':'📈 Évolution (volume par jour)',
       'txnd:title':'Détail de la transaction','txnd:ref':'Référence','txnd:user':'Utilisateur','txnd:phone':'Téléphone','txnd:type':'Type','txnd:amount':'Montant','txnd:fee':'Commission','txnd:received':'Reçu','txnd:rate':'Taux','txnd:status':'Statut','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Fermer',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
@@ -14144,7 +14240,9 @@ var UI_TEXT_TR={
       'ret:chart_title':'📊 Résumé par méthode de paiement','ret:chart_none':'Aucune donnée pour le graphique',
       'ret:kpi_pending_amt':'À payer','ret:kpi_paid_amt':'Payé','ret:kpi_pending_n':'Nb en attente','ret:kpi_total_n':'Total demandes',
       'ret:f_all_roles':'👥 Tous les rôles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Représentant','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Commerce',
-      'ret:bulk_selected':'sélectionnés','ret:bulk_pay':'Marquer sélectionnés comme payés','ret:bulk_clear':'Retirer la sélection'}
+      'ret:bulk_selected':'sélectionnés','ret:bulk_pay':'Marquer sélectionnés comme payés','ret:bulk_clear':'Retirer la sélection',
+      'ret:reject':'Rejeter','ret:rejected':'❌ Rejeté','ret:reject_title':'Rejeter le retrait','ret:reject_sub':'Il sera marqué comme échoué et le montant remboursé sur le wallet de l\'utilisateur.','ret:reject_reason_lbl':'Motif du rejet','ret:reject_reason_ph':'Ex : coordonnées bancaires erronées, suspicion de fraude…','ret:reject_confirm':'Rejeter et rembourser','ret:reject_cancel':'Annuler','ret:reject_need':'Saisissez le motif du rejet','ret:reject_done':'Retrait rejeté et remboursé',
+      'ret:aml_approve1':'Approuver 1/2','ret:aml_approve2':'Approuver 2/2','ret:aml_prompt':'Nom de l\'approbateur (contrôle AML) :','ret:aml_diff':'La deuxième approbation doit être faite par une autre personne.','ret:aml_ready':'Double approbation complète — vous pouvez marquer payé','ret:aml_1of2':'Approbation 1/2 enregistrée — un second approbateur est requis','ret:aml_block':'Ce retrait de montant élevé requiert une double approbation avant paiement.','ret:aml_bulk_block':'Les retraits sélectionnés de montant élevé requièrent une double approbation.','ret:aml_hint':'Retrait de montant élevé : double approbation requise','ret:aml_by':'par'}
   };
   if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
 })();
@@ -15497,7 +15595,7 @@ function applyRetiroFilters(){
     var paid=(w.status==='completed');
     var flag=FLAG_EMOJI[w._country]||'';
     return '<tr>'
-      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+(paid?' disabled':'')+' onclick="onRetChkChange()"></td>'
+      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+((w.status!=='processing'&&w.status!=='pending')?' disabled':'')+' onclick="onRetChkChange()"></td>'
       +'<td><div style="font-size:12px;font-weight:600">'+(w.name||'—')+'</div>'
       +'<div style="font-size:10px;color:var(--muted)">'+(w.email||'')+(w.role?' · '+w.role:'')+(w._ia?' · '+w._ia:'')+(w._phone?' · '+w._phone:'')+'</div>'
       +(w._country?'<div style="font-size:10px;color:var(--muted)">'+flag+' '+(w._city?w._city+', ':'')+(COUNTRY_NAMES_V21[w._country]||w._country)+'</div>':'')
@@ -15507,7 +15605,7 @@ function applyRetiroFilters(){
       +'<td style="font-size:11px;color:var(--muted);max-width:180px;word-break:break-all">'+(w.destination||'—')+'</td>'
       +'<td style="font-size:12px">'+(sLbl[w.status]||w.status)+'</td>'
       +'<td style="font-size:11px;color:var(--muted)">'+d+'</td>'
-      +'<td>'+(paid?'—':'<button class="topbar-btn btn-primary" style="font-size:11px" onclick="markRetiroPaid(\''+w.id+'\',this)">'+_i18n('ret:mark_paid')+'</button>')+'</td>'
+      +_retActionCell(w)
       +'</tr>';
   }).join('');
 }
@@ -15524,6 +15622,7 @@ var _origLoadTxns_v21 = loadTransactions;
 loadTransactions = async function(){
   await _origLoadTxns_v21();
   initTxnFilters();
+  if(typeof buildCountryFilter==='function')buildCountryFilter('txn-country',renderTxns,_i18n('txn:f_all_countries'));
 };
 
 // ── FILTROS RIDERS ─────────────────────────────────────────────
