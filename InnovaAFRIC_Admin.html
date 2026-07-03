@@ -2988,6 +2988,20 @@ select.form-input option{background:var(--s2)}
   <div class="modal" style="max-width:460px">
     <div class="modal-title">📦 <span data-i18n="ord:detail_title">Detalle del pedido</span></div>
     <div id="m-order-detail-body" style="margin:10px 0"></div>
+    <div id="m-order-actions" style="border-top:1px solid var(--b1);padding-top:12px;margin-bottom:6px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px" data-i18n="ord:actions">Acciones</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="orderSetStatus('confirmed')" data-i18n="ord:act_confirm">✔ Confirmar</button>
+        <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="orderSetStatus('shipped')" data-i18n="ord:act_ship">🚚 En reparto</button>
+        <button class="topbar-btn btn-ghost" style="font-size:11px" onclick="orderSetStatus('delivered')" data-i18n="ord:act_deliver">✅ Entregado</button>
+        <button class="topbar-btn btn-ghost" style="font-size:11px;color:var(--red);border-color:var(--red-d,#7f1d1d)" onclick="orderSetStatus('cancelled')" data-i18n="ord:act_cancel">❌ Cancelar</button>
+        <button class="topbar-btn btn-ghost" style="font-size:11px;color:var(--amber)" onclick="orderRefund()" data-i18n="ord:act_refund">↩️ Reembolsar</button>
+      </div>
+      <div id="m-order-assign" style="display:none;gap:6px;align-items:center">
+        <select id="m-order-rider" class="filter-select" style="flex:1;min-width:0"><option value="">— Rider —</option></select>
+        <button class="topbar-btn btn-primary" style="font-size:11px;white-space:nowrap" onclick="orderAssignRider()" data-i18n="ord:act_assign">🛵 Asignar</button>
+      </div>
+    </div>
     <div class="form-actions">
       <button class="btn-block btn-ghost" onclick="closeModal('m-order-detail')" data-i18n="txnd:close">Cerrar</button>
     </div>
@@ -8759,7 +8773,51 @@ function openOrderDetail(id){
     +(items?row(_i18n('ord:items'), items):'')
     +(o.notes?row(_i18n('ord:notes'), o.notes):'')
     +row(_i18n('ord:th_date'), fmt_date(o.created_at));
+  window._orderDetailId=o.id;
+  var assign=document.getElementById('m-order-assign');
+  if(assign){ if((o.type||'')==='grocery'){ assign.style.display='flex'; _populateRiderSelect(); } else { assign.style.display='none'; } }
   openModal('m-order-detail');
+}
+var _ridersForAssign=null;
+async function _loadRidersForAssign(){
+  if(_ridersForAssign) return _ridersForAssign;
+  try{ var r=await rwAPI('GET','/delivery/riders'); if(r&&r.success&&r.data&&r.data.riders) _ridersForAssign=r.data.riders; }catch(e){}
+  return _ridersForAssign||[];
+}
+async function _populateRiderSelect(){
+  var sel=document.getElementById('m-order-rider'); if(!sel)return;
+  var riders=await _loadRidersForAssign();
+  sel.innerHTML='<option value="">— Rider —</option>'+riders.map(function(r){return '<option value="'+r.id+'">'+(r.name||r.id)+(r.zone?(' · '+r.zone):'')+' ('+(r.status||'')+')</option>';}).join('');
+}
+async function orderSetStatus(status){
+  var id=window._orderDetailId; if(!id)return;
+  if(status==='cancelled' && !confirm('¿Cancelar este pedido?'))return;
+  var r=await rwAPI('PATCH','/admin/orders/'+id+'/status',{status:status});
+  if(!r||!r.success){ alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo')); return; }
+  if(typeof toast==='function')toast('✅ '+_i18n('ord:status_done'),'success');
+  if(typeof logAdminAction==='function')logAdminAction('order_status','Pedido '+id+' → '+status);
+  closeModal('m-order-detail'); loadOrders();
+}
+async function orderAssignRider(){
+  var id=window._orderDetailId; if(!id)return;
+  var riderId=(document.getElementById('m-order-rider')||{}).value||'';
+  if(!riderId){ toast(_i18n('ord:pick_rider'),'warning'); return; }
+  var r=await rwAPI('POST','/admin/orders/'+id+'/assign-rider',{riderId:riderId});
+  if(!r||!r.success){ alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo')); return; }
+  if(typeof toast==='function')toast('🛵 '+_i18n('ord:assign_done'),'success');
+  if(typeof logAdminAction==='function')logAdminAction('order_assign_rider','Pedido '+id+' → rider '+riderId);
+  closeModal('m-order-detail'); loadOrders();
+}
+async function orderRefund(){
+  var id=window._orderDetailId; if(!id)return;
+  var reason=(prompt(_i18n('ord:refund_prompt'))||'').trim();
+  if(!reason)return;
+  var r=await rwAPI('POST','/admin/orders/'+id+'/refund',{reason:reason});
+  if(!r||!r.success){ alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo')); return; }
+  var d=r.data||{};
+  if(typeof toast==='function')toast('↩️ '+_i18n('ord:refund_done')+(d.refunded!=null?(' ('+d.refunded+' '+(d.currency||'')+')'):''),'success');
+  if(typeof logAdminAction==='function')logAdminAction('order_refund','Pedido '+id+' reembolsado: '+reason);
+  closeModal('m-order-detail'); loadOrders();
 }
 function exportOrdersCSV(){
   var list=window._ordersFiltered||window._ordersLast||[];
@@ -14333,6 +14391,7 @@ var UI_TEXT_TR={
       'txnd:title':'Detalle de transacción','txnd:ref':'Referencia','txnd:user':'Usuario','txnd:phone':'Teléfono','txnd:type':'Tipo','txnd:amount':'Importe','txnd:fee':'Comisión','txnd:received':'Recibido','txnd:rate':'Tasa','txnd:status':'Estado','txnd:date':'Fecha','txnd:desc':'Descripción','txnd:close':'Cerrar',
       'ord:title':'Pedidos','ord:detail_title':'Detalle del pedido','ord:kpi_total':'Total pedidos','ord:kpi_progress':'En curso','ord:kpi_delivered':'Entregados','ord:kpi_volume':'Volumen','ord:f_all':'Todos los estados','ord:s_pending':'⏳ Pendiente','ord:s_confirmed':'✔ Confirmado','ord:s_preparing':'👨‍🍳 Preparando','ord:s_shipped':'🚚 En reparto','ord:s_delivered':'✅ Entregado','ord:s_cancelled':'❌ Cancelado','ord:th_code':'Código','ord:th_user':'Usuario','ord:th_type':'Tipo','ord:th_total':'Total','ord:th_status':'Estado','ord:th_date':'Fecha','ord:count':'pedidos','ord:filtered':'filtrados','ord:none':'Sin pedidos','ord:address':'Dirección','ord:items':'Artículos','ord:notes':'Notas',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En entrega','rid:kpi_eur':'Saldo total',
+      'ord:actions':'Acciones','ord:act_confirm':'✔ Confirmar','ord:act_ship':'🚚 En reparto','ord:act_deliver':'✅ Entregado','ord:act_cancel':'❌ Cancelar','ord:act_refund':'↩️ Reembolsar','ord:act_assign':'🛵 Asignar','ord:status_done':'Estado actualizado','ord:pick_rider':'Elige un rider','ord:assign_done':'Rider asignado','ord:refund_prompt':'Motivo del reembolso:','ord:refund_done':'Pedido reembolsado',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
       'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
       'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
@@ -14369,6 +14428,7 @@ var UI_TEXT_TR={
       'txnd:title':'Transaction detail','txnd:ref':'Reference','txnd:user':'User','txnd:phone':'Phone','txnd:type':'Type','txnd:amount':'Amount','txnd:fee':'Fee','txnd:received':'Received','txnd:rate':'Rate','txnd:status':'Status','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Close',
       'ord:title':'Orders','ord:detail_title':'Order detail','ord:kpi_total':'Total orders','ord:kpi_progress':'In progress','ord:kpi_delivered':'Delivered','ord:kpi_volume':'Volume','ord:f_all':'All statuses','ord:s_pending':'⏳ Pending','ord:s_confirmed':'✔ Confirmed','ord:s_preparing':'👨‍🍳 Preparing','ord:s_shipped':'🚚 Out for delivery','ord:s_delivered':'✅ Delivered','ord:s_cancelled':'❌ Cancelled','ord:th_code':'Code','ord:th_user':'User','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Status','ord:th_date':'Date','ord:count':'orders','ord:filtered':'filtered','ord:none':'No orders','ord:address':'Address','ord:items':'Items','ord:notes':'Notes',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Free','rid:kpi_busy':'On delivery','rid:kpi_eur':'Total balance',
+      'ord:actions':'Actions','ord:act_confirm':'✔ Confirm','ord:act_ship':'🚚 Out for delivery','ord:act_deliver':'✅ Delivered','ord:act_cancel':'❌ Cancel','ord:act_refund':'↩️ Refund','ord:act_assign':'🛵 Assign','ord:status_done':'Status updated','ord:pick_rider':'Pick a rider','ord:assign_done':'Rider assigned','ord:refund_prompt':'Refund reason:','ord:refund_done':'Order refunded',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
       'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
       'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
@@ -14405,6 +14465,7 @@ var UI_TEXT_TR={
       'txnd:title':'Détail de la transaction','txnd:ref':'Référence','txnd:user':'Utilisateur','txnd:phone':'Téléphone','txnd:type':'Type','txnd:amount':'Montant','txnd:fee':'Commission','txnd:received':'Reçu','txnd:rate':'Taux','txnd:status':'Statut','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Fermer',
       'ord:title':'Commandes','ord:detail_title':'Détail de la commande','ord:kpi_total':'Total commandes','ord:kpi_progress':'En cours','ord:kpi_delivered':'Livrées','ord:kpi_volume':'Volume','ord:f_all':'Tous les statuts','ord:s_pending':'⏳ En attente','ord:s_confirmed':'✔ Confirmée','ord:s_preparing':'👨‍🍳 Préparation','ord:s_shipped':'🚚 En livraison','ord:s_delivered':'✅ Livrée','ord:s_cancelled':'❌ Annulée','ord:th_code':'Code','ord:th_user':'Utilisateur','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Statut','ord:th_date':'Date','ord:count':'commandes','ord:filtered':'filtrées','ord:none':'Aucune commande','ord:address':'Adresse','ord:items':'Articles','ord:notes':'Notes',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En livraison','rid:kpi_eur':'Solde total',
+      'ord:actions':'Actions','ord:act_confirm':'✔ Confirmer','ord:act_ship':'🚚 En livraison','ord:act_deliver':'✅ Livrée','ord:act_cancel':'❌ Annuler','ord:act_refund':'↩️ Rembourser','ord:act_assign':'🛵 Assigner','ord:status_done':'Statut mis à jour','ord:pick_rider':'Choisis un rider','ord:assign_done':'Rider assigné','ord:refund_prompt':'Motif du remboursement :','ord:refund_done':'Commande remboursée',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
       'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
       'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
