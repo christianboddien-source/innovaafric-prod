@@ -1134,9 +1134,31 @@ select.form-input option{background:var(--s2)}
           <button class="topbar-btn btn-ghost" onclick="exportTxnsPDF()">📄 PDF</button>
         </div>
       </div>
+      <div id="txn-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="txn:kpi_volume">Volumen total</div>
+          <div style="font-size:20px;font-weight:800;color:var(--cyan)"><span id="txn-kpi-volume">—</span> <span style="font-size:12px;color:var(--muted);font-weight:600">XAF</span></div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="txn:kpi_fees">Comisiones</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green)"><span id="txn-kpi-fees">—</span> <span style="font-size:12px;color:var(--muted);font-weight:600">XAF</span></div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="txn:kpi_avg">Ticket medio</div>
+          <div style="font-size:20px;font-weight:800;color:var(--amber)"><span id="txn-kpi-avg">—</span> <span style="font-size:12px;color:var(--muted);font-weight:600">XAF</span></div>
+        </div>
+        <div class="card" style="padding:14px 16px">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="txn:kpi_count">Nº transacciones</div>
+          <div style="font-size:20px;font-weight:800;color:var(--purple)" id="txn-kpi-count">—</div>
+        </div>
+      </div>
       <div class="card" id="txn-chart-card">
         <div class="card-title" data-i18n="txn:chart_title" style="font-size:14px;margin-bottom:12px">📊 Resumen por tipo de operación</div>
         <div id="txn-chart"><div class="td-empty">—</div></div>
+      </div>
+      <div class="card" id="txn-time-card">
+        <div class="card-title" data-i18n="txn:time_title" style="font-size:14px;margin-bottom:12px">📈 Evolución temporal (volumen por día)</div>
+        <div style="height:220px;position:relative"><canvas id="txn-time-chart"></canvas></div>
       </div>
       <div class="card">
         <div class="card-head">
@@ -2913,6 +2935,17 @@ select.form-input option{background:var(--s2)}
     <div class="form-actions">
       <button class="btn-block btn-primary" onclick="doRecharge()">💰 Recargar ahora</button>
       <button class="btn-block btn-ghost" onclick="closeModal('m-recharge')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETALLE TRANSACCIÓN (v34) -->
+<div class="modal-overlay" id="m-txn-detail" onclick="if(event.target===this)closeModal('m-txn-detail')">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-title">🧾 <span data-i18n="txnd:title">Detalle de transacción</span></div>
+    <div id="m-txn-detail-body" style="margin:10px 0"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-ghost" onclick="closeModal('m-txn-detail')" data-i18n="txnd:close">Cerrar</button>
     </div>
   </div>
 </div>
@@ -5255,16 +5288,47 @@ select.form-input option{background:var(--s2)}
 <!-- ══ fin v27 ═══════════════════════════════════════════════ -->
 
 <div id="pg-retiros" style="display:none">
+  <div id="ret-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px">
+    <div class="card" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ret:kpi_pending_amt">Pendiente de pago</div>
+      <div style="font-size:20px;font-weight:800;color:var(--amber)"><span id="ret-kpi-pending-amt">—</span> <span style="font-size:12px;color:var(--muted);font-weight:600">XAF</span></div>
+    </div>
+    <div class="card" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ret:kpi_paid_amt">Pagado</div>
+      <div style="font-size:20px;font-weight:800;color:var(--green)"><span id="ret-kpi-paid-amt">—</span> <span style="font-size:12px;color:var(--muted);font-weight:600">XAF</span></div>
+    </div>
+    <div class="card" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ret:kpi_pending_n">Nº pendientes</div>
+      <div style="font-size:20px;font-weight:800;color:var(--cyan)" id="ret-kpi-pending-n">—</div>
+    </div>
+    <div class="card" style="padding:14px 16px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px" data-i18n="ret:kpi_total_n">Total solicitudes</div>
+      <div style="font-size:20px;font-weight:800;color:var(--purple)" id="ret-kpi-total-n">—</div>
+    </div>
+  </div>
+  <div class="card" id="ret-chart-card">
+    <div class="card-title" data-i18n="ret:chart_title" style="font-size:14px;margin-bottom:12px">📊 Resumen por método de cobro</div>
+    <div id="ret-chart"><div class="td-empty">—</div></div>
+  </div>
   <div class="card">
     <div class="card-head">
       <div><div class="card-title">💵 <span data-i18n="ret:title">Retiros — solicitudes de cobro</span></div><div class="card-sub" id="ret-count">Cargando...</div></div>
-      <button class="topbar-btn btn-ghost" onclick="loadRetiros()">↻</button>
+      <div style="display:flex;gap:6px">
+        <button class="topbar-btn btn-ghost" onclick="exportRetirosCSV()">📥 CSV</button>
+        <button class="topbar-btn btn-ghost" onclick="exportRetirosPDF()">📄 PDF</button>
+        <button class="topbar-btn btn-ghost" onclick="loadRetiros()">↻</button>
+      </div>
     </div>
     <div style="font-size:12px;color:var(--muted);margin:6px 0 12px" data-i18n="ret:help">Cobros pedidos por circulares, representantes, riders y comercios. Márcalos como pagado cuando hayas hecho la transferencia.</div>
+    <div id="ret-bulk-bar" style="display:none;align-items:center;gap:10px;background:rgba(34,211,238,.1);border:1px solid var(--cyan-d,#0e7490);border-radius:10px;padding:8px 12px;margin-bottom:10px">
+      <span style="font-size:12px"><b id="ret-bulk-count">0</b> <span data-i18n="ret:bulk_selected">seleccionados</span></span>
+      <button class="topbar-btn btn-primary" style="font-size:12px" onclick="markRetirosBulk()">✅ <span data-i18n="ret:bulk_pay">Marcar seleccionados como pagados</span></button>
+      <button class="topbar-btn btn-ghost" style="font-size:12px" onclick="retClearSelection()" data-i18n="ret:bulk_clear">Quitar selección</button>
+    </div>
     <div class="table-wrap" style="overflow-x:auto">
       <table class="tbl">
-        <thead><tr><th data-i18n="ret:th_user">Usuario</th><th data-i18n="ret:th_amount">Importe</th><th data-i18n="ret:th_method">Método</th><th data-i18n="ret:th_dest">Destino</th><th data-i18n="ret:th_status">Estado</th><th data-i18n="ret:th_date">Fecha</th><th></th></tr></thead>
-        <tbody id="tb-retiros"><tr><td colspan="7" class="td-empty">—</td></tr></tbody>
+        <thead><tr><th style="width:34px"><input type="checkbox" id="ret-chk-all" onclick="retToggleAll(this)" title="Seleccionar todo"></th><th data-i18n="ret:th_user">Usuario</th><th data-i18n="ret:th_amount">Importe</th><th data-i18n="ret:th_method">Método</th><th data-i18n="ret:th_dest">Destino</th><th data-i18n="ret:th_status">Estado</th><th data-i18n="ret:th_date">Fecha</th><th></th></tr></thead>
+        <tbody id="tb-retiros"><tr><td colspan="8" class="td-empty">—</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -7309,6 +7373,20 @@ select.form-input option{background:var(--s2)}
 // ═══════════════════════════════════════════════════════════
 // INNOVAAFRIC ADMIN v18 — CORE
 // ═══════════════════════════════════════════════════════════
+
+// ── FIX LAYOUT v34: reubicar páginas que quedaron fuera de <main>.content ──
+// Muchas secciones "pg-*" (v22–v32, retiros, webs, compliance, etc.) se
+// añadieron como hijas directas de <body>. Como body es display:flex, al
+// mostrarse aparecían estrujadas a la derecha en vez de ocupar el área de
+// contenido. Las movemos dentro de .content, donde nav() ya las gestiona.
+(function relocateStrayPages(){
+  try{
+    var content=document.querySelector('.main .content')||document.querySelector('.content');
+    if(!content) return;
+    document.querySelectorAll('body > [id^="pg-"]').forEach(function(pg){ content.appendChild(pg); });
+  }catch(e){}
+})();
+
 const SB_URL='https://spnfvmvrlexyiljwyola.supabase.co';
 const SB_KEY='sb_publishable_Aqe-VLEi6MfY8AvlpRfnLQ_OAom278u';
 let SB=null, ALL_USERS=[], CURRENT_PAGE='dashboard';
@@ -8371,7 +8449,7 @@ function renderTxns(){
   ALL_TXNS=items;
   if(lbl)lbl.textContent=items.length+' '+_i18n(items.length===1?'txn:count_one':'txn:count')+((filt||q||from||to)?_i18n('txn:filtered'):'');
   const SP={completed:'green',pending:'amber',processing:'cyan',failed:'red',voided:'gray'};
-  if(tb)tb.innerHTML=items.length?items.map(function(t){return '<tr>'
+  if(tb)tb.innerHTML=items.length?items.map(function(t){return '<tr style="cursor:pointer" onclick="openTxnDetail(\''+String(t.id||'')+'\')" title="Ver detalle">'
     +'<td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+String(t.id||'—').substring(0,14)+'</td>'
     +'<td style="font-size:12px"><div>'+(t.userName||t.userEmail||'—')+'</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">'+txnIa(t.userId)+'</div></td>'
     +'<td><span class="pill pill-cyan">'+_txnTL(t.type)+'</span></td>'
@@ -8381,6 +8459,8 @@ function renderTxns(){
     +'<td style="font-size:11px;color:var(--muted)">'+fmt_date(t.createdAt)+'</td>'
     +'</tr>';}).join(''):'<tr><td colspan="7" class="td-empty">'+_i18n('txn:none')+'</td></tr>';
   renderTxnChart(items);
+  renderTxnKPIs(items);
+  renderTxnTimeChart(items);
 }
 function renderTxnChart(items){
   const box=document.getElementById('txn-chart');if(!box)return;
@@ -8391,6 +8471,71 @@ function renderTxnChart(items){
   box.innerHTML=rows.map(function(r){const pct=Math.round(r[1].sum/max*100);
     return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>'+_txnTL(r[0])+' <span style="color:var(--muted)">('+r[1].n+')</span></span><b>'+Math.round(r[1].sum).toLocaleString('es',{useGrouping:'always'})+' XAF</b></div><div style="height:9px;background:var(--card2,#1a2234);border-radius:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--accent-dark,#0e7490),var(--accent,#22d3ee))"></div></div></div>';
   }).join('');
+}
+// ── Transacciones v34: KPIs · gráfico temporal (Chart.js) · detalle ──
+var _txnTimeChart=null;
+function renderTxnKPIs(items){
+  items=items||[];
+  var vol=items.reduce(function(s,t){return s+Number(t.amountSent||0);},0);
+  var fees=items.reduce(function(s,t){return s+Number(t.fee||0);},0);
+  var avg=items.length?vol/items.length:0;
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('txn-kpi-volume', Math.round(vol).toLocaleString('es',{useGrouping:'always'}));
+  set('txn-kpi-fees',   Math.round(fees).toLocaleString('es',{useGrouping:'always'}));
+  set('txn-kpi-avg',    Math.round(avg).toLocaleString('es',{useGrouping:'always'}));
+  set('txn-kpi-count',  items.length);
+}
+function renderTxnTimeChart(items){
+  var canvas=document.getElementById('txn-time-chart');
+  if(!canvas||typeof Chart==='undefined')return;
+  var byDay={};
+  (items||[]).forEach(function(t){
+    if(!t.createdAt)return;
+    var d=new Date(t.createdAt); if(isNaN(d))return;
+    var key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(!byDay[key])byDay[key]={sum:0,n:0};
+    byDay[key].sum+=Number(t.amountSent||0); byDay[key].n++;
+  });
+  var keys=Object.keys(byDay).sort();
+  var labels=keys.map(function(k){var p=k.split('-');return p[2]+'/'+p[1];});
+  var data=keys.map(function(k){return Math.round(byDay[k].sum);});
+  if(_txnTimeChart){_txnTimeChart.destroy();_txnTimeChart=null;}
+  if(!keys.length)return;
+  var ctx=canvas.getContext('2d');
+  var grad=ctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(34,211,238,.35)'); grad.addColorStop(1,'rgba(34,211,238,0)');
+  _txnTimeChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:labels,datasets:[{label:_i18n('txn:kpi_volume')+' (XAF)',data:data,borderColor:'#22d3ee',backgroundColor:grad,fill:true,tension:.3,pointRadius:3,pointBackgroundColor:'#22d3ee',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return Number(c.parsed.y).toLocaleString('es')+' XAF';}}}},
+      scales:{
+        x:{grid:{color:'rgba(148,163,184,.1)'},ticks:{color:'#94a3b8',font:{size:10},maxRotation:0,autoSkip:true,maxTicksLimit:12}},
+        y:{grid:{color:'rgba(148,163,184,.1)'},ticks:{color:'#94a3b8',font:{size:10},callback:function(v){return Number(v).toLocaleString('es');}}}
+      }}
+  });
+}
+function openTxnDetail(id){
+  var pool=(ALL_TXNS&&ALL_TXNS.length?ALL_TXNS:(typeof ALL_TXNS_RAW!=='undefined'?ALL_TXNS_RAW:[]))||[];
+  var t=pool.filter(function(x){return String(x.id||'')===String(id);})[0];
+  if(!t){toast('Transacción no encontrada','warning');return;}
+  var SP={completed:'green',pending:'amber',processing:'cyan',failed:'red',voided:'gray'};
+  var row=function(k,v){return '<div style="display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--b1)"><span style="color:var(--muted);font-size:12px">'+k+'</span><span style="font-size:13px;font-weight:600;text-align:right;word-break:break-all">'+v+'</span></div>';};
+  var body=document.getElementById('m-txn-detail-body');
+  if(body)body.innerHTML=
+     row(_i18n('txnd:ref'), String(t.id||'—'))
+    +row(_i18n('txnd:user'), (t.userName||t.userEmail||'—')+'<div style="font-size:10px;color:var(--muted);font-family:var(--mono)">'+txnIa(t.userId)+'</div>')
+    +(t.userEmail?row('Email', t.userEmail):'')
+    +(t.userPhone?row(_i18n('txnd:phone'), t.userPhone):'')
+    +row(_i18n('txnd:type'), '<span class="pill pill-cyan">'+_txnTL(t.type)+'</span>')
+    +row(_i18n('txnd:amount'), '<b>'+Number(t.amountSent||0).toLocaleString('es',{useGrouping:'always'})+' '+(t.currencySent||'XAF')+'</b>')
+    +row(_i18n('txnd:fee'), '<span style="color:var(--green)">'+Number(t.fee||0).toLocaleString('es',{useGrouping:'always'})+'</span>')
+    +((t.amountReceived!=null&&t.amountReceived!=='')?row(_i18n('txnd:received'), Number(t.amountReceived||0).toLocaleString('es')+' '+(t.currencyReceived||t.currencySent||'')):'')
+    +((t.rate!=null&&t.rate!=='')?row(_i18n('txnd:rate'), String(t.rate)):'')
+    +row(_i18n('txnd:status'), '<span class="pill pill-'+(SP[t.status]||'gray')+'">'+_txnStatus(t.status)+'</span>')
+    +row(_i18n('txnd:date'), fmt_date(t.createdAt))
+    +(t.description?row(_i18n('txnd:desc'), t.description):'');
+  openModal('m-txn-detail');
 }
 function clearTxnFilters(){
   ['txn-search','txn-from','txn-to'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
@@ -8453,9 +8598,9 @@ async function loadRetiros(){
   const tb=document.getElementById('tb-retiros');
   const cnt=document.getElementById('ret-count');
   const badge=document.getElementById('sb-retiros-count');
-  if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">'+_i18n('ret:loading')+'</td></tr>';
+  if(tb)tb.innerHTML='<tr><td colspan="8" class="td-empty">'+_i18n('ret:loading')+'</td></tr>';
   const r=await rwAPI('GET','/admin/withdrawals');
-  if(!r||!r.success){if(tb)tb.innerHTML='<tr><td colspan="7" class="td-empty">Error: '+((r&&r.error&&(r.error.message||r.error))||'sin respuesta')+'</td></tr>';return;}
+  if(!r||!r.success){if(tb)tb.innerHTML='<tr><td colspan="8" class="td-empty">Error: '+((r&&r.error&&(r.error.message||r.error))||'sin respuesta')+'</td></tr>';return;}
   const list=(r.data&&r.data.withdrawals)||[];
   const pend=(r.data&&r.data.pending)||0;
   window._retirosLast={list:list,pend:pend};
@@ -8469,13 +8614,18 @@ function renderRetiros(){
   const list=cache.list||[], pend=cache.pend||0;
   if(cnt)cnt.textContent=list.length+' '+_i18n('ret:count')+' · '+pend+' '+_i18n('ret:pending');
   if(badge){if(pend>0){badge.style.display='inline';badge.textContent=pend;}else{badge.style.display='none';}}
+  renderRetChart(list);
+  renderRetKPIs(list);
+  window._retirosFiltered=list;
+  retResetSelectionUI();
   const mLbl={bank_transfer:_i18n('ret:m_bank'),authorized_point:_i18n('ret:m_point'),orange_money:_i18n('ret:m_orange'),mtn_money:_i18n('ret:m_mtn')};
   const sLbl={processing:_i18n('ret:s_pending'),pending:_i18n('ret:s_pending'),completed:_i18n('ret:s_paid'),failed:_i18n('ret:s_failed')};
-  if(!list.length){tb.innerHTML='<tr><td colspan="7" class="td-empty">'+_i18n('ret:none')+'</td></tr>';return;}
+  if(!list.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">'+_i18n('ret:none')+'</td></tr>';return;}
   tb.innerHTML=list.map(function(w){
     const d=w.createdAt?new Date(w.createdAt).toLocaleString('es',{useGrouping:'always'}):'';
     const paid=(w.status==='completed');
     return '<tr>'
+      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+(paid?' disabled':'')+' onclick="onRetChkChange()"></td>'
       +'<td><div style="font-size:12px;font-weight:600">'+(w.name||'—')+'</div><div style="font-size:10px;color:var(--muted)">'+(w.email||'')+(w.role?' · '+w.role:'')+'</div></td>'
       +'<td><b>'+Number(w.amount||0).toLocaleString('es',{useGrouping:'always'})+' '+(w.currency||'XAF')+'</b><div style="font-size:10px;color:var(--muted)">neto '+Number(w.amount_net||0).toLocaleString('es',{useGrouping:'always'})+'</div></td>'
       +'<td style="font-size:12px">'+(mLbl[w.method]||w.method)+'</td>'
@@ -8486,6 +8636,17 @@ function renderRetiros(){
       +'</tr>';
   }).join('');
 }
+function renderRetChart(list){
+  var box=document.getElementById('ret-chart'); if(!box)return;
+  var mLbl={bank_transfer:_i18n('ret:m_bank'),authorized_point:_i18n('ret:m_point'),orange_money:_i18n('ret:m_orange'),mtn_money:_i18n('ret:m_mtn')};
+  var agg={}; (list||[]).forEach(function(w){ var k=w.method||'—'; if(!agg[k])agg[k]={n:0,sum:0}; agg[k].n++; agg[k].sum+=Number(w.amount||0); });
+  var rows=Object.entries(agg).sort(function(a,b){return b[1].sum-a[1].sum;});
+  if(!rows.length){box.innerHTML='<div class="td-empty">'+_i18n('ret:chart_none')+'</div>';return;}
+  var max=Math.max.apply(null,rows.map(function(r){return r[1].sum;}).concat([1]));
+  box.innerHTML=rows.map(function(r){var pct=Math.round(r[1].sum/max*100);
+    return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>'+(mLbl[r[0]]||r[0])+' <span style="color:var(--muted)">('+r[1].n+')</span></span><b>'+Math.round(r[1].sum).toLocaleString('es',{useGrouping:'always'})+' XAF</b></div><div style="height:9px;background:var(--card2,#1a2234);border-radius:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--accent-dark,#0e7490),var(--accent,#22d3ee))"></div></div></div>';
+  }).join('');
+}
 async function markRetiroPaid(id,btn){
   if(!confirm('¿Marcar este retiro como PAGADO? Confirma que ya has hecho la transferencia al usuario.'))return;
   if(btn){btn.textContent='…';btn.disabled=true;}
@@ -8494,6 +8655,101 @@ async function markRetiroPaid(id,btn){
   if(typeof toast==='function')toast('✅ Retiro marcado como pagado','success');
   if(typeof logAdminAction==='function')logAdminAction('withdraw_paid','Retiro '+id+' pagado');
   loadRetiros();
+}
+
+// ── Retiros v34: KPIs · filtro por rol · selección múltiple · export ──
+function _retRoleMatch(role, f){
+  role=(role||'').toLowerCase();
+  if(f==='representante') return role.indexOf('repr')===0;            // representante / representative
+  if(f==='comercio')      return role==='comercio'||role.indexOf('merch')===0;
+  return role===f;
+}
+function renderRetKPIs(list){
+  list=list||[];
+  var isPend=function(w){return w.status==='processing'||w.status==='pending';};
+  var pendAmt=list.filter(isPend).reduce(function(s,w){return s+Number(w.amount||0);},0);
+  var paidAmt=list.filter(function(w){return w.status==='completed';}).reduce(function(s,w){return s+Number(w.amount||0);},0);
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  set('ret-kpi-pending-amt', Math.round(pendAmt).toLocaleString('es',{useGrouping:'always'}));
+  set('ret-kpi-paid-amt',    Math.round(paidAmt).toLocaleString('es',{useGrouping:'always'}));
+  set('ret-kpi-pending-n',   list.filter(isPend).length);
+  set('ret-kpi-total-n',     list.length);
+}
+function retSelectedIds(){ return Array.prototype.slice.call(document.querySelectorAll('.ret-chk:checked')).map(function(c){return c.value;}); }
+function onRetChkChange(){
+  var n=retSelectedIds().length;
+  var bar=document.getElementById('ret-bulk-bar'); if(bar)bar.style.display=n>0?'flex':'none';
+  var lbl=document.getElementById('ret-bulk-count'); if(lbl)lbl.textContent=n;
+  var all=document.getElementById('ret-chk-all');
+  var boxes=document.querySelectorAll('.ret-chk:not(:disabled)');
+  if(all)all.checked=(boxes.length>0 && n===boxes.length);
+}
+function retToggleAll(master){
+  document.querySelectorAll('.ret-chk:not(:disabled)').forEach(function(c){c.checked=master.checked;});
+  onRetChkChange();
+}
+function retClearSelection(){
+  document.querySelectorAll('.ret-chk').forEach(function(c){c.checked=false;});
+  var all=document.getElementById('ret-chk-all'); if(all)all.checked=false;
+  onRetChkChange();
+}
+function retResetSelectionUI(){
+  var bar=document.getElementById('ret-bulk-bar'); if(bar)bar.style.display='none';
+  var all=document.getElementById('ret-chk-all'); if(all)all.checked=false;
+}
+async function markRetirosBulk(){
+  var ids=retSelectedIds();
+  if(!ids.length){toast('Selecciona al menos un retiro','warning');return;}
+  if(!confirm('¿Marcar '+ids.length+' retiro(s) como PAGADOS?\nConfirma que ya has hecho las transferencias.'))return;
+  var ok=0,fail=0;
+  for(var i=0;i<ids.length;i++){
+    try{ var r=await rwAPI('POST','/admin/withdrawals/'+ids[i]+'/complete',{}); if(r&&r.success)ok++; else fail++; }
+    catch(e){ fail++; }
+  }
+  if(typeof toast==='function')toast('✅ '+ok+' pagado(s)'+(fail?(' · '+fail+' con error'):''), fail?'warning':'success');
+  if(typeof logAdminAction==='function')logAdminAction('withdraw_paid_bulk',ok+' retiros pagados en lote');
+  loadRetiros();
+}
+function exportRetirosCSV(){
+  var src=window._retirosFiltered||[];
+  if(!src.length){toast('No hay retiros para exportar','warning');return;}
+  var mLbl={bank_transfer:'Banco',authorized_point:'Metalico',orange_money:'Orange',mtn_money:'MTN'};
+  var sLbl={processing:'Pendiente',pending:'Pendiente',completed:'Pagado',failed:'Fallido'};
+  var esc=function(v){v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  var header=['Usuario','Email','Rol','Importe','Neto','Moneda','Metodo','Destino','Estado','Pais','Ciudad','Fecha'];
+  var lines=[header.join(',')].concat(src.map(function(w){
+    return [w.name,w.email,w.role,Number(w.amount||0),Number(w.amount_net||0),(w.currency||'XAF'),(mLbl[w.method]||w.method||''),w.destination,(sLbl[w.status]||w.status||''),(w._country||''),(w._city||''),(w.createdAt?new Date(w.createdAt).toLocaleString('es'):'')].map(esc).join(',');
+  }));
+  var blob=new Blob(['﻿'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='innovaafric_retiros_'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  toast('CSV exportado: '+src.length+' retiros','success');
+}
+function exportRetirosPDF(){
+  var src=window._retirosFiltered||[];
+  if(!src.length){toast('No hay retiros para exportar','warning');return;}
+  var mLbl={bank_transfer:'🏦 Banco',authorized_point:'💵 Metálico',orange_money:'📱 Orange',mtn_money:'📱 MTN'};
+  var sLbl={processing:'⏳ Pendiente',pending:'⏳ Pendiente',completed:'✅ Pagado',failed:'❌ Fallido'};
+  var totPend=src.filter(function(w){return w.status==='processing'||w.status==='pending';}).reduce(function(s,w){return s+Number(w.amount||0);},0);
+  var rows=src.map(function(w){
+    return '<tr><td>'+(w.name||'—')+'<br><small>'+(w.email||'')+(w.role?' · '+w.role:'')+'</small></td>'
+      +'<td>'+Number(w.amount||0).toLocaleString('es')+' '+(w.currency||'XAF')+'</td>'
+      +'<td>'+(mLbl[w.method]||w.method||'')+'</td>'
+      +'<td>'+(w.destination||'—')+'</td>'
+      +'<td>'+(sLbl[w.status]||w.status||'')+'</td>'
+      +'<td>'+(w.createdAt?new Date(w.createdAt).toLocaleString('es'):'')+'</td></tr>';
+  }).join('');
+  var html='<html><head><meta charset="UTF-8"><title>Retiros</title>'
+    +'<style>body{font-family:Arial;padding:20px;font-size:10px}h1{font-size:16px;color:#0a1628}table{width:100%;border-collapse:collapse}th,td{padding:4px 6px;border-bottom:1px solid #eee;text-align:left}th{background:#f5f5f5}small{color:#888}</style></head><body>'
+    +'<h1>💵 InnovaAFRIC · Retiros — solicitudes de cobro</h1>'
+    +'<p>'+new Date().toLocaleDateString('es')+' · '+src.length+' retiros · Pendiente de pago: <b>'+Math.round(totPend).toLocaleString('es')+' XAF</b></p>'
+    +'<table><thead><tr><th>Usuario</th><th>Importe</th><th>Método</th><th>Destino</th><th>Estado</th><th>Fecha</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<p style="font-size:9px;color:#999;text-align:center;margin-top:16px">InnovaAFRIC · We Simplify Life</p></body></html>';
+  var win=window.open('','_blank');if(!win){toast('Activa ventanas emergentes','error');return;}
+  win.document.write(html);win.document.close();win.focus();setTimeout(function(){win.print();},400);
+  toast('Abriendo PDF de retiros','success');
 }
 
 // ── Web-Admin: editar y publicar páginas ──────────────────
@@ -13811,6 +14067,8 @@ var UI_TEXT_TR={
       'txn:f_all':'Todos los tipos','txn:f_send':'Envíos','txn:f_p2p':'P2P','txn:f_cashout':'Reintegros (a banco/metálico)','txn:f_traslados':'Traslados (comisiones/unidades)','txn:f_qr':'QR Pay','txn:f_topup':'Recargas','txn:f_rider':'Pagos a riders',
       'txn:from':'Desde','txn:to':'Hasta','txn:clear':'Limpiar filtros',
       'txn:chart_title':'📊 Resumen por tipo de operación',
+      'txn:kpi_volume':'Volumen total','txn:kpi_fees':'Comisiones','txn:kpi_avg':'Ticket medio','txn:kpi_count':'Nº transacciones','txn:time_title':'📈 Evolución temporal (volumen por día)',
+      'txnd:title':'Detalle de transacción','txnd:ref':'Referencia','txnd:user':'Usuario','txnd:phone':'Teléfono','txnd:type':'Tipo','txnd:amount':'Importe','txnd:fee':'Comisión','txnd:received':'Recibido','txnd:rate':'Tasa','txnd:status':'Estado','txnd:date':'Fecha','txnd:desc':'Descripción','txnd:close':'Cerrar',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
       'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
       'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
@@ -13820,7 +14078,11 @@ var UI_TEXT_TR={
       'ret:mark_paid':'Marcar pagado','ret:none':'No hay retiros todavía.','ret:loading':'Cargando…','ret:count':'retiro(s)','ret:pending':'pendiente(s)',
       'ret:f_all_countries':'🌍 Todos los países','ret:f_all_cities':'🏙️ Todas las ciudades','ret:search_ph':'🔎 Nombre, email, código IA o teléfono…',
       'ret:p_all':'📅 Todo el período','ret:p_today':'Hoy','ret:p_week':'Últimos 7 días','ret:p_month':'Este mes','ret:p_year':'Este año','ret:p_custom':'Personalizado…',
-      'ret:clear':'Limpiar filtros','ret:amount_min_ph':'Importe mín.','ret:amount_max_ph':'Importe máx.','ret:f_all_status':'Todos los estados'},
+      'ret:clear':'Limpiar filtros','ret:amount_min_ph':'Importe mín.','ret:amount_max_ph':'Importe máx.','ret:f_all_status':'Todos los estados',
+      'ret:chart_title':'📊 Resumen por método de cobro','ret:chart_none':'Sin datos para el gráfico',
+      'ret:kpi_pending_amt':'Pendiente de pago','ret:kpi_paid_amt':'Pagado','ret:kpi_pending_n':'Nº pendientes','ret:kpi_total_n':'Total solicitudes',
+      'ret:f_all_roles':'👥 Todos los roles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Representante','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Comercio',
+      'ret:bulk_selected':'seleccionados','ret:bulk_pay':'Marcar seleccionados como pagados','ret:bulk_clear':'Quitar selección'},
     en:{'nav:webs':'Webs','web:title':'Web-Admin — edit and publish your pages',
       'web:close':'Close','web:history':'History','web:download':'Download','web:revert':'Undo','web:publish':'Publish',
       'web:tab_texts':'Texts','web:tab_images':'Images','web:tab_links':'Links','web:tab_seo':'SEO','web:tab_colors':'Colors','web:tab_code':'Code','web:tab_blocks':'Blocks','web:blocks_help':'Add ready-made sections to the end of the page. Then edit their text in the 📝 Texts tab and click 🚀 Publish.',
@@ -13836,6 +14098,8 @@ var UI_TEXT_TR={
       'txn:f_all':'All types','txn:f_send':'Transfers','txn:f_p2p':'P2P','txn:f_cashout':'Withdrawals (bank/cash)','txn:f_traslados':'Transfers (commissions/units)','txn:f_qr':'QR Pay','txn:f_topup':'Top-ups','txn:f_rider':'Rider payments',
       'txn:from':'From','txn:to':'To','txn:clear':'Clear filters',
       'txn:chart_title':'📊 Summary by operation type',
+      'txn:kpi_volume':'Total volume','txn:kpi_fees':'Fees','txn:kpi_avg':'Avg ticket','txn:kpi_count':'Transactions','txn:time_title':'📈 Timeline (volume per day)',
+      'txnd:title':'Transaction detail','txnd:ref':'Reference','txnd:user':'User','txnd:phone':'Phone','txnd:type':'Type','txnd:amount':'Amount','txnd:fee':'Fee','txnd:received':'Received','txnd:rate':'Rate','txnd:status':'Status','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Close',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
       'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
       'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
@@ -13845,7 +14109,11 @@ var UI_TEXT_TR={
       'ret:mark_paid':'Mark paid','ret:none':'No withdrawals yet.','ret:loading':'Loading…','ret:count':'withdrawal(s)','ret:pending':'pending',
       'ret:f_all_countries':'🌍 All countries','ret:f_all_cities':'🏙️ All cities','ret:search_ph':'🔎 Name, email, IA code or phone…',
       'ret:p_all':'📅 All time','ret:p_today':'Today','ret:p_week':'Last 7 days','ret:p_month':'This month','ret:p_year':'This year','ret:p_custom':'Custom…',
-      'ret:clear':'Clear filters','ret:amount_min_ph':'Min. amount','ret:amount_max_ph':'Max. amount','ret:f_all_status':'All statuses'},
+      'ret:clear':'Clear filters','ret:amount_min_ph':'Min. amount','ret:amount_max_ph':'Max. amount','ret:f_all_status':'All statuses',
+      'ret:chart_title':'📊 Summary by payout method','ret:chart_none':'No data for the chart',
+      'ret:kpi_pending_amt':'Pending payout','ret:kpi_paid_amt':'Paid','ret:kpi_pending_n':'Pending count','ret:kpi_total_n':'Total requests',
+      'ret:f_all_roles':'👥 All roles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Representative','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Merchant',
+      'ret:bulk_selected':'selected','ret:bulk_pay':'Mark selected as paid','ret:bulk_clear':'Clear selection'},
     fr:{'nav:webs':'Webs','web:title':'Web-Admin — éditer et publier vos pages',
       'web:close':'Fermer','web:history':'Historique','web:download':'Télécharger','web:revert':'Annuler','web:publish':'Publier',
       'web:tab_texts':'Textes','web:tab_images':'Images','web:tab_links':'Liens','web:tab_seo':'SEO','web:tab_colors':'Couleurs','web:tab_code':'Code','web:tab_blocks':'Blocs','web:blocks_help':'Ajoutez des sections prédéfinies à la fin de la page. Modifiez ensuite leurs textes dans l\'onglet 📝 Textes et cliquez sur 🚀 Publier.',
@@ -13861,6 +14129,8 @@ var UI_TEXT_TR={
       'txn:f_all':'Tous les types','txn:f_send':'Envois','txn:f_p2p':'P2P','txn:f_cashout':'Retraits (banque/espèces)','txn:f_traslados':'Transferts (commissions/unités)','txn:f_qr':'QR Pay','txn:f_topup':'Recharges','txn:f_rider':'Paiements riders',
       'txn:from':'Du','txn:to':'Au','txn:clear':'Effacer les filtres',
       'txn:chart_title':'📊 Résumé par type d\'opération',
+      'txn:kpi_volume':'Volume total','txn:kpi_fees':'Commissions','txn:kpi_avg':'Panier moyen','txn:kpi_count':'Nb transactions','txn:time_title':'📈 Évolution (volume par jour)',
+      'txnd:title':'Détail de la transaction','txnd:ref':'Référence','txnd:user':'Utilisateur','txnd:phone':'Téléphone','txnd:type':'Type','txnd:amount':'Montant','txnd:fee':'Commission','txnd:received':'Reçu','txnd:rate':'Taux','txnd:status':'Statut','txnd:date':'Date','txnd:desc':'Description','txnd:close':'Fermer',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
       'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
       'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
@@ -13870,7 +14140,11 @@ var UI_TEXT_TR={
       'ret:mark_paid':'Marquer payé','ret:none':'Aucun retrait pour le moment.','ret:loading':'Chargement…','ret:count':'retrait(s)','ret:pending':'en attente',
       'ret:f_all_countries':'🌍 Tous les pays','ret:f_all_cities':'🏙️ Toutes les villes','ret:search_ph':'🔎 Nom, email, code IA ou téléphone…',
       'ret:p_all':'📅 Toute la période','ret:p_today':'Aujourd\'hui','ret:p_week':'7 derniers jours','ret:p_month':'Ce mois','ret:p_year':'Cette année','ret:p_custom':'Personnalisé…',
-      'ret:clear':'Effacer les filtres','ret:amount_min_ph':'Montant min.','ret:amount_max_ph':'Montant max.','ret:f_all_status':'Tous les statuts'}
+      'ret:clear':'Effacer les filtres','ret:amount_min_ph':'Montant min.','ret:amount_max_ph':'Montant max.','ret:f_all_status':'Tous les statuts',
+      'ret:chart_title':'📊 Résumé par méthode de paiement','ret:chart_none':'Aucune donnée pour le graphique',
+      'ret:kpi_pending_amt':'À payer','ret:kpi_paid_amt':'Payé','ret:kpi_pending_n':'Nb en attente','ret:kpi_total_n':'Total demandes',
+      'ret:f_all_roles':'👥 Tous les rôles','ret:r_circular':'🏘️ Circular','ret:r_rep':'🏅 Représentant','ret:r_rider':'🛵 Rider','ret:r_comercio':'🏪 Commerce',
+      'ret:bulk_selected':'sélectionnés','ret:bulk_pay':'Marquer sélectionnés comme payés','ret:bulk_clear':'Retirer la sélection'}
   };
   if(typeof ADMIN_TR!=='undefined'){['es','en','fr'].forEach(function(l){ if(ADMIN_TR[l])Object.assign(ADMIN_TR[l],W[l]); });}
 })();
@@ -13927,6 +14201,17 @@ function applyAdminLang(){
   document.querySelectorAll('.back-btn').forEach(function(b){if(T['btn:back'])b.textContent=T['btn:back'];});
   // ── Traducción de contenido interno de módulos (card-title, card-sub, section headings) ──
   _applyPageContentTranslation(ADMIN_LANG);
+  // ── Re-aplicar data-i18n como paso final: _applyPageContentTranslation snapshotea
+  //    el texto de .card-title/th en data-es y puede dejarlos en el idioma anterior.
+  //    La traducción por clave (data-i18n) es la autoridad, así que la reafirmamos. ──
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k=el.getAttribute('data-i18n');
+    if(T[k]!==undefined&&typeof T[k]==='string'){el.textContent=T[k];}
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    var k=el.getAttribute('data-i18n-ph');
+    if(T[k]!==undefined&&typeof T[k]==='string'){el.placeholder=T[k];}
+  });
   // ── Re-render de tablas dinámicas para que cambien de idioma en vivo ──
   try{ if(typeof ALL_TXNS_RAW!=='undefined'&&ALL_TXNS_RAW&&ALL_TXNS_RAW.length&&typeof renderTxns==='function')renderTxns(); }catch(e){}
   try{ if(window._retirosLast&&typeof renderRetiros==='function')renderRetiros(); }catch(e){}
@@ -15091,6 +15376,12 @@ function initRetirosFilters() {
     +'<option value="week" data-i18n="ret:p_week">Últimos 7 días</option>'
     +'<option value="month" data-i18n="ret:p_month">Este mes</option>'
     +'<option value="year" data-i18n="ret:p_year">Este año</option></select>'
+    +'<select class="filter-select" id="rf-role" onchange="applyRetiroFilters()">'
+    +'<option value="" data-i18n="ret:f_all_roles">👥 Todos los roles</option>'
+    +'<option value="circular" data-i18n="ret:r_circular">🏘️ Circular</option>'
+    +'<option value="representante" data-i18n="ret:r_rep">🏅 Representante</option>'
+    +'<option value="rider" data-i18n="ret:r_rider">🛵 Rider</option>'
+    +'<option value="comercio" data-i18n="ret:r_comercio">🏪 Comercio</option></select>'
     +'<input class="filter-input" id="rf-search" data-i18n-ph="ret:search_ph" placeholder="🔎 Nombre, email, código IA o teléfono…" oninput="applyRetiroFilters()" style="min-width:220px">';
 
   // Fila 2: importe mín/máx · estado · calendario manual · limpiar (misma fila 2 que Transacciones)
@@ -15136,7 +15427,7 @@ function onRetDateChange(){
 }
 
 function clearRetiroFilters(){
-  ['rf-country','rf-city','rf-search','rf-period','rf-amount-min','rf-amount-max','rf-status','rf-from','rf-to'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  ['rf-country','rf-city','rf-search','rf-period','rf-role','rf-amount-min','rf-amount-max','rf-status','rf-from','rf-to'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
   buildCityFilter('rf-city', '', applyRetiroFilters);
   applyRetiroFilters();
 }
@@ -15153,6 +15444,7 @@ function applyRetiroFilters(){
   var amountMin=parseFloat((document.getElementById('rf-amount-min')||{}).value);
   var amountMax=parseFloat((document.getElementById('rf-amount-max')||{}).value);
   var statusF =(document.getElementById('rf-status')||{}).value||'';
+  var roleF   =(document.getElementById('rf-role')||{}).value||'';
 
   var now=new Date(), from=null, to=null;
   var fV=(document.getElementById('rf-from')||{}).value, tV=(document.getElementById('rf-to')||{}).value;
@@ -15176,6 +15468,7 @@ function applyRetiroFilters(){
     if(country && w._country!==country) return false;
     if(city    && w._city!==city)       return false;
     if(statusF && w.status!==statusF)   return false;
+    if(roleF   && !_retRoleMatch(w.role, roleF)) return false;
     if(!isNaN(amountMin) && Number(w.amount||0)<amountMin) return false;
     if(!isNaN(amountMax) && Number(w.amount||0)>amountMax) return false;
     if(from && (!w.createdAt || new Date(w.createdAt)<from)) return false;
@@ -15192,14 +15485,19 @@ function applyRetiroFilters(){
   var badge=document.getElementById('sb-retiros-count');
   if(badge){ if(pend>0){badge.style.display='inline';badge.textContent=pend;} else {badge.style.display='none';} }
 
+  renderRetChart(list);
+  renderRetKPIs(list);
+  window._retirosFiltered=list;
+  retResetSelectionUI();
   var mLbl={bank_transfer:_i18n('ret:m_bank'),authorized_point:_i18n('ret:m_point'),orange_money:_i18n('ret:m_orange'),mtn_money:_i18n('ret:m_mtn')};
   var sLbl={processing:_i18n('ret:s_pending'),pending:_i18n('ret:s_pending'),completed:_i18n('ret:s_paid'),failed:_i18n('ret:s_failed')};
-  if(!list.length){ tb.innerHTML='<tr><td colspan="7" class="td-empty">'+_i18n('ret:none')+'</td></tr>'; return; }
+  if(!list.length){ tb.innerHTML='<tr><td colspan="8" class="td-empty">'+_i18n('ret:none')+'</td></tr>'; return; }
   tb.innerHTML=list.map(function(w){
     var d=w.createdAt?new Date(w.createdAt).toLocaleString('es',{useGrouping:'always'}):'';
     var paid=(w.status==='completed');
     var flag=FLAG_EMOJI[w._country]||'';
     return '<tr>'
+      +'<td><input type="checkbox" class="ret-chk" value="'+w.id+'"'+(paid?' disabled':'')+' onclick="onRetChkChange()"></td>'
       +'<td><div style="font-size:12px;font-weight:600">'+(w.name||'—')+'</div>'
       +'<div style="font-size:10px;color:var(--muted)">'+(w.email||'')+(w.role?' · '+w.role:'')+(w._ia?' · '+w._ia:'')+(w._phone?' · '+w._phone:'')+'</div>'
       +(w._country?'<div style="font-size:10px;color:var(--muted)">'+flag+' '+(w._city?w._city+', ':'')+(COUNTRY_NAMES_V21[w._country]||w._country)+'</div>':'')
