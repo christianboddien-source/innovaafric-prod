@@ -3008,6 +3008,21 @@ select.form-input option{background:var(--s2)}
   </div>
 </div>
 
+<!-- FICHA RIDER (v36) -->
+<div class="modal-overlay" id="m-rider-ficha" onclick="if(event.target===this)closeModal('m-rider-ficha')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🛵 <span data-i18n="rid:ficha_title">Ficha del rider</span></div>
+    <div id="m-rider-ficha-body" style="margin:10px 0"></div>
+    <div style="display:flex;gap:6px;margin-bottom:6px">
+      <button class="topbar-btn btn-primary" style="flex:1;font-size:12px" onclick="riderFichaRecharge()" data-i18n="rid:f_recharge">💰 Recargar wallet</button>
+      <button class="topbar-btn btn-ghost" style="flex:1;font-size:12px" onclick="riderFichaPayments()" data-i18n="rid:f_payments">💸 Cola de pagos</button>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-ghost" onclick="closeModal('m-rider-ficha')" data-i18n="txnd:close">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- RECHAZAR RETIRO (v34.1) -->
 <div class="modal-overlay" id="m-ret-reject" onclick="if(event.target===this)closeModal('m-ret-reject')">
   <div class="modal" style="max-width:440px">
@@ -11858,24 +11873,24 @@ function exportComisionPDF(){
 // ── PAGOS RIDERS ──────────────────────────────────────────
 async function loadRiderPayment(){
   const r=await rwAPI('GET','/rider-payment/pending');
-  const rows=(r&&(r.data||r.payments))||[];
+  const rows=(r&&r.data&&r.data.orders)||[];
   document.getElementById('rp-pending').textContent=rows.length;
-  const total=rows.reduce((s,p)=>s+(Number(p.amount)||0),0);
-  document.getElementById('rp-amount').textContent=rows.length?fmtAmt(total,(rows[0]&&rows[0].currency)||'XAF'):'0';
+  const total=rows.reduce((s,p)=>s+(Number(p.riderFeeXaf)||0),0);
+  document.getElementById('rp-amount').textContent=fmtAmt(total,'XAF');
   document.getElementById('rp-released').textContent='—';
-  document.getElementById('rp-auto').textContent=rows.filter(p=>p.mode==='auto').length;
+  document.getElementById('rp-auto').textContent=rows.filter(p=>p.riderPaymentMode==='auto').length;
   const tb=document.getElementById('tb-rider-payment');
   if(!tb)return;
   if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin pagos pendientes</td></tr>';return;}
   tb.innerHTML=rows.map(p=>'<tr>'
-    +'<td style="font-family:var(--mono);font-size:11px">'+(p.order_id||p.orderId||'—')+'</td>'
-    +'<td><div class="user-cell"><div class="uc-av" style="background:var(--cyan-d);color:var(--cyan)">🛵</div><div><div class="uc-name">'+(p.rider_name||p.riderId||'—')+'</div></div></div></td>'
-    +'<td style="font-family:var(--mono);color:var(--green)">'+(p.amount!=null?fmtAmt(p.amount,p.currency||'XAF'):'—')+'</td>'
-    +'<td style="font-size:11px;color:var(--muted)">'+(p.created_at||p.date||'—').substring(0,16).replace('T',' ')+'</td>'
-    +'<td><span class="pill '+(p.mode==='auto'?'pill-green':'pill-amber')+'">'+(p.mode||'manual')+'</span></td>'
+    +'<td style="font-family:var(--mono);font-size:11px">'+(p.id||'—')+'</td>'
+    +'<td><div class="user-cell"><div class="uc-av" style="background:var(--cyan-d);color:var(--cyan)">🛵</div><div><div class="uc-name">'+((p.rider&&p.rider.name)||'—')+'</div><div class="uc-email" style="font-size:10px">'+((p.user&&p.user.name)||'')+'</div></div></div></td>'
+    +'<td style="font-family:var(--mono);color:var(--green)">'+fmtAmt(p.riderFeeXaf||0,'XAF')+'</td>'
+    +'<td style="font-size:11px;color:var(--muted)">'+((p.confirmedAt||'—')+'').substring(0,16).replace('T',' ')+'</td>'
+    +'<td><span class="pill '+(p.riderPaymentMode==='auto'?'pill-green':'pill-amber')+'">'+(p.riderPaymentMode||'manual')+'</span></td>'
     +'<td style="display:flex;gap:4px">'
-    +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="releaseRiderPayment(\''+( p.order_id||p.orderId||'')+'\',this)">✅ Liberar</button>'
-    +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="toggleRiderPayMode(\''+(p.order_id||p.orderId||'')+'\',\''+(p.mode==='auto'?'manual':'auto')+'\',this)">'+(p.mode==='auto'?'→ Manual':'→ Auto')+'</button>'
+    +'<button class="topbar-btn btn-primary" style="font-size:11px;padding:4px 8px" onclick="releaseRiderPayment(\''+(p.id||'')+'\',this)">✅ Liberar</button>'
+    +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="toggleRiderPayMode(\''+(p.id||'')+'\',\''+(p.riderPaymentMode==='auto'?'manual':'auto')+'\',this)">'+(p.riderPaymentMode==='auto'?'→ Manual':'→ Auto')+'</button>'
     +'</td>'
     +'</tr>').join('');
 }
@@ -14392,6 +14407,7 @@ var UI_TEXT_TR={
       'ord:title':'Pedidos','ord:detail_title':'Detalle del pedido','ord:kpi_total':'Total pedidos','ord:kpi_progress':'En curso','ord:kpi_delivered':'Entregados','ord:kpi_volume':'Volumen','ord:f_all':'Todos los estados','ord:s_pending':'⏳ Pendiente','ord:s_confirmed':'✔ Confirmado','ord:s_preparing':'👨‍🍳 Preparando','ord:s_shipped':'🚚 En reparto','ord:s_delivered':'✅ Entregado','ord:s_cancelled':'❌ Cancelado','ord:th_code':'Código','ord:th_user':'Usuario','ord:th_type':'Tipo','ord:th_total':'Total','ord:th_status':'Estado','ord:th_date':'Fecha','ord:count':'pedidos','ord:filtered':'filtrados','ord:none':'Sin pedidos','ord:address':'Dirección','ord:items':'Artículos','ord:notes':'Notas',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En entrega','rid:kpi_eur':'Saldo total',
       'ord:actions':'Acciones','ord:act_confirm':'✔ Confirmar','ord:act_ship':'🚚 En reparto','ord:act_deliver':'✅ Entregado','ord:act_cancel':'❌ Cancelar','ord:act_refund':'↩️ Reembolsar','ord:act_assign':'🛵 Asignar','ord:status_done':'Estado actualizado','ord:pick_rider':'Elige un rider','ord:assign_done':'Rider asignado','ord:refund_prompt':'Motivo del reembolso:','ord:refund_done':'Pedido reembolsado',
+      'rid:ficha_title':'Ficha del rider','rid:f_name':'Nombre','rid:f_phone':'Teléfono','rid:f_loc':'Ubicación','rid:f_zone':'Zona','rid:f_status':'Estado','rid:f_deliveries':'Entregas','rid:f_rating':'Valoración','rid:f_rank':'Ranking','rid:f_wallet':'Saldo wallet','rid:f_notreg':'Este rider aún no está en la red de reparto (sin entregas/rating).','rid:f_recharge':'💰 Recargar wallet','rid:f_payments':'💸 Cola de pagos',
       'txn:count_one':'transacción','txn:count':'transacciones','txn:filtered':' (filtradas)',
       'txn:none':'Sin transacciones con esos filtros','txn:chart_none':'Sin datos para el gráfico','txn:loading':'Cargando…',
       'txn:tl_send':'💸 Envío','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retiro','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Traslado circular','txn:tl_rep':'🔄 Traslado rep','txn:tl_topup':'⬆️ Recarga','txn:tl_rider_pay':'🛵 Pago rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Reembolso',
@@ -14429,6 +14445,7 @@ var UI_TEXT_TR={
       'ord:title':'Orders','ord:detail_title':'Order detail','ord:kpi_total':'Total orders','ord:kpi_progress':'In progress','ord:kpi_delivered':'Delivered','ord:kpi_volume':'Volume','ord:f_all':'All statuses','ord:s_pending':'⏳ Pending','ord:s_confirmed':'✔ Confirmed','ord:s_preparing':'👨‍🍳 Preparing','ord:s_shipped':'🚚 Out for delivery','ord:s_delivered':'✅ Delivered','ord:s_cancelled':'❌ Cancelled','ord:th_code':'Code','ord:th_user':'User','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Status','ord:th_date':'Date','ord:count':'orders','ord:filtered':'filtered','ord:none':'No orders','ord:address':'Address','ord:items':'Items','ord:notes':'Notes',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Free','rid:kpi_busy':'On delivery','rid:kpi_eur':'Total balance',
       'ord:actions':'Actions','ord:act_confirm':'✔ Confirm','ord:act_ship':'🚚 Out for delivery','ord:act_deliver':'✅ Delivered','ord:act_cancel':'❌ Cancel','ord:act_refund':'↩️ Refund','ord:act_assign':'🛵 Assign','ord:status_done':'Status updated','ord:pick_rider':'Pick a rider','ord:assign_done':'Rider assigned','ord:refund_prompt':'Refund reason:','ord:refund_done':'Order refunded',
+      'rid:ficha_title':'Rider profile','rid:f_name':'Name','rid:f_phone':'Phone','rid:f_loc':'Location','rid:f_zone':'Zone','rid:f_status':'Status','rid:f_deliveries':'Deliveries','rid:f_rating':'Rating','rid:f_rank':'Ranking','rid:f_wallet':'Wallet balance','rid:f_notreg':'This rider is not in the delivery network yet (no deliveries/rating).','rid:f_recharge':'💰 Top up wallet','rid:f_payments':'💸 Payment queue',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtered)',
       'txn:none':'No transactions for these filters','txn:chart_none':'No data for the chart','txn:loading':'Loading…',
       'txn:tl_send':'💸 Transfer','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Withdrawal','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Circular transfer','txn:tl_rep':'🔄 Rep transfer','txn:tl_topup':'⬆️ Top-up','txn:tl_rider_pay':'🛵 Rider payment','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Refund',
@@ -14466,6 +14483,7 @@ var UI_TEXT_TR={
       'ord:title':'Commandes','ord:detail_title':'Détail de la commande','ord:kpi_total':'Total commandes','ord:kpi_progress':'En cours','ord:kpi_delivered':'Livrées','ord:kpi_volume':'Volume','ord:f_all':'Tous les statuts','ord:s_pending':'⏳ En attente','ord:s_confirmed':'✔ Confirmée','ord:s_preparing':'👨‍🍳 Préparation','ord:s_shipped':'🚚 En livraison','ord:s_delivered':'✅ Livrée','ord:s_cancelled':'❌ Annulée','ord:th_code':'Code','ord:th_user':'Utilisateur','ord:th_type':'Type','ord:th_total':'Total','ord:th_status':'Statut','ord:th_date':'Date','ord:count':'commandes','ord:filtered':'filtrées','ord:none':'Aucune commande','ord:address':'Adresse','ord:items':'Articles','ord:notes':'Notes',
       'rid:kpi_total':'Total riders','rid:kpi_free':'Libres','rid:kpi_busy':'En livraison','rid:kpi_eur':'Solde total',
       'ord:actions':'Actions','ord:act_confirm':'✔ Confirmer','ord:act_ship':'🚚 En livraison','ord:act_deliver':'✅ Livrée','ord:act_cancel':'❌ Annuler','ord:act_refund':'↩️ Rembourser','ord:act_assign':'🛵 Assigner','ord:status_done':'Statut mis à jour','ord:pick_rider':'Choisis un rider','ord:assign_done':'Rider assigné','ord:refund_prompt':'Motif du remboursement :','ord:refund_done':'Commande remboursée',
+      'rid:ficha_title':'Fiche du rider','rid:f_name':'Nom','rid:f_phone':'Téléphone','rid:f_loc':'Localisation','rid:f_zone':'Zone','rid:f_status':'Statut','rid:f_deliveries':'Livraisons','rid:f_rating':'Note','rid:f_rank':'Classement','rid:f_wallet':'Solde wallet','rid:f_notreg':'Ce rider n\'est pas encore dans le réseau de livraison (pas de livraisons/note).','rid:f_recharge':'💰 Recharger wallet','rid:f_payments':'💸 File de paiements',
       'txn:count_one':'transaction','txn:count':'transactions','txn:filtered':' (filtrées)',
       'txn:none':'Aucune transaction pour ces filtres','txn:chart_none':'Aucune donnée pour le graphique','txn:loading':'Chargement…',
       'txn:tl_send':'💸 Envoi','txn:tl_p2p':'🤝 P2P','txn:tl_withdraw':'💵 Retrait','txn:tl_qr':'📱 QR','txn:tl_circular':'🔄 Transfert circular','txn:tl_rep':'🔄 Transfert rep','txn:tl_topup':'⬆️ Recharge','txn:tl_rider_pay':'🛵 Paiement rider','txn:tl_rider':'🛵 Rider','txn:tl_refund':'↩️ Remboursement',
@@ -15877,42 +15895,75 @@ async function loadRidersV21() {
   if(city)    riders = riders.filter(function(u){return u.city===city;});
   var wRes = await SB.from('wallets').select('user_id,eur,xaf').in('user_id',riders.map(function(u){return u.id;})).catch(()=>({data:[]}));
   var wMap={}; (wRes.data||[]).forEach(function(w){wMap[w.user_id]=w;});
-  // Datos de estado (simulado con localStorage en esta versión)
+  // Datos REALES de Railway (tabla Rider): entregas, rating, estado, zona, vehículo
+  var railRiders=[];
+  try{ var rr=await rwAPI('GET','/delivery/riders'); if(rr&&rr.success&&rr.data&&rr.data.riders) railRiders=rr.data.riders; }catch(e){}
+  window._ridersRailway=railRiders;
+  var railByUser={}; railRiders.forEach(function(r){ if(r.userId) railByUser[r.userId]=r; });
   var riderStates=JSON.parse(localStorage.getItem('ia_rider_states')||'{}');
-  if(!riders.length){renderRidersKPIs([],{},{});window._ridersLast=[];tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin riders registrados</td></tr>';return;}
-  var filtered = status ? riders.filter(function(u){return (riderStates[u.id]||'libre')===status;}) : riders;
-  renderRidersKPIs(riders, riderStates, wMap);
-  window._ridersLast=filtered.map(function(u){return {u:u,w:wMap[u.id]||{},state:riderStates[u.id]||'libre'};});
-  tb.innerHTML=filtered.map(function(u){
-    var w=wMap[u.id]||{};
-    var state=riderStates[u.id]||'libre';
-    var flag=FLAG_EMOJI[u.country]||'🌍';
-    var stateConfig={
+  var stOf=function(u){ var r=railByUser[u.id]; return (r&&r.status)?_railToState(r.status):(riderStates[u.id]||'libre'); };
+  if(!riders.length){renderRidersKPIs([],{},{},{});window._ridersLast=[];tb.innerHTML='<tr><td colspan="7" class="td-empty">Sin riders registrados</td></tr>';return;}
+  var filtered = status ? riders.filter(function(u){return stOf(u)===status;}) : riders;
+  renderRidersKPIs(riders, riderStates, wMap, railByUser);
+  window._ridersLast=filtered.map(function(u){return {u:u,w:wMap[u.id]||{},state:stOf(u),rail:railByUser[u.id]||null};});
+  var stateConfigOf=function(state){return {
       libre:{pill:'pill-green',icon:'🟢',label:'Libre',anim:''},
       ocupado:{pill:'pill-amber',icon:'🟡',label:'En entrega',anim:'animation:pulse 1s infinite'},
-      regresando:{pill:'pill-cyan',icon:'🔵',label:'Regresando',anim:''}
-    }[state]||{pill:'pill-gray',icon:'⚫',label:state,anim:''};
+      regresando:{pill:'pill-cyan',icon:'🔵',label:'Regresando',anim:''},
+      offline:{pill:'pill-gray',icon:'⚫',label:'Offline',anim:''}
+    }[state]||{pill:'pill-gray',icon:'⚫',label:state,anim:''};};
+  tb.innerHTML=filtered.map(function(u){
+    var w=wMap[u.id]||{};
+    var rr=railByUser[u.id]||null;
+    var state=stOf(u);
+    var flag=FLAG_EMOJI[u.country]||'🌍';
+    var sc=stateConfigOf(state);
     var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
+    var stats=rr?('<div style="font-size:10px;color:var(--muted)">🚚 '+(rr.deliveriesTotal||0)+' · ★ '+(rr.rating!=null?Number(rr.rating).toFixed(1):'—')+(rr.vehicle?(' · '+rr.vehicle):'')+'</div>'):'';
     return'<tr>'
       +'<td><div class="user-cell"><div class="uc-av" style="background:'+avColor(u.email)+';color:#000">'+initials(u.full_name||u.email)+'</div>'
       +'<div><div class="uc-name">'+flag+' '+(u.full_name||'—')+'</div>'
       +'<div class="uc-email">'+(u.email||'')+'</div>'
-      +'<div style="font-size:10px;color:var(--cyan);font-family:var(--mono)">'+ia+'</div></div></div></td>'
+      +'<div style="font-size:10px;color:var(--cyan);font-family:var(--mono)">'+ia+'</div>'+stats+'</div></div></td>'
       +'<td style="font-size:12px">'+(u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')+'</td>'
       +'<td style="font-family:var(--mono);font-weight:700;color:var(--cyan)">€'+Number(w.eur||0).toFixed(2)+'</td>'
       +'<td style="font-family:var(--mono);color:var(--amber)">'+Math.round(w.xaf||0).toLocaleString('es', {useGrouping:'always'})+' XAF</td>'
-      +'<td><span class="pill '+stateConfig.pill+'" style="'+stateConfig.anim+'">'+stateConfig.icon+' '+stateConfig.label+'</span></td>'
+      +'<td><span class="pill '+sc.pill+'" style="'+sc.anim+'">'+sc.icon+' '+sc.label+'</span></td>'
       +'<td style="font-size:12px">'+(u.phone||'—')+'</td>'
       +'<td style="display:flex;gap:4px">'
-      +'<select onchange="setRiderState(\''+u.id+'\',this.value)" class="filter-select" style="font-size:11px;padding:3px">'
-      +'<option value="libre" '+(state==='libre'?'selected':'')+'>🟢 Libre</option>'
-      +'<option value="ocupado" '+(state==='ocupado'?'selected':'')+'>🟡 En entrega</option>'
-      +'<option value="regresando" '+(state==='regresando'?'selected':'')+'>🔵 Regresando</option>'
-      +'</select>'
-      +'<button class="topbar-btn btn-ghost" style="font-size:10px;padding:3px 6px" onclick="openRecharge(\''+u.id+'\',\''+( u.full_name||'').replace(/'/g,'')+'\')">💰</button>'
+      +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:3px 7px" title="Ficha" onclick="openRiderFicha(\''+u.id+'\')">👁</button>'
+      +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:3px 7px" title="Recargar" onclick="openRecharge(\''+u.id+'\',\''+( u.full_name||'').replace(/'/g,'')+'\')">💰</button>'
       +'</td></tr>';
   }).join('')||'<tr><td colspan="7" class="td-empty">Sin riders para los filtros seleccionados</td></tr>';
 }
+function _railToState(s){ return ({available:'libre',busy:'ocupado',offline:'offline'})[s]||s; }
+function openRiderFicha(uid){
+  var u=(ALL_USERS||[]).filter(function(x){return x.id===uid;})[0]; if(!u){toast('Rider no encontrado','warning');return;}
+  var entry=(window._ridersLast||[]).filter(function(r){return r.u.id===uid;})[0]||{};
+  var w=entry.w||{}; var rr=entry.rail||null;
+  var rail=window._ridersRailway||[];
+  var sorted=rail.slice().sort(function(a,b){return (b.deliveriesTotal||0)-(a.deliveriesTotal||0);});
+  var pos=rr?(sorted.findIndex(function(x){return x.id===rr.id;})+1):0;
+  var ia='IA-'+(u.id||'').replace(/^[a-z]+_/i,'').replace(/-/g,'').toUpperCase().substring(0,6);
+  var sLbl={libre:'🟢 Libre',ocupado:'🟡 En entrega',regresando:'🔵 Regresando',offline:'⚫ Offline'};
+  var row=function(k,v){return '<div style="display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--b1)"><span style="color:var(--muted);font-size:12px">'+k+'</span><span style="font-size:13px;font-weight:600;text-align:right;word-break:break-all">'+v+'</span></div>';};
+  var b=document.getElementById('m-rider-ficha-body');
+  if(b)b.innerHTML=
+     row(_i18n('rid:f_name'), (u.full_name||'—')+'<div style="font-size:10px;color:var(--muted)">'+(u.email||'')+' · '+ia+'</div>')
+    +(u.phone?row(_i18n('rid:f_phone'), u.phone):'')
+    +row(_i18n('rid:f_loc'), (u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—'))
+    +(rr&&rr.zone?row(_i18n('rid:f_zone'), rr.zone+(rr.vehicle?(' · '+rr.vehicle):'')):'')
+    +row(_i18n('rid:f_status'), sLbl[entry.state]||entry.state||'—')
+    +(rr?row(_i18n('rid:f_deliveries'), (rr.deliveriesTotal||0)):'')
+    +(rr?row(_i18n('rid:f_rating'), (rr.rating!=null?('★ '+Number(rr.rating).toFixed(1)):'—')):'')
+    +(pos?row(_i18n('rid:f_rank'), '#'+pos+' / '+sorted.length):'')
+    +row(_i18n('rid:f_wallet'), '€'+Number(w.eur||0).toFixed(2)+' · '+Math.round(w.xaf||0).toLocaleString('es')+' XAF')
+    +(!rr?('<div style="font-size:11px;color:var(--amber);margin-top:8px">⚠️ '+_i18n('rid:f_notreg')+'</div>'):'');
+  window._riderFichaUid=uid; window._riderFichaName=(u.full_name||'');
+  openModal('m-rider-ficha');
+}
+function riderFichaRecharge(){ var uid=window._riderFichaUid; closeModal('m-rider-ficha'); if(uid)openRecharge(uid,(window._riderFichaName||'').replace(/'/g,'')); }
+function riderFichaPayments(){ closeModal('m-rider-ficha'); nav('rider-payment',null); }
 
 function setRiderState(uid, state) {
   var states = JSON.parse(localStorage.getItem('ia_rider_states')||'{}');
@@ -15921,10 +15972,12 @@ function setRiderState(uid, state) {
   toast('Rider → '+state,'info');
 }
 
-function renderRidersKPIs(riders, states, wMap){
+function renderRidersKPIs(riders, states, wMap, railByUser){
+  railByUser=railByUser||{};
   var setk=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
-  var free=riders.filter(function(u){return (states[u.id]||'libre')==='libre';}).length;
-  var busy=riders.filter(function(u){return (states[u.id]||'libre')==='ocupado';}).length;
+  var stOf=function(u){ var r=railByUser[u.id]; return (r&&r.status)?_railToState(r.status):(states[u.id]||'libre'); };
+  var free=riders.filter(function(u){return stOf(u)==='libre';}).length;
+  var busy=riders.filter(function(u){return stOf(u)==='ocupado';}).length;
   var eur=riders.reduce(function(s,u){return s+Number((wMap[u.id]||{}).eur||0);},0);
   setk('rid-kpi-total',riders.length); setk('rid-kpi-free',free); setk('rid-kpi-busy',busy);
   setk('rid-kpi-eur',eur.toFixed(2));
@@ -15932,14 +15985,14 @@ function renderRidersKPIs(riders, states, wMap){
 function exportRidersCSV(){
   var list=window._ridersLast||[];
   exportCSV('innovaafric_riders',
-    ['Nombre','Email','Telefono','Pais','Ciudad','Estado','Saldo_EUR','Saldo_XAF'],
-    list.map(function(r){var u=r.u,w=r.w;return [ (u.full_name||''), (u.email||''), (u.phone||''), (COUNTRY_NAMES_V21[u.country]||u.country||''), (u.city||''), r.state, Number(w.eur||0), Math.round(w.xaf||0) ];}));
+    ['Nombre','Email','Telefono','Pais','Ciudad','Estado','Entregas','Rating','Saldo_EUR','Saldo_XAF'],
+    list.map(function(r){var u=r.u,w=r.w,rr=r.rail;return [ (u.full_name||''), (u.email||''), (u.phone||''), (COUNTRY_NAMES_V21[u.country]||u.country||''), (u.city||''), r.state, (rr?(rr.deliveriesTotal||0):''), (rr&&rr.rating!=null?Number(rr.rating).toFixed(1):''), Number(w.eur||0), Math.round(w.xaf||0) ];}));
 }
 function exportRidersListPDF(){
   var list=window._ridersLast||[];
-  var sLbl={libre:'Libre',ocupado:'En entrega',regresando:'Regresando'};
-  exportTablePDF('🛵 InnovaAFRIC · Riders', ['Nombre','Email','Ubicación','Estado','Saldo €','Saldo XAF'],
-    list.map(function(r){var u=r.u,w=r.w;return [ (u.full_name||'—'), (u.email||''), ((u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')), (sLbl[r.state]||r.state), '€'+Number(w.eur||0).toFixed(2), Math.round(w.xaf||0).toLocaleString('es') ];}), 'Red de Riders');
+  var sLbl={libre:'Libre',ocupado:'En entrega',regresando:'Regresando',offline:'Offline'};
+  exportTablePDF('🛵 InnovaAFRIC · Riders', ['Nombre','Ubicación','Estado','Entregas','Rating','Saldo €','Saldo XAF'],
+    list.map(function(r){var u=r.u,w=r.w,rr=r.rail;return [ (u.full_name||'—'), ((u.city||'—')+', '+(COUNTRY_NAMES_V21[u.country]||u.country||'—')), (sLbl[r.state]||r.state), (rr?(rr.deliveriesTotal||0):'—'), (rr&&rr.rating!=null?('★ '+Number(rr.rating).toFixed(1)):'—'), '€'+Number(w.eur||0).toFixed(2), Math.round(w.xaf||0).toLocaleString('es') ];}), 'Red de Riders');
 }
 function initRiderFilters() {
   var tbr = document.getElementById('tb-riders');
