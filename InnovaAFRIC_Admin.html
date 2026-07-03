@@ -5287,7 +5287,7 @@ select.form-input option{background:var(--s2)}
   </div>
   <div class="table-wrap">
     <table class="tbl">
-      <thead><tr><th>ID</th><th>Usuario</th><th>Comercio</th><th>Tx original</th><th>Monto</th><th>Motivo</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <thead><tr><th>Usuario</th><th>Comercio</th><th>Pedido</th><th>Monto</th><th>Motivo</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody id="tb-refunds"></tbody>
     </table>
   </div>
@@ -20197,57 +20197,56 @@ function exportMerchantsPDF(){
 }
 
 /* ── REFUNDS ────────────────────────────────────────────────── */
-function loadRefunds(){
-  rwAPI('GET','/refunds').then(d=>{
-    filterRefunds(d&&d.length?d:REFUNDS_DATA);
-  }).catch(()=>filterRefunds(REFUNDS_DATA));
-  var stats=REFUNDS_DATA.reduce((a,r)=>({
-    total:a.total+1,pending:a.pending+(r.status==='pendiente'?1:0),
-    amount:a.amount+(r.status!=='rechazada'?r.amount:0)
-  }),{total:0,pending:0,amount:0});
+async function loadRefunds(){
+  var src=[];
+  try{ var rr=await rwAPI('GET','/refunds'); if(rr&&rr.success&&Array.isArray(rr.data)) src=rr.data; }catch(e){}
+  REFUNDS_DATA.length=0;
+  src.forEach(function(x){ REFUNDS_DATA.push({
+    id:x.id, user:x.userEmail||x.userId||'—', merchant:x.merchantName||'—', tx:x.orderId||'—',
+    amount:Number(x.amount||0), currency:x.currency||'XAF', reason:x.reason||'—',
+    date:(x.createdAt||'').slice(0,10), status:x.status||'pendiente'
+  }); });
+  filterRefunds(REFUNDS_DATA);
+  var stats=REFUNDS_DATA.reduce(function(a,r){return{total:a.total+1,pending:a.pending+(r.status==='pendiente'?1:0),refunded:a.refunded+(r.status==='aprobada'?r.amount:0),rejected:a.rejected+(r.status==='rechazada'?1:0)};},{total:0,pending:0,refunded:0,rejected:0});
   var el=document.getElementById('refunds-stats');
-  if(el)el.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${stats.total}</div><div class="kpi-lbl">Devoluciones totales</div></div>
-    <div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">${stats.pending}</div><div class="kpi-lbl">Pendientes</div></div>
-    <div class="kpi-card"><div class="kpi-val">XOF ${stats.amount.toLocaleString()}</div><div class="kpi-lbl">Monto devuelto</div></div>
-    <div class="kpi-card"><div class="kpi-val">${REFUNDS_DATA.filter(r=>r.status==='rechazada').length}</div><div class="kpi-lbl">Rechazadas</div></div>`;
+  if(el)el.innerHTML='<div class="kpi-card"><div class="kpi-val">'+stats.total+'</div><div class="kpi-lbl">Devoluciones totales</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">'+stats.pending+'</div><div class="kpi-lbl">Pendientes</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+Math.round(stats.refunded).toLocaleString('es')+'</div><div class="kpi-lbl">Reembolsado</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--red)">'+stats.rejected+'</div><div class="kpi-lbl">Rechazadas</div></div>';
+  var badge=document.getElementById('sb-refunds-count');
+  if(badge){ if(stats.pending>0){badge.textContent=stats.pending;badge.style.display='inline';}else{badge.style.display='none';} }
 }
 
 function filterRefunds(data){
   data=data||REFUNDS_DATA;
   var q=(document.getElementById('refunds-search')||{}).value||'';
   var st=(document.getElementById('refunds-status')||{}).value||'';
-  var filtered=data.filter(r=>(!q||r.user.toLowerCase().includes(q.toLowerCase())||r.tx.includes(q))&&(!st||r.status===st));
+  var filtered=data.filter(function(r){return(!q||(r.user||'').toLowerCase().includes(q.toLowerCase())||(r.tx||'').indexOf(q)>=0)&&(!st||r.status===st);});
   var tb=document.getElementById('tb-refunds');if(!tb)return;
-  var colors={pendiente:'badge-amber',aprobada:'badge-cyan',procesada:'badge-green',rechazada:'badge-red'};
-  tb.innerHTML=filtered.map(r=>`<tr>
-    <td>${r.id}</td><td>${r.user}</td><td>${r.merchant}</td><td>${r.tx}</td>
-    <td>XOF ${r.amount.toLocaleString()}</td><td>${r.reason}</td><td>${r.date}</td>
-    <td><span class="badge ${colors[r.status]||'badge-gray'}">${r.status}</span></td>
-    <td>
-      ${r.status==='pendiente'?`<button class="btn-xs btn-green" onclick="approveRefund('${r.id}')">Aprobar</button> <button class="btn-xs btn-red" onclick="rejectRefund('${r.id}')">Rechazar</button>`:''}
-      ${r.status==='aprobada'?`<button class="btn-xs btn-cyan" onclick="processRefund('${r.id}')">Procesar</button>`:''}
-    </td>
-  </tr>`).join('');
+  var colors={pendiente:'badge-amber',aprobada:'badge-green',rechazada:'badge-red'};
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin devoluciones</td></tr>';return;}
+  tb.innerHTML=filtered.map(function(r){return '<tr>'
+    +'<td>'+(r.user||'—')+'</td><td>'+(r.merchant||'—')+'</td><td style="font-family:var(--mono);font-size:11px">'+(r.tx||'—')+'</td>'
+    +'<td style="font-family:var(--mono)">'+Number(r.amount||0).toLocaleString('es')+' '+(r.currency||'XAF')+'</td>'
+    +'<td style="font-size:12px;max-width:160px;word-break:break-word">'+(r.reason||'—')+'</td><td style="font-size:11px;color:var(--muted)">'+(r.date||'—')+'</td>'
+    +'<td><span class="badge '+(colors[r.status]||'badge-gray')+'">'+(r.status||'—')+'</span></td>'
+    +'<td>'+(r.status==='pendiente'?'<button class="btn-xs btn-green" onclick="approveRefund(\''+r.id+'\')">Aprobar</button> <button class="btn-xs btn-red" onclick="rejectRefund(\''+r.id+'\')">Rechazar</button>':'—')+'</td>'
+    +'</tr>';}).join('');
 }
 
-function approveRefund(id){
-  var r=REFUNDS_DATA.find(x=>x.id===id);if(!r)return;
-  r.status='aprobada';
-  rwAPI('PATCH','/refunds/'+id,{status:'aprobada'}).catch(()=>{});
-  toast('Devolución aprobada','success');filterRefunds();logAdminAction('approve_refund',id);
+async function approveRefund(id){
+  if(!confirm('¿Aprobar esta devolución? Se reembolsará el importe al wallet del usuario.'))return;
+  var r=await rwAPI('PATCH','/refunds/'+id+'/approve',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('✅ Devolución aprobada y reembolsada','success'); if(typeof logAdminAction==='function')logAdminAction('approve_refund',id); loadRefunds();
 }
-function rejectRefund(id){
-  var r=REFUNDS_DATA.find(x=>x.id===id);if(!r)return;
-  r.status='rechazada';
-  rwAPI('PATCH','/refunds/'+id,{status:'rechazada'}).catch(()=>{});
-  toast('Devolución rechazada','warning');filterRefunds();logAdminAction('reject_refund',id);
+async function rejectRefund(id){
+  var reason=(prompt('Motivo del rechazo (opcional):')||'').trim();
+  var r=await rwAPI('PATCH','/refunds/'+id+'/reject',{notes:reason});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Devolución rechazada','warning'); if(typeof logAdminAction==='function')logAdminAction('reject_refund',id); loadRefunds();
 }
-function processRefund(id){
-  var r=REFUNDS_DATA.find(x=>x.id===id);if(!r)return;
-  r.status='procesada';
-  rwAPI('PATCH','/refunds/'+id,{status:'procesada'}).catch(()=>{});
-  toast('Devolución procesada','success');filterRefunds();logAdminAction('process_refund',id);
+function processRefund(id){ return approveRefund(id);
 }
 function exportRefundsCSV(){
   var rows=[['ID','Usuario','Comercio','TX','Monto','Motivo','Fecha','Estado']];
