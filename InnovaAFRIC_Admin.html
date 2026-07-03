@@ -3013,6 +3013,37 @@ select.form-input option{background:var(--s2)}
   </div>
 </div>
 
+<!-- DETALLE SOCIO B2B + FACTURAS (v38) -->
+<div class="modal-overlay" id="m-partner-detail" onclick="if(event.target===this)closeModal('m-partner-detail')">
+  <div class="modal" style="max-width:640px;width:95%">
+    <div class="modal-title">🤝 Socio B2B</div>
+    <div id="m-partner-head" style="margin:8px 0 12px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:13px;font-weight:600">📄 Facturas</div>
+      <button class="topbar-btn btn-primary" style="font-size:12px" onclick="partnerNewInvoiceToggle()">+ Nueva factura</button>
+    </div>
+    <div id="m-partner-newinv" style="display:none;background:var(--s2);border-radius:10px;padding:12px;margin-bottom:10px">
+      <div class="form-row">
+        <div><label class="form-label">Importe *</label><input class="form-input" id="pinv-amount" type="number" min="0"></div>
+        <div><label class="form-label">Moneda</label><select class="form-input" id="pinv-currency"><option>XAF</option><option>XOF</option><option>EUR</option><option>USD</option></select></div>
+      </div>
+      <div class="form-row">
+        <div><label class="form-label">Período *</label><input class="form-input" id="pinv-period" placeholder="2026-07"></div>
+        <div><label class="form-label">Vencimiento *</label><input class="form-input" id="pinv-due" type="date"></div>
+      </div>
+      <div><label class="form-label">Notas</label><input class="form-input" id="pinv-notes"></div>
+      <button class="btn-block btn-primary" style="margin-top:8px" onclick="createPartnerInvoice()">✓ Crear factura</button>
+    </div>
+    <div class="table-wrap" style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>Período</th><th>Importe</th><th>Vence</th><th>Estado</th><th>Notas</th><th></th></tr></thead>
+        <tbody id="tb-partner-inv"><tr><td colspan="6" class="td-empty">—</td></tr></tbody>
+      </table>
+    </div>
+    <div class="form-actions"><button class="btn-block btn-ghost" onclick="closeModal('m-partner-detail')">Cerrar</button></div>
+  </div>
+</div>
+
 <!-- NUEVO PROVEEDOR (v37) -->
 <div class="modal-overlay" id="m-new-proveedor-v21" onclick="if(event.target===this)closeModal('m-new-proveedor-v21')">
   <div class="modal" style="max-width:480px">
@@ -4992,7 +5023,7 @@ select.form-input option{background:var(--s2)}
   </div>
   <div class="table-wrap">
     <table class="tbl">
-      <thead><tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>País</th><th>Contacto</th><th>Volumen mes</th><th>Contrato</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <thead><tr><th>Nombre</th><th>Tipo</th><th>País</th><th>Contacto</th><th>Share %</th><th>Facturas</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody id="tb-partners"></tbody>
     </table>
   </div>
@@ -5006,7 +5037,8 @@ select.form-input option{background:var(--s2)}
       <label>Tipo<select id="partner-type" class="inp"><option value="banco">Banco</option><option value="telco">Telco</option><option value="fintech">Fintech</option><option value="ngo">ONG</option><option value="gobierno">Gobierno</option></select></label>
       <label>País<select id="partner-country" class="inp"><option value="SN">Senegal</option><option value="CI">Costa de Marfil</option><option value="GH">Ghana</option><option value="GN">Guinea</option><option value="ML">Mali</option><option value="NG">Nigeria</option><option value="FR">Francia</option><option value="ES">España</option></select></label>
       <label>Email contacto<input id="partner-email" class="inp" type="email" placeholder="contacto@socio.com"></label>
-      <label>Revenue share %<input id="partner-rev" class="inp" type="number" value="15" step="0.5"></label>
+      <label>Teléfono<input id="partner-phone" class="inp" placeholder="+240 ..."></label>
+      <label>Comisión (share) %<input id="partner-rev" class="inp" type="number" value="2.5" step="0.5"></label>
       <label>Vence contrato<input id="partner-contract" class="inp" type="date"></label>
     </div>
     <div style="margin-top:1rem;display:flex;gap:.75rem;justify-content:flex-end">
@@ -19424,42 +19456,25 @@ var SLA_DATA=[
 
 /* ── PARTNERS ───────────────────────────────────────────────── */
 async function loadPartners(){
-  var src=null;
-  try{
-    var apiP=await rwAPI('GET','/partners').catch(function(){return null;});
-    if(apiP&&apiP.length){src=apiP;}
-    else{
-      var sbP=await SB.from('partners').select('id,name,type,country,contact_email,monthly_volume,revenue_share,contract_end,status,created_at').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
-      if(sbP.data&&sbP.data.length){
-        src=sbP.data.map(function(p){
-          return{
-            id:p.id,name:p.name,type:p.type||'fintech',country:p.country||'—',
-            contact:p.contact_email||'—',
-            vol:Number(p.monthly_volume||0),
-            revShare:Number(p.revenue_share||0),
-            contract:p.contract_end?p.contract_end.slice(0,10):'—',
-            status:p.status||'activo'
-          };
-        });
-        PARTNERS_DATA.length=0;
-        src.forEach(function(p){PARTNERS_DATA.push(p);});
-      }
-    }
-  }catch(e){}
-  var list=src||PARTNERS_DATA;
-  filterPartners(list);
-  var stats=list.reduce(function(a,p){
-    return{total:a.total+1,active:a.active+(p.status==='activo'?1:0),vol:a.vol+(p.vol||0),neg:a.neg+(p.status==='negociacion'?1:0)};
-  },{total:0,active:0,vol:0,neg:0});
+  var src=[];
+  try{ var r=await rwAPI('GET','/partners'); if(r&&r.success&&Array.isArray(r.data)) src=r.data; }catch(e){}
+  PARTNERS_DATA.length=0;
+  src.forEach(function(p){ PARTNERS_DATA.push({
+    id:p.id, name:p.name, type:p.type||'—', country:p.country||'—',
+    contact:p.contact||'—', phone:p.phone||'', share:Number(p.share||0),
+    status:p.status||'activo', invoices:(p._count&&p._count.invoices)||0,
+    joined:p.joinedAt?String(p.joinedAt).slice(0,10):'—'
+  }); });
+  filterPartners(PARTNERS_DATA);
+  var stats=PARTNERS_DATA.reduce(function(a,p){
+    return{total:a.total+1,active:a.active+(p.status==='activo'?1:0),susp:a.susp+(p.status==='suspendido'?1:0),inv:a.inv+(p.invoices||0)};
+  },{total:0,active:0,susp:0,inv:0});
   var el=document.getElementById('partners-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+stats.total+'</div><div class="kpi-lbl">Socios totales</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+stats.active+'</div><div class="kpi-lbl">Activos</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val">XOF '+(stats.vol/1000000).toFixed(0)+'M</div><div class="kpi-lbl">Volumen mensual</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">'+stats.neg+'</div><div class="kpi-lbl">En negociación</div></div>';
-  var pending=INVOICES_DATA.filter(function(i){return i.status==='vencida';}).length;
-  var badge=document.getElementById('sb-b2b-inv-count');
-  if(badge&&pending>0){badge.textContent=pending;badge.style.display='inline';}
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--red)">'+stats.susp+'</div><div class="kpi-lbl">Suspendidos</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--cyan)">'+stats.inv+'</div><div class="kpi-lbl">Facturas emitidas</div></div>';
 }
 
 function filterPartners(data){
@@ -19468,74 +19483,105 @@ function filterPartners(data){
   var tp=(document.getElementById('partners-type')||{}).value||'';
   var st=(document.getElementById('partners-status')||{}).value||'';
   var filtered=data.filter(p=>
-    (!q||p.name.toLowerCase().includes(q.toLowerCase()))&&(!tp||p.type===tp)&&(!st||p.status===st));
+    (!q||(p.name||'').toLowerCase().includes(q.toLowerCase()))&&(!tp||p.type===tp)&&(!st||p.status===st));
   var tb=document.getElementById('tb-partners');if(!tb)return;
   var stC={activo:'badge-green',negociacion:'badge-amber',suspendido:'badge-red'};
-  var today=new Date('2026-06-02');
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin socios B2B — crea el primero con "+ Nuevo socio"</td></tr>';return;}
   tb.innerHTML=filtered.map(p=>{
-    var exp=new Date(p.contract);
-    var days=Math.round((exp-today)/86400000);
-    var contractWarn=days<90?`<span style="color:var(--amber);font-size:.75rem"> ⚠ ${days}d</span>`:'';
     return`<tr>
-      <td>${p.id}</td><td><strong>${p.name}</strong></td><td>${p.type}</td><td>${p.country}</td>
-      <td><a href="mailto:${p.contact}" style="color:var(--cyan)">${p.contact}</a></td>
-      <td>XOF ${(p.vol/1000000).toFixed(1)}M</td>
-      <td>${p.contract}${contractWarn}</td>
+      <td><strong>${p.name||'—'}</strong></td><td>${p.type||'—'}</td><td>${p.country||'—'}</td>
+      <td><a href="mailto:${p.contact}" style="color:var(--cyan)">${p.contact||'—'}</a>${p.phone?`<div style="font-size:.7rem;color:var(--muted)">${p.phone}</div>`:''}</td>
+      <td style="font-family:var(--mono)">${Number(p.share||0)}%</td>
+      <td style="font-family:var(--mono)">${p.invoices||0}</td>
       <td><span class="badge ${stC[p.status]||'badge-gray'}">${p.status}</span></td>
       <td>
-        <button class="btn-xs btn-cyan" onclick="viewPartner('${p.id}')">Ver</button>
-        ${p.status==='activo'?`<button class="btn-xs btn-red" onclick="suspendPartner('${p.id}')">Suspender</button>`:''}
-        ${p.status==='negociacion'?`<button class="btn-xs btn-green" onclick="activatePartner('${p.id}')">Activar</button>`:''}
+        <button class="btn-xs btn-cyan" onclick="viewPartner('${p.id}')">Ver / Facturas</button>
+        ${p.status==='activo'?`<button class="btn-xs btn-red" onclick="suspendPartner('${p.id}')">Suspender</button>`:`<button class="btn-xs btn-green" onclick="activatePartner('${p.id}')">Activar</button>`}
       </td>
     </tr>`;
   }).join('');
 }
 
-function createPartner(){
-  var f={name:document.getElementById('partner-name').value,type:document.getElementById('partner-type').value,
-    country:document.getElementById('partner-country').value,email:document.getElementById('partner-email').value,
-    revShare:document.getElementById('partner-rev').value,contract:document.getElementById('partner-contract').value};
-  if(!f.name||!f.email){toast('Nombre y email son obligatorios','warning');return;}
-  rwAPI('POST','/partners',f).then(()=>{
-    toast('Socio creado','success');closeModal('m-create-partner');loadPartners();
-    logAdminAction('create_partner',f.name);
-  }).catch(()=>sbSave('partners',f,'/partners',loadPartners,'m-create-partner','Socio creado'));
+async function createPartner(){
+  var name=((document.getElementById('partner-name')||{}).value||'').trim();
+  var type=(document.getElementById('partner-type')||{}).value||'';
+  var country=(document.getElementById('partner-country')||{}).value||'';
+  var contact=((document.getElementById('partner-email')||{}).value||'').trim();
+  var phone=((document.getElementById('partner-phone')||{}).value||'').trim();
+  var share=(document.getElementById('partner-rev')||{}).value||'';
+  if(!name||!type||!country){toast('Nombre, tipo y país son obligatorios','warning');return;}
+  var r=await rwAPI('POST','/partners',{name:name,type:type,country:country,contact:contact||null,phone:phone||null,share:share||2.5});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo crear'));return;}
+  toast('✅ Socio creado','success'); closeModal('m-create-partner'); loadPartners();
+  if(typeof logAdminAction==='function')logAdminAction('create_partner',name);
 }
-function viewPartner(id){
-  var p=(typeof PARTNERS_DATA!=='undefined'?PARTNERS_DATA:[]).find(function(x){return x.id===id;});
-  if(!p){toast('Socio no encontrado','warning');return;}
-  showDetailPanel('Socio: '+p.name,[
-    {label:'Nombre',value:p.name,bold:true},
-    {label:'Tipo',value:p.type},
-    {label:'País',value:p.country},
-    {label:'Contacto',value:p.contact||p.email||'—'},
-    {label:'Volumen mensual',value:'XOF '+(p.vol/1000000).toFixed(1)+'M'},
-    {label:'Revenue share',value:(p.revShare||0)+'%'},
-    {label:'Contrato hasta',value:p.contract||'—'},
-    {label:'Estado',value:p.status}
-  ],[
-    {label:'Suspender socio',cls:'topbar-btn btn-danger-sm',fn:'suspendPartner(\''+id+'\');document.getElementById(\'_detail-panel\').remove()'},
-    {label:'Exportar PDF',cls:'topbar-btn btn-ghost',fn:'exportPartnersPDF()'}
-  ]);
+var _partnerViewId=null;
+async function viewPartner(id){
+  _partnerViewId=id;
+  var r=await rwAPI('GET','/partners/'+id);
+  if(!r||!r.success){toast('Socio no encontrado','warning');return;}
+  var p=r.data||{};
+  var head=document.getElementById('m-partner-head');
+  if(head)head.innerHTML='<div style="font-size:15px;font-weight:700">'+(p.name||'—')+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-top:2px">'+(p.type||'')+' · '+(p.country||'')+' · '+(p.contact||'—')+(p.phone?(' · '+p.phone):'')+'</div>'
+    +'<div style="font-size:12px;color:var(--muted)">Comisión (share): <b>'+(p.share||0)+'%</b> · Estado: <span class="badge '+({activo:'badge-green',suspendido:'badge-red'}[p.status]||'badge-gray')+'">'+(p.status||'')+'</span></div>';
+  var nf=document.getElementById('m-partner-newinv'); if(nf)nf.style.display='none';
+  renderPartnerInvoices(p.invoices||[]);
+  openModal('m-partner-detail');
 }
-function suspendPartner(id){
-  var p=PARTNERS_DATA.find(x=>x.id===id);if(!p)return;
-  p.status='suspendido';toast('Socio suspendido','warning');filterPartners();logAdminAction('suspend_partner',id);
+function renderPartnerInvoices(invs){
+  var tb=document.getElementById('tb-partner-inv'); if(!tb)return;
+  var stC={pagada:'badge-green',pendiente:'badge-amber',vencida:'badge-red'};
+  if(!invs.length){tb.innerHTML='<tr><td colspan="6" class="td-empty">Sin facturas — crea la primera</td></tr>';return;}
+  tb.innerHTML=invs.map(function(i){
+    return '<tr><td style="font-family:var(--mono);font-size:11px">'+(i.period||'—')+'</td>'
+      +'<td style="font-family:var(--mono)">'+Number(i.amount||0).toLocaleString('es')+' '+(i.currency||'XAF')+'</td>'
+      +'<td style="font-size:11px">'+((i.dueDate||'')+'').slice(0,10)+'</td>'
+      +'<td><span class="badge '+(stC[i.status]||'badge-gray')+'">'+(i.status||'')+'</span></td>'
+      +'<td style="font-size:11px;color:var(--muted);max-width:140px;word-break:break-word">'+(i.notes||'')+'</td>'
+      +'<td>'+(i.status!=='pagada'?'<button class="btn-xs btn-green" onclick="payPartnerInvoice(\''+i.id+'\')">Marcar pagada</button>':'—')+'</td></tr>';
+  }).join('');
 }
-function activatePartner(id){
-  var p=PARTNERS_DATA.find(x=>x.id===id);if(!p)return;
-  p.status='activo';toast('Socio activado','success');filterPartners();logAdminAction('activate_partner',id);
+function partnerNewInvoiceToggle(){ var f=document.getElementById('m-partner-newinv'); if(f)f.style.display=(f.style.display==='none'||!f.style.display)?'block':'none'; }
+async function createPartnerInvoice(){
+  var id=_partnerViewId; if(!id)return;
+  var amount=(document.getElementById('pinv-amount')||{}).value||'';
+  var currency=(document.getElementById('pinv-currency')||{}).value||'XAF';
+  var period=((document.getElementById('pinv-period')||{}).value||'').trim();
+  var dueDate=(document.getElementById('pinv-due')||{}).value||'';
+  var notes=((document.getElementById('pinv-notes')||{}).value||'').trim();
+  if(!amount||!period||!dueDate){toast('Importe, período y vencimiento son obligatorios','warning');return;}
+  var r=await rwAPI('POST','/partners/'+id+'/invoices',{amount:amount,currency:currency,period:period,dueDate:dueDate,notes:notes});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('✅ Factura creada','success'); if(typeof logAdminAction==='function')logAdminAction('create_invoice','Socio '+id+' · '+period);
+  ['pinv-amount','pinv-period','pinv-due','pinv-notes'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
+  viewPartner(id);
+}
+async function payPartnerInvoice(invId){
+  if(!confirm('¿Marcar esta factura como PAGADA?'))return;
+  var r=await rwAPI('PATCH','/partners/invoices/'+invId+'/pay',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('✅ Factura pagada','success'); if(typeof logAdminAction==='function')logAdminAction('pay_invoice',invId);
+  if(_partnerViewId)viewPartner(_partnerViewId);
+}
+async function suspendPartner(id){
+  if(!confirm('¿Suspender este socio?'))return;
+  var r=await rwAPI('PUT','/partners/'+id+'/suspend',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Socio suspendido','warning'); if(typeof logAdminAction==='function')logAdminAction('suspend_partner',id); loadPartners();
+}
+async function activatePartner(id){
+  var r=await rwAPI('PATCH','/partners/'+id,{status:'activo'});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Socio activado','success'); if(typeof logAdminAction==='function')logAdminAction('activate_partner',id); loadPartners();
 }
 function exportPartnersCSV(){
-  var rows=[['ID','Nombre','Tipo','País','Email','Volumen','Rev%','Contrato','Estado']];
-  PARTNERS_DATA.forEach(p=>rows.push([p.id,p.name,p.type,p.country,p.contact,p.vol,p.revShare+'%',p.contract,p.status]));
-  var csv=rows.map(r=>r.join(',')).join('\n');
-  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='partners.csv';a.click();toast('CSV exportado','success');
+  exportCSV('innovaafric_partners',['Nombre','Tipo','Pais','Contacto','Telefono','Share_%','Facturas','Estado'],
+    (PARTNERS_DATA||[]).map(function(p){return [p.name,p.type,p.country,p.contact,p.phone,p.share,p.invoices,p.status];}));
 }
 function exportPartnersPDF(){
-  var rows=PARTNERS_DATA.map(p=>[p.name,p.type,p.country,'XOF '+(p.vol/1000000).toFixed(1)+'M',p.revShare+'%',p.status]);
-  exportModulePDF('Socios B2B InnovaAFRIC',['Nombre','Tipo','País','Volumen','Rev%','Estado'],rows,'partners_b2b.pdf');
+  exportTablePDF('🤝 InnovaAFRIC · Socios B2B',['Nombre','Tipo','País','Contacto','Share %','Facturas','Estado'],
+    (PARTNERS_DATA||[]).map(function(p){return [p.name,p.type,p.country,p.contact,p.share+'%',p.invoices,p.status];}));
 }
 
 /* ── B2B BILLING ────────────────────────────────────────────── */
