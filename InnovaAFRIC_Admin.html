@@ -8663,14 +8663,22 @@ async function loadRiders(){
   </tr>`).join(''):'<tr><td colspan="5" class="td-empty">Sin riders registrados</td></tr>';
 }
 async function loadCirculares(){
-  const{data}=await SB.from('circulares').select('*,user:user_id(full_name,email)').catch(()=>({data:[]}));
-  window._circLast=data||[];
-  document.getElementById('tb-circulares').innerHTML=(data||[]).length?(data||[]).map(c=>`<tr>
-    <td><div class="uc-name">${c.user?.full_name||'—'}</div><div class="uc-email">${c.user?.email||''}</div></td>
-    <td>${c.city||'—'}, ${c.country||'—'}</td>
-    <td><span class="pill pill-${c.status==='active'?'green':'amber'}">${c.status}</span></td>
-    <td style="font-family:var(--mono)">${c.commission_pct||1}%</td>
-  </tr>`).join(''):'<tr><td colspan="4" class="td-empty">Sin circulares registradas</td></tr>';
+  var tb=document.getElementById('tb-circulares');
+  if(tb)tb.innerHTML='<tr><td colspan="4" class="loading-cell"><div class="spin"></div></td></tr>';
+  // Fuente de verdad: Railway (/circulares). Supabase 'circulares' está vacío.
+  var rows=[];
+  try{ var r=await rwAPI('GET','/circulares'); if(r&&r.success&&r.data&&r.data.circulares) rows=r.data.circulares; }catch(e){}
+  window._circLast=(rows||[]).map(function(c){
+    var u=c.user||{};
+    return { user:{full_name:u.name||u.full_name||'—', email:u.email||''}, city:c.neighborhood||c.city||'', country:c.country||u.country||'', status:c.status||'', commission_pct:(c.commissionPct!=null?c.commissionPct:(c.commission!=null?c.commission:5)) };
+  });
+  var data=window._circLast;
+  if(tb)tb.innerHTML=data.length?data.map(function(c){return '<tr>'
+    +'<td><div class="uc-name">'+(c.user.full_name||'—')+'</div><div class="uc-email">'+(c.user.email||'')+'</div></td>'
+    +'<td>'+(c.city||'—')+', '+(c.country||'—')+'</td>'
+    +'<td><span class="pill pill-'+(c.status==='active'?'green':'amber')+'">'+(c.status||'—')+'</span></td>'
+    +'<td style="font-family:var(--mono)">'+(c.commission_pct||1)+'%</td>'
+    +'</tr>';}).join(''):'<tr><td colspan="4" class="td-empty">Sin circulares registradas</td></tr>';
 }
 function exportCircBasicCSV(){
   var list=window._circLast||[];
@@ -8685,8 +8693,28 @@ function exportCircBasicPDF(){
 async function loadOrders(){
   var tb=document.getElementById('tb-orders');
   if(tb)tb.innerHTML='<tr><td colspan="6" class="loading-cell"><div class="spin"></div></td></tr>';
-  const{data}=await SB.from('orders').select('*,user:user_id(full_name,email)').order('created_at',{ascending:false}).catch(()=>({data:[]}));
-  window._ordersLast=data||[];
+  // Fuente de verdad: Railway (modelo Order de Prisma). Supabase 'orders' está vacío.
+  var orders=[];
+  try{
+    var r=await rwAPI('GET','/admin/orders');
+    if(r&&r.success&&r.data&&r.data.orders) orders=r.data.orders;
+  }catch(e){}
+  window._ordersLast=(orders||[]).map(function(o){
+    var u=o.user||{};
+    return {
+      id:o.id,
+      tracking_code:o.trackingId||o.tracking_code||o.id,
+      type:o.orderType||o.type||'shop',
+      total_eur:(o.totalEur!=null?o.totalEur:o.total_eur)||0,
+      total_xaf:(o.totalXaf!=null?o.totalXaf:o.total_xaf)||0,
+      status:o.status||'',
+      created_at:o.createdAt||o.created_at,
+      delivery_address:o.deliveryAddress||o.delivery_address||'',
+      notes:o.notes||'',
+      items:o.items||null,
+      user:{full_name:u.name||u.full_name||'', email:u.email||''}
+    };
+  });
   renderOrders();
 }
 function renderOrders(){
