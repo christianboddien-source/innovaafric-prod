@@ -11760,7 +11760,7 @@ function circTab(tab){
 }
 async function loadCircularesAdmin(){
   const r=await rwAPI('GET','/circulares');
-  const rows=(r&&(r.circulares||r.data))||[];
+  const rows=(r&&r.data&&r.data.circulares)||[];
   document.getElementById('circ-total').textContent=rows.length;
   document.getElementById('circ-active').textContent=rows.filter(c=>c.status==='active').length;
   const tb=document.getElementById('tb-circulares-admin');
@@ -11786,7 +11786,7 @@ async function loadCircularesAdmin(){
 }
 async function loadCircularPendientes(){
   const r=await rwAPI('GET','/circulares/purchases/pending');
-  const rows=(r&&(r.purchases||r.data))||[];
+  const rows=(r&&r.data&&r.data.purchases)||[];
   document.getElementById('circ-pending').textContent=rows.length;
   const tb=document.getElementById('tb-circ-pendientes');
   if(!tb)return;
@@ -11900,7 +11900,7 @@ async function loadComisionHistory(){
   if(to&&to.value)ep+='&to='+to.value;
   if(type&&type.value)ep+='&type='+type.value;
   const r=await rwAPI('GET',ep);
-  const rows=(r&&(r.data||r.records))||[];
+  const rows=(r&&r.data&&(r.data.records||(Array.isArray(r.data)?r.data:[])))||[];
   _COM_HISTORY=rows;
   const tb=document.getElementById('tb-comisiones');
   if(!tb)return;
@@ -11917,13 +11917,18 @@ async function loadComisionHistory(){
 }
 async function loadComisionSummary(){
   const r=await rwAPI('GET','/commissions/summary');
-  const s=(r&&(r.data||r.summary))||r||{};
+  const arr=(r&&r.data&&Array.isArray(r.data))?r.data:[];
+  const agg=arr.reduce(function(a,x){var sm=x._sum||{};return {total:a.total+(sm.grossFee||0),hacienda:a.hacienda+(sm.ivaAmount||0),innova:a.innova+(sm.innovaAmount||0),reps:a.reps+(sm.repAmount||0)};},{total:0,hacienda:0,innova:0,reps:0});
+  const s={total:agg.total,hacienda:agg.hacienda,innova:agg.innova,reps:agg.reps,currency:'EUR',
+    hacienda_pct:agg.total?Math.round(agg.hacienda/agg.total*100):0,
+    innova_pct:agg.total?Math.round(agg.innova/agg.total*100):0,
+    rep_pct:agg.total?Math.round(agg.reps/agg.total*100):0};
   const el=document.getElementById('com-summary-wrap');
   if(!el)return;
-  document.getElementById('com-total').textContent=s.total!=null?fmtAmt(s.total,s.currency||'EUR'):'—';
-  document.getElementById('com-hacienda').textContent=s.hacienda!=null?fmtAmt(s.hacienda,s.currency||'EUR'):'—';
-  document.getElementById('com-innova').textContent=s.innova!=null?fmtAmt(s.innova,s.currency||'EUR'):'—';
-  document.getElementById('com-reps').textContent=s.reps!=null?fmtAmt(s.reps,s.currency||'EUR'):'—';
+  document.getElementById('com-total').textContent=fmtAmt(s.total,s.currency);
+  document.getElementById('com-hacienda').textContent=fmtAmt(s.hacienda,s.currency);
+  document.getElementById('com-innova').textContent=fmtAmt(s.innova,s.currency);
+  document.getElementById('com-reps').textContent=fmtAmt(s.reps,s.currency);
   el.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'
     +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--amber);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.hacienda_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">Hacienda</div></div>'
     +'<div style="background:var(--s2);border-radius:var(--r-lg);padding:16px;text-align:center"><div style="color:var(--cyan);font-size:24px;font-weight:700;font-family:var(--mono)">'+(s.innova_pct||0)+'%</div><div style="color:var(--muted);font-size:12px;margin-top:4px">InnovaAFRIC</div></div>'
@@ -11987,9 +11992,14 @@ function repTab(tab){
 }
 async function loadRepresentantesV34(){
   const r=await rwAPI('GET','/representatives');
-  const rows=(r&&(r.data||r.representatives))||[];
+  const raw=(r&&r.success&&Array.isArray(r.data))?r.data:[];
+  const rows=raw.map(function(rep){var u=rep.user||{};var acc=rep.account||{};return {
+    id:rep.id, user_id:rep.userId, name:u.name||u.email||'—', country:rep.country||u.country||'—', city:rep.zone||'—',
+    users_count:rep.clientCount!=null?rep.clientCount:'—', units_balance:acc.unitBalance!=null?acc.unitBalance:null,
+    discount_pct:rep.discountRate!=null?Math.round(rep.discountRate*100):10, active:rep.status?rep.status==='active':true
+  };});
   const repsLocal=(ALL_USERS||[]).filter(u=>u.role==='representante');
-  const all=rows.length?rows:repsLocal.map(u=>({id:u.id,name:u.full_name||u.email,country:u.country,city:u.city,units_balance:null,discount_pct:10,active:true}));
+  const all=rows.length?rows:repsLocal.map(u=>({id:u.id,user_id:u.id,name:u.full_name||u.email,country:u.country,city:u.city,units_balance:null,discount_pct:10,active:true}));
   window._REPS_V34=all;
   document.getElementById('rp-total').textContent=all.length;
   document.getElementById('rp-countries').textContent=new Set(all.map(r=>r.country)).size;
@@ -12013,7 +12023,7 @@ async function loadRepresentantesV34(){
 }
 async function loadRepPendientes(){
   const r=await rwAPI('GET','/representatives/purchases/pending');
-  const rows=(r&&(r.data||r.purchases))||[];
+  const rows=(r&&r.data&&r.data.purchases)||[];
   document.getElementById('rp-pending-count').textContent=rows.length;
   const tb=document.getElementById('tb-rep-pendientes');
   if(!tb)return;
@@ -12049,7 +12059,7 @@ async function loadRepHistorial(){
   let ep='/representatives/recharges?limit=100';
   if(filter&&filter.value)ep+='&rep_id='+filter.value;
   const r=await rwAPI('GET',ep);
-  const rows=(r&&(r.data||r.recharges))||[];
+  const rows=(r&&r.data&&r.data.recharges)||[];
   const tb=document.getElementById('tb-rep-historial');
   if(!tb)return;
   if(!rows.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin historial</td></tr>';return;}
@@ -12084,8 +12094,8 @@ function exportRepPDF(id){
 // ── 2FA POR USUARIO ───────────────────────────────────────
 var _2FA_USERS=[];
 async function load2FAUsers(){
-  const r=await rwAPI('GET','/users?limit=500');
-  const users=(r&&(r.data||r.users))||(ALL_USERS||[]);
+  if(typeof ensureUsers==='function'){try{await ensureUsers();}catch(e){}}
+  const users=(ALL_USERS||[]);
   _2FA_USERS=users;
   render2FAUsers(users);
 }
