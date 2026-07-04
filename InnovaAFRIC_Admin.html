@@ -21139,109 +21139,68 @@ var CARDS_DATA=[
 var CARD_STOCK={Visa_Debito:450,Mastercard_Prepago:280,Visa_Business:120};
 
 async function loadPhysicalCards(){
-  var cardsList=null;
+  var cardsList=[];
   try{
-    var apiC=await rwAPI('GET','/cards/physical').catch(function(){return null;});
-    if(apiC&&apiC.length){cardsList=apiC;}
-    else{
-      var sbC=await SB.from('physical_cards').select('id,user_id,card_type,last4,issued_at,expires_at,status,user:user_id(full_name,email,country)').order('issued_at',{ascending:false}).limit(300).catch(function(){return{data:null};});
-      if(sbC.data&&sbC.data.length){
-        cardsList=sbC.data.map(function(c){
-          return{
-            id:c.id,
-            user:(c.user&&c.user.full_name)||c.user_id,
-            type:c.card_type||'Visa Débito',
-            last4:c.last4||'????',
-            issued:c.issued_at?c.issued_at.slice(0,10):'—',
-            expires:c.expires_at?c.expires_at.slice(0,7):'—',
-            status:c.status||'activa',
-            country:(c.user&&c.user.country)||'—'
-          };
-        });
-        // Build real stock KPIs from status counts
-        var stockEl=document.getElementById('cards-stock');
-        if(stockEl){
-          var activa=cardsList.filter(function(c){return c.status==='activa';}).length;
-          var bloqueada=cardsList.filter(function(c){return c.status==='bloqueada';}).length;
-          var solicitada=cardsList.filter(function(c){return c.status==='solicitada';}).length;
-          var cancelada=cardsList.filter(function(c){return c.status==='cancelada';}).length;
-          stockEl.innerHTML=[
-            {label:'Activas',val:activa,ok:true},
-            {label:'Solicitadas',val:solicitada,ok:true},
-            {label:'Bloqueadas',val:bloqueada,ok:bloqueada===0},
-            {label:'Canceladas',val:cancelada,ok:cancelada===0}
-          ].map(function(s){return'<div class="kpi-card"><div class="kpi-val">'+s.val+'</div><div class="kpi-lbl">'+s.label+'</div><div style="font-size:.7rem;color:'+(s.ok?'var(--green)':'var(--amber)')+'">'+( s.ok?'OK':'Revisar')+'</div></div>';}).join('');
-        }
-      }
-    }
+    var apiC=await rwAPI('GET','/cards/physical');
+    if(apiC&&apiC.success&&Array.isArray(apiC.data)) cardsList=apiC.data.map(function(c){return {
+      id:c.id, user:c.userName||c.userEmail||'—', email:c.userEmail||'', type:c.network||'Visa', last4:c.last4||'????',
+      issued:(c.requestedAt||'').slice(0,10), expires:c.issuedAt?String(c.issuedAt).slice(0,10):'—',
+      country:c.country||'—', status:c.status||'pendiente', limit:c.limitAmount||0, currency:c.currency||'XAF'
+    };});
   }catch(e){}
-  filterCards(cardsList||CARDS_DATA);
-  if(!cardsList){
-  var st=document.getElementById('cards-stock');
-  if(st)st.innerHTML=Object.entries(CARD_STOCK).map(([k,v])=>`
-    <div class="kpi-card">
-      <div class="kpi-val">${v}</div>
-      <div class="kpi-lbl">${k.replace(/_/g,' ')}</div>
-      <div style="font-size:.7rem;color:${v<100?'var(--red)':'var(--green)'}">
-        ${v<100?'⚠ Stock bajo':'OK'}
-      </div>
-    </div>`).join('');
-  }
+  CARDS_DATA.length=0; cardsList.forEach(function(c){CARDS_DATA.push(c);});
+  filterCards(CARDS_DATA);
+  var count=function(st){return CARDS_DATA.filter(function(c){return c.status===st;}).length;};
+  var pend=count('pendiente')+count('solicitada');
+  var act=count('activo')+count('activa');
+  var setp=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+  setp('pc-pending',pend); setp('pc-production',count('produccion')+count('production')); setp('pc-active',act); setp('pc-blocked',count('bloqueada')); setp('pc-stock',CARDS_DATA.length);
+  var cl=document.getElementById('pc-count-label'); if(cl)cl.textContent=CARDS_DATA.length+' tarjetas · '+pend+' pendientes';
+  var badge=document.getElementById('sb-cards-count');
+  if(badge){ if(pend>0){badge.textContent=pend;badge.style.display='inline';}else{badge.style.display='none';} }
 }
 
 function filterCards(data){
-  var q=(document.getElementById('cards-search')||{}).value||'';
-  var st=(document.getElementById('cards-status')||{}).value||'';
-  var filtered=data.filter(c=>{
-    var mq=!q||c.user.toLowerCase().includes(q.toLowerCase())||c.last4.includes(q);
-    var ms=!st||c.status===st;
-    return mq&&ms;
-  });
+  data=data||CARDS_DATA;
+  var q=(document.getElementById('pc-search-f')||document.getElementById('cards-search')||{}).value||'';
+  var st=(document.getElementById('pc-status-f')||document.getElementById('cards-status')||{}).value||'';
+  var stMap={pending:'pendiente',production:'produccion',shipped:'enviada',active:'activo',blocked:'bloqueada',expired:'expirada'};
+  var stF=stMap[st]||st;
+  var filtered=data.filter(function(c){var mq=!q||(c.user||'').toLowerCase().includes(q.toLowerCase())||(c.last4||'').indexOf(q)>=0;var ms=!st||c.status===stF||c.status===st;return mq&&ms;});
   var tb=document.getElementById('tb-cards');
   if(!tb)return;
-  var colors={activa:'badge-green',bloqueada:'badge-red',solicitada:'badge-amber',cancelada:'badge-gray'};
-  tb.innerHTML=filtered.map(c=>`<tr>
-    <td>${c.id}</td><td>${c.user}</td><td>${c.type}</td>
-    <td>••••&nbsp;${c.last4}</td><td>${c.issued}</td><td>${c.expires}</td>
-    <td>${c.country}</td>
-    <td><span class="badge ${colors[c.status]||'badge-gray'}">${c.status}</span></td>
-    <td>
-      ${c.status==='activa'?`<button class="btn-xs btn-red" onclick="blockCard('${c.id}')">Bloquear</button>`:''}
-      ${c.status==='bloqueada'?`<button class="btn-xs btn-green" onclick="unblockCard('${c.id}')">Desbloquear</button>`:''}
-      ${c.status==='solicitada'?`<button class="btn-xs btn-cyan" onclick="approveCard('${c.id}')">Aprobar</button>`:''}
-    </td>
-  </tr>`).join('');
+  var colors={activo:'badge-green',activa:'badge-green',bloqueada:'badge-red',pendiente:'badge-amber',solicitada:'badge-amber',cancelada:'badge-gray'};
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="9" class="td-empty">Sin tarjetas físicas — emite la primera con "Emitir tarjeta"</td></tr>';return;}
+  tb.innerHTML=filtered.map(function(c){var active=(c.status==='activo'||c.status==='activa');var pending=(c.status==='pendiente'||c.status==='solicitada');return '<tr>'
+    +'<td style="font-family:var(--mono);font-size:10px">'+String(c.id||'').slice(0,10)+'</td><td>'+(c.user||'—')+'</td><td>'+(c.type||'—')+'</td>'
+    +'<td>••••&nbsp;'+(c.last4||'????')+'</td><td>'+(c.issued||'—')+'</td><td>'+(c.expires||'—')+'</td><td>'+(c.country||'—')+'</td>'
+    +'<td><span class="badge '+(colors[c.status]||'badge-gray')+'">'+(c.status||'—')+'</span></td>'
+    +'<td>'
+    +(pending?'<button class="btn-xs btn-cyan" onclick="approveCard(\''+c.id+'\')">Aprobar</button> ':'')
+    +(active?'<button class="btn-xs btn-red" onclick="blockCard(\''+c.id+'\')">Bloquear</button>':'')
+    +(c.status==='bloqueada'?'<button class="btn-xs btn-green" onclick="unblockCard(\''+c.id+'\')">Desbloquear</button>':'')
+    +'</td></tr>';}).join('');
 }
 
-function issueCard(){
-  var f={
-    user:document.getElementById('card-user').value,
-    type:document.getElementById('card-type').value,
-    country:document.getElementById('card-country').value
-  };
-  if(!f.user||!f.country){toast('Completa todos los campos','warning');return;}
-  rwAPI('POST','/cards/physical',f).then(()=>{
-    toast('Tarjeta emitida correctamente','success');
-    closeModal('m-issue-card');loadPhysicalCards();
-    logAdminAction('issue_physical_card',f.user);
-  }).catch(()=>sbSave('physical_cards',f,'/cards/physical',loadPhysicalCards,'m-issue-card','Tarjeta emitida correctamente'));
+async function issueCard(){
+  var user=((document.getElementById('card-user')||{}).value||'').trim();
+  var type=(document.getElementById('card-type')||{}).value||'';
+  var country=(document.getElementById('card-country')||{}).value||'';
+  if(!user||!country){toast('Usuario (email) y país son obligatorios','warning');return;}
+  var network=(type==='prepaid'?'Visa':'Mastercard');
+  var r=await rwAPI('POST','/cards/physical',{user:user,email:user,country:country,network:network});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo emitir'));return;}
+  toast('✅ Tarjeta solicitada','success'); closeModal('m-issue-card'); loadPhysicalCards();
+  if(typeof logAdminAction==='function')logAdminAction('issue_physical_card',user);
 }
-
-function blockCard(id){
-  rwAPI('PATCH','/cards/physical/'+id,{status:'bloqueada'})
-    .then(()=>{toast('Tarjeta bloqueada','warning');loadPhysicalCards();})
-    .catch(()=>toast('Bloqueada (demo)','info'));
+async function _setCardStatus(id,status,msg){
+  var r=await rwAPI('PATCH','/cards/physical/'+id,{status:status});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast(msg,'success'); if(typeof logAdminAction==='function')logAdminAction('card_'+status,id); loadPhysicalCards();
 }
-function unblockCard(id){
-  rwAPI('PATCH','/cards/physical/'+id,{status:'activa'})
-    .then(()=>{toast('Tarjeta desbloqueada','success');loadPhysicalCards();})
-    .catch(()=>toast('Desbloqueada (demo)','info'));
-}
-function approveCard(id){
-  rwAPI('PATCH','/cards/physical/'+id,{status:'activa'})
-    .then(()=>{toast('Tarjeta aprobada','success');loadPhysicalCards();})
-    .catch(()=>toast('Aprobada (demo)','info'));
-}
+function blockCard(id){ return _setCardStatus(id,'bloqueada','Tarjeta bloqueada'); }
+function unblockCard(id){ return _setCardStatus(id,'activo','Tarjeta desbloqueada'); }
+function approveCard(id){ return _setCardStatus(id,'activo','Tarjeta aprobada'); }
 function exportCardsCSV(){
   var rows=[['ID','Usuario','Tipo','Last4','Emitida','Vence','País','Estado']];
   CARDS_DATA.forEach(c=>rows.push([c.id,c.user,c.type,c.last4,c.issued,c.expires,c.country,c.status]));
