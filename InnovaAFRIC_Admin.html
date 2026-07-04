@@ -684,6 +684,7 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('xendershop',this)"><span class="ic">🛒</span><span>XenderShop Admin</span><span class="badge-warn" id="sb-xshop-count" style="display:none">0</span></div>
     <div class="sb-link" onclick="nav('shop-cats',this)"><span class="ic">🏷️</span><span data-i18n="nav:shop-cats">Categorías y subcategorías de XenderShop</span></div>
     <div class="sb-link" onclick="nav('bigshop-admin',this)"><span class="ic">🏪</span><span data-i18n="nav:bigshop-admin">XenderBigShop Admin</span></div>
+    <div class="sb-link" onclick="nav('bigshop-cats',this)"><span class="ic">🏷️</span><span data-i18n="nav:bigshop-cats">Categorías y subcategorías de XenderBigShop</span></div>
     <div class="sb-link" onclick="nav('delivery-admin',this)"><span class="ic">🚚</span><span data-i18n="nav:delivery-admin">XenderDelivery</span></div>
     <div class="sb-link" onclick="nav('bills-providers',this)"><span class="ic">⚡</span><span data-i18n="nav:bills-providers">Proveedores Bills</span></div>
     <div class="sb-link" onclick="nav('ads-admin',this)"><span class="ic">📢</span><span data-i18n="nav:ads-admin">Publicidad</span></div>
@@ -2207,7 +2208,7 @@ select.form-input option{background:var(--s2)}
             <button class="topbar-btn btn-ghost" onclick="loadXenderShop()">↺ Actualizar</button>
             <button class="topbar-btn btn-ghost" onclick="exportXShopProductsCSV()">📥 CSV</button>
             <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-xendershop','🛒 InnovaAFRIC · XenderShop Admin')">📄 Imprimir PDF</button>
-            <button class="topbar-btn btn-cyan" onclick="openModal('m-xshop-product')">+ Nuevo producto</button>
+            <button class="topbar-btn btn-cyan" onclick="fillSubcatDatalist();openModal('m-xshop-product')">+ Nuevo producto</button>
           </div>
         </div>
         <!-- KPIs -->
@@ -2262,7 +2263,7 @@ select.form-input option{background:var(--s2)}
           </select>
         </div>
         <div class="table-wrap"><table>
-          <thead><tr><th>Producto</th><th>Categoría</th><th>Precio EUR</th><th>Precio XAF</th><th>Stock</th><th>CE</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <thead><tr><th>Producto</th><th>Categoría</th><th>Subcategoría</th><th>Precios (4 monedas)</th><th>Stock</th><th>CE</th><th>Estado</th><th>Acciones</th></tr></thead>
           <tbody id="tb-xshop-products"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
         </table></div>
       </div>
@@ -2302,8 +2303,9 @@ select.form-input option{background:var(--s2)}
             <label class="form-label">Moneda principal</label>
             <select class="form-input" id="xshop-main-currency">
               <option value="EUR">EUR (€)</option>
-              <option value="XAF">XAF (FCFA)</option>
               <option value="USD">USD ($)</option>
+              <option value="XAF">XAF · CFA CEMAC</option>
+              <option value="XOF">XOF · CFA UEMOA</option>
             </select>
           </div>
           <div>
@@ -2335,8 +2337,11 @@ select.form-input option{background:var(--s2)}
             <option value="sport">🏃 Deporte</option><option value="beauty">💄 Belleza</option>
             <option value="kids">👶 Niños</option><option value="food">🍎 Alimentación</option><option value="other">📦 Otros</option>
           </select></label>
+          <label style="grid-column:1/-1">Subcategoría<input class="form-input" id="xshop-prod-subcat" list="xshop-subcat-list" placeholder="ej: Móviles, Cocina, Audio..."><datalist id="xshop-subcat-list"></datalist></label>
           <label>Precio EUR €<input class="form-input" type="number" id="xshop-prod-eur" placeholder="29.99" min="0" step="0.01"></label>
-          <label>Precio XAF<input class="form-input" type="number" id="xshop-prod-xaf" placeholder="19650" min="0"></label>
+          <label>Precio USD $<input class="form-input" type="number" id="xshop-prod-usd" placeholder="32.00" min="0" step="0.01"></label>
+          <label>Precio XAF · CFA CEMAC<input class="form-input" type="number" id="xshop-prod-xaf" placeholder="19650" min="0"></label>
+          <label>Precio XOF · CFA UEMOA<input class="form-input" type="number" id="xshop-prod-xof" placeholder="19650" min="0"></label>
           <label>Stock<input class="form-input" type="number" id="xshop-prod-stock" placeholder="100" min="0"></label>
           <label>País de origen<input class="form-input" id="xshop-prod-origin" placeholder="China, España, Ghana..."></label>
           <label style="display:flex;align-items:center;gap:8px;grid-column:1/-1">
@@ -2409,7 +2414,7 @@ select.form-input option{background:var(--s2)}
       </div>
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">🏪 XenderBigShop <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Marketplace multivendor</div></div>
+          <div><div class="card-title">🏪 XenderBigShop Admin <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Marketplace multivendor · <a href="https://christianboddien-source.github.io/innovaafric-prod/xenderbigshop/" target="_blank" style="color:var(--cyan)">Ver tienda en vivo ↗</a></div></div>
           <div style="display:flex;gap:8px">
             <select class="filter-select" id="bs-plan-filter" onchange="filterBigShopVendors()">
               <option value="">Todos los planes</option>
@@ -2446,6 +2451,20 @@ select.form-input option{background:var(--s2)}
           </div>
         </div>
         <div style="padding:0 20px 16px"><button class="topbar-btn btn-primary" onclick="saveBigShopPlans()">💾 Guardar planes</button></div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍAS Y SUBCATEGORÍAS XENDERBIGSHOP -->
+    <div id="pg-bigshop-cats" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div><div class="card-title">🏷️ Categorías y subcategorías de XenderBigShop</div><div class="card-sub">Gestión de categorías y subcategorías del marketplace multivendor</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bigshop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderBigShop')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-primary" onclick="openModal('m-new-bcat')">+ Nueva categoría</button>
+          </div>
+        </div>
+        <div style="padding:16px 20px" id="bigshop-cats-list"><div class="loading-cell"><div class="spin"></div></div></div>
       </div>
     </div>
 
@@ -3373,6 +3392,32 @@ select.form-input option{background:var(--s2)}
     <div class="form-actions">
       <button class="btn-block btn-primary" onclick="saveCategory()">✓ Guardar categoría</button>
       <button class="btn-block btn-ghost" onclick="closeModal('m-new-cat')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nueva/Editar categoría XenderBigShop -->
+<div class="modal-overlay" id="m-new-bcat" onclick="if(event.target===this)closeModal('m-new-bcat')">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🏷️ Nueva categoría XenderBigShop</div>
+    <input type="hidden" id="bcat-edit-id">
+    <div class="form-row">
+      <div><label class="form-label">Emoji / Icono</label><input class="form-input" id="bcat-emoji" value="📦" style="font-size:20px;text-align:center;width:80px"></div>
+      <div style="flex:1"><label class="form-label">Nombre *</label><input class="form-input" id="bcat-name" placeholder="ej: Electrónica & Móviles"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Descripción</label><input class="form-input" id="bcat-desc" placeholder="Descripción de la categoría"></div>
+    <div class="form-group"><label class="form-label">Subcategorías (separadas por coma)</label><input class="form-input" id="bcat-subcats" placeholder="Smartphones, Ordenadores, Audio, Accesorios"></div>
+    <div class="form-row">
+      <div><label class="form-label">Color (hex)</label><input class="form-input" type="color" id="bcat-color" value="#f59e0b" style="height:42px;padding:4px"></div>
+      <div><label class="form-label">Orden</label><input class="form-input" type="number" id="bcat-order" value="1" min="1"></div>
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;gap:10px">
+      <input type="checkbox" id="bcat-active" checked>
+      <label for="bcat-active" style="font-size:13px">Categoría activa</label>
+    </div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="saveBigCategory()">✓ Guardar categoría</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-new-bcat')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -7773,6 +7818,7 @@ function nav(page,el){
     'shop-cats':'🏷️ Categorías y subcategorías de XenderShop',
     'bills-providers':'⚡ Proveedores de servicios',
     'bigshop-admin':'🏪 XenderBigShop Admin',
+    'bigshop-cats':'🏷️ Categorías y subcategorías de XenderBigShop',
     'delivery-admin':'🚚 XenderDelivery Admin',
     'ads-admin':'📢 Publicidad Admin',
     representantes:'🏅 Representantes',
@@ -10229,7 +10275,7 @@ function printModulePDF(pageId, title){
     return;
   }
   // 2) Sin tabla: exportar el texto de cada tarjeta/ítem de la lista visible
-  var listSel={'pg-shop-cats':'#shop-cats-list','pg-bills-providers':'#bill-providers-list','pg-ads-admin':'#ads-admin-list'};
+  var listSel={'pg-shop-cats':'#shop-cats-list','pg-bigshop-cats':'#bigshop-cats-list','pg-bills-providers':'#bill-providers-list','pg-ads-admin':'#ads-admin-list'};
   var container=(listSel[pageId]&&pg.querySelector(listSel[pageId]))||pg;
   var rows=[].slice.call(container.children).filter(function(c){
     return clean(c.textContent).length && !c.querySelector('.spin');
@@ -10465,6 +10511,88 @@ function deleteCategory(id){
   try{SB.from('shop_categories').delete().eq('id',id).then(function(){}).catch(function(){});}catch(e){}
   toast('Categoría eliminada','success');
   renderShopCategories();
+}
+
+// ══════════════════════════════════════════════════════
+// CATEGORÍAS Y SUBCATEGORÍAS — XENDERBIGSHOP (marketplace multivendor)
+// ══════════════════════════════════════════════════════
+var ALL_BIGSHOP_CATS=JSON.parse(localStorage.getItem('ia_bigshop_cats')||'[]');
+if(!ALL_BIGSHOP_CATS.length){
+  ALL_BIGSHOP_CATS=[
+    {id:'bcat_1',emoji:'📱',name:'Electrónica & Móviles',desc:'Dispositivos, accesorios y repuestos',subcats:['Smartphones','Ordenadores','Audio','Accesorios','Repuestos'],color:'#06b6d4',order:1,active:true},
+    {id:'bcat_2',emoji:'👗',name:'Moda & Textil',desc:'Ropa, calzado y complementos',subcats:['Hombre','Mujer','Niños','Calzado','Bolsos'],color:'#8b5cf6',order:2,active:true},
+    {id:'bcat_3',emoji:'🏠',name:'Hogar & Muebles',desc:'Mobiliario, menaje y electrodomésticos',subcats:['Muebles','Cocina','Decoración','Electrodomésticos'],color:'#10b981',order:3,active:true},
+    {id:'bcat_4',emoji:'💄',name:'Belleza & Salud',desc:'Cosmética y cuidado personal',subcats:['Maquillaje','Cuidado de la piel','Perfumes','Higiene'],color:'#ec4899',order:4,active:true},
+    {id:'bcat_5',emoji:'🍎',name:'Alimentación',desc:'Productos alimentarios y bebidas',subcats:['Conservas','Bebidas','Cereales','Especias'],color:'#ef4444',order:5,active:true},
+    {id:'bcat_6',emoji:'🛠️',name:'Industria & Herramientas',desc:'Equipos y suministros B2B',subcats:['Herramientas','Construcción','Agrícola','Seguridad'],color:'#f59e0b',order:6,active:true}
+  ];
+  localStorage.setItem('ia_bigshop_cats',JSON.stringify(ALL_BIGSHOP_CATS));
+}
+function loadBigShopCategories(){
+  try{SB.from('bigshop_categories').select('*').order('order_idx').then(function(r){if(r.data&&r.data.length){ALL_BIGSHOP_CATS=r.data;localStorage.setItem('ia_bigshop_cats',JSON.stringify(ALL_BIGSHOP_CATS));}renderBigShopCategories();}).catch(renderBigShopCategories);}
+  catch(e){renderBigShopCategories();}
+}
+function renderBigShopCategories(){
+  var el=document.getElementById('bigshop-cats-list');if(!el)return;
+  if(!ALL_BIGSHOP_CATS.length){el.innerHTML='<div class="td-empty">Sin categorías — Añade la primera</div>';return;}
+  el.innerHTML=ALL_BIGSHOP_CATS.map(function(c){
+    return'<div class="cat-card">'
+      +'<div style="width:44px;height:44px;border-radius:12px;background:'+c.color+'22;border:1px solid '+c.color+'44;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">'+c.emoji+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="font-size:14px;font-weight:600;margin-bottom:3px">'+c.name+'</div>'
+      +'<div style="font-size:11px;color:var(--muted);margin-bottom:5px">'+c.desc+'</div>'
+      +'<div style="display:flex;gap:4px;flex-wrap:wrap">'
+      +(c.subcats||[]).map(function(s){return'<span style="font-size:10px;background:var(--s3);border-radius:4px;padding:2px 7px">'+s+'</span>';}).join('')
+      +'</div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">'
+      +'<span class="pill pill-'+(c.active?'green':'gray')+'" style="font-size:10px">'+(c.active?'Activa':'Inactiva')+'</span>'
+      +'<button class="topbar-btn btn-ghost" style="font-size:11px;padding:4px 8px" onclick="editBigCategory(\''+c.id+'\')">✏️ Editar</button>'
+      +'<button class="topbar-btn btn-danger-sm" style="font-size:11px;padding:4px 8px" onclick="deleteBigCategory(\''+c.id+'\')">🗑️</button>'
+      +'</div></div>';
+  }).join('');
+}
+function editBigCategory(id){
+  var c=ALL_BIGSHOP_CATS.find(function(x){return x.id===id;});if(!c)return;
+  document.getElementById('bcat-edit-id').value=id;
+  document.getElementById('bcat-emoji').value=c.emoji;
+  document.getElementById('bcat-name').value=c.name;
+  document.getElementById('bcat-desc').value=c.desc||'';
+  document.getElementById('bcat-subcats').value=(c.subcats||[]).join(', ');
+  document.getElementById('bcat-color').value=c.color||'#f59e0b';
+  document.getElementById('bcat-order').value=c.order||1;
+  document.getElementById('bcat-active').checked=c.active!==false;
+  openModal('m-new-bcat');
+}
+function saveBigCategory(){
+  var name=document.getElementById('bcat-name').value.trim();
+  if(!name){toast('El nombre es obligatorio','error');return;}
+  var editId=document.getElementById('bcat-edit-id').value;
+  var cat={
+    id:editId||'bcat_'+Date.now(),
+    emoji:document.getElementById('bcat-emoji').value||'📦',
+    name:name,desc:document.getElementById('bcat-desc').value,
+    subcats:document.getElementById('bcat-subcats').value.split(',').map(function(s){return s.trim();}).filter(Boolean),
+    color:document.getElementById('bcat-color').value,
+    order:parseInt(document.getElementById('bcat-order').value)||1,
+    active:document.getElementById('bcat-active').checked
+  };
+  if(editId){var i=ALL_BIGSHOP_CATS.findIndex(function(c){return c.id===editId;});if(i>=0)ALL_BIGSHOP_CATS[i]=cat;}
+  else ALL_BIGSHOP_CATS.push(cat);
+  localStorage.setItem('ia_bigshop_cats',JSON.stringify(ALL_BIGSHOP_CATS));
+  try{SB.from('bigshop_categories').upsert({id:cat.id,emoji:cat.emoji,name:cat.name,description:cat.desc,subcategories:cat.subcats,color:cat.color,order_idx:cat.order,active:cat.active}).then(function(){}).catch(function(){});}catch(e){}
+  closeModal('m-new-bcat');
+  toast('✅ Categoría guardada','success');
+  logAdminAction('save_bigshop_category','Categoría: '+cat.name);
+  document.getElementById('bcat-edit-id').value='';
+  renderBigShopCategories();
+}
+function deleteBigCategory(id){
+  if(!confirm('¿Eliminar esta categoría?'))return;
+  ALL_BIGSHOP_CATS=ALL_BIGSHOP_CATS.filter(function(c){return c.id!==id;});
+  localStorage.setItem('ia_bigshop_cats',JSON.stringify(ALL_BIGSHOP_CATS));
+  try{SB.from('bigshop_categories').delete().eq('id',id).then(function(){}).catch(function(){});}catch(e){}
+  toast('Categoría eliminada','success');
+  renderBigShopCategories();
 }
 
 // ══════════════════════════════════════════════════════
@@ -11104,6 +11232,7 @@ nav=function(page,el){
   if(page==='shop-cats')loadShopCategories();
   if(page==='bills-providers')loadBillProviders();
   if(page==='bigshop-admin')loadBigShopAdmin();
+  if(page==='bigshop-cats')loadBigShopCategories();
   if(page==='delivery-admin')loadDeliveryAdmin();
   if(page==='ads-admin')loadAdsAdmin();
   if(page==='representantes'){loadRepresentantesV34();loadRepPendientes();}
@@ -13702,7 +13831,7 @@ var ADMIN_TR={
     'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alertas',
     'nav:auditlog':'Auditoría','nav:sync':'Sincronización','nav:aichat':'Admin AI Chat',
     'nav:worldmap':'Mapa mundial','nav:shop-cats':'Categorías y subcategorías de XenderShop',
-    'nav:bills-providers':'Proveedores Bills','nav:bigshop-admin':'XenderBigShop Admin',
+    'nav:bills-providers':'Proveedores Bills','nav:bigshop-admin':'XenderBigShop Admin','nav:bigshop-cats':'Categorías y subcategorías de XenderBigShop',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicidad',
     'nav:representantes':'Representantes','nav:comercios':'Comercios',
     'nav:logistica-admin':'Logística','nav:marketing-admin':'Marketing',
@@ -13826,7 +13955,7 @@ var ADMIN_TR={
     'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alerts',
     'nav:auditlog':'Audit Log','nav:sync':'Sync','nav:aichat':'Admin AI Chat',
     'nav:worldmap':'World Map','nav:shop-cats':'XenderShop Categories & Subcategories',
-    'nav:bills-providers':'Bills Providers','nav:bigshop-admin':'XenderBigShop',
+    'nav:bills-providers':'Bills Providers','nav:bigshop-admin':'XenderBigShop Admin','nav:bigshop-cats':'XenderBigShop Categories & Subcategories',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Advertising',
     'nav:representantes':'Representatives','nav:comercios':'Merchants',
     'nav:logistica-admin':'Logistics','nav:marketing-admin':'Marketing',
@@ -13948,7 +14077,7 @@ var ADMIN_TR={
     'nav:chat':'Chat','nav:roles':'Rôles','nav:apikeys':'Clés API','nav:alerts':'Alertes',
     'nav:auditlog':"Journal d'audit",'nav:sync':'Synchronisation','nav:aichat':'Admin AI Chat',
     'nav:worldmap':'Carte mondiale','nav:shop-cats':'Catégories et sous-catégories XenderShop',
-    'nav:bills-providers':'Fournisseurs Bills','nav:bigshop-admin':'XenderBigShop',
+    'nav:bills-providers':'Fournisseurs Bills','nav:bigshop-admin':'XenderBigShop Admin','nav:bigshop-cats':'Catégories et sous-catégories XenderBigShop',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicité',
     'nav:representantes':'Représentants','nav:comercios':'Commerces',
     'nav:logistica-admin':'Logistique','nav:marketing-admin':'Marketing',
@@ -25191,6 +25320,12 @@ function xshopTab(tab){
   });
 }
 
+// Rellena el datalist de subcategorías con las subcats de todas las categorías de XenderShop
+function fillSubcatDatalist(){
+  var dl=document.getElementById('xshop-subcat-list');if(!dl)return;
+  var set={};(typeof ALL_SHOP_CATS!=='undefined'?ALL_SHOP_CATS:[]).forEach(function(c){(c.subcats||[]).forEach(function(s){if(s)set[s]=1;});});
+  dl.innerHTML=Object.keys(set).map(function(s){return'<option value="'+s.replace(/"/g,'')+'">';}).join('');
+}
 function renderXShopProducts(){
   var q=(document.getElementById('xshop-search')?.value||'').toLowerCase();
   var cat=document.getElementById('xshop-cat-filter')?.value||'';
@@ -25209,8 +25344,11 @@ function renderXShopProducts(){
     return'<tr>'
       +'<td><div style="font-weight:600;font-size:12px">'+(p.name||'—')+'</div>'+(p.description?'<div style="font-size:10px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.description+'</div>':'')+'</td>'
       +'<td><span style="font-size:11px">'+(catIcons[p.category]||'📦')+' '+(p.category||'—')+'</span></td>'
-      +'<td style="color:#fbbf24;font-weight:600">€'+(Number(p.priceEur||p.price_eur||0)).toFixed(2)+'</td>'
-      +'<td style="color:var(--cyan)">'+(Number(p.priceXaf||p.price_xaf||0)).toLocaleString()+' XAF</td>'
+      +'<td><span style="font-size:11px;color:var(--muted)">'+(p.subcat||p.subcategory||'—')+'</span></td>'
+      +'<td style="font-size:11px;line-height:1.5;white-space:nowrap">'
+      +'<div style="color:#fbbf24;font-weight:600">€'+(Number(p.priceEur||p.price_eur||0)).toFixed(2)+' · $'+(Number(p.priceUsd||p.price_usd||0)).toFixed(2)+'</div>'
+      +'<div style="color:var(--cyan)">'+(Number(p.priceXaf||p.price_xaf||0)).toLocaleString()+' XAF · '+(Number(p.priceXof||p.price_xof||0)).toLocaleString()+' XOF</div>'
+      +'</td>'
       +'<td style="color:'+sc+';font-weight:600">'+stock+'</td>'
       +'<td style="text-align:center">'+(p.ceCertified||p.ce_certified?'✅':'—')+'</td>'
       +'<td><span style="color:'+sc+';font-size:11px">'+(stock===0?'❌ Sin stock':stock<5?'⚠️ Bajo':'✅ OK')+'</span></td>'
@@ -25259,8 +25397,12 @@ function editXShopProduct(id){
   document.getElementById('xshop-prod-id').value=p.id;
   document.getElementById('xshop-prod-name').value=p.name||'';
   document.getElementById('xshop-prod-cat').value=p.category||'other';
+  fillSubcatDatalist();
+  document.getElementById('xshop-prod-subcat').value=p.subcat||p.subcategory||'';
   document.getElementById('xshop-prod-eur').value=p.priceEur||p.price_eur||'';
+  document.getElementById('xshop-prod-usd').value=p.priceUsd||p.price_usd||'';
   document.getElementById('xshop-prod-xaf').value=p.priceXaf||p.price_xaf||'';
+  document.getElementById('xshop-prod-xof').value=p.priceXof||p.price_xof||'';
   document.getElementById('xshop-prod-stock').value=p.stock||0;
   document.getElementById('xshop-prod-origin').value=p.origin||'';
   document.getElementById('xshop-prod-ce').checked=!!(p.ceCertified||p.ce_certified);
@@ -25274,8 +25416,11 @@ async function saveXShopProduct(){
   var data={
     name:document.getElementById('xshop-prod-name').value.trim(),
     category:document.getElementById('xshop-prod-cat').value,
+    subcat:document.getElementById('xshop-prod-subcat').value.trim(),
     priceEur:parseFloat(document.getElementById('xshop-prod-eur').value)||0,
+    priceUsd:parseFloat(document.getElementById('xshop-prod-usd').value)||0,
     priceXaf:parseInt(document.getElementById('xshop-prod-xaf').value)||0,
+    priceXof:parseInt(document.getElementById('xshop-prod-xof').value)||0,
     stock:parseInt(document.getElementById('xshop-prod-stock').value)||0,
     origin:document.getElementById('xshop-prod-origin').value.trim(),
     ceCertified:document.getElementById('xshop-prod-ce').checked,
