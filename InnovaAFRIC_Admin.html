@@ -25416,14 +25416,14 @@ async function saveXShopProduct(){
   var data={
     name:document.getElementById('xshop-prod-name').value.trim(),
     category:document.getElementById('xshop-prod-cat').value,
-    subcat:document.getElementById('xshop-prod-subcat').value.trim(),
-    priceEur:parseFloat(document.getElementById('xshop-prod-eur').value)||0,
-    priceUsd:parseFloat(document.getElementById('xshop-prod-usd').value)||0,
-    priceXaf:parseInt(document.getElementById('xshop-prod-xaf').value)||0,
-    priceXof:parseInt(document.getElementById('xshop-prod-xof').value)||0,
+    subcategory:document.getElementById('xshop-prod-subcat').value.trim(),
+    price_eur:parseFloat(document.getElementById('xshop-prod-eur').value)||0,
+    price_usd:parseFloat(document.getElementById('xshop-prod-usd').value)||0,
+    price_xaf:parseInt(document.getElementById('xshop-prod-xaf').value)||0,
+    price_xof:parseInt(document.getElementById('xshop-prod-xof').value)||0,
     stock:parseInt(document.getElementById('xshop-prod-stock').value)||0,
     origin:document.getElementById('xshop-prod-origin').value.trim(),
-    ceCertified:document.getElementById('xshop-prod-ce').checked,
+    ce_certified:document.getElementById('xshop-prod-ce').checked,
     description:document.getElementById('xshop-prod-desc').value.trim(),
     image:document.getElementById('xshop-prod-img').value.trim(),
     updated_at:new Date().toISOString()
@@ -25434,7 +25434,8 @@ async function saveXShopProduct(){
       await SB.from('products').update(data).eq('id',id);
       toast('✅ Producto actualizado','success');
     }else{
-      data.id='prod_'+Date.now();data.created_at=new Date().toISOString();
+      // La BD genera el id (UUID) — no forzamos id de texto para respetar la FK con orders
+      data.created_at=new Date().toISOString();
       await SB.from('products').insert(data);
       toast('✅ Producto creado','success');
     }
