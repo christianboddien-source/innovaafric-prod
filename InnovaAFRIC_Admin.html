@@ -20411,65 +20411,46 @@ function activateProduct(id){
 
 /* ── REVIEWS ────────────────────────────────────────────────── */
 async function loadReviews(){
-  var src=null;
-  try{
-    var apiR2=await rwAPI('GET','/reviews').catch(function(){return null;});
-    if(apiR2&&apiR2.length){src=apiR2;}
-    else{
-      var sbRv=await SB.from('reviews').select('id,user_id,merchant_id,rating,comment,status,created_at,user:user_id(full_name),merchant:merchant_id(name)').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
-      if(sbRv.data&&sbRv.data.length){
-        src=sbRv.data.map(function(r){
-          return{
-            id:r.id,
-            user:(r.user&&r.user.full_name)||r.user_id,
-            merchant:(r.merchant&&r.merchant.name)||r.merchant_id||'—',
-            rating:Number(r.rating||3),
-            comment:r.comment||'—',
-            date:r.created_at?r.created_at.slice(0,10):'—',
-            status:r.status||'pendiente'
-          };
-        });
-        REVIEWS_DATA.length=0;
-        src.forEach(function(r){REVIEWS_DATA.push(r);});
-      }
-    }
-  }catch(e){}
-  var list=src||REVIEWS_DATA;
+  var src=[];
+  try{ var r=await rwAPI('GET','/reviews'); if(r&&r.success&&Array.isArray(r.data)) src=r.data; }catch(e){}
+  REVIEWS_DATA.length=0;
+  src.forEach(function(x){ REVIEWS_DATA.push({
+    id:x.id, user:x.user||x.userEmail||'—', merchant:x.target||x.targetId||'—', type:x.type||'',
+    rating:Number(x.rating||0), comment:x.comment||'—', date:(x.createdAt||'').slice(0,10), status:'publicada'
+  }); });
+  var list=REVIEWS_DATA;
   filterReviews(list);
   renderReviewsCharts(list);
   var avg=list.length?(list.reduce(function(s,r){return s+r.rating;},0)/list.length).toFixed(1):0;
-  var pending=list.filter(function(r){return r.status==='pendiente';}).length;
+  var positive=list.filter(function(r){return r.rating>=4;}).length;
   var negative=list.filter(function(r){return r.rating<=2;}).length;
   var el=document.getElementById('reviews-stats');
   if(el)el.innerHTML=
     '<div class="kpi-card"><div class="kpi-val">'+list.length+'</div><div class="kpi-lbl">Total reseñas</div></div>'
     +'<div class="kpi-card"><div class="kpi-val" style="color:var(--amber)">'+avg+' ⭐</div><div class="kpi-lbl">Rating promedio</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(pending>0?'var(--amber)':'var(--green)')+'">'+pending+'</div><div class="kpi-lbl">Pendientes moderación</div></div>'
-    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(negative>0?'var(--red)':'var(--green)')+'">'+negative+'</div><div class="kpi-lbl">Reseñas negativas</div></div>';
+    +'<div class="kpi-card"><div class="kpi-val" style="color:var(--green)">'+positive+'</div><div class="kpi-lbl">Positivas (4-5⭐)</div></div>'
+    +'<div class="kpi-card"><div class="kpi-val" style="color:'+(negative>0?'var(--red)':'var(--green)')+'">'+negative+'</div><div class="kpi-lbl">Negativas (1-2⭐)</div></div>';
 }
 
 function filterReviews(data){
   data=data||REVIEWS_DATA;
   var q=(document.getElementById('reviews-search')||{}).value||'';
   var rat=(document.getElementById('reviews-rating')||{}).value||'';
-  var st=(document.getElementById('reviews-status')||{}).value||'';
-  var filtered=data.filter(r=>{
-    return(!q||r.user.toLowerCase().includes(q.toLowerCase())||r.merchant.toLowerCase().includes(q.toLowerCase()))
-      &&(!rat||r.rating===parseInt(rat))&&(!st||r.status===st);
+  var filtered=data.filter(function(r){
+    return(!q||(r.user||'').toLowerCase().includes(q.toLowerCase())||(r.merchant||'').toLowerCase().includes(q.toLowerCase()))
+      &&(!rat||r.rating===parseInt(rat));
   });
   var tb=document.getElementById('tb-reviews');if(!tb)return;
-  var stC={publicada:'badge-green',pendiente:'badge-amber',eliminada:'badge-red'};
-  tb.innerHTML=filtered.map(r=>`<tr>
-    <td>${r.id}</td><td>${r.user}</td><td>${r.merchant}</td>
-    <td>${'⭐'.repeat(r.rating)}</td>
-    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.comment}">${r.comment}</td>
-    <td>${r.date}</td>
-    <td><span class="badge ${stC[r.status]||'badge-gray'}">${r.status}</span></td>
-    <td>
-      ${r.status==='pendiente'?`<button class="btn-xs btn-green" onclick="approveReview('${r.id}')">Publicar</button> <button class="btn-xs btn-red" onclick="deleteReview('${r.id}')">Eliminar</button>`:''}
-      ${r.status==='publicada'?`<button class="btn-xs btn-red" onclick="deleteReview('${r.id}')">Eliminar</button>`:''}
-    </td>
-  </tr>`).join('');
+  if(!filtered.length){tb.innerHTML='<tr><td colspan="8" class="td-empty">Sin reseñas</td></tr>';return;}
+  tb.innerHTML=filtered.map(function(r){return '<tr>'
+    +'<td style="font-family:var(--mono);font-size:10px">'+String(r.id||'').slice(0,8)+'</td><td>'+(r.user||'—')+'</td>'
+    +'<td>'+(r.merchant||'—')+(r.type?(' <span style="font-size:9px;color:var(--muted)">('+r.type+')</span>'):'')+'</td>'
+    +'<td>'+'⭐'.repeat(r.rating)+'</td>'
+    +'<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+String(r.comment||'').replace(/"/g,'&quot;')+'">'+(r.comment||'—')+'</td>'
+    +'<td>'+(r.date||'—')+'</td>'
+    +'<td><span class="badge badge-green">publicada</span></td>'
+    +'<td><button class="btn-xs btn-red" onclick="deleteReview(\''+r.id+'\')">Eliminar</button></td>'
+    +'</tr>';}).join('');
 }
 
 function renderReviewsCharts(data){
@@ -20488,15 +20469,12 @@ function renderReviewsCharts(data){
   });
 }
 
-function approveReview(id){
-  var r=REVIEWS_DATA.find(x=>x.id===id);if(!r)return;
-  r.status='publicada';toast('Reseña publicada','success');filterReviews();
-  logAdminAction('approve_review',id);
-}
-function deleteReview(id){
-  var r=REVIEWS_DATA.find(x=>x.id===id);if(!r)return;
-  r.status='eliminada';toast('Reseña eliminada','warning');filterReviews();
-  logAdminAction('delete_review',id);
+function approveReview(id){ toast('Las reseñas se publican automáticamente','info'); }
+async function deleteReview(id){
+  if(!confirm('¿Eliminar esta reseña? Esta acción no se puede deshacer.'))return;
+  var r=await rwAPI('DELETE','/reviews/'+id);
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('🗑 Reseña eliminada','success'); if(typeof logAdminAction==='function')logAdminAction('delete_review',id); loadReviews();
 }
 
 /* ── PROMO CODES ────────────────────────────────────────────── */
