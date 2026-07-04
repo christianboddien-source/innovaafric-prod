@@ -2028,6 +2028,7 @@ select.form-input option{background:var(--s2)}
               <option value="moda">Moda</option>
               <option value="solar">Solar</option>
             </select>
+            <button class="topbar-btn btn-primary" onclick="openAdminProduct()">+ Nuevo</button>
             <button class="topbar-btn btn-ghost" onclick="loadProductos()">↻</button>
           </div>
         </div>
@@ -5331,6 +5332,32 @@ select.form-input option{background:var(--s2)}
     <div style="margin-top:1rem;display:flex;gap:.75rem;justify-content:flex-end">
       <button class="btn-secondary" onclick="closeModal('m-create-product')">Cancelar</button>
       <button class="btn-primary" onclick="createProduct()">Crear producto</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTO CREAR/EDITAR (v38, /admin/products) -->
+<div class="modal-overlay" id="m-admin-product" onclick="if(event.target===this)closeModal('m-admin-product')">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">🛍️ <span id="ap-title">Nuevo producto</span></div>
+    <input type="hidden" id="ap-id">
+    <div class="form-row">
+      <div><label class="form-label">Nombre *</label><input class="form-input" id="ap-name"></div>
+      <div><label class="form-label">Categoría</label><input class="form-input" id="ap-category" placeholder="electro / hogar / moda / solar"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Precio EUR *</label><input class="form-input" id="ap-eur" type="number" step="0.01" min="0"></div>
+      <div><label class="form-label">Precio XAF</label><input class="form-input" id="ap-xaf" type="number" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Stock</label><input class="form-input" id="ap-stock" type="number" value="0" min="0"></div>
+      <div><label class="form-label">Origen</label><input class="form-input" id="ap-origin" placeholder="China / Europa…"></div>
+    </div>
+    <div><label class="form-label">Descripción</label><input class="form-input" id="ap-desc"></div>
+    <div id="ap-feedback" style="display:none;margin:8px 0;padding:8px 12px;border-radius:8px;font-size:13px"></div>
+    <div class="form-actions">
+      <button class="btn-block btn-primary" onclick="adminProductSave()">✓ Guardar</button>
+      <button class="btn-block btn-ghost" onclick="closeModal('m-admin-product')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -12580,11 +12607,12 @@ let ALL_PRODUCTOS=[];
 async function loadProductos(){
   try{
 
-  const r=await rwAPI('GET','/shop/products?limit=100');
+  const r=await rwAPI('GET','/admin/products');
   const grid=document.getElementById('productos-grid');
-  if(!r.success){grid.innerHTML='<div class="td-empty">Railway no disponible</div>';return;}
-  ALL_PRODUCTOS=r.data.items||r.data.products||[];
-  document.getElementById('productos-count').textContent=ALL_PRODUCTOS.length+' productos';
+  if(!r||!r.success){grid.innerHTML='<div class="td-empty">Railway no disponible</div>';return;}
+  ALL_PRODUCTOS=(r.data&&(r.data.products||r.data.items))||[];
+  var low=ALL_PRODUCTOS.filter(function(p){return Number(p.stock||0)<=5;}).length;
+  document.getElementById('productos-count').textContent=ALL_PRODUCTOS.length+' productos'+(low?(' · '+low+' con stock bajo ⚠️'):'');
   renderProductosGrid(ALL_PRODUCTOS);
 
   }catch(e){console.warn("loadProductos:",e);try{var el=document.querySelector("[id^='tb-']");if(el)el.innerHTML='<tr><td colspan="10" class="td-empty">Error cargando datos</td></tr>';}catch(_){}}
@@ -12612,8 +12640,60 @@ function renderProductosGrid(prods){
           <span style="font-size:10px;color:var(--muted)">${p.stock||0} uds</span>
         </div>
         ${p.ceCertified?'<span style="font-size:9px;background:var(--green-d);color:var(--green);border-radius:4px;padding:1px 6px;font-weight:700">CE ✓</span>':''}
+        <div style="display:flex;gap:4px;margin-top:8px">
+          <button class="topbar-btn btn-ghost" style="font-size:10px;padding:3px 6px;flex:1" onclick="adminProductEdit('${p.id}')">✏️ Editar</button>
+          <button class="topbar-btn btn-ghost" style="font-size:10px;padding:3px 6px;color:var(--red)" onclick="adminProductDelete('${p.id}','${(p.name||'').replace(/'/g,'')}')">🗑</button>
+        </div>
       </div>
     </div>`).join('')+'</div>';
+}
+
+// ── Productos: CRUD real (/admin/products) ──
+function openAdminProduct(){
+  document.getElementById('ap-title').textContent='Nuevo producto';
+  ['ap-id','ap-name','ap-category','ap-eur','ap-xaf','ap-origin','ap-desc'].forEach(function(x){var e=document.getElementById(x);if(e)e.value='';});
+  var st=document.getElementById('ap-stock'); if(st)st.value=0;
+  var fb=document.getElementById('ap-feedback'); if(fb)fb.style.display='none';
+  openModal('m-admin-product');
+}
+function adminProductEdit(id){
+  var p=(ALL_PRODUCTOS||[]).filter(function(x){return String(x.id)===String(id);})[0];
+  if(!p){toast('Producto no encontrado','warning');return;}
+  document.getElementById('ap-title').textContent='Editar producto';
+  document.getElementById('ap-id').value=p.id;
+  document.getElementById('ap-name').value=p.name||'';
+  document.getElementById('ap-category').value=p.category||'';
+  document.getElementById('ap-eur').value=p.priceEur!=null?p.priceEur:'';
+  document.getElementById('ap-xaf').value=p.priceXaf!=null?p.priceXaf:'';
+  document.getElementById('ap-stock').value=p.stock!=null?p.stock:0;
+  document.getElementById('ap-origin').value=p.origin||'';
+  document.getElementById('ap-desc').value=p.description||'';
+  var fb=document.getElementById('ap-feedback'); if(fb)fb.style.display='none';
+  openModal('m-admin-product');
+}
+async function adminProductSave(){
+  var id=((document.getElementById('ap-id')||{}).value||'').trim();
+  var body={
+    name:((document.getElementById('ap-name')||{}).value||'').trim(),
+    category:((document.getElementById('ap-category')||{}).value||'').trim()||'General',
+    priceEur:Number((document.getElementById('ap-eur')||{}).value)||0,
+    priceXaf:Number((document.getElementById('ap-xaf')||{}).value)||0,
+    stock:parseInt((document.getElementById('ap-stock')||{}).value)||0,
+    origin:((document.getElementById('ap-origin')||{}).value||'').trim()||null,
+    description:((document.getElementById('ap-desc')||{}).value||'').trim()||null
+  };
+  if(!body.name || (!body.priceEur && !body.priceXaf)){toast('Nombre y al menos un precio son obligatorios','warning');return;}
+  var r=id ? await rwAPI('PUT','/admin/products/'+id, body) : await rwAPI('POST','/admin/products', body);
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo guardar'));return;}
+  toast(id?'✅ Producto actualizado':'✅ Producto creado','success');
+  if(typeof logAdminAction==='function')logAdminAction(id?'edit_product':'create_product',body.name);
+  closeModal('m-admin-product'); loadProductos();
+}
+async function adminProductDelete(id,name){
+  if(!confirm('¿Eliminar el producto "'+(name||id)+'"? Esta acción no se puede deshacer.'))return;
+  var r=await rwAPI('DELETE','/admin/products/'+id);
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('🗑 Producto eliminado','success'); if(typeof logAdminAction==='function')logAdminAction('delete_product',id); loadProductos();
 }
 
 // ── CHAT ──────────────────────────────────────────────────
