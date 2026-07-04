@@ -2433,9 +2433,36 @@ select.form-input option{background:var(--s2)}
           </table>
         </div>
       </div>
+      <!-- Productos del marketplace (catálogo multivendor + moderación) -->
+      <div class="card">
+        <div class="card-head" style="flex-wrap:wrap;gap:8px">
+          <div><div class="card-title">🛍️ Productos del marketplace</div><div class="card-sub">Catálogo de todas las tiendas · categoría, subcategoría y precios en las 4 monedas · moderación</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select class="filter-select" id="bsp-store-filter" onchange="renderBigShopProducts()"><option value="">Todas las tiendas</option></select>
+            <select class="filter-select" id="bsp-cat-filter" onchange="renderBigShopProducts()"><option value="">Todas las categorías</option></select>
+            <select class="filter-select" id="bsp-status-filter" onchange="renderBigShopProducts()">
+              <option value="">Todos los estados</option>
+              <option value="approved">✅ Aprobado</option>
+              <option value="pending">⏳ Pendiente</option>
+              <option value="hidden">🚫 Oculto</option>
+            </select>
+            <button class="topbar-btn btn-ghost" onclick="exportBigShopProductsPDF()">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="exportBigShopProductsCSV()">📥 CSV</button>
+            <button class="topbar-btn btn-primary" onclick="openBigShopProduct()">+ Nuevo producto</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Producto</th><th>Tienda</th><th>Categoría</th><th>Subcategoría</th><th>Precios (4 monedas)</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tb-bigshop-products"><tr><td colspan="8" class="loading-cell"><div class="spin"></div></td></tr></tbody>
+        </table></div>
+      </div>
       <!-- Planes de suscripción configurables -->
       <div class="card">
-        <div class="card-head"><div class="card-title">💰 Planes de suscripción</div><div class="card-sub">Configura los planes para vendedores</div></div>
+        <div class="card-head"><div><div class="card-title">💰 Planes de suscripción</div><div class="card-sub">Configura los planes para vendedores</div></div>
+          <div style="display:flex;align-items:center;gap:6px"><label class="form-label" style="margin:0">Moneda</label>
+            <select class="filter-select" id="plan-currency"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="XAF">XAF · CFA CEMAC</option><option value="XOF">XOF · CFA UEMOA</option></select>
+          </div>
+        </div>
         <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-lg);padding:16px">
             <div style="font-size:13px;font-weight:700;margin-bottom:10px">Plan Básico</div>
@@ -2447,7 +2474,7 @@ select.form-input option{background:var(--s2)}
             <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--amber)">Plan Pro ⭐</div>
             <div class="form-group"><label class="form-label">Comisión %</label><input class="form-input" type="number" id="plan-pro-fee" value="5" step="0.5"></div>
             <div class="form-group"><label class="form-label">Máx productos</label><input class="form-input" value="Ilimitado" id="plan-pro-prods"></div>
-            <div class="form-group"><label class="form-label">Precio/mes (EUR)</label><input class="form-input" type="number" id="plan-pro-price" value="29"></div>
+            <div class="form-group"><label class="form-label">Precio/mes</label><input class="form-input" type="number" id="plan-pro-price" value="29"></div>
           </div>
         </div>
         <div style="padding:0 20px 16px"><button class="topbar-btn btn-primary" onclick="saveBigShopPlans()">💾 Guardar planes</button></div>
@@ -3418,6 +3445,33 @@ select.form-input option{background:var(--s2)}
     <div class="form-actions">
       <button class="btn-block btn-primary" onclick="saveBigCategory()">✓ Guardar categoría</button>
       <button class="btn-block btn-ghost" onclick="closeModal('m-new-bcat')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo/Editar producto XenderBigShop (catálogo multivendor) -->
+<div id="m-bigshop-product" class="modal-overlay" onclick="if(event.target===this)closeModal('m-bigshop-product')">
+  <div class="modal-box" style="max-width:600px" onclick="event.stopPropagation()">
+    <div class="modal-hdr"><h3 id="m-bsp-title">Nuevo producto</h3><button onclick="closeModal('m-bigshop-product')">✕</button></div>
+    <input type="hidden" id="bsp-prod-id">
+    <div class="form-grid">
+      <label style="grid-column:1/-1">Nombre del producto *<input class="form-input" id="bsp-prod-name" placeholder="Nombre del producto"></label>
+      <label>Tienda / Vendedor<input class="form-input" id="bsp-prod-store" list="bsp-store-list" placeholder="Nombre de la tienda"><datalist id="bsp-store-list"></datalist></label>
+      <label>Categoría<select class="form-input" id="bsp-prod-cat"></select></label>
+      <label style="grid-column:1/-1">Subcategoría<input class="form-input" id="bsp-prod-subcat" list="bsp-subcat-list" placeholder="ej: Smartphones, Cocina, Audio..."><datalist id="bsp-subcat-list"></datalist></label>
+      <label>Precio EUR €<input class="form-input" type="number" id="bsp-prod-eur" placeholder="29.99" min="0" step="0.01"></label>
+      <label>Precio USD $<input class="form-input" type="number" id="bsp-prod-usd" placeholder="32.00" min="0" step="0.01"></label>
+      <label>Precio XAF · CFA CEMAC<input class="form-input" type="number" id="bsp-prod-xaf" placeholder="19650" min="0"></label>
+      <label>Precio XOF · CFA UEMOA<input class="form-input" type="number" id="bsp-prod-xof" placeholder="19650" min="0"></label>
+      <label>Stock<input class="form-input" type="number" id="bsp-prod-stock" placeholder="100" min="0"></label>
+      <label>Estado de moderación<select class="form-input" id="bsp-prod-status"><option value="pending">⏳ Pendiente</option><option value="approved">✅ Aprobado</option><option value="hidden">🚫 Oculto</option></select></label>
+      <label style="grid-column:1/-1">País de origen<input class="form-input" id="bsp-prod-origin" placeholder="China, España, Ghana..."></label>
+      <label style="grid-column:1/-1">Descripción<textarea class="form-input" id="bsp-prod-desc" rows="3" placeholder="Descripción del producto..."></textarea></label>
+      <label style="grid-column:1/-1">URL imagen<input class="form-input" id="bsp-prod-img" placeholder="https://..."></label>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-secondary" onclick="closeModal('m-bigshop-product')">Cancelar</button>
+      <button class="btn-primary" onclick="saveBigShopProduct()">💾 Guardar producto</button>
     </div>
   </div>
 </div>
@@ -10732,6 +10786,9 @@ async function loadBigShopAdmin(){
     document.getElementById('bs-rev').textContent='—';
   }
   renderBigShopVendors(vendors);
+  LAST_BIGSHOP_VENDORS=vendors;
+  loadBigShopProducts();
+  loadBigShopPlans();
 
   }catch(e){console.warn("loadBigShopAdmin:",e);try{var el=document.querySelector("[id^='tb-']");if(el)el.innerHTML='<tr><td colspan="10" class="td-empty">Error cargando datos</td></tr>';}catch(_){}}
 }
@@ -10761,12 +10818,177 @@ function renderBigShopVendors(vendors){
   }).join('');
 }
 async function saveBigShopPlans(){
-  var plans={basic:{fee:parseFloat(document.getElementById('plan-basic-fee').value)||8,maxProducts:parseInt(document.getElementById('plan-basic-prods').value)||50,price:parseFloat(document.getElementById('plan-basic-price').value)||0},pro:{fee:parseFloat(document.getElementById('plan-pro-fee').value)||5,maxProducts:'unlimited',price:parseFloat(document.getElementById('plan-pro-price').value)||29}};
+  var curEl=document.getElementById('plan-currency');
+  var plans={currency:curEl?curEl.value:'EUR',basic:{fee:parseFloat(document.getElementById('plan-basic-fee').value)||8,maxProducts:parseInt(document.getElementById('plan-basic-prods').value)||50,price:parseFloat(document.getElementById('plan-basic-price').value)||0},pro:{fee:parseFloat(document.getElementById('plan-pro-fee').value)||5,maxProducts:'unlimited',price:parseFloat(document.getElementById('plan-pro-price').value)||29}};
   localStorage.setItem('ia_bigshop_plans',JSON.stringify(plans));
   // Persistir en Supabase config
   SB.from('config').upsert({key:'bigshop_plans',value:JSON.stringify(plans),updated_at:new Date().toISOString()}).catch(()=>null);
-  toast('✅ Planes guardados en Supabase','success');
-  logAdminAction('save_bigshop_plans','Planes BigShop actualizados');
+  toast('✅ Planes guardados en Supabase ('+plans.currency+')','success');
+  logAdminAction('save_bigshop_plans','Planes BigShop actualizados · '+plans.currency);
+}
+function loadBigShopPlans(){
+  var setVal=function(id,v){var el=document.getElementById(id);if(el&&v!==undefined&&v!==null&&v!=='')el.value=v;};
+  try{var p=JSON.parse(localStorage.getItem('ia_bigshop_plans')||'null');if(!p)return;
+    if(p.basic){setVal('plan-basic-fee',p.basic.fee);setVal('plan-basic-prods',p.basic.maxProducts);setVal('plan-basic-price',p.basic.price);}
+    if(p.pro){setVal('plan-pro-fee',p.pro.fee);setVal('plan-pro-price',p.pro.price);}
+    if(p.currency)setVal('plan-currency',p.currency);
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════════════
+// XENDERBIGSHOP — PRODUCTOS DEL MARKETPLACE (catálogo multivendor + moderación)
+// ══════════════════════════════════════════════════════
+var LAST_BIGSHOP_VENDORS=[];
+var ALL_BIGSHOP_PRODUCTS=JSON.parse(localStorage.getItem('ia_bigshop_products')||'[]');
+if(!ALL_BIGSHOP_PRODUCTS.length){
+  ALL_BIGSHOP_PRODUCTS=[
+    {id:'bsp_1',store:'Asia Import Direct',name:'Auriculares Bluetooth TWS',category:'Electrónica & Móviles',subcategory:'Audio',price_eur:12.9,price_usd:14,price_xaf:8460,price_xof:8460,stock:340,status:'approved',origin:'China'},
+    {id:'bsp_2',store:'Supermercado Central Malabo',name:'Arroz Jazmín 25kg',category:'Alimentación',subcategory:'Cereales',price_eur:28,price_usd:30,price_xaf:18360,price_xof:18360,stock:120,status:'approved',origin:'Tailandia'},
+    {id:'bsp_3',store:'España Hub · Productos EU',name:'Sartén antiadherente 28cm',category:'Hogar & Muebles',subcategory:'Cocina',price_eur:19.9,price_usd:22,price_xaf:13050,price_xof:13050,stock:60,status:'pending',origin:'España'}
+  ];
+  localStorage.setItem('ia_bigshop_products',JSON.stringify(ALL_BIGSHOP_PRODUCTS));
+}
+function loadBigShopProducts(){
+  var done=function(){fillBigShopProdFilters();renderBigShopProducts();};
+  try{SB.from('bigshop_products').select('*').order('created_at',{ascending:false}).then(function(r){if(r.data&&r.data.length){ALL_BIGSHOP_PRODUCTS=r.data;localStorage.setItem('ia_bigshop_products',JSON.stringify(ALL_BIGSHOP_PRODUCTS));}done();}).catch(done);}
+  catch(e){done();}
+}
+function fillBigShopProdFilters(){
+  var esc=function(s){return String(s||'').replace(/"/g,'');};
+  var cats=(typeof ALL_BIGSHOP_CATS!=='undefined'?ALL_BIGSHOP_CATS:[]);
+  // Tiendas (de vendors + productos existentes)
+  var stores={};(LAST_BIGSHOP_VENDORS||[]).forEach(function(v){if(v&&v.name)stores[v.name]=1;});
+  ALL_BIGSHOP_PRODUCTS.forEach(function(p){if(p.store)stores[p.store]=1;});
+  var storeKeys=Object.keys(stores);
+  var sf=document.getElementById('bsp-store-filter');
+  if(sf){var cur=sf.value;sf.innerHTML='<option value="">Todas las tiendas</option>'+storeKeys.map(function(s){return'<option value="'+esc(s)+'">'+s+'</option>';}).join('');sf.value=cur;}
+  var sdl=document.getElementById('bsp-store-list');
+  if(sdl)sdl.innerHTML=storeKeys.map(function(s){return'<option value="'+esc(s)+'">';}).join('');
+  // Categorías (de ALL_BIGSHOP_CATS)
+  var cf=document.getElementById('bsp-cat-filter');
+  if(cf){var cc=cf.value;cf.innerHTML='<option value="">Todas las categorías</option>'+cats.map(function(c){return'<option value="'+esc(c.name)+'">'+c.emoji+' '+c.name+'</option>';}).join('');cf.value=cc;}
+  var cs=document.getElementById('bsp-prod-cat');
+  if(cs){var pv=cs.value;cs.innerHTML='<option value="">— Categoría —</option>'+cats.map(function(c){return'<option value="'+esc(c.name)+'">'+c.emoji+' '+c.name+'</option>';}).join('');cs.value=pv;}
+  // Subcategorías (datalist)
+  var subdl=document.getElementById('bsp-subcat-list');
+  if(subdl){var set={};cats.forEach(function(c){(c.subcats||c.subcategories||[]).forEach(function(s){if(s)set[s]=1;});});subdl.innerHTML=Object.keys(set).map(function(s){return'<option value="'+esc(s)+'">';}).join('');}
+}
+function renderBigShopProducts(){
+  var sf=document.getElementById('bsp-store-filter'),cf=document.getElementById('bsp-cat-filter'),stf=document.getElementById('bsp-status-filter');
+  var store=sf?sf.value:'',cat=cf?cf.value:'',status=stf?stf.value:'';
+  var list=ALL_BIGSHOP_PRODUCTS.filter(function(p){
+    return(!store||p.store===store)&&(!cat||p.category===cat)&&(!status||(p.status||'pending')===status);
+  });
+  var tb=document.getElementById('tb-bigshop-products');if(!tb)return;
+  var stLabel={approved:'<span class="pill pill-green" style="font-size:10px">✅ Aprobado</span>',pending:'<span class="pill pill-amber" style="font-size:10px">⏳ Pendiente</span>',hidden:'<span class="pill pill-gray" style="font-size:10px">🚫 Oculto</span>'};
+  tb.innerHTML=list.length?list.map(function(p){
+    var st=p.status||'pending';var stock=Number(p.stock||0);
+    return'<tr>'
+      +'<td><div style="font-weight:600;font-size:12px">'+(p.name||'—')+'</div></td>'
+      +'<td style="font-size:11px">'+(p.store||'—')+'</td>'
+      +'<td style="font-size:11px">'+(p.category||'—')+'</td>'
+      +'<td style="font-size:11px;color:var(--muted)">'+(p.subcategory||p.subcat||'—')+'</td>'
+      +'<td style="font-size:11px;line-height:1.5;white-space:nowrap">'
+      +'<div style="color:#fbbf24;font-weight:600">€'+(Number(p.price_eur||0)).toFixed(2)+' · $'+(Number(p.price_usd||0)).toFixed(2)+'</div>'
+      +'<div style="color:var(--cyan)">'+(Number(p.price_xaf||0)).toLocaleString()+' XAF · '+(Number(p.price_xof||0)).toLocaleString()+' XOF</div>'
+      +'</td>'
+      +'<td style="font-family:var(--mono)">'+stock+'</td>'
+      +'<td>'+(stLabel[st]||st)+'</td>'
+      +'<td style="display:flex;gap:4px;flex-wrap:wrap">'
+      +(st!=='approved'?'<button class="btn-sm btn-primary" style="font-size:11px" title="Aprobar" onclick="moderateBigShopProduct(\''+p.id+'\',\'approved\')">✅</button>':'')
+      +(st!=='hidden'?'<button class="btn-sm btn-ghost" style="font-size:11px" title="Ocultar" onclick="moderateBigShopProduct(\''+p.id+'\',\'hidden\')">🚫</button>':'')
+      +'<button class="btn-sm btn-ghost" style="font-size:11px" onclick="editBigShopProduct(\''+p.id+'\')">✏️</button>'
+      +'<button class="btn-sm btn-danger" onclick="deleteBigShopProduct(\''+p.id+'\',\''+(p.name||'').replace(/'/g,'')+'\')" style="background:var(--red);color:#fff;border:none;padding:3px 7px;border-radius:5px;cursor:pointer;font-size:11px">🗑️</button>'
+      +'</td></tr>';
+  }).join(''):'<tr><td colspan="8" class="td-empty">Sin productos</td></tr>';
+}
+function openBigShopProduct(){
+  fillBigShopProdFilters();
+  document.getElementById('m-bsp-title').textContent='Nuevo producto';
+  ['id','name','store','subcat','eur','usd','xaf','xof','stock','origin','desc','img'].forEach(function(k){var el=document.getElementById('bsp-prod-'+k);if(el)el.value='';});
+  var cs=document.getElementById('bsp-prod-cat');if(cs)cs.selectedIndex=0;
+  document.getElementById('bsp-prod-status').value='pending';
+  openModal('m-bigshop-product');
+}
+function editBigShopProduct(id){
+  var p=ALL_BIGSHOP_PRODUCTS.find(function(x){return x.id===id;});if(!p)return;
+  fillBigShopProdFilters();
+  document.getElementById('m-bsp-title').textContent='Editar producto';
+  document.getElementById('bsp-prod-id').value=p.id;
+  document.getElementById('bsp-prod-name').value=p.name||'';
+  document.getElementById('bsp-prod-store').value=p.store||'';
+  document.getElementById('bsp-prod-cat').value=p.category||'';
+  document.getElementById('bsp-prod-subcat').value=p.subcategory||p.subcat||'';
+  document.getElementById('bsp-prod-eur').value=p.price_eur||'';
+  document.getElementById('bsp-prod-usd').value=p.price_usd||'';
+  document.getElementById('bsp-prod-xaf').value=p.price_xaf||'';
+  document.getElementById('bsp-prod-xof').value=p.price_xof||'';
+  document.getElementById('bsp-prod-stock').value=p.stock||0;
+  document.getElementById('bsp-prod-status').value=p.status||'pending';
+  document.getElementById('bsp-prod-origin').value=p.origin||'';
+  document.getElementById('bsp-prod-desc').value=p.description||'';
+  document.getElementById('bsp-prod-img').value=p.image||'';
+  openModal('m-bigshop-product');
+}
+async function saveBigShopProduct(){
+  var id=document.getElementById('bsp-prod-id').value;
+  var data={
+    store:document.getElementById('bsp-prod-store').value.trim(),
+    name:document.getElementById('bsp-prod-name').value.trim(),
+    category:document.getElementById('bsp-prod-cat').value,
+    subcategory:document.getElementById('bsp-prod-subcat').value.trim(),
+    price_eur:parseFloat(document.getElementById('bsp-prod-eur').value)||0,
+    price_usd:parseFloat(document.getElementById('bsp-prod-usd').value)||0,
+    price_xaf:parseInt(document.getElementById('bsp-prod-xaf').value)||0,
+    price_xof:parseInt(document.getElementById('bsp-prod-xof').value)||0,
+    stock:parseInt(document.getElementById('bsp-prod-stock').value)||0,
+    status:document.getElementById('bsp-prod-status').value,
+    origin:document.getElementById('bsp-prod-origin').value.trim(),
+    description:document.getElementById('bsp-prod-desc').value.trim(),
+    image:document.getElementById('bsp-prod-img').value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  if(!data.name){toast('Nombre requerido','error');return;}
+  var isUuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  // localStorage (fallback siempre disponible)
+  if(id){var i=ALL_BIGSHOP_PRODUCTS.findIndex(function(x){return x.id===id;});if(i>=0)ALL_BIGSHOP_PRODUCTS[i]=Object.assign({},ALL_BIGSHOP_PRODUCTS[i],data,{id:id});}
+  else{ALL_BIGSHOP_PRODUCTS.unshift(Object.assign({id:'bsp_'+Date.now(),created_at:new Date().toISOString()},data));}
+  localStorage.setItem('ia_bigshop_products',JSON.stringify(ALL_BIGSHOP_PRODUCTS));
+  // Supabase (best-effort; la BD genera el id UUID en alta)
+  try{
+    if(id&&isUuid){SB.from('bigshop_products').update(data).eq('id',id).then(function(){}).catch(function(){});}
+    else{var ins=Object.assign({created_at:new Date().toISOString()},data);SB.from('bigshop_products').insert(ins).then(function(){}).catch(function(){});}
+  }catch(e){}
+  closeModal('m-bigshop-product');
+  toast('✅ Producto guardado','success');
+  logAdminAction('save_bigshop_product','name:'+data.name);
+  renderBigShopProducts();
+}
+function moderateBigShopProduct(id,status){
+  var p=ALL_BIGSHOP_PRODUCTS.find(function(x){return x.id===id;});if(!p)return;
+  p.status=status;
+  localStorage.setItem('ia_bigshop_products',JSON.stringify(ALL_BIGSHOP_PRODUCTS));
+  try{if(/^[0-9a-f]{8}-/i.test(id))SB.from('bigshop_products').update({status:status,updated_at:new Date().toISOString()}).eq('id',id).then(function(){}).catch(function(){});}catch(e){}
+  toast(status==='approved'?'✅ Producto aprobado':'🚫 Producto ocultado','success');
+  logAdminAction('moderate_bigshop_product','id:'+id+' → '+status);
+  renderBigShopProducts();
+}
+function deleteBigShopProduct(id,name){
+  if(!confirm('¿Eliminar "'+name+'"?'))return;
+  ALL_BIGSHOP_PRODUCTS=ALL_BIGSHOP_PRODUCTS.filter(function(x){return x.id!==id;});
+  localStorage.setItem('ia_bigshop_products',JSON.stringify(ALL_BIGSHOP_PRODUCTS));
+  try{if(/^[0-9a-f]{8}-/i.test(id))SB.from('bigshop_products').delete().eq('id',id).then(function(){}).catch(function(){});}catch(e){}
+  toast('🗑️ Producto eliminado','success');
+  renderBigShopProducts();
+}
+function _bigShopProdRows(){
+  return ALL_BIGSHOP_PRODUCTS.map(function(p){return[p.name||'—',p.store||'—',p.category||'—',(p.subcategory||p.subcat||'—'),'€'+(Number(p.price_eur||0)).toFixed(2),'$'+(Number(p.price_usd||0)).toFixed(2),(Number(p.price_xaf||0))+' XAF',(Number(p.price_xof||0))+' XOF',(p.stock||0),(p.status||'pending')];});
+}
+function exportBigShopProductsPDF(){
+  exportTablePDF('🏪 InnovaAFRIC · XenderBigShop · Productos',['Producto','Tienda','Categoría','Subcategoría','EUR','USD','XAF','XOF','Stock','Estado'],_bigShopProdRows());
+}
+function exportBigShopProductsCSV(){
+  exportCSV('xenderbigshop_productos',['Producto','Tienda','Categoria','Subcategoria','EUR','USD','XAF','XOF','Stock','Estado'],_bigShopProdRows());
 }
 
 // ══════════════════════════════════════════════════════

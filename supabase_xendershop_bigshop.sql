@@ -40,6 +40,28 @@ CREATE TABLE IF NOT EXISTS bigshop_categories (
 );
 ALTER TABLE bigshop_categories DISABLE ROW LEVEL SECURITY;
 
+-- 4) BIGSHOP_PRODUCTS ─ catálogo multivendor: productos de todas las tiendas
+--    con categoría/subcategoría, precios en 4 monedas y estado de moderación.
+CREATE TABLE IF NOT EXISTS bigshop_products (
+  id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  store        TEXT,
+  name         TEXT NOT NULL,
+  category     TEXT,
+  subcategory  TEXT,
+  price_eur    NUMERIC(14,4) DEFAULT 0,
+  price_usd    NUMERIC(14,4) DEFAULT 0,
+  price_xaf    NUMERIC(14,2) DEFAULT 0,
+  price_xof    NUMERIC(14,2) DEFAULT 0,
+  stock        INTEGER DEFAULT 0,
+  status       TEXT DEFAULT 'pending',   -- pending | approved | hidden
+  origin       TEXT,
+  image        TEXT,
+  description  TEXT,
+  created_at   TIMESTAMPTZ DEFAULT now(),
+  updated_at   TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE bigshop_products DISABLE ROW LEVEL SECURITY;
+
 -- ── Verificación rápida (opcional) ─────────────────────────────────────
 -- SELECT column_name, data_type FROM information_schema.columns
 --   WHERE table_name='products' ORDER BY ordinal_position;
