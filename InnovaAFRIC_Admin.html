@@ -673,7 +673,6 @@ select.form-input option{background:var(--s2)}
     <div class="sb-link" onclick="nav('productos',this)"><span class="ic">🛍️</span><span data-i18n="nav:productos">Productos</span></div>
     <div class="sb-link" onclick="nav('chat',this)"><span class="ic">💬</span><span data-i18n="nav:chat">Chat</span></div>
     <div class="sb-link" onclick="nav('roles',this)"><span class="ic">🎭</span><span data-i18n="nav:roles">Roles</span></div>
-    <div class="sb-link" onclick="nav('apikeys',this)"><span class="ic">🔑</span><span data-i18n="nav:apikeys">API Keys</span></div>
     <div class="sb-link" onclick="nav('alerts',this)"><span class="ic">🔔</span><span data-i18n="nav:alerts">Alertas</span></div>
     <div class="sb-link" onclick="nav('analytics-adv',this)"><span class="ic">📈</span><span data-i18n="nav:analytics-adv">Analytics Avanzado</span></div>
     <div class="sb-link" onclick="nav('auditlog',this)"><span class="ic">📋</span><span data-i18n="nav:auditlog">Auditoría</span></div>
@@ -2064,20 +2063,7 @@ select.form-input option{background:var(--s2)}
     </div>
 
     <!-- API KEYS (Railway) -->
-    <div id="pg-apikeys" style="display:none">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">🔑 API Keys <span class="api-source-badge api-source-railway">● Railway</span></div><div class="card-sub">Clientes con acceso a la API</div></div>
-          <button class="topbar-btn btn-ghost" onclick="loadApiKeys()">↻</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Nombre</th><th>Client ID</th><th>Scopes</th><th>Estado</th><th>Creada</th></tr></thead>
-            <tbody id="tb-apikeys"><tr><td colspan="5" class="loading-cell"><div class="spin"></div></td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    <!-- Módulo API Keys duplicado eliminado — se usa "API keys socios" (pg-api-keys) -->
 
     <!-- ALERTAS -->
     <div id="pg-alerts" style="display:none">
@@ -11447,7 +11433,6 @@ nav=function(page,el){
   if(page==='productos')loadProductos();
   if(page==='chat')loadChatRooms();
   if(page==='roles')loadRoles();
-  if(page==='apikeys')loadApiKeys();
   if(page==='alerts'){loadAlerts();checkAlerts();}
   if(page==='aichat')initAIChat();
   if(page==='sync')checkSyncStatus();
@@ -13173,25 +13158,7 @@ function loadRoles(){
     </div>`).join('');
 }
 
-// ── API KEYS ──────────────────────────────────────────────
-async function loadApiKeys(){
-  try{
-
-  const r=await rwAPI('GET','/apikeys');
-  const tb=document.getElementById('tb-apikeys');
-  if(!r.success){tb.innerHTML='<tr><td colspan="5" class="td-empty">Railway no disponible</td></tr>';return;}
-  const keys=(r.data&&(r.data.keys||r.data.clients||r.data.items))||[];
-  if(!keys.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin API Keys registradas</td></tr>';return;}
-  tb.innerHTML=keys.map(k=>`<tr>
-    <td style="font-weight:600">${k.name||k.description||'—'}</td>
-    <td><span style="font-family:var(--mono);font-size:11px;background:var(--s3);padding:3px 8px;border-radius:5px">${k.clientId||'—'}</span></td>
-    <td style="font-size:11px;color:var(--muted)">${(k.scopes||'').toString()}</td>
-    <td>${k.active?'<span class="pill pill-green">Activa</span>':'<span class="pill pill-gray">Inactiva</span>'}</td>
-    <td style="font-size:11px;color:var(--muted)">${k.createdAt?fmt_date(k.createdAt):'—'}</td>
-  </tr>`).join('');
-
-  }catch(e){console.warn("loadApiKeys:",e);try{var el=document.querySelector("[id^='tb-']");if(el)el.innerHTML='<tr><td colspan="10" class="td-empty">Error cargando datos</td></tr>';}catch(_){}}
-}
+// (loadApiKeys eliminada — el módulo API Keys duplicado se quitó; se usa loadAPIKeys / pg-api-keys)
 
 // ── ALERTS ────────────────────────────────────────────────
 let ALL_ALERTS_DATA=JSON.parse(localStorage.getItem('ia_alerts_v18')||'[]');
@@ -13765,7 +13732,7 @@ const CMD_ITEMS=[
   {type:'nav',ic:'🛍️',label:'Productos',desc:'Catálogo de productos',page:'productos'},
   {type:'nav',ic:'💬',label:'Chat',desc:'Conversaciones',page:'chat'},
   {type:'nav',ic:'🎭',label:'Roles',desc:'Sistema de roles',page:'roles'},
-  {type:'nav',ic:'🔑',label:'API Keys',desc:'Claves de acceso',page:'apikeys'},
+  {type:'nav',ic:'🔑',label:'API Keys',desc:'Claves de acceso',page:'api-keys'},
   {type:'nav',ic:'🔔',label:'Alertas',desc:'Alertas del sistema',page:'alerts'},
   {type:'nav',ic:'📋',label:'Auditoría',desc:'Log de acciones',page:'auditlog'},
   {type:'nav',ic:'🔄',label:'Sincronización',desc:'Sync Supabase-Railway',page:'sync'},
@@ -23797,7 +23764,7 @@ var ALL_MODULES=[
   {id:'auditlog',label:'Auditoría',icon:'📋'},
   {id:'reports',label:'Informes',icon:'📊'},
   {id:'roles',label:'Roles',icon:'🎭'},
-  {id:'apikeys',label:'API Keys',icon:'🔑'},
+  {id:'api-keys',label:'API Keys',icon:'🔑'},
   {id:'products',label:'Productos',icon:'🛍️'},
   {id:'orders',label:'Pedidos',icon:'📦'},
   {id:'taxes',label:'Impuestos',icon:'🏛️'},
