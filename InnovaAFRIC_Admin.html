@@ -2207,7 +2207,7 @@ select.form-input option{background:var(--s2)}
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="topbar-btn btn-ghost" onclick="loadXenderShop()">↺ Actualizar</button>
             <button class="topbar-btn btn-ghost" onclick="exportXShopProductsCSV()">📥 CSV</button>
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-xendershop','🛒 InnovaAFRIC · XenderShop Admin')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-xendershop','🛒 InnovaAFRIC · XenderShop Admin')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-cyan" onclick="fillSubcatDatalist();openModal('m-xshop-product')">+ Nuevo producto</button>
           </div>
         </div>
@@ -2363,7 +2363,7 @@ select.form-input option{background:var(--s2)}
         <div class="card-head">
           <div><div class="card-title">🏷️ Categorías y subcategorías de XenderShop</div><div class="card-sub">Gestión de categorías y subcategorías</div></div>
           <div style="display:flex;gap:8px">
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-shop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderShop')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-shop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderShop')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openModal('m-new-cat')">+ Nueva categoría</button>
           </div>
         </div>
@@ -2395,7 +2395,7 @@ select.form-input option{background:var(--s2)}
               <option value="airtime">📱 Recarga</option>
               <option value="streaming">🎬 Streaming</option>
             </select>
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bills-providers','⚡ InnovaAFRIC · Proveedores Bills')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-bills-providers','⚡ InnovaAFRIC · Proveedores Bills')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openModal('m-new-provider')">+ Nuevo proveedor</button>
             <button class="topbar-btn btn-ghost" onclick="loadBillProviders()">↻</button>
           </div>
@@ -2421,7 +2421,7 @@ select.form-input option{background:var(--s2)}
               <option value="free">Básico Gratis</option>
               <option value="pro">Pro €29/mes</option>
             </select>
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bigshop-admin','🏪 InnovaAFRIC · XenderBigShop Admin')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-bigshop-admin','🏪 InnovaAFRIC · XenderBigShop Admin')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openNewStore()">+ Nueva tienda</button>
             <button class="topbar-btn btn-ghost" onclick="loadBigShopAdmin()">↻</button>
           </div>
@@ -2487,7 +2487,7 @@ select.form-input option{background:var(--s2)}
         <div class="card-head">
           <div><div class="card-title">🏷️ Categorías y subcategorías de XenderBigShop</div><div class="card-sub">Gestión de categorías y subcategorías del marketplace multivendor</div></div>
           <div style="display:flex;gap:8px">
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bigshop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderBigShop')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-bigshop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderBigShop')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openModal('m-new-bcat')">+ Nueva categoría</button>
           </div>
         </div>
@@ -2517,7 +2517,7 @@ select.form-input option{background:var(--s2)}
               <option value="local">En ruta local</option>
               <option value="delivered">Entregado</option>
             </select>
-            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-delivery-admin','🚚 InnovaAFRIC · XenderDelivery')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-delivery-admin','🚚 InnovaAFRIC · XenderDelivery')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-ghost" onclick="loadDeliveryAdmin()">↻</button>
           </div>
         </div>
@@ -2542,7 +2542,7 @@ select.form-input option{background:var(--s2)}
       <div class="card" style="margin-bottom:16px">
         <div class="card-head">
           <div><div class="card-title">💰 Configurar tarifas de publicidad</div><div class="card-sub">Precios editables por superadmin</div></div>
-          <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-ads-admin','📢 InnovaAFRIC · Publicidad')">📄 Imprimir PDF</button>
+          <button class="topbar-btn btn-ghost" onclick="printEcoPDF('pg-ads-admin','📢 InnovaAFRIC · Publicidad')">📄 Imprimir PDF</button>
           <button class="topbar-btn btn-primary" onclick="openModal('m-new-ad-admin')">+ Nuevo anuncio</button>
           <button class="topbar-btn btn-primary" onclick="saveAdPrices()">💾 Guardar tarifas</button>
         </div>
@@ -10310,7 +10310,9 @@ function exportTablePDF(title, headers, rows, subtitle){
   toast('Abriendo PDF','success');
 }
 // Imprime en PDF el contenido visible de un módulo del ecosistema (tabla o lista de tarjetas)
-function printModulePDF(pageId, title){
+// PDF de los módulos del ecosistema Xender (maneja tabla O lista visible).
+// Nombre propio para no chocar con la printModulePDF(titleOverride,tableId) preexistente.
+function printEcoPDF(pageId, title){
   var pg=document.getElementById(pageId); if(!pg){toast('Módulo no encontrado','warning');return;}
   var isVisible=function(el){return el.offsetParent!==null;};
   var clean=function(s){return String(s||'').trim().replace(/\s+/g,' ');};
