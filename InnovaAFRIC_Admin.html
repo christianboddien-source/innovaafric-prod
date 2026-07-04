@@ -682,10 +682,10 @@ select.form-input option{background:var(--s2)}
     <div class="sb-group" data-i18n="grp:Ecosistema-Xender">Ecosistema Xender</div>
     <div class="sb-link" onclick="nav('worldmap',this)"><span class="ic">🌍</span><span data-i18n="nav:worldmap">Mapa mundial</span></div>
     <div class="sb-link" onclick="nav('xendershop',this)"><span class="ic">🛒</span><span>XenderShop Admin</span><span class="badge-warn" id="sb-xshop-count" style="display:none">0</span></div>
-    <div class="sb-link" onclick="nav('shop-cats',this)"><span class="ic">🏷️</span><span data-i18n="nav:shop-cats">Categorías Shop</span></div>
-    <div class="sb-link" onclick="nav('bills-providers',this)"><span class="ic">⚡</span><span data-i18n="nav:bills-providers">Proveedores Bills</span></div>
-    <div class="sb-link" onclick="nav('bigshop-admin',this)"><span class="ic">🏪</span><span data-i18n="nav:bigshop-admin">XenderBigShop</span></div>
+    <div class="sb-link" onclick="nav('shop-cats',this)"><span class="ic">🏷️</span><span data-i18n="nav:shop-cats">Categorías y subcategorías de XenderShop</span></div>
+    <div class="sb-link" onclick="nav('bigshop-admin',this)"><span class="ic">🏪</span><span data-i18n="nav:bigshop-admin">XenderBigShop Admin</span></div>
     <div class="sb-link" onclick="nav('delivery-admin',this)"><span class="ic">🚚</span><span data-i18n="nav:delivery-admin">XenderDelivery</span></div>
+    <div class="sb-link" onclick="nav('bills-providers',this)"><span class="ic">⚡</span><span data-i18n="nav:bills-providers">Proveedores Bills</span></div>
     <div class="sb-link" onclick="nav('ads-admin',this)"><span class="ic">📢</span><span data-i18n="nav:ads-admin">Publicidad</span></div>
     <div class="sb-group" data-i18n="grp:Gestion-Rol">Gestión por Rol</div>
     <div class="sb-link" onclick="nav('representantes',this)"><span class="ic">🏅</span><span data-i18n="nav:representantes">Representantes</span></div>
@@ -2206,6 +2206,7 @@ select.form-input option{background:var(--s2)}
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="topbar-btn btn-ghost" onclick="loadXenderShop()">↺ Actualizar</button>
             <button class="topbar-btn btn-ghost" onclick="exportXShopProductsCSV()">📥 CSV</button>
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-xendershop','🛒 InnovaAFRIC · XenderShop Admin')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-cyan" onclick="openModal('m-xshop-product')">+ Nuevo producto</button>
           </div>
         </div>
@@ -2355,8 +2356,11 @@ select.form-input option{background:var(--s2)}
     <div id="pg-shop-cats" style="display:none">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">🏷️ Categorías XenderShop</div><div class="card-sub">Gestión de categorías y subcategorías</div></div>
-          <button class="topbar-btn btn-primary" onclick="openModal('m-new-cat')">+ Nueva categoría</button>
+          <div><div class="card-title">🏷️ Categorías y subcategorías de XenderShop</div><div class="card-sub">Gestión de categorías y subcategorías</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-shop-cats','🏷️ InnovaAFRIC · Categorías y subcategorías XenderShop')">📄 Imprimir PDF</button>
+            <button class="topbar-btn btn-primary" onclick="openModal('m-new-cat')">+ Nueva categoría</button>
+          </div>
         </div>
         <div style="padding:16px 20px" id="shop-cats-list"><div class="loading-cell"><div class="spin"></div></div></div>
       </div>
@@ -2386,6 +2390,7 @@ select.form-input option{background:var(--s2)}
               <option value="airtime">📱 Recarga</option>
               <option value="streaming">🎬 Streaming</option>
             </select>
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bills-providers','⚡ InnovaAFRIC · Proveedores Bills')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openModal('m-new-provider')">+ Nuevo proveedor</button>
             <button class="topbar-btn btn-ghost" onclick="loadBillProviders()">↻</button>
           </div>
@@ -2411,6 +2416,7 @@ select.form-input option{background:var(--s2)}
               <option value="free">Básico Gratis</option>
               <option value="pro">Pro €29/mes</option>
             </select>
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-bigshop-admin','🏪 InnovaAFRIC · XenderBigShop Admin')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-primary" onclick="openNewStore()">+ Nueva tienda</button>
             <button class="topbar-btn btn-ghost" onclick="loadBigShopAdmin()">↻</button>
           </div>
@@ -2465,6 +2471,7 @@ select.form-input option{background:var(--s2)}
               <option value="local">En ruta local</option>
               <option value="delivered">Entregado</option>
             </select>
+            <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-delivery-admin','🚚 InnovaAFRIC · XenderDelivery')">📄 Imprimir PDF</button>
             <button class="topbar-btn btn-ghost" onclick="loadDeliveryAdmin()">↻</button>
           </div>
         </div>
@@ -2489,6 +2496,7 @@ select.form-input option{background:var(--s2)}
       <div class="card" style="margin-bottom:16px">
         <div class="card-head">
           <div><div class="card-title">💰 Configurar tarifas de publicidad</div><div class="card-sub">Precios editables por superadmin</div></div>
+          <button class="topbar-btn btn-ghost" onclick="printModulePDF('pg-ads-admin','📢 InnovaAFRIC · Publicidad')">📄 Imprimir PDF</button>
           <button class="topbar-btn btn-primary" onclick="openModal('m-new-ad-admin')">+ Nuevo anuncio</button>
           <button class="topbar-btn btn-primary" onclick="saveAdPrices()">💾 Guardar tarifas</button>
         </div>
@@ -7762,7 +7770,7 @@ function nav(page,el){
     chat:'Chat 💬',roles:'Roles 🎭',apikeys:'API Keys 🔑',alerts:'Alertas 🔔',
     aichat:'Admin AI Chat 🤖',sync:'Sincronización 🔄',
     worldmap:'🌍 Mapa mundial en tiempo real',
-    'shop-cats':'🏷️ Categorías XenderShop',
+    'shop-cats':'🏷️ Categorías y subcategorías de XenderShop',
     'bills-providers':'⚡ Proveedores de servicios',
     'bigshop-admin':'🏪 XenderBigShop Admin',
     'delivery-admin':'🚚 XenderDelivery Admin',
@@ -10201,6 +10209,33 @@ function exportTablePDF(title, headers, rows, subtitle){
   win.document.write(html); win.document.close(); win.focus(); setTimeout(function(){win.print();},400);
   toast('Abriendo PDF','success');
 }
+// Imprime en PDF el contenido visible de un módulo del ecosistema (tabla o lista de tarjetas)
+function printModulePDF(pageId, title){
+  var pg=document.getElementById(pageId); if(!pg){toast('Módulo no encontrado','warning');return;}
+  var isVisible=function(el){return el.offsetParent!==null;};
+  var clean=function(s){return String(s||'').trim().replace(/\s+/g,' ');};
+  // 1) Si hay una tabla visible, exportar sus columnas (sin la de Acciones)
+  var table=[].slice.call(pg.querySelectorAll('table')).filter(isVisible)[0];
+  if(table){
+    var ths=[].slice.call(table.querySelectorAll('thead th')).map(function(th){return clean(th.textContent);});
+    var actIdx=ths.findIndex(function(h){return /acciones|actions/i.test(h);});
+    var headers=ths.filter(function(_,i){return i!==actIdx;});
+    var rows=[].slice.call(table.querySelectorAll('tbody tr')).filter(function(tr){
+      return !tr.querySelector('.loading-cell,.td-empty,.spin');
+    }).map(function(tr){
+      return [].slice.call(tr.querySelectorAll('td')).filter(function(_,i){return i!==actIdx;}).map(function(td){return clean(td.textContent);});
+    }).filter(function(r){return r.join('').length;});
+    exportTablePDF(title, headers.length?headers:['Detalle'], rows);
+    return;
+  }
+  // 2) Sin tabla: exportar el texto de cada tarjeta/ítem de la lista visible
+  var listSel={'pg-shop-cats':'#shop-cats-list','pg-bills-providers':'#bill-providers-list','pg-ads-admin':'#ads-admin-list'};
+  var container=(listSel[pageId]&&pg.querySelector(listSel[pageId]))||pg;
+  var rows=[].slice.call(container.children).filter(function(c){
+    return clean(c.textContent).length && !c.querySelector('.spin');
+  }).map(function(c){return [clean(c.textContent).slice(0,220)];});
+  exportTablePDF(title, ['Detalle'], rows);
+}
 function exportTxnsCSV(){
   var src=ALL_TXNS&&ALL_TXNS.length?ALL_TXNS:[];
   if(!src.length){toast('Carga las transacciones primero','warning');return;}
@@ -10713,13 +10748,18 @@ async function loadAdsAdmin(){
   loadAdsAdminList();
   updateAdsStats();
 }
+// 4 monedas del sistema InnovaAFRIC
+var AD_CURRENCIES=[['EUR','EUR €'],['USD','USD $'],['XAF','XAF · CFA CEMAC'],['XOF','XOF · CFA UEMOA']];
 function renderAdPricesEditor(){
   var el=document.getElementById('ad-prices-editor');if(!el)return;
-  var reachLabel={local:'📍 Local (XAF)',nacional:'🗺️ Nacional (XAF)',africa:'🌍 África Central (EUR)',global:'🌐 Global (EUR)'};
+  var reachLabel={local:'📍 Local',nacional:'🗺️ Nacional',africa:'🌍 África Central',global:'🌐 Global'};
   el.innerHTML=Object.entries(AD_PRICES_CONFIG).map(function(e){
     var reach=e[0],rp=e[1];
-    return'<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;align-items:center">'
-      +'<div style="font-size:12px;font-weight:600">'+reachLabel[reach]+'</div>'
+    var cur=rp.currency||'XAF';
+    var curSelect='<select class="form-input" id="adp-'+reach+'-cur" style="padding:6px 10px;font-size:11px;margin-top:4px">'
+      +AD_CURRENCIES.map(function(c){return'<option value="'+c[0]+'"'+(c[0]===cur?' selected':'')+'>'+c[1]+'</option>';}).join('')+'</select>';
+    return'<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;align-items:start">'
+      +'<div style="font-size:12px;font-weight:600">'+reachLabel[reach]+curSelect+'</div>'
       +[1,3,7,30].map(function(d){return'<div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">'+d+' día'+(d>1?'s':'')+'</label><input class="form-input" type="number" id="adp-'+reach+'-'+d+'" value="'+(rp[d]||0)+'" style="padding:6px 10px;font-size:12px"></div>';}).join('')
       +'</div>';
   }).join('');
@@ -10727,9 +10767,10 @@ function renderAdPricesEditor(){
 function saveAdPrices(){
   var reaches=['local','nacional','africa','global'];
   var days=[1,3,7,30];
-  var currencies={local:'XAF',nacional:'XAF',africa:'EUR',global:'EUR'};
   reaches.forEach(function(reach){
-    AD_PRICES_CONFIG[reach]={currency:currencies[reach]};
+    var curEl=document.getElementById('adp-'+reach+'-cur');
+    var currency=curEl?curEl.value:((AD_PRICES_CONFIG[reach]&&AD_PRICES_CONFIG[reach].currency)||'XAF');
+    AD_PRICES_CONFIG[reach]={currency:currency};
     days.forEach(function(d){
       var el=document.getElementById('adp-'+reach+'-'+d);
       if(el)AD_PRICES_CONFIG[reach][d]=parseFloat(el.value)||0;
@@ -13660,8 +13701,8 @@ var ADMIN_TR={
     'nav:accounting':'Contabilidad','nav:payroll':'Nómina Riders','nav:productos':'Productos',
     'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alertas',
     'nav:auditlog':'Auditoría','nav:sync':'Sincronización','nav:aichat':'Admin AI Chat',
-    'nav:worldmap':'Mapa mundial','nav:shop-cats':'Categorías Shop',
-    'nav:bills-providers':'Proveedores Bills','nav:bigshop-admin':'XenderBigShop',
+    'nav:worldmap':'Mapa mundial','nav:shop-cats':'Categorías y subcategorías de XenderShop',
+    'nav:bills-providers':'Proveedores Bills','nav:bigshop-admin':'XenderBigShop Admin',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicidad',
     'nav:representantes':'Representantes','nav:comercios':'Comercios',
     'nav:logistica-admin':'Logística','nav:marketing-admin':'Marketing',
@@ -13784,7 +13825,7 @@ var ADMIN_TR={
     'nav:accounting':'Accounting','nav:payroll':'Rider Payroll','nav:productos':'Products',
     'nav:chat':'Chat','nav:roles':'Roles','nav:apikeys':'API Keys','nav:alerts':'Alerts',
     'nav:auditlog':'Audit Log','nav:sync':'Sync','nav:aichat':'Admin AI Chat',
-    'nav:worldmap':'World Map','nav:shop-cats':'Shop Categories',
+    'nav:worldmap':'World Map','nav:shop-cats':'XenderShop Categories & Subcategories',
     'nav:bills-providers':'Bills Providers','nav:bigshop-admin':'XenderBigShop',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Advertising',
     'nav:representantes':'Representatives','nav:comercios':'Merchants',
@@ -13906,7 +13947,7 @@ var ADMIN_TR={
     'nav:accounting':'Comptabilité','nav:payroll':'Paie Riders','nav:productos':'Produits',
     'nav:chat':'Chat','nav:roles':'Rôles','nav:apikeys':'Clés API','nav:alerts':'Alertes',
     'nav:auditlog':"Journal d'audit",'nav:sync':'Synchronisation','nav:aichat':'Admin AI Chat',
-    'nav:worldmap':'Carte mondiale','nav:shop-cats':'Catégories Shop',
+    'nav:worldmap':'Carte mondiale','nav:shop-cats':'Catégories et sous-catégories XenderShop',
     'nav:bills-providers':'Fournisseurs Bills','nav:bigshop-admin':'XenderBigShop',
     'nav:delivery-admin':'XenderDelivery','nav:ads-admin':'Publicité',
     'nav:representantes':'Représentants','nav:comercios':'Commerces',
