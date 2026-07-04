@@ -20504,8 +20504,10 @@ async function loadPromoCodes(){
   var src=null;
   try{
     var apiPr=await rwAPI('GET','/promo-codes').catch(function(){return null;});
-    if(apiPr&&apiPr.length){src=apiPr;}
-    else{
+    if(apiPr&&apiPr.success&&Array.isArray(apiPr.data)){
+      src=apiPr.data.map(function(p){return {id:p.id||p.code,code:p.code,type:p.type||'porcentaje',value:Number(p.value||0),uses:Number(p.uses||0),limit:Number(p.maxUses||0),expires:p.expires?String(p.expires).slice(0,10):'—',status:p.status||'activo'};});
+      PROMOS_DATA.length=0; src.forEach(function(p){PROMOS_DATA.push(p);});
+    } else {
       var sbPr=await SB.from('promo_codes').select('id,code,type,value,uses_count,max_uses,expires_at,status,created_at').order('created_at',{ascending:false}).limit(200).catch(function(){return{data:null};});
       if(sbPr.data&&sbPr.data.length){
         var now=new Date();
@@ -20556,28 +20558,37 @@ function filterPromos(data){
     <td>${p.expires}</td>
     <td><span class="badge ${stC[p.status]||'badge-gray'}">${p.status}</span></td>
     <td>
-      ${p.status==='activo'?`<button class="btn-xs btn-red" onclick="deactivatePromo('${p.code}')">Desactivar</button>`:''}
+      <button class="btn-xs ${p.status==='activo'?'btn-red':'btn-green'}" onclick="togglePromo('${p.id||p.code}')">${p.status==='activo'?'Desactivar':'Activar'}</button>
       <button class="btn-xs btn-amber" onclick="copyPromoCode('${p.code}')">Copiar</button>
+      <button class="btn-xs btn-red" onclick="deletePromo('${p.id||p.code}','${p.code}')">🗑</button>
     </td>
   </tr>`).join('');
 }
 
-function createPromoCode(){
-  var f={code:(document.getElementById('promo-code').value||'').toUpperCase(),
-    type:document.getElementById('promo-type').value,value:document.getElementById('promo-value').value,
-    limit:document.getElementById('promo-limit').value,expires:document.getElementById('promo-expires').value,
-    scope:document.getElementById('promo-scope').value};
-  if(!f.code||!f.expires){toast('Código y fecha de expiración obligatorios','warning');return;}
-  rwAPI('POST','/promo-codes',f).then(()=>{
-    toast('Código creado: '+f.code,'success');closeModal('m-create-promo');loadPromoCodes();
-    logAdminAction('create_promo_code',f.code);
-  }).catch(()=>sbSave('promo_codes',f,'/promo-codes',loadPromoCodes,'m-create-promo','Código creado: '+f.code));
+async function createPromoCode(){
+  var code=((document.getElementById('promo-code')||{}).value||'').toUpperCase().trim();
+  var type=(document.getElementById('promo-type')||{}).value||'porcentaje';
+  var value=(document.getElementById('promo-value')||{}).value||'';
+  var maxUses=(document.getElementById('promo-limit')||{}).value||'';
+  var expires=(document.getElementById('promo-expires')||{}).value||'';
+  if(!code||!value){toast('Código y valor son obligatorios','warning');return;}
+  var r=await rwAPI('POST','/promo-codes',{code:code,type:type,value:value,maxUses:maxUses||undefined,expires:expires||undefined});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo crear'));return;}
+  toast('✅ Código creado: '+code,'success'); closeModal('m-create-promo'); loadPromoCodes();
+  if(typeof logAdminAction==='function')logAdminAction('create_promo_code',code);
 }
-function deactivatePromo(code){
-  var p=PROMOS_DATA.find(x=>x.code===code);if(!p)return;
-  p.status='expirado';toast('Código '+code+' desactivado','warning');filterPromos();
-  logAdminAction('deactivate_promo',code);
+async function togglePromo(id){
+  var r=await rwAPI('PATCH','/promo-codes/'+id+'/toggle',{});
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('Estado del código actualizado','success'); if(typeof logAdminAction==='function')logAdminAction('toggle_promo',id); loadPromoCodes();
 }
+async function deletePromo(id,code){
+  if(!confirm('¿Eliminar el código "'+(code||id)+'"?'))return;
+  var r=await rwAPI('DELETE','/promo-codes/'+id);
+  if(!r||!r.success){alert('❌ '+((r&&r.error&&(r.error.message||r.error))||'No se pudo'));return;}
+  toast('🗑 Código eliminado','success'); if(typeof logAdminAction==='function')logAdminAction('delete_promo',id); loadPromoCodes();
+}
+function deactivatePromo(id){ return togglePromo(id); }
 function copyPromoCode(code){
   navigator.clipboard&&navigator.clipboard.writeText(code).then(()=>toast('Código copiado: '+code,'success')).catch(()=>toast(code,'info'));
 }
