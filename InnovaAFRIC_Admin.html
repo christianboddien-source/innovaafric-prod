@@ -13180,7 +13180,7 @@ async function loadApiKeys(){
   const r=await rwAPI('GET','/apikeys');
   const tb=document.getElementById('tb-apikeys');
   if(!r.success){tb.innerHTML='<tr><td colspan="5" class="td-empty">Railway no disponible</td></tr>';return;}
-  const keys=r.data.clients||r.data.items||[];
+  const keys=(r.data&&(r.data.keys||r.data.clients||r.data.items))||[];
   if(!keys.length){tb.innerHTML='<tr><td colspan="5" class="td-empty">Sin API Keys registradas</td></tr>';return;}
   tb.innerHTML=keys.map(k=>`<tr>
     <td style="font-weight:600">${k.name||k.description||'—'}</td>
@@ -20246,25 +20246,48 @@ function suspendWL(id){
 /* ── API KEYS ───────────────────────────────────────────────── */
 async function loadAPIKeys(){
   var src=null;
+  // 1) Fuente de verdad: Railway (modelo apiKey vía /admin/api-keys)
   try{
-    var sbAK=await SB.from('api_keys').select('id,partner_name,key_prefix,environment,permissions,call_count,last_used_at,created_at,status').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
-    if(sbAK.data&&sbAK.data.length){
-      src=sbAK.data.map(function(k){
+    var r=await rwAPI('GET','/admin/api-keys');
+    var rows=r&&r.success?(Array.isArray(r.data)?r.data:(r.data&&(r.data.keys||r.data.items))||[]):null;
+    if(rows&&rows.length){
+      src=rows.map(function(k){
         return{
-          partner:k.partner_name||'—',
-          key:(k.key_prefix||'ik_live_')+'...masked',
+          id:k.id,
+          partner:k.partnerName||k.partner_name||'—',
+          key:(k.keyPrefix||k.key_prefix||'ik_live_...'),
           env:k.environment||'production',
           perms:k.permissions||'read',
-          calls:Number(k.call_count||0),
-          lastUse:k.last_used_at?k.last_used_at.slice(0,10):'—',
-          created:k.created_at?k.created_at.slice(0,10):'—',
+          calls:Number(k.callCount||k.call_count||0),
+          lastUse:(k.lastUsedAt||k.last_used_at)?String(k.lastUsedAt||k.last_used_at).slice(0,10):'—',
+          created:(k.createdAt||k.created_at)?String(k.createdAt||k.created_at).slice(0,10):'—',
           status:k.status||'activa'
         };
       });
-      APIKEYS_DATA.length=0;
-      src.forEach(function(k){APIKEYS_DATA.push(k);});
     }
   }catch(e){}
+  // 2) Fallback: Supabase api_keys
+  if(!src){
+    try{
+      var sbAK=await SB.from('api_keys').select('id,partner_name,key_prefix,environment,permissions,call_count,last_used_at,created_at,status').order('created_at',{ascending:false}).limit(100).catch(function(){return{data:null};});
+      if(sbAK.data&&sbAK.data.length){
+        src=sbAK.data.map(function(k){
+          return{
+            id:k.id,
+            partner:k.partner_name||'—',
+            key:(k.key_prefix||'ik_live_')+'...masked',
+            env:k.environment||'production',
+            perms:k.permissions||'read',
+            calls:Number(k.call_count||0),
+            lastUse:k.last_used_at?k.last_used_at.slice(0,10):'—',
+            created:k.created_at?k.created_at.slice(0,10):'—',
+            status:k.status||'activa'
+          };
+        });
+      }
+    }catch(e){}
+  }
+  if(src){APIKEYS_DATA.length=0;src.forEach(function(k){APIKEYS_DATA.push(k);});}
   filterAPIKeys(src||APIKEYS_DATA);
 }
 
@@ -20286,7 +20309,7 @@ function filterAPIKeys(data){
     <td>${k.lastUse}</td><td>${k.created}</td>
     <td><span class="badge ${k.status==='activa'?'badge-green':'badge-red'}">${k.status}</span></td>
     <td>
-      ${k.status==='activa'?`<button class="btn-xs btn-red" onclick="revokeAPIKey('${k.partner}')">Revocar</button>`:''}
+      ${k.status==='activa'?`<button class="btn-xs btn-red" onclick="revokeAPIKey('${k.id||''}','${(k.partner||'').replace(/'/g,'')}')">Revocar</button>`:''}
       <button class="btn-xs btn-amber" onclick="copyAPIKey('${k.key}')">Copiar</button>
     </td>
   </tr>`).join('');
@@ -20303,22 +20326,32 @@ async function generateAPIKey(){
   var keyPrefix=fullKey.slice(0,12)+'...';
   var newKey={partner_name:partner,key_prefix:keyPrefix,full_key:fullKey,environment:env,
     permissions:'read',call_count:0,rate_limit:parseInt(limit)||1000,status:'activa',created_at:new Date().toISOString()};
+  var savedToRailway=false;
   try{
     var r=await rwAPI('POST','/admin/api-keys',{partner,env,key:fullKey,limit});
-    if(r&&r.success){}
+    if(r&&r.success){savedToRailway=true;}
     else throw new Error('Railway fallback');
   }catch(e){
     try{await SB.from('api_keys').insert(newKey);}catch(e2){localStorage.setItem('ia_apikey_'+Date.now(),JSON.stringify(newKey));}
   }
-  APIKEYS_DATA.push({partner,key:keyPrefix,env,perms:'read',calls:0,lastUse:'—',created:new Date().toISOString().slice(0,10),status:'activa'});
   toast('🔑 API key generada: '+keyPrefix,'success');
   closeModal('m-create-apikey');
-  filterAPIKeys();
   logAdminAction('generate_api_key',partner+' ('+env+')');
+  // Refrescar desde la fuente real para traer el registro con su id
+  if(savedToRailway){loadAPIKeys();}
+  else{APIKEYS_DATA.push({partner,key:keyPrefix,env,perms:'read',calls:0,lastUse:'—',created:new Date().toISOString().slice(0,10),status:'activa'});filterAPIKeys();}
 }
-function revokeAPIKey(partner){
-  var k=APIKEYS_DATA.find(x=>x.partner===partner&&x.status==='activa');if(!k)return;
-  k.status='revocada';toast('API key revocada para '+partner,'warning');filterAPIKeys();
+async function revokeAPIKey(id,partner){
+  if(!confirm('¿Revocar la API key de '+(partner||'este socio')+'?'))return;
+  // Railway real si tenemos id; si no, degradar a mock local
+  if(id){
+    try{
+      var r=await rwAPI('DELETE','/admin/api-keys/'+id);
+      if(r&&r.success){toast('🔑 API key revocada','success');logAdminAction('revoke_api_key',partner+' ('+id+')');loadAPIKeys();return;}
+    }catch(e){}
+  }
+  var k=APIKEYS_DATA.find(x=>x.partner===partner&&x.status==='activa');if(k){k.status='revocada';}
+  toast('API key revocada para '+partner,'warning');filterAPIKeys();
   logAdminAction('revoke_api_key',partner);
 }
 function copyAPIKey(key){
