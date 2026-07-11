@@ -8505,7 +8505,6 @@ async function deleteUser(){
   logAdminAction('delete_user','Usuario '+id+' eliminado');
   setTimeout(()=>{loadDashboard();loadUsers();},300);
 }
-}
 async function resetUserPIN(){
   const id=document.getElementById('m-edit-id').value;
   const email=document.getElementById('m-edit-email').textContent;
