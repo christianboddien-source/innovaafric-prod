@@ -8485,12 +8485,26 @@ async function saveEdit(){
 async function deleteUser(){
   if(!confirm('¿Eliminar este usuario?'))return;
   const id=document.getElementById('m-edit-id').value;
-  await SB.from('wallets').delete().eq('user_id',id);
-  await SB.from('users').delete().eq('id',id);
+  const isSupabaseId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+  if(!isSupabaseId){
+    toast('❌ Este usuario vive solo en Railway (ID '+id+') y no se puede borrar desde aquí. Bórralo desde la consola de Railway.','error');
+    return;
+  }
+
+  const {error:werr} = await SB.from('wallets').delete().eq('user_id',id);
+  const {error:uerr} = await SB.from('users').delete().eq('id',id);
+  if(werr || uerr){
+    toast('❌ Error al eliminar: '+((uerr||werr).message),'error');
+    console.error('deleteUser error', werr, uerr);
+    return;
+  }
+
   closeModal('m-edit-user');
-  toast('Usuario eliminado','error');
+  toast('✅ Usuario eliminado','success');
   logAdminAction('delete_user','Usuario '+id+' eliminado');
   setTimeout(()=>{loadDashboard();loadUsers();},300);
+}
 }
 async function resetUserPIN(){
   const id=document.getElementById('m-edit-id').value;
