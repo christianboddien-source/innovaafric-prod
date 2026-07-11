@@ -7712,15 +7712,16 @@ function getUserCurrency(country,userId){
   return COUNTRY_CURRENCY[country]||'EUR';
 }
 function formatUserBalance(w,country,userId){
-  const cur=getUserCurrency(country,userId);
-  const sym=CURRENCY_SYMBOL[cur]||cur;
-  const rate=CURRENCY_RATE[cur]||1;
   const eur=Number(w&&w.eur||0),xaf=Number(w&&w.xaf||0),usd=Number(w&&w.usd||0);
-  let amount=0;
-  if(cur==='EUR')amount=eur;
-  else if(cur==='XAF'||cur==='XOF')amount=xaf>0?xaf:eur*rate;
-  else if(cur==='USD')amount=usd>0?usd:eur*rate;
-  else amount=eur;
+  let cur=getUserCurrency(country,userId);
+  const hasBalanceInCur = (cur==='EUR'&&eur>0)||((cur==='XAF'||cur==='XOF')&&xaf>0)||(cur==='USD'&&usd>0);
+  if(!hasBalanceInCur){
+    if(xaf>0)cur='XAF';
+    else if(usd>0)cur='USD';
+    else if(eur>0)cur='EUR';
+  }
+  const sym=CURRENCY_SYMBOL[cur]||cur;
+  let amount = cur==='EUR'?eur : (cur==='XAF'||cur==='XOF')?xaf : cur==='USD'?usd : eur;
   if(amount>=1000000)return sym+(amount/1000000).toFixed(2)+'M '+(cur!=='EUR'?cur:'');
   if(amount>=1000&&(cur==='XAF'||cur==='XOF'))return sym+Math.round(amount/1000)+'k '+cur;
   if(cur==='EUR'||cur==='USD'||cur==='GBP')return sym+amount.toFixed(2);
