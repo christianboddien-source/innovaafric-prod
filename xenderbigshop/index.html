@@ -81,7 +81,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(224,146,26,0.15);border:1px solid rgba(224,146,26,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#E0921A;text-decoration:none;margin-left:8px;';
-    badge.textContent = '👤 '+(XB_SESSION.name||XB_SESSION.email||'Usuario').split(' ')[0];
+    badge.textContent = '👤 '+(XB_SESSION.name?XB_SESSION.name.split(' ')[0]:'Mi cuenta');
     nav.appendChild(badge);
   }
 
@@ -1176,28 +1176,22 @@ function toggleFaq(header){
   <p style="font-size:15px;color:#6b7a8d;max-width:520px;margin:0 auto" data-i18n="contact_p">Open your store, partner with us, or get help with your account. We are here.</p>
   <div class="contact-grid">
     <div class="contact-card">
-      <div class="contact-icon">🏪</div>
-      <div class="contact-label" data-i18n="contact_vend">Vendor Onboarding</div>
-      <a href="mailto:vendors@xenderbigshop.com" class="contact-email">vendors@xenderbigshop.com</a>
-      <p class="contact-desc" data-i18n="contact_vend_d">Open your store and start selling to Africa in 48 hours.</p>
+      <div class="contact-icon">📧</div>
+      <div class="contact-label">Email</div>
+      <a href="mailto:contact@xenderbigshop.com" class="contact-email">contact@xenderbigshop.com</a>
+      <p class="contact-desc">Escríbenos para cualquier consulta.</p>
     </div>
     <div class="contact-card">
-      <div class="contact-icon">📦</div>
-      <div class="contact-label" data-i18n="contact_log">Logistics & B2B</div>
-      <a href="mailto:logistics@innovaafric.com" class="contact-email">logistics@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_log_d">Wholesale, bulk shipping, and B2B import from Asia.</p>
+      <div class="contact-icon">📞</div>
+      <div class="contact-label">Teléfono / WhatsApp</div>
+      <span class="contact-email" style="opacity:.5">Próximamente</span>
+      <p class="contact-desc">Lo activaremos muy pronto.</p>
     </div>
     <div class="contact-card">
-      <div class="contact-icon">🤝</div>
-      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
-      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_par_d">Become a Circular or regional distribution partner.</p>
-    </div>
-    <div class="contact-card">
-      <div class="contact-icon">💼</div>
-      <div class="contact-label" data-i18n="contact_inv">Investors</div>
-      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_inv_d">Seed round open. Deck on request.</p>
+      <div class="contact-icon">📍</div>
+      <div class="contact-label">Dirección</div>
+      <span class="contact-email" style="opacity:.5">Próximamente</span>
+      <p class="contact-desc">Calle · Nº · Piso · Código postal · Ciudad — pronto.</p>
     </div>
   </div>
 </section>
