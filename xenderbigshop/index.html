@@ -81,7 +81,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(224,146,26,0.15);border:1px solid rgba(224,146,26,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#E0921A;text-decoration:none;margin-left:8px;';
-    badge.textContent = '👤 '+XB_SESSION.name.split(' ')[0];
+    badge.textContent = '👤 '+(XB_SESSION.name||XB_SESSION.email||'Usuario').split(' ')[0];
     nav.appendChild(badge);
   }
 
