@@ -81,7 +81,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#F59E0B;text-decoration:none;margin-left:8px;';
-    badge.textContent = '👤 '+(XD_SESSION.name||XD_SESSION.email||'Usuario').split(' ')[0];
+    badge.textContent = '👤 '+(XD_SESSION.name?XD_SESSION.name.split(' ')[0]:'Mi cuenta');
     nav.appendChild(badge);
   }
 
@@ -862,28 +862,22 @@ function rdCalc(v){
   <p style="font-size:15px;color:var(--muted);max-width:520px;margin:0 auto" data-i18n="contact_p">Become a rider, integrate our API, or partner with us to grow delivery across Africa.</p>
   <div class="contact-grid">
     <div class="contact-card">
-      <div class="contact-icon">🏍️</div>
-      <div class="contact-label" data-i18n="contact_rider">Become a Rider</div>
-      <a href="mailto:riders@xenderdelivery.com" class="contact-email">riders@xenderdelivery.com</a>
-      <p class="contact-desc" data-i18n="contact_rider_d">Join our fleet, earn daily, work flexible hours. Apply now.</p>
+      <div class="contact-icon">📧</div>
+      <div class="contact-label">Email</div>
+      <a href="mailto:contact@xenderdelivery.com" class="contact-email">contact@xenderdelivery.com</a>
+      <p class="contact-desc">Escríbenos para cualquier consulta.</p>
     </div>
     <div class="contact-card">
-      <div class="contact-icon">🏢</div>
-      <div class="contact-label" data-i18n="contact_biz">Business & Merchants</div>
-      <a href="mailto:delivery@innovaafric.com" class="contact-email">delivery@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_biz_d">Same-day delivery, API integration, and corporate accounts.</p>
+      <div class="contact-icon">📞</div>
+      <div class="contact-label">Teléfono / WhatsApp</div>
+      <span class="contact-email" style="opacity:.5">Próximamente</span>
+      <p class="contact-desc">Lo activaremos muy pronto.</p>
     </div>
     <div class="contact-card">
-      <div class="contact-icon">🤝</div>
-      <div class="contact-label" data-i18n="contact_par">Partnerships</div>
-      <a href="mailto:partners@innovaafric.com" class="contact-email">partners@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_par_d">Circulares Autorizadas and last-mile logistics partnerships.</p>
-    </div>
-    <div class="contact-card">
-      <div class="contact-icon">💼</div>
-      <div class="contact-label" data-i18n="contact_inv">Investors</div>
-      <a href="mailto:investors@innovaafric.com" class="contact-email">investors@innovaafric.com</a>
-      <p class="contact-desc" data-i18n="contact_inv_d">Seed round open. Deck and financials on request.</p>
+      <div class="contact-icon">📍</div>
+      <div class="contact-label">Dirección</div>
+      <span class="contact-email" style="opacity:.5">Próximamente</span>
+      <p class="contact-desc">Calle · Nº · Piso · Código postal · Ciudad — pronto.</p>
     </div>
   </div>
 </section>
