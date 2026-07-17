@@ -59,7 +59,7 @@
       if(data){
         var pct=data.status==='delivered'?100:data.status==='shipping'?65:data.status==='processing'?30:10;
         var icon=data.status==='delivered'?'✅':data.status==='shipping'?'🚴':'📦';
-        res.innerHTML='<div style="text-align:left;padding:20px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:36px;">'+icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+data.status.toUpperCase()+'</div><div style="font-size:13px;color:#F59E0B;">Ref: '+data.reference+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:16px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+pct+'%;border-radius:12px;"></div></div><div style="font-size:13px;color:rgba(255,255,255,0.6);">Total: '+(data.currency||'EUR')+' '+(data.total||'—')+'</div></div>';
+        res.innerHTML='<div style="text-align:left;padding:20px;"><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:36px;">'+icon+'</span><div><div style="font-size:18px;font-weight:900;color:#fff;">'+(data.status||'').toUpperCase()+'</div><div style="font-size:13px;color:#F59E0B;">Ref: '+data.reference+'</div></div></div><div style="background:rgba(255,255,255,0.06);border-radius:12px;height:10px;margin-bottom:16px;overflow:hidden;"><div style="background:#F59E0B;height:100%;width:'+pct+'%;border-radius:12px;"></div></div><div style="font-size:13px;color:rgba(255,255,255,0.6);">Total: '+(data.currency||'EUR')+' '+(data.total||'—')+'</div></div>';
         return;
       }
     }catch(e){}
@@ -81,7 +81,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#F59E0B;text-decoration:none;margin-left:8px;';
-    badge.textContent = '👤 '+XD_SESSION.name.split(' ')[0];
+    badge.textContent = '👤 '+(XD_SESSION.name||XD_SESSION.email||'Usuario').split(' ')[0];
     nav.appendChild(badge);
   }
 
