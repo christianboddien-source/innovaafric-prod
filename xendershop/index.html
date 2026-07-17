@@ -168,7 +168,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(255,64,16,0.15);border:1px solid rgba(255,64,16,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF4010;text-decoration:none;';
-    badge.textContent = '👤 '+XS_SESSION.name.split(' ')[0];
+    badge.textContent = '👤 '+(XS_SESSION.name||XS_SESSION.email||'Usuario').split(' ')[0];
     nav.insertBefore(badge, nav.firstChild);
   }
 
@@ -1326,6 +1326,10 @@ function setLang(l){
   // sort options
   var fs=document.getElementById('f-sort');
   if(fs&&T.sort_lbl){var o=fs.options;if(o[0])o[0].textContent=T.sort_lbl;if(o[1])o[1].textContent=T.sort_low;if(o[2])o[2].textContent=T.sort_high;if(o[3])o[3].textContent=T.sort_top;if(o[4])o[4].textContent=T.sort_pop;}
+  // search category dropdown (Todas/All/Toutes + categorías)
+  var _scat={es:['Todas','Electrónica','Moda','Hogar','Belleza','Deportes','Bebé','Automóvil'],en:['All','Electronics','Fashion','Home','Beauty','Sports','Baby','Auto'],fr:['Toutes','Électronique','Mode','Maison','Beauté','Sports','Bébé','Auto']};
+  var _sc=document.querySelector('.search-cats');
+  if(_sc){var _so=_sc.options,_sa=_scat[l]||_scat.es;for(var _si=0;_si<_so.length&&_si<_sa.length;_si++)_so[_si].textContent=_sa[_si];}
   // all data-i18n elements
   document.querySelectorAll('[data-i18n]').forEach(function(el){
     var k=el.getAttribute('data-i18n');
