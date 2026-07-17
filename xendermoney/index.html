@@ -118,7 +118,7 @@
       var dash = document.getElementById('xm-dashboard');
       if(!dash) return;
       dash.style.display = 'block';
-      document.getElementById('xm-dash-name').textContent = session.name.split(' ')[0];
+      document.getElementById('xm-dash-name').textContent = (session.name || session.email || 'Usuario').split(' ')[0];
       document.getElementById('xm-dash-email').textContent = session.email;
       document.getElementById('xm-dash-code').textContent = session.ia_code||'—';
       // Load wallet balance
