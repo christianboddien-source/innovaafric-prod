@@ -168,7 +168,7 @@
     var badge = document.createElement('a');
     badge.href = '../xendermoney/index.html';
     badge.style.cssText = 'background:rgba(255,64,16,0.15);border:1px solid rgba(255,64,16,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF4010;text-decoration:none;';
-    badge.textContent = '👤 '+(XS_SESSION.name||XS_SESSION.email||'Usuario').split(' ')[0];
+    badge.textContent = '👤 '+(XS_SESSION.name?XS_SESSION.name.split(' ')[0]:'Mi cuenta');
     nav.insertBefore(badge, nav.firstChild);
   }
 
@@ -1053,6 +1053,32 @@ setLang=function(l){
   <p style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:10px;" data-i18n="nl_foot">Sin spam. Puedes cancelar en cualquier momento.</p>
 </div>
 
+<!-- ═══════════ CONTACTO ═══════════ -->
+<section id="contact" style="background:#fff8f5;padding:56px 20px;text-align:center;">
+  <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#FF4010;text-transform:uppercase;margin-bottom:8px;">Contacto</div>
+  <h2 style="font-size:clamp(1.3rem,2.4vw,2rem);font-weight:900;color:#1a1a1a;margin:0 0 28px;">Estamos para ayudarte</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;max-width:860px;margin:0 auto;">
+    <div style="background:#fff;border:1px solid #f0e0d8;border-radius:14px;padding:24px 18px;box-shadow:0 3px 16px rgba(0,0,0,.06);">
+      <div style="font-size:26px;margin-bottom:8px;">📧</div>
+      <div style="font-size:11px;font-weight:700;color:#FF4010;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Email</div>
+      <a href="mailto:contact@xendershop.com" style="display:block;font-size:13px;font-weight:700;color:#7c3800;text-decoration:none;word-break:break-all;">contact@xendershop.com</a>
+      <p style="font-size:12px;color:#6b7a8d;margin-top:6px;">Escríbenos para cualquier consulta.</p>
+    </div>
+    <div style="background:#fff;border:1px solid #f0e0d8;border-radius:14px;padding:24px 18px;box-shadow:0 3px 16px rgba(0,0,0,.06);">
+      <div style="font-size:26px;margin-bottom:8px;">📞</div>
+      <div style="font-size:11px;font-weight:700;color:#FF4010;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Teléfono / WhatsApp</div>
+      <span style="font-size:13px;font-weight:700;color:#aaa;">Próximamente</span>
+      <p style="font-size:12px;color:#6b7a8d;margin-top:6px;">Lo activaremos muy pronto.</p>
+    </div>
+    <div style="background:#fff;border:1px solid #f0e0d8;border-radius:14px;padding:24px 18px;box-shadow:0 3px 16px rgba(0,0,0,.06);">
+      <div style="font-size:26px;margin-bottom:8px;">📍</div>
+      <div style="font-size:11px;font-weight:700;color:#FF4010;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Dirección</div>
+      <span style="font-size:13px;font-weight:700;color:#aaa;">Próximamente</span>
+      <p style="font-size:12px;color:#6b7a8d;margin-top:6px;">Calle · Nº · Piso · Código postal · Ciudad — pronto.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <div class="footer-inner">
@@ -1095,7 +1121,7 @@ setLang=function(l){
         <a href="#">Chat 24/7</a>
         <a href="#" data-i18n="foot_privacy">Política de Privacidad</a>
         <a href="#" data-i18n="foot_terms">Términos de Uso</a>
-        <a href="#" data-i18n="foot_contact">Contacto</a>
+        <a href="#contact" data-i18n="foot_contact">Contacto</a>
       </div>
     </div>
     <div class="footer-bottom">
