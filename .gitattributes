@@ -1,0 +1,24 @@
+# Se edita desde Windows, pero esto se ejecuta en Linux (Docker, IONOS).
+# Un Dockerfile guardado con CRLF falla en Alpine con errores de
+# "command not found" que no hay quien diagnostique.
+#
+# La regla se limita a propósito a los archivos que corren en el servidor.
+# No se pone `* text=auto` para no renormalizar de golpe todo el HTML del
+# repo: funcionaría igual, pero convertiría cualquier cambio pequeño en un
+# diff de cien archivos.
+
+Dockerfile          text eol=lf
+*.sh                text eol=lf
+docker-compose.yml  text eol=lf
+Caddyfile           text eol=lf
+*.sql               text eol=lf
+services/**         text eol=lf
+
+# Binarios: que Git no los toque.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
