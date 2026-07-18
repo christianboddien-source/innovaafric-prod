@@ -2593,7 +2593,28 @@
   }
 
   // Newsletter
-  async function nlInnova(e){e.preventDefault();var em=document.getElementById('nl-innova').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent=(TR[LANG]||TR.en).nl_subscribing;btn.disabled=true;}try{var SB=window.SB||window.supabaseClient;if(SB)await SB.from('newsletter_subscribers').insert({email:em,source:'innovaafric',created_at:new Date().toISOString()});}catch(err){}alert((TR[LANG]||TR.en).nl_ok+' '+em);document.getElementById('nl-innova').value='';if(btn){btn.textContent=(TR[LANG]||TR.en).nl_btn;btn.disabled=false;}}
+  // OJO: la tabla `newsletter_subscribers` NO existe en Supabase. Hasta que la
+  // cree supabase_fix_esquema.sql esto fallará siempre, y es mejor decirlo que
+  // fingir que se ha guardado el correo.
+  async function nlInnova(e){
+    e.preventDefault();
+    var em=document.getElementById('nl-innova').value.trim();
+    if(!em)return;
+    var T=TR[LANG]||TR.en;
+    var btn=e.target.querySelector('button[type="submit"]');
+    if(btn){btn.textContent=T.nl_subscribing;btn.disabled=true;}
+    var SB=window.SB||window.supabaseClient;
+    var res=SB?await SB.from('newsletter_subscribers').insert({email:em,source:'innovaafric',created_at:new Date().toISOString()})
+              :{error:{message:'cliente Supabase no disponible'}};
+    if(btn){btn.textContent=T.nl_btn;btn.disabled=false;}
+    if(res.error){
+      console.error('[InnovaAFRIC] No se pudo guardar la suscripción:', res.error);
+      alert('⚠ La suscripción no está disponible ahora mismo. Vuelve a intentarlo en unas horas.');
+      return;
+    }
+    alert(T.nl_ok+' '+em);
+    document.getElementById('nl-innova').value='';
+  }
 </script>
 
 <!-- ═══ COOKIE BANNER ═══ -->

@@ -38,15 +38,22 @@
     });
     var btn=f.querySelector('button[type="submit"]');
     if(btn){btn.textContent='Enviando…';btn.disabled=true;}
-    try{
-      await SB.from('riders').insert({name:name||'Nuevo rider',phone:phone||null,city:city||null,vehicle_type:vehicle||null,status:'pending',is_available:false,created_at:new Date().toISOString()});
-      xdToast('✅ ¡Solicitud de rider enviada! Te contactamos en 48h.','success');
-      f.reset();
-    }catch(err){
-      xdToast('✅ ¡Solicitud recibida! Te contactamos en 48h.','success');
-      f.reset();
-    }
+    // supabase-js devuelve el error en res.error, no lo lanza: el catch de
+    // antes no saltaba nunca y siempre se mostraba "✅ ¡Solicitud recibida!",
+    // aunque la solicitud se hubiera perdido.
+    var res = await SB.from('riders').insert({
+      name:name||'Nuevo rider', phone:phone||null, city:city||null,
+      vehicle_type:vehicle||null, status:'pending', is_available:false,
+      created_at:new Date().toISOString()
+    });
     if(btn){btn.textContent='Enviar solicitud →';btn.disabled=false;}
+    if(res.error){
+      console.error('[XenderDelivery] No se pudo registrar el rider:', res.error);
+      xdToast('⚠ No hemos podido enviar tu solicitud. Inténtalo de nuevo.','error');
+      return;
+    }
+    xdToast('✅ ¡Solicitud de rider enviada! Te contactamos en 48h.','success');
+    f.reset();
   }
 
   async function trackOrder(){
@@ -1129,7 +1136,25 @@ if(!localStorage.getItem('cookie_xd')){document.getElementById('cookie-banner').
 function cookieAccept(){localStorage.setItem('cookie_xd','all');document.getElementById('cookie-banner').style.display='none';}
 function cookieDecline(){localStorage.setItem('cookie_xd','essential');document.getElementById('cookie-banner').style.display='none';}
 function toggleFloat(){var m=document.getElementById('float-menu');var b=document.getElementById('float-btn');var open=m.style.display==='block';m.style.display=open?'none':'block';b.textContent=open?'💬':'✕';}
-async function nlXd(e){e.preventDefault();var em=document.getElementById('nl-xd').value.trim();if(!em)return;var btn=e.target.querySelector('button[type="submit"]');if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}try{await SB.from('newsletter_subscribers').insert({email:em,source:'xenderdelivery',created_at:new Date().toISOString()});}catch(err){}xdToast('✅ ¡Suscrito en XenderDelivery! Novedades en '+em,'success');document.getElementById('nl-xd').value='';if(btn){btn.textContent='Suscribirme →';btn.disabled=false;}}
+// OJO: la tabla `newsletter_subscribers` NO existe en Supabase. Hasta que la
+// cree supabase_fix_esquema.sql esto fallará siempre, y es mejor decirlo que
+// fingir que se ha guardado el correo.
+async function nlXd(e){
+  e.preventDefault();
+  var em=document.getElementById('nl-xd').value.trim();
+  if(!em)return;
+  var btn=e.target.querySelector('button[type="submit"]');
+  if(btn){btn.textContent='Suscribiendo…';btn.disabled=true;}
+  var res=await SB.from('newsletter_subscribers').insert({email:em,source:'xenderdelivery',created_at:new Date().toISOString()});
+  if(btn){btn.textContent='Suscribirme →';btn.disabled=false;}
+  if(res.error){
+    console.error('[XenderDelivery] No se pudo guardar la suscripción:', res.error);
+    xdToast('⚠ La suscripción no está disponible ahora mismo. Vuelve a intentarlo en unas horas.','error');
+    return;
+  }
+  xdToast('✅ ¡Suscrito en XenderDelivery! Novedades en '+em,'success');
+  document.getElementById('nl-xd').value='';
+}
 function toggleHamXd(){var o=document.getElementById('ham-xd');var b=document.getElementById('ham-btn-xd');var open=o.classList.contains('open');o.classList.toggle('open');if(b)b.textContent=open?'☰':'✕';}
 /* trackOrder defined in head — Supabase-backed with demo fallback */
 /* submitRiderReg defined in head — Supabase-backed */

@@ -78,8 +78,13 @@
           created_at: now
         }).select().single();
         if(error) throw error;
-        // Create wallet
-        await SB.from('wallets').insert({user_id: newUser.id, currency: 'EUR', balance: 0, created_at: now});
+        // Create wallet. Se comprueba el error: antes no, y una cuenta sin
+        // monedero llegaba al panel como si todo hubiese ido bien.
+        var wRes = await SB.from('wallets').insert({user_id: newUser.id, currency: 'EUR', balance: 0, created_at: now});
+        if(wRes.error){
+          console.error('[XenderMoney] Cuenta creada pero el monedero no:', wRes.error);
+          alert('⚠ Tu cuenta se ha creado, pero no hemos podido abrir tu monedero. Escríbenos antes de operar.');
+        }
         xmSetSession({id: newUser.id, name: newUser.name, email: newUser.email, ia_code: iaCode, country: pais});
         await xmShowDashboard(xmGetSession());
       } catch(err) {
@@ -195,17 +200,23 @@
         // Upload file to Supabase Storage (bucket: kyc-docs)
         var fileName = session.id + '_' + docType + '_' + Date.now() + '.' + file.name.split('.').pop();
         var {data: uploadData, error: uploadErr} = await SB.storage.from('kyc-docs').upload(fileName, file, {upsert: true});
-        var fileUrl = uploadErr ? null : (SB_URL + '/storage/v1/object/public/kyc-docs/' + fileName);
-        // Insert kyc_request record
-        await SB.from('kyc_requests').insert({
+        if(uploadErr) throw uploadErr;   // sin documento subido no hay KYC que registrar
+        var fileUrl = SB_URL + '/storage/v1/object/public/kyc-docs/' + fileName;
+        // Insert kyc_request record. Se comprueba el error: antes no se miraba
+        // y, si fallaba, al usuario se le decía igualmente "✅ Documento
+        // enviado" y su estado pasaba a "⏳ En revisión" sin que existiera
+        // ningún registro. Es un problema de cumplimiento, no solo de datos.
+        var kRes = await SB.from('kyc_requests').insert({
           user_id: session.id,
           document_type: docType,
-          document_url: fileUrl || 'pending_upload',
+          document_url: fileUrl,
           status: 'pending',
           submitted_at: new Date().toISOString()
         });
+        if(kRes.error) throw kRes.error;
         // Update user kyc_status
-        await SB.from('users').update({ kyc_status: 'pending' }).eq('id', session.id);
+        var uRes = await SB.from('users').update({ kyc_status: 'pending' }).eq('id', session.id);
+        if(uRes.error) throw uRes.error;
         document.getElementById('xm-kyc-status-badge').textContent = '⏳ En revisión';
         document.getElementById('xm-kyc-status-badge').style.color = '#F5A623';
         xmKycToast('✅ Documento enviado — revisión en 24–48h','success');

@@ -1,5 +1,8 @@
 -- ═══════════════════════════════════════════════════════════════════════════
---  CORRECCIÓN DE ESQUEMA — XenderShop
+--  CORRECCIÓN DE ESQUEMA — ecosistema InnovaAFRIC
+--
+--  ⚠ LO MÁS URGENTE ESTÁ EN EL BLOQUE `users`: sin esas cuatro columnas
+--    NADIE PUEDE REGISTRARSE en XenderMoney. El alta falla siempre.
 --
 --  POR QUÉ EXISTE ESTE ARCHIVO
 --  El esquema desplegado en Supabase no coincide ni con supabase_migration_v1.sql
@@ -20,6 +23,14 @@
 --               (NO tiene: active, discount_pct, discount_fixed)
 --    products → id, name, price_eur, category, subcategory, rating
 --               (NO tiene: image_url, discount, orders)
+--    users    → id, email, phone, country, role, created_at
+--               (NO tiene: name, ia_code, status, kyc_status)  ← ROMPE EL ALTA
+--    wallets  → id, user_id, created_at
+--               (NO tiene: currency, balance)
+--    kyc_requests → id, user_id, status
+--               (NO tiene: document_type, document_url, submitted_at)
+--    riders   → id, created_at
+--               (NO tiene: name, email, phone, city, status)
 --    newsletter_subscribers → NO EXISTE
 --
 --  CÓMO USARLO
@@ -99,6 +110,58 @@ CREATE TABLE IF NOT EXISTS newsletter_subscribers (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS newsletter_email_key
   ON newsletter_subscribers(lower(email));
+
+-- ── USERS ─────────────────────────────────────────────────────────────────
+-- CRÍTICO: sin estas cuatro columnas el alta de XenderMoney falla siempre y
+-- nadie puede crear una cuenta. El insert de xendermoney/index.html envía
+-- name, ia_code, status y kyc_status, y las cuatro dan 42703.
+ALTER TABLE users ADD COLUMN IF NOT EXISTS name        TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS ia_code     TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS status      TEXT DEFAULT 'active';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS kyc_status  TEXT DEFAULT 'pending';
+
+-- El código IA identifica al usuario en todo el ecosistema: debe ser único.
+CREATE UNIQUE INDEX IF NOT EXISTS users_ia_code_key ON users(ia_code)
+  WHERE ia_code IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_key ON users(lower(email))
+  WHERE email IS NOT NULL;
+
+-- ── WALLETS ───────────────────────────────────────────────────────────────
+-- Un monedero sin saldo ni moneda no es un monedero. El insert se hace sin
+-- comprobar el error, asi que la cuenta se creaba sin monedero y nadie
+-- se enteraba.
+ALTER TABLE wallets ADD COLUMN IF NOT EXISTS currency TEXT DEFAULT 'EUR';
+ALTER TABLE wallets ADD COLUMN IF NOT EXISTS balance  NUMERIC(14,4) DEFAULT 0;
+
+-- Un monedero por usuario y moneda.
+CREATE UNIQUE INDEX IF NOT EXISTS wallets_user_currency_key
+  ON wallets(user_id, currency);
+
+-- ── KYC_REQUESTS ──────────────────────────────────────────────────────────
+-- Sin document_url no queda constancia del documento subido, aunque al
+-- usuario se le diga "⏳ En revisión". Esto es un problema de cumplimiento,
+-- no solo de datos.
+ALTER TABLE kyc_requests ADD COLUMN IF NOT EXISTS document_type TEXT;
+ALTER TABLE kyc_requests ADD COLUMN IF NOT EXISTS document_url  TEXT;
+ALTER TABLE kyc_requests ADD COLUMN IF NOT EXISTS submitted_at  TIMESTAMPTZ DEFAULT now();
+ALTER TABLE kyc_requests ADD COLUMN IF NOT EXISTS reviewed_at   TIMESTAMPTZ;
+ALTER TABLE kyc_requests ADD COLUMN IF NOT EXISTS reviewer_note TEXT;
+
+CREATE INDEX IF NOT EXISTS kyc_requests_user_idx   ON kyc_requests(user_id);
+CREATE INDEX IF NOT EXISTS kyc_requests_status_idx ON kyc_requests(status);
+
+-- ── RIDERS ────────────────────────────────────────────────────────────────
+-- El alta de repartidores de XenderDelivery no puede guardar ni el nombre.
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS name    TEXT;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS email   TEXT;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS phone   TEXT;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS city    TEXT;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS country TEXT;
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS status  TEXT DEFAULT 'pending';
+ALTER TABLE riders ADD COLUMN IF NOT EXISTS is_available BOOLEAN DEFAULT false;
+-- vehicle_type ya existe; es la única columna del formulario que sí estaba.
+
+CREATE INDEX IF NOT EXISTS riders_status_idx ON riders(status);
 
 COMMIT;
 
