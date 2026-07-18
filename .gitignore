@@ -1,0 +1,12 @@
+# Secretos. docker-compose.yml lee el .env de esta carpeta: ahí van el
+# AE_APP_SECRET y cualquier otra credencial. NUNCA se sube a Git.
+.env
+.env.*
+!.env.example
+
+node_modules/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db

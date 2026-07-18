@@ -1,0 +1,13 @@
+{
+  "name": "innovaafric-aliexpress-proxy",
+  "version": "1.0.0",
+  "description": "Proxy firmado para la API de AliExpress. Mantiene el app_secret fuera del navegador.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

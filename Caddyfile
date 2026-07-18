@@ -1,0 +1,69 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  Caddy — servidor web de InnovaAFRIC en IONOS
+#
+#  Caddy saca y renueva los certificados TLS solo, sin configurar nada. Por
+#  eso se elige frente a Nginx: es una cosa menos que mantener.
+#
+#  ⚠ ANTES DE ARRANCAR: los registros A de cada dominio deben apuntar ya a la
+#    IP del servidor. Caddy pide el certificado al arrancar y si el DNS no
+#    resuelve, falla.
+# ═══════════════════════════════════════════════════════════════════════════
+
+{
+	# Cambiar por el correo real: aquí avisa Let's Encrypt si un certificado
+	# va a caducar sin renovarse.
+	email christianboddien@gmail.com
+}
+
+# ── XenderShop ─────────────────────────────────────────────────────────────
+www.xendershop.com, xendershop.com {
+	root * /srv/xendershop
+	file_server
+	encode gzip zstd
+
+	# El proxy de AliExpress se sirve bajo el mismo dominio. Así el navegador
+	# no hace peticiones entre dominios y CORS deja de ser un problema.
+	handle /api/aliexpress/* {
+		uri strip_prefix /api
+		reverse_proxy aliexpress-proxy:3000
+	}
+
+	header {
+		# Cabeceras de seguridad básicas.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+	}
+}
+
+# ── XenderBigShop ──────────────────────────────────────────────────────────
+www.xenderbigshop.com, xenderbigshop.com {
+	root * /srv/xenderbigshop
+	file_server
+	encode gzip zstd
+}
+
+# ── XenderMoney ────────────────────────────────────────────────────────────
+www.xendermoney.com, xendermoney.com {
+	root * /srv/xendermoney
+	file_server
+	encode gzip zstd
+}
+
+# ── XenderDelivery ─────────────────────────────────────────────────────────
+www.xenderdelivery.com, xenderdelivery.com {
+	root * /srv/xenderdelivery
+	file_server
+	encode gzip zstd
+}
+
+# ── InnovaAFRIC (portada del ecosistema) ───────────────────────────────────
+# Va LA ÚLTIMA en la migración de dominios: api.innovaafric.com apunta hoy a
+# Railway y hay enrutado de correo vivo. Hay que recrear el registro `api`
+# antes de mover este dominio.
+www.innovaafric.com, innovaafric.com {
+	root * /srv/innovaafric
+	file_server
+	encode gzip zstd
+}
