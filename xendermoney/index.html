@@ -94,27 +94,78 @@
     }
 
     // ── LOGIN ──
+    /* ═══════════════════════════════════════════════════════════════════
+       LOGIN
+
+       Antes esta función buscaba al usuario por email en Supabase y abría la
+       sesión ahí mismo, sin comprobar la contraseña. La contraseña solo se
+       usaba después para pedir un token a Railway, dentro de un try/catch
+       vacío: fallara o no, el panel se abría igual. En la práctica, con el
+       email de cualquier usuario registrado se entraba en su cuenta.
+
+       Ahora la contraseña se verifica PRIMERO contra la API de Railway, que
+       es la única que sabe si es correcta (devuelve 401 si no lo es), y la
+       sesión solo se abre si la autenticación sale bien.
+
+       Si Railway no responde, NO se entra. En una aplicación que mueve
+       dinero es preferible dejar a alguien fuera un rato que dejar entrar a
+       quien no debe.
+       ═══════════════════════════════════════════════════════════════════ */
     async function xmLogin(e){
   e.preventDefault();
   var email = document.getElementById('xm-login-email').value.trim();
+  var passEl = document.getElementById('xm-login-pass');
+  var pass = passEl ? passEl.value : '';
   var btn = document.getElementById('xm-login-btn');
+  var restore = function(){ btn.textContent = 'Entrar →'; btn.disabled = false; };
   btn.textContent = 'Entrando…'; btn.disabled = true;
+
+  if(!email || !pass){ alert('❌ Escribe tu email y tu contraseña.'); return restore(); }
+
+  // ── 1. Verificar las credenciales contra Railway ──
+  var tokenRes, tokenJson;
   try {
-    var {data: user, error} = await SB.from('users').select('*').eq('email', email).maybeSingle();
-    if(!user){alert('❌ No encontramos una cuenta con ese email.');btn.textContent='Entrar →';btn.disabled=false;return;}
-    xmSetSession({id: user.id, name: user.name, email: user.email, ia_code: user.ia_code, country: user.country});
-    // Obtener token de Railway para saldos
-    try {
-      var pass = document.getElementById('xm-login-pass') ? document.getElementById('xm-login-pass').value : '';
-      var tokenRes = await fetch('https://api.innovaafric.com/v1/auth/token', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({grant_type:'password',email,password:pass})});
-      var tokenJson = await tokenRes.json();
-      if(tokenJson.access_token) localStorage.setItem('inno_token', tokenJson.access_token);
-    } catch(te){}
+    tokenRes = await fetch('https://api.innovaafric.com/v1/auth/token', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({grant_type:'password', email:email, password:pass})
+    });
+    tokenJson = await tokenRes.json();
+  } catch(netErr){
+    console.error('[XenderMoney] No se pudo contactar con la API:', netErr);
+    alert('⚠ No hemos podido verificar tus credenciales ahora mismo. Revisa tu conexión e inténtalo de nuevo.');
+    return restore();
+  }
+
+  // La API envuelve las respuestas en {success, data, error}, pero se aceptan
+  // también las formas planas por si cambia el contrato.
+  var token = (tokenJson && (tokenJson.access_token
+            || (tokenJson.data && tokenJson.data.access_token)
+            || (tokenJson.result && tokenJson.result.access_token))) || null;
+
+  if(!tokenRes.ok || !token){
+    var msg = (tokenJson && tokenJson.error && tokenJson.error.message)
+           || 'Email o contraseña incorrectos';
+    alert('❌ ' + msg);
+    return restore();
+  }
+  localStorage.setItem('inno_token', token);
+
+  // ── 2. Autenticado: ahora sí cargamos el perfil y abrimos sesión ──
+  try {
+    var {data: user} = await SB.from('users').select('*').eq('email', email).maybeSingle();
+    // Railway ya validó las credenciales. Si el perfil todavía no está en
+    // Supabase, se entra igualmente con lo mínimo en vez de dejar fuera a
+    // alguien que sí se ha autenticado bien.
+    xmSetSession(user
+      ? {id:user.id, name:user.name, email:user.email, ia_code:user.ia_code, country:user.country}
+      : {id:null, name:null, email:email, ia_code:null, country:null});
     document.getElementById('xm-login-modal').style.display = 'none';
     await xmShowDashboard(xmGetSession());
   } catch(err) {
+    console.error('[XenderMoney] Error cargando el perfil:', err);
     alert('❌ Error: ' + (err.message||'inténtalo de nuevo'));
-    btn.textContent = 'Entrar →'; btn.disabled = false;
+    restore();
   }
 }
 
