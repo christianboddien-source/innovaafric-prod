@@ -349,7 +349,7 @@
              "4,8/5 valoración media" con cero tiendas registradas. -->
         <div class="trust-item"><div class="trust-icon">🏪</div><div class="trust-text"><strong>0€</strong><span data-i18n="trust1">First month, all plans</span></div></div>
         <div class="trust-item"><div class="trust-icon">🌍</div><div class="trust-text"><strong>35</strong><span data-i18n="trust2">Countries covered</span></div></div>
-        <div class="trust-item"><div class="trust-icon">💳</div><div class="trust-text"><strong>5%</strong><span data-i18n="trust3">Commission, Basic plan</span></div></div>
+        <div class="trust-item"><div class="trust-icon">💳</div><div class="trust-text"><strong>5%</strong><span data-i18n="trust3">Commission, Starter plan</span></div></div>
         <div class="trust-item"><div class="trust-icon">⚡</div><div class="trust-text"><strong>48h</strong><span data-i18n="trust4">Store live</span></div></div>
       </div>
     </div>
@@ -606,7 +606,7 @@
           <li data-i18n="p1f5">XenderDelivery integration</li>
           <li data-i18n="p1f6">Email support</li>
         </ul>
-        <button class="btn-plan btn-plan-outline" data-i18n="plan_free">Start Free</button>
+        <button class="btn-plan btn-plan-outline" onclick="bsElegirPlan('starter')" data-i18n="plan_free">Start Free</button>
       </div>
       <div class="plan-card featured reveal">
         <div class="plan-badge" data-i18n="plan_pop">MOST POPULAR</div>
@@ -623,7 +623,7 @@
           <li data-i18n="p2f7">Marketing tools & promo codes</li>
           <li data-i18n="p2f8">Priority support (24/7)</li>
         </ul>
-        <button class="btn-plan btn-plan-primary" data-i18n="plan_start">Get Started</button>
+        <button class="btn-plan btn-plan-primary" onclick="bsElegirPlan('business')" data-i18n="plan_start">Get Started</button>
       </div>
       <div class="plan-card reveal">
         <div class="plan-name" data-i18n="plan3_name">Enterprise</div>
@@ -638,7 +638,7 @@
           <li data-i18n="p3f6">AliExpress dropship access</li>
           <li data-i18n="p3f7">White-label option available</li>
         </ul>
-        <button class="btn-plan btn-plan-outline" data-i18n="plan_contact">Contact Sales</button>
+        <button class="btn-plan btn-plan-outline" onclick="bsElegirPlan('enterprise')" data-i18n="plan_contact">Contact Sales</button>
       </div>
     </div>
   </div>
@@ -1274,7 +1274,7 @@ const TR = {
     hero_btn1:'Abrir mi Tienda Hoy', hero_btn2:'Ver Tipos de Negocio',
     biz_rest:'Restaurante', biz_rest_d:'Menú online y delivery', biz_pharma:'Farmacia', biz_pharma_d:'Medicinas y salud',
     biz_super:'Supermercado', biz_super_d:'Compra a domicilio', biz_bout:'Boutique', biz_bout_d:'Moda y ropa',
-    trust1:'Primer mes, todos los planes', trust2:'Países cubiertos', trust3:'Comisión, plan Básico', trust4:'Tienda en marcha',
+    trust1:'Primer mes, todos los planes', trust2:'Países cubiertos', trust3:'Comisión, plan Starter', trust4:'Tienda en marcha',
     stat1:'Vendedores Activos', stat2:'Pedidos Mensuales', stat3:'Países', stat4:'Satisfacción',
     biz_tag:'PARA QUIÉN ES', biz_title:'Todo Tipo de Negocio es Bienvenido',
     biz_sub:'Tanto si cocinas, vendes medicamentos, o tienes una boutique — XenderBigShop tiene un espacio dedicado para tu negocio.',
@@ -1357,7 +1357,7 @@ const TR = {
     hero_btn1:'Open My Store Today', hero_btn2:'See Business Types',
     biz_rest:'Restaurant', biz_rest_d:'Online menu & delivery', biz_pharma:'Pharmacy', biz_pharma_d:'Medicines & health',
     biz_super:'Supermarket', biz_super_d:'Groceries delivered', biz_bout:'Boutique', biz_bout_d:'Fashion & clothing',
-    trust1:'First month, all plans', trust2:'Countries covered', trust3:'Commission, Basic plan', trust4:'Store live',
+    trust1:'First month, all plans', trust2:'Countries covered', trust3:'Commission, Starter plan', trust4:'Store live',
     stat1:'Active Vendors', stat2:'Monthly Orders', stat3:'Countries', stat4:'Satisfaction',
     biz_tag:'WHO IS IT FOR', biz_title:'Every Type of Business is Welcome',
     biz_sub:'Whether you cook meals, sell medicines, or run a fashion boutique — XenderBigShop has a dedicated space for your business.',
@@ -1440,7 +1440,7 @@ const TR = {
     hero_btn1:"Ouvrir ma Boutique Aujourd'hui", hero_btn2:"Voir les Types d'Entreprise",
     biz_rest:'Restaurant', biz_rest_d:'Menu en ligne & livraison', biz_pharma:'Pharmacie', biz_pharma_d:'Médicaments & santé',
     biz_super:'Supermarché', biz_super_d:'Courses à domicile', biz_bout:'Boutique', biz_bout_d:'Mode & vêtements',
-    trust1:'Premier mois, tous les plans', trust2:'Pays couverts', trust3:'Commission, plan Basique', trust4:'Boutique en ligne',
+    trust1:'Premier mois, tous les plans', trust2:'Pays couverts', trust3:'Commission, plan Starter', trust4:'Boutique en ligne',
     stat1:'Vendeurs Actifs', stat2:'Commandes Mensuelles', stat3:'Pays', stat4:'Satisfaction',
     biz_tag:'POUR QUI', biz_title:"Chaque Type d'Entreprise est le Bienvenu",
     biz_sub:"Que vous cuisiniez, vendiez des médicaments ou gériez une boutique de mode — XenderBigShop a un espace dédié pour votre entreprise.",
@@ -1530,6 +1530,42 @@ function setLang(l) {
 setLang(LANG);
 // El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
 function bsPickLang(l){ localStorage.setItem('ia_lang_manual','1'); setLang(l); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOTONES DE LA TABLA DE PRECIOS
+   Los tres eran <button> sin onclick: no hacían absolutamente nada.
+   Son los botones que más importan comercialmente de toda la página.
+
+   Starter y Business abren el registro recordando el plan elegido.
+   Enterprise lleva a contacto, porque es venta asistida.
+   ═══════════════════════════════════════════════════════════════════ */
+// ⚠ Los importes salen de las tarjetas de precios ($0 / $29 / $99). OJO: el
+// FAQ de esta misma página dice otra cosa — "0 XAF (Básico)" y "29.900 XAF/mes
+// (Pro)" — con otros nombres de plan y otra moneda. Y 29.900 XAF son unos $49,
+// no $29. Hay que decidir cuál es la buena y unificar las dos secciones.
+var BS_PLANES = {
+  starter:    {es:'Plan Starter · $0/mes',    en:'Starter plan · $0/month',    fr:'Plan Starter · 0 $/mois'},
+  business:   {es:'Plan Business · $29/mes',  en:'Business plan · $29/month',  fr:'Plan Business · 29 $/mois'},
+  enterprise: {es:'Plan Enterprise',          en:'Enterprise plan',            fr:'Plan Enterprise'}
+};
+
+function bsElegirPlan(plan){
+  try{ localStorage.setItem('bs_plan', plan); }catch(e){}
+
+  // Enterprise no se contrata solo: se habla con ventas.
+  if(plan === 'enterprise'){
+    var c = document.getElementById('contact');
+    if(c){ c.scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  }
+
+  var etiqueta = document.getElementById('bs-plan-elegido');
+  if(etiqueta){
+    var txt = (BS_PLANES[plan] && (BS_PLANES[plan][LANG] || BS_PLANES[plan].es)) || '';
+    if(txt){ etiqueta.textContent = '✓ ' + txt; etiqueta.style.display = ''; }
+    else   { etiqueta.style.display = 'none'; }
+  }
+  openModal('modal-bs');
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    GEODETECCIÓN DE IDIOMA
@@ -1746,6 +1782,9 @@ function bsUpdateDelivery(){
   <div style="max-width:720px;margin:0 auto;text-align:center;">
     <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#E0921A;text-transform:uppercase;margin-bottom:12px;">ÚNETE AL MAYOR PORTAL B2B</div>
     <h2 style="font-size:clamp(22px,2.8vw,34px);font-weight:900;color:#1a1a1a;margin-bottom:8px;">Crea tu cuenta B2B</h2>
+    <!-- Se rellena al llegar desde un botón de la tabla de precios, para que
+         el usuario no pierda de vista el plan que acaba de elegir. -->
+    <div id="bs-plan-elegido" style="display:none;background:#fff3e0;border:1px solid #E0921A;border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;color:#8a5a00;margin:0 auto 14px;width:fit-content;"></div>
     <p style="color:#666;margin-bottom:28px;">Elige tu perfil: comprador o proveedor</p>
     <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;">
       <button id="bst-comprador" onclick="showBSTab('comprador')" style="padding:12px 28px;border-radius:20px;background:#E0921A;color:#fff;border:none;font-weight:800;font-size:15px;cursor:pointer;">🛒 Soy Comprador</button>

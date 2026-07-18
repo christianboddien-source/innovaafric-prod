@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head><!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGSW2FSB8J"></script>
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://www.xenderdelivery.com/"/>
 <meta property="og:title" content="XenderDelivery — Entregas en África"/>
-<meta property="og:description" content="Entrega rápida en toda África. Moto, bicicleta, furgoneta o camión. Tracking en tiempo real. 5,000+ riders activos en 3 continentes."/>
+<meta property="og:description" content="Entrega rápida en toda África. Moto, bicicleta, furgoneta o camión. Tracking en tiempo real. Entrega express 24-72h en 20 ciudades."/>
 <meta property="og:image" content="https://christianboddien-source.github.io/innovaafric-prod/xenderdelivery/og.jpg"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="XenderDelivery — Livraison rapide en Afrique"/>
@@ -319,9 +319,9 @@
       <a href="#riders" data-i18n="nav_riders">Riders</a>
       <a href="../" data-i18n="nav_eco">Ecosistema</a>
       <div class="lang-btns">
-        <button onclick="setLang('es')" id="lb-es">ES</button>
-        <button onclick="setLang('en')" id="lb-en">EN</button>
-        <button onclick="setLang('fr')" id="lb-fr">FR</button>
+        <button onclick="xdPickLang('es')" id="lb-es">ES</button>
+        <button onclick="xdPickLang('en')" id="lb-en">EN</button>
+        <button onclick="xdPickLang('fr')" id="lb-fr">FR</button>
       </div>
       <a href="#" onclick="openModal('modal-rider');return false;" class="btn-nav" data-i18n="nav_join">Ser Rider</a>
       <button class="ham-btn-xd" id="ham-btn-xd" onclick="toggleHamXd()">☰</button>
@@ -380,10 +380,10 @@
 
 <div class="stats">
   <div class="stats-inner">
-    <div class="reveal"><div class="stat-num">5K+</div><div class="stat-lbl" data-i18n="stat1">Riders Activos</div></div>
-    <div class="reveal"><div class="stat-num">1M+</div><div class="stat-lbl" data-i18n="stat2">Entregas Realizadas</div></div>
+    <div class="reveal"><div class="stat-num">24-72h</div><div class="stat-lbl" data-i18n="stat1">Riders Activos</div></div>
+    <div class="reveal"><div class="stat-num">4</div><div class="stat-lbl" data-i18n="stat2">Entregas Realizadas</div></div>
     <div class="reveal"><div class="stat-num">20</div><div class="stat-lbl" data-i18n="stat3">Ciudades Cubiertas</div></div>
-    <div class="reveal"><div class="stat-num">98%</div><div class="stat-lbl" data-i18n="stat4">Tasa de Éxito</div></div>
+    <div class="reveal"><div class="stat-num">GPS</div><div class="stat-lbl" data-i18n="stat4">Tasa de Éxito</div></div>
   </div>
 </div>
 
@@ -510,7 +510,7 @@
         <h4 data-i18n="rc_title">Ingresos Rider Mensual</h4>
         <div class="rider-stats">
           <div class="rs"><div class="rs-val">$450</div><div class="rs-lbl" data-i18n="rs1">Promedio mensual</div></div>
-          <div class="rs"><div class="rs-val">4.9★</div><div class="rs-lbl" data-i18n="rs2">Rating medio</div></div>
+          <div class="rs"><div class="rs-val">0%</div><div class="rs-lbl" data-i18n="rs2">Rating medio</div></div>
           <div class="rs"><div class="rs-val">8h</div><div class="rs-lbl" data-i18n="rs3">Jornada típica</div></div>
           <div class="rs"><div class="rs-val">Daily</div><div class="rs-lbl" data-i18n="rs4">Frecuencia de pago</div></div>
         </div>
@@ -856,7 +856,7 @@ function rdCalc(v){
 
 <section class="cta">
   <h2 class="reveal" data-i18n="cta_h">¿Listo para entregar más rápido?</h2>
-  <p class="reveal" data-i18n="cta_p">Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.</p>
+  <p class="reveal" data-i18n="cta_p">Conviértete en rider o registra tu comercio. Primera entrega sin comisión en XenderDelivery.</p>
   <div class="cta-btns">
     <a href="#features" class="btn-cta btn-cta-a" data-i18n="cta_btn1">Empezar a Enviar</a>
     <a href="../" class="btn-cta btn-cta-o" data-i18n="cta_btn2">Ver Ecosistema</a>
@@ -923,7 +923,7 @@ const TR={
     hero_btn1:"Enviar Ahora",hero_btn2:"Ser Rider",
     track_status:"EN RUTA",track_from:"Abidjan",track_to:"Accra",
     ms1:"Tiempo promedio",ms2:"Seguimiento GPS",ms3:"Entregas aseguradas",
-    stat1:"Riders Activos",stat2:"Entregas Realizadas",stat3:"Ciudades Cubiertas",stat4:"Tasa de Éxito",
+    stat1:"Entrega express",stat2:"Tipos de vehículo",stat3:"Ciudades cubiertas",stat4:"Seguimiento en vivo",
     feat_tag:"SERVICIOS",feat_title:"Entrega inteligente",feat_sub:"Tecnología avanzada para cada envío, grande o pequeño.",
     f1_h:"Entrega Express",f1_p:"Mismo día dentro de la ciudad. Riders disponibles 24/7 para entregas urgentes.",
     f2_h:"Seguimiento GPS",f2_p:"Rastrea tu paquete en tiempo real desde el panel. Notificaciones en cada etapa.",
@@ -946,13 +946,13 @@ const TR={
     rl1:"Registro en 10 minutos con verificación de identidad",rl2:"Elige tus propias horas de trabajo",
     rl3:"Pagos diarios directo a tu Mobile Money",rl4:"Seguro de accidente incluido",
     rl5:"Bonificaciones por rendimiento y zonas peak",rider_btn:"Registrarme como Rider",
-    rc_title:"Ingresos Rider Mensual",rs1:"Promedio mensual",rs2:"Rating medio",rs3:"Jornada típica",rs4:"Frecuencia de pago",
+    rc_title:"Ingresos Rider Mensual",rs1:"Estimación mensual",rs2:"Comisión de alta",rs3:"Jornada típica",rs4:"Frecuencia de pago",
     contact_h:"Contacto & Únete a la Flota",contact_p:"Sé rider, integra nuestra API o asóciate con nosotros para hacer crecer la entrega en África.",
     contact_rider:"Sé Rider",contact_rider_d:"Únete a nuestra flota, gana diariamente, trabaja con horarios flexibles. Aplica ahora.",
     contact_biz:"Empresas & Comercios",contact_biz_d:"Entrega el mismo día, integración API y cuentas corporativas.",
     contact_par:"Asociaciones",contact_par_d:"Circulares Autorizadas y asociaciones de logística de última milla.",
     contact_inv:"Inversores",contact_inv_d:"Ronda Seed abierta. Deck y financieros bajo solicitud.",
-    cta_h:"¿Listo para entregar más rápido?",cta_p:"Únete a más de 5,000 riders y miles de comercios que confían en XenderDelivery.",
+    cta_h:"¿Listo para entregar más rápido?",cta_p:"Conviértete en rider o registra tu comercio. Primera entrega sin comisión en XenderDelivery.",
     cta_btn1:"Empezar a Enviar",cta_btn2:"Ver Ecosistema",footer_slogan:"WE SIMPLIFY LIFE"
   },
   en:{
@@ -964,7 +964,7 @@ const TR={
     hero_btn1:"Send Now",hero_btn2:"Become a Rider",
     track_status:"IN TRANSIT",track_from:"Abidjan",track_to:"Accra",
     ms1:"Average time",ms2:"GPS Tracking",ms3:"Insured deliveries",
-    stat1:"Active Riders",stat2:"Deliveries Made",stat3:"Cities Covered",stat4:"Success Rate",
+    stat1:"Express delivery",stat2:"Vehicle types",stat3:"Cities covered",stat4:"Live tracking",
     feat_tag:"SERVICES",feat_title:"Smart delivery",feat_sub:"Advanced technology for every shipment, large or small.",
     f1_h:"Express Delivery",f1_p:"Same day within the city. Riders available 24/7 for urgent deliveries.",
     f2_h:"GPS Tracking",f2_p:"Track your package in real time from the dashboard. Notifications at every stage.",
@@ -987,13 +987,13 @@ const TR={
     rl1:"Register in 10 minutes with identity verification",rl2:"Choose your own working hours",
     rl3:"Daily payments directly to your Mobile Money",rl4:"Accident insurance included",
     rl5:"Bonuses for performance and peak zones",rider_btn:"Register as a Rider",
-    rc_title:"Monthly Rider Earnings",rs1:"Monthly average",rs2:"Average rating",rs3:"Typical shift",rs4:"Payment frequency",
+    rc_title:"Monthly Rider Earnings",rs1:"Monthly estimate",rs2:"Sign-up fee",rs3:"Typical shift",rs4:"Payment frequency",
     contact_h:"Contact & Join the Fleet",contact_p:"Become a rider, integrate our API, or partner with us to grow delivery across Africa.",
     contact_rider:"Become a Rider",contact_rider_d:"Join our fleet, earn daily, work flexible hours. Apply now.",
     contact_biz:"Business & Merchants",contact_biz_d:"Same-day delivery, API integration, and corporate accounts.",
     contact_par:"Partnerships",contact_par_d:"Circulares Autorizadas and last-mile logistics partnerships.",
     contact_inv:"Investors",contact_inv_d:"Seed round open. Deck and financials on request.",
-    cta_h:"Ready to deliver faster?",cta_p:"Join over 5,000 riders and thousands of merchants who trust XenderDelivery.",
+    cta_h:"Ready to deliver faster?",cta_p:"Become a rider or register your business. First delivery commission-free with XenderDelivery.",
     cta_btn1:"Start Shipping",cta_btn2:"View Ecosystem",footer_slogan:"WE SIMPLIFY LIFE"
   },
   fr:{
@@ -1005,7 +1005,7 @@ const TR={
     hero_btn1:"Envoyer Maintenant",hero_btn2:"Devenir Rider",
     track_status:"EN ROUTE",track_from:"Abidjan",track_to:"Accra",
     ms1:"Temps moyen",ms2:"Suivi GPS",ms3:"Livraisons assurées",
-    stat1:"Riders Actifs",stat2:"Livraisons Effectuées",stat3:"Villes Couvertes",stat4:"Taux de Succès",
+    stat1:"Livraison express",stat2:"Types de véhicule",stat3:"Villes couvertes",stat4:"Suivi en direct",
     feat_tag:"SERVICES",feat_title:"Livraison intelligente",feat_sub:"Technologie avancée pour chaque envoi, grand ou petit.",
     f1_h:"Livraison Express",f1_p:"Le jour même en ville. Riders disponibles 24/7 pour les livraisons urgentes.",
     f2_h:"Suivi GPS",f2_p:"Suivez votre colis en temps réel depuis le tableau de bord. Notifications à chaque étape.",
@@ -1028,13 +1028,13 @@ const TR={
     rl1:"Inscription en 10 minutes avec vérification d'identité",rl2:"Choisissez vos propres horaires de travail",
     rl3:"Paiements quotidiens directement sur votre Mobile Money",rl4:"Assurance accident incluse",
     rl5:"Bonus de performance et zones de pointe",rider_btn:"M'inscrire comme Rider",
-    rc_title:"Revenus Mensuels Rider",rs1:"Moyenne mensuelle",rs2:"Note moyenne",rs3:"Journée typique",rs4:"Fréquence de paiement",
+    rc_title:"Revenus Mensuels Rider",rs1:"Estimation mensuelle",rs2:"Frais d'inscription",rs3:"Journée typique",rs4:"Fréquence de paiement",
     contact_h:"Contact & Rejoignez la Flotte",contact_p:"Devenez rider, intégrez notre API ou partenariez avec nous pour développer la livraison en Afrique.",
     contact_rider:"Devenez Rider",contact_rider_d:"Rejoignez notre flotte, gagnez quotidiennement, horaires flexibles. Postulez maintenant.",
     contact_biz:"Entreprises & Commerçants",contact_biz_d:"Livraison le jour même, intégration API et comptes entreprise.",
     contact_par:"Partenariats",contact_par_d:"Circulaires Autorisées et partenariats logistique dernier kilomètre.",
     contact_inv:"Investisseurs",contact_inv_d:"Levée Seed ouverte. Deck et financiers sur demande.",
-    cta_h:"Prêt à livrer plus vite ?",cta_p:"Rejoignez plus de 5 000 riders et des milliers de commerçants qui font confiance à XenderDelivery.",
+    cta_h:"Prêt à livrer plus vite ?",cta_p:"Devenez rider ou enregistrez votre commerce. Première livraison sans commission avec XenderDelivery.",
     cta_btn1:"Commencer à Envoyer",cta_btn2:"Voir l'Écosystème",footer_slogan:"WE SIMPLIFY LIFE"
   }
 };
@@ -1052,6 +1052,65 @@ function setLang(l){
   document.documentElement.lang=l;
 }
 setLang(LANG);
+// El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
+function xdPickLang(l){ localStorage.setItem('ia_lang_manual','1'); setLang(l); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GEODETECCIÓN DE IDIOMA
+   Mismo criterio que XenderShop y XenderBigShop: elección manual >
+   geo-IP > zona horaria > navegador > ES. Antes esta página se abría
+   siempre en español aunque el visitante estuviera en Abiyán.
+   ═══════════════════════════════════════════════════════════════════ */
+const XD_LANG_BY_COUNTRY = {
+  es:['ES','GQ','MX','AR','CO','CL','PE','DO','PT','AD','AO','MZ','CV'],
+  fr:['FR','BE','LU','CH','MC','CM','GA','CG','TD','CF','CI','SN','ML',
+      'BF','NE','TG','BJ','GW','MA','DZ','TN','CD','MG','GN']
+};
+const XD_TZ = {
+  'Europe/Madrid':'ES','Atlantic/Canary':'ES','Europe/Paris':'FR','Europe/Brussels':'BE',
+  'Europe/Lisbon':'PT','Africa/Malabo':'GQ','Africa/Douala':'CM','Africa/Libreville':'GA',
+  'Africa/Brazzaville':'CG','Africa/Ndjamena':'TD','Africa/Bangui':'CF','Africa/Abidjan':'CI',
+  'Africa/Dakar':'SN','Africa/Bamako':'ML','Africa/Ouagadougou':'BF','Africa/Niamey':'NE',
+  'Africa/Lome':'TG','Africa/Porto-Novo':'BJ','Africa/Bissau':'GW','Africa/Casablanca':'MA',
+  'Africa/Algiers':'DZ','Africa/Tunis':'TN','Africa/Kinshasa':'CD','Africa/Luanda':'AO',
+  'Africa/Lagos':'NG','Africa/Accra':'GH','Africa/Nairobi':'KE','Africa/Johannesburg':'ZA',
+  'America/New_York':'US','America/Chicago':'US','America/Los_Angeles':'US','America/Toronto':'CA'
+};
+function xdLangFor(c){
+  for(const l in XD_LANG_BY_COUNTRY) if(XD_LANG_BY_COUNTRY[l].includes(c)) return l;
+  return 'en';
+}
+function xdCountryLocal(){
+  try{ const tz=Intl.DateTimeFormat().resolvedOptions().timeZone; if(XD_TZ[tz]) return XD_TZ[tz]; }catch(e){}
+  const nl=(navigator.languages&&navigator.languages[0])||navigator.language||'';
+  const m=nl.match(/^[a-z]{2}[-_]([A-Z]{2})$/i);
+  if(m) return m[1].toUpperCase();
+  const b=nl.slice(0,2).toLowerCase();
+  return b==='es'?'ES':b==='fr'?'FR':null;
+}
+async function xdInitGeo(){
+  if(localStorage.getItem('ia_lang_manual')==='1') return;
+  const local=xdCountryLocal();
+  if(local){ const l=xdLangFor(local); if(l!==LANG) setLang(l); }
+  const apis=[['https://get.geojs.io/v1/ip/country.json',d=>d.country],
+              ['https://ipapi.co/json/',d=>d.country_code],
+              ['https://ipwho.is/',d=>d.country_code]];
+  for(const [url,pick] of apis){
+    try{
+      const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),2500);
+      const r=await fetch(url,{signal:ctrl.signal}); clearTimeout(t);
+      if(!r.ok) continue;
+      const c=pick(await r.json());
+      if(c&&/^[A-Za-z]{2}$/.test(c)){
+        const l=xdLangFor(c.toUpperCase());
+        if(l!==LANG) setLang(l);
+        console.info('[XenderDelivery] País: '+c.toUpperCase()+' (geo-IP) → '+l.toUpperCase());
+        return;
+      }
+    }catch(e){}
+  }
+}
+xdInitGeo();
 const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
 },{threshold:0.1});
@@ -1251,6 +1310,45 @@ function closeModal(id){document.getElementById(id).style.display='none';documen
     }).catch(function(){});
 }catch(e){}})();
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     REFINAMIENTO VISUAL — capa aditiva, la última de la cascada.
+     Solo aspecto: ni una regla de posicionamiento ni de lógica. Si algo
+     no convence, se borra este bloque entero y la página vuelve
+     exactamente a como estaba antes.
+     ═══════════════════════════════════════════════════════════════════ -->
+<style>
+:root{
+  --sh-1:0 1px 2px rgba(0,0,0,.20), 0 1px 3px rgba(0,0,0,.16);
+  --sh-2:0 10px 32px rgba(0,0,0,.30), 0 3px 10px rgba(0,0,0,.20);
+  --hair:rgba(232,237,245,.10);
+}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* Escala de esquinas coherente: hoy conviven 5, 6, 8, 10, 12, 14, 16 y 20 px */
+.track-card,.contact-card,.stat,.rs,.faq-item{border-radius:16px!important;}
+.btn,.btn-primary,.btn-outline,button.cta,input,select,textarea{border-radius:10px!important;}
+
+/* Sobre fondo oscuro, un borde tenue separa mejor que una sombra */
+.track-card,.contact-card{border:1px solid var(--hair)!important;box-shadow:var(--sh-1)!important;}
+.track-card:hover,.contact-card:hover{border-color:rgba(245,158,11,.35)!important;box-shadow:var(--sh-2)!important;}
+.track-card,.contact-card{transition:border-color .2s ease, box-shadow .2s ease;}
+
+/* Tipografía algo más contenida en los titulares grandes */
+h1,h2,.stat-num{letter-spacing:-.025em;}
+.stat-lbl,.rs-lbl{letter-spacing:.02em;}
+
+/* Foco visible: en una página oscura sin esto no se ve nada al tabular */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--amber);outline-offset:2px;border-radius:6px;
+}
+
+/* Quien pide menos movimiento, recibe menos movimiento */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
+  .reveal{opacity:1!important;transform:none!important;}
+}
+</style>
 </body>
 </html>
 
