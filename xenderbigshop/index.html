@@ -10,15 +10,15 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>XenderBigShop — Multi-Vendor Marketplace Africa</title>
-<meta name="description" content="XenderBigShop: sell your restaurant, pharmacy, supermarket or boutique online. Africa's #1 multi-vendor marketplace for businesses."/>
+<title>XenderBigShop — Multi-Vendor Marketplace for Africa</title>
+<meta name="description" content="XenderBigShop: sell your restaurant, pharmacy, supermarket or boutique online. Multi-vendor marketplace built for African businesses."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://www.xenderbigshop.com/"/>
 <meta property="og:title" content="XenderBigShop — Vende en toda África"/>
-<meta property="og:description" content="El marketplace multivendedor #1 de África. Abre tu tienda online, vende en 35 países y cobra con Mobile Money. 50,000+ vendedores activos."/>
+<meta property="og:description" content="Marketplace multivendedor para negocios africanos. Abre tu tienda online, vende en 35 países y cobra con Mobile Money. Primer mes gratis."/>
 <meta property="og:image" content="https://christianboddien-source.github.io/innovaafric-prod/xenderbigshop/og.jpg"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="XenderBigShop — Africa's #1 Marketplace"/>
+<meta name="twitter:title" content="XenderBigShop — Marketplace for African Business"/>
 <meta name="twitter:description" content="Open your store in 5 minutes. Sell to 35 African countries. Get paid instantly via Mobile Money."/>
 <meta name="keywords" content="XenderBigShop, marketplace Africa, vendre en ligne Afrique, multivendor Africa, Dokan Africa"/>
 <link rel="canonical" href="https://www.xenderbigshop.com/"/>
@@ -298,7 +298,7 @@
 
 <!-- ANNOUNCE -->
 <div class="announce-bar">
-  🏪 <span data-i18n="announce_text">XenderBigShop — Open your restaurant, pharmacy or boutique online in 48 hours · Africa's #1 B2B Marketplace</span> 🚀
+  🏪 <span data-i18n="announce_text">XenderBigShop — Open your restaurant, pharmacy or boutique online in 48 hours · B2B Marketplace for Africa</span> 🚀
 </div>
 
 <!-- NAV -->
@@ -344,9 +344,12 @@
         <a href="#business-types" class="btn-secondary" data-i18n="hero_btn2">See Business Types</a>
       </div>
       <div class="hero-trust">
-        <div class="trust-item"><div class="trust-icon">🏪</div><div class="trust-text"><strong>50,000+</strong><span data-i18n="trust1">Active vendors</span></div></div>
-        <div class="trust-item"><div class="trust-icon">🌍</div><div class="trust-text"><strong>35</strong><span data-i18n="trust2">Countries</span></div></div>
-        <div class="trust-item"><div class="trust-icon">⭐</div><div class="trust-text"><strong>4.8/5</strong><span data-i18n="trust3">Average rating</span></div></div>
+        <!-- Cifras verificables: lo que se OFRECE, no un recuento de clientes
+             que todavía no existe. Antes ponía "50.000+ vendedores activos" y
+             "4,8/5 valoración media" con cero tiendas registradas. -->
+        <div class="trust-item"><div class="trust-icon">🏪</div><div class="trust-text"><strong>0€</strong><span data-i18n="trust1">First month, all plans</span></div></div>
+        <div class="trust-item"><div class="trust-icon">🌍</div><div class="trust-text"><strong>35</strong><span data-i18n="trust2">Countries covered</span></div></div>
+        <div class="trust-item"><div class="trust-icon">💳</div><div class="trust-text"><strong>5%</strong><span data-i18n="trust3">Commission, Basic plan</span></div></div>
         <div class="trust-item"><div class="trust-icon">⚡</div><div class="trust-text"><strong>48h</strong><span data-i18n="trust4">Store live</span></div></div>
       </div>
     </div>
@@ -863,7 +866,10 @@
       <button style="border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:#8B6A3A;background:white;">24</button>
       <button style="border:1.5px solid rgba(224,146,26,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;color:#8B6A3A;background:white;">Next →</button>
     </div>
-    <p style="text-align:center;font-size:12px;color:#8B6A3A;margin-top:12px;">Showing 1–6 of 50,000+ registered vendors</p>
+    <!-- Estas seis fichas son ejemplos de presentación, no tiendas reales.
+         Decirlo evita que parezcan un catálogo de vendedores que aún no
+         existe. Cuando haya tiendas de verdad, esta nota se quita. -->
+    <p style="text-align:center;font-size:12px;color:#8B6A3A;margin-top:12px;" data-i18n="vendors_demo">Ejemplos del tipo de negocio que puede vender en XenderBigShop.</p>
 
   </div>
 </section>
@@ -1152,17 +1158,21 @@ function toggleFaq(header){
   </div>
   <!-- Stats band -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:900px;margin:40px auto 0;text-align:center;">
-    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">50,000+</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Vendedores activos</div></div>
-    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">35</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Países de venta</div></div>
-    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">2M+</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Productos listados</div></div>
-    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">98%</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Satisfacción vendedor</div></div>
+    <!-- Todas estas cifras son comprobables hoy: son características del
+         servicio, no estadísticas de uso. Antes decía "50.000+ vendedores
+         activos" y "98% satisfacción vendedor" sin una sola tienda dada
+         de alta. -->
+    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">0€</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Primer mes, todos los planes</div></div>
+    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">35</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Países cubiertos</div></div>
+    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">5</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Tipos de negocio</div></div>
+    <div><div style="font-size:26px;font-weight:900;color:#E0921A;">3</div><div style="font-size:12px;color:#A07050;margin-top:4px;">Idiomas: ES · EN · FR</div></div>
   </div>
 </section>
 
 <!-- CTA -->
 <section class="cta">
   <h2 class="reveal" data-i18n="cta_h">Ready to Take Your Business Online?</h2>
-  <p class="reveal" data-i18n="cta_p">Join 50,000+ vendors. Open your store today. First month free on all plans.</p>
+  <p class="reveal" data-i18n="cta_p">Open your store today and sell across 35 countries. First month free on all plans.</p>
   <div class="cta-btns">
     <a href="#plans" class="btn-cta btn-cta-o" data-i18n="cta_btn1">Open My Store</a>
     <a href="../" class="btn-cta btn-cta-w" data-i18n="cta_btn2">View Ecosystem</a>
@@ -1213,7 +1223,7 @@ function toggleFaq(header){
     <div class="foot-top">
       <div>
         <div class="foot-logo"><img src="assets/logo.svg" alt="XenderBigShop" height="40" style="display:block;"></div>
-        <p class="foot-desc" data-i18n="foot_desc">Africa's #1 multi-vendor marketplace for restaurants, pharmacies, boutiques and every type of business. We Simplify Life.</p>
+        <p class="foot-desc" data-i18n="foot_desc">Multi-vendor marketplace for restaurants, pharmacies, boutiques and every type of business in Africa. We Simplify Life.</p>
       </div>
       <div>
         <p class="foot-col-ttl" data-i18n="foot_biz">Business Types</p>
@@ -1256,7 +1266,7 @@ const TR = {
   es:{
     dl_h:'Gestiona tu tienda desde el móvil', dl_sub:'Panel de vendedor completo en iOS y Android.',
     ck_txt:'🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#E0921A;text-decoration:underline;">Política de Privacidad</a>.', ck_dec:'Rechazar', ck_acc:'Aceptar ✓',
-    announce_text:'XenderBigShop — Abre tu restaurante, farmacia o boutique online en 48 horas · Marketplace B2B #1 de África',
+    announce_text:'XenderBigShop — Abre tu restaurante, farmacia o boutique online en 48 horas · Marketplace B2B para África',
     nav_biz:'Tipos de Negocio', nav_how:'Cómo funciona', nav_feat:'Funciones', nav_plans:'Planes', nav_eco:'Ecosistema', nav_start:'Abrir mi Tienda',
     hero_badge:'MARKETPLACE MULTI-VENDOR · AFRICA',
     hero_h1:'Vende tu <em>Restaurante, Farmacia</em><br/>o Negocio Online',
@@ -1264,7 +1274,7 @@ const TR = {
     hero_btn1:'Abrir mi Tienda Hoy', hero_btn2:'Ver Tipos de Negocio',
     biz_rest:'Restaurante', biz_rest_d:'Menú online y delivery', biz_pharma:'Farmacia', biz_pharma_d:'Medicinas y salud',
     biz_super:'Supermercado', biz_super_d:'Compra a domicilio', biz_bout:'Boutique', biz_bout_d:'Moda y ropa',
-    trust1:'Vendedores activos', trust2:'Países', trust3:'Valoración media', trust4:'Tienda en marcha',
+    trust1:'Primer mes, todos los planes', trust2:'Países cubiertos', trust3:'Comisión, plan Básico', trust4:'Tienda en marcha',
     stat1:'Vendedores Activos', stat2:'Pedidos Mensuales', stat3:'Países', stat4:'Satisfacción',
     biz_tag:'PARA QUIÉN ES', biz_title:'Todo Tipo de Negocio es Bienvenido',
     biz_sub:'Tanto si cocinas, vendes medicamentos, o tienes una boutique — XenderBigShop tiene un espacio dedicado para tu negocio.',
@@ -1323,14 +1333,15 @@ const TR = {
     t2_name:'Dr. Emmanuel Ondoa', t2_role:'Propietario de Farmacia · Yaundé, Camerún',
     t3_text:'"Vendo estampados africanos y mi boutique ahora envía a 12 países. La plataforma tradujo mi tienda a 3 idiomas automáticamente. Los ingresos pasaron de €500 a €4.000/mes."',
     t3_name:'Grace Ayuk', t3_role:'Boutique de Moda · Douala, Camerún',
-    cta_h:'¿Listo para Llevar tu Negocio Online?', cta_p:'Únete a 50.000+ vendedores. Abre tu tienda hoy. Primer mes gratis en todos los planes.',
+    cta_h:'¿Listo para Llevar tu Negocio Online?', cta_p:'Abre tu tienda hoy y véndele a 35 países. Primer mes gratis en todos los planes.',
+    vendors_demo:'Ejemplos del tipo de negocio que puede vender en XenderBigShop.',
     cta_btn1:'Abrir mi Tienda', cta_btn2:'Ver Ecosistema',
     contact_label:'Contacto', contact_h:'Contacto & Soporte Vendedores', contact_p:'Abre tu tienda, asóciate con nosotros u obtén ayuda con tu cuenta. Estamos aquí.',
     contact_vend:'Alta de Vendedor', contact_vend_d:'Abre tu tienda y empieza a vender en África en 48 horas.',
     contact_log:'Logística & B2B', contact_log_d:'Mayorista, envíos masivos e importación B2B desde Asia.',
     contact_par:'Asociaciones', contact_par_d:'Conviértete en Circular o socio de distribución regional.',
     contact_inv:'Inversores', contact_inv_d:'Ronda Seed abierta. Deck bajo solicitud.',
-    foot_desc:"Marketplace multi-vendor #1 de África para restaurantes, farmacias, boutiques y todo tipo de negocio. We Simplify Life.",
+    foot_desc:"Marketplace multivendedor para restaurantes, farmacias, boutiques y todo tipo de negocio en África. We Simplify Life.",
     foot_biz:'Tipos de Negocio', foot_ecosystem:'Ecosistema', foot_legal:'Legal',
     foot_privacy:'Privacidad', foot_terms:'Términos', foot_vendor_rules:'Reglas Vendedores', foot_buyer:'Protección Comprador',
     foot_copy:'© 2026 XenderBigShop · Ecosistema InnovaAFRIC'
@@ -1338,7 +1349,7 @@ const TR = {
   en:{
     dl_h:'Manage your store from your phone', dl_sub:'Full seller dashboard on iOS and Android.',
     ck_txt:'🍪 We use cookies to improve your experience. <a href="#" style="color:#E0921A;text-decoration:underline;">Privacy Policy</a>.', ck_dec:'Decline', ck_acc:'Accept ✓',
-    announce_text:"XenderBigShop — Open your restaurant, pharmacy or boutique online in 48 hours · Africa's #1 B2B Marketplace",
+    announce_text:"XenderBigShop — Open your restaurant, pharmacy or boutique online in 48 hours · B2B Marketplace for Africa",
     nav_biz:'Business Types', nav_how:'How it works', nav_feat:'Features', nav_plans:'Plans', nav_eco:'Ecosystem', nav_start:'Open My Store',
     hero_badge:'MULTI-VENDOR MARKETPLACE · AFRICA',
     hero_h1:'Sell Your <em>Restaurant, Pharmacy</em><br/>or Business Online',
@@ -1346,7 +1357,7 @@ const TR = {
     hero_btn1:'Open My Store Today', hero_btn2:'See Business Types',
     biz_rest:'Restaurant', biz_rest_d:'Online menu & delivery', biz_pharma:'Pharmacy', biz_pharma_d:'Medicines & health',
     biz_super:'Supermarket', biz_super_d:'Groceries delivered', biz_bout:'Boutique', biz_bout_d:'Fashion & clothing',
-    trust1:'Active vendors', trust2:'Countries', trust3:'Average rating', trust4:'Store live',
+    trust1:'First month, all plans', trust2:'Countries covered', trust3:'Commission, Basic plan', trust4:'Store live',
     stat1:'Active Vendors', stat2:'Monthly Orders', stat3:'Countries', stat4:'Satisfaction',
     biz_tag:'WHO IS IT FOR', biz_title:'Every Type of Business is Welcome',
     biz_sub:'Whether you cook meals, sell medicines, or run a fashion boutique — XenderBigShop has a dedicated space for your business.',
@@ -1405,7 +1416,8 @@ const TR = {
     t2_name:'Dr. Emmanuel Ondoa', t2_role:'Pharmacy Owner · Yaoundé, Cameroon',
     t3_text:'"I sell African prints and my boutique now ships to 12 countries. The platform translated my store in 3 languages automatically. Revenue went from €500 to €4,000/month."',
     t3_name:'Grace Ayuk', t3_role:'Fashion Boutique · Douala, Cameroon',
-    cta_h:'Ready to Take Your Business Online?', cta_p:'Join 50,000+ vendors. Open your store today. First month free on all plans.',
+    cta_h:'Ready to Take Your Business Online?', cta_p:'Open your store today and sell across 35 countries. First month free on all plans.',
+    vendors_demo:'Examples of the kind of business that can sell on XenderBigShop.',
     cta_btn1:'Open My Store', cta_btn2:'View Ecosystem',
     contact_label:'Contact', contact_h:'Contact & Vendor Support', contact_p:'Open your store, partner with us, or get help with your account. We are here.',
     contact_vend:'Vendor Onboarding', contact_vend_d:'Open your store and start selling to Africa in 48 hours.',
@@ -1420,7 +1432,7 @@ const TR = {
   fr:{
     dl_h:'Gérez votre boutique depuis le mobile', dl_sub:'Tableau de bord vendeur complet sur iOS et Android.',
     ck_txt:'🍪 Nous utilisons des cookies pour améliorer votre expérience. <a href="#" style="color:#E0921A;text-decoration:underline;">Politique de confidentialité</a>.', ck_dec:'Refuser', ck_acc:'Accepter ✓',
-    announce_text:"XenderBigShop — Ouvrez votre restaurant, pharmacie ou boutique en ligne en 48h · Marketplace B2B #1 d'Afrique",
+    announce_text:"XenderBigShop — Ouvrez votre restaurant, pharmacie ou boutique en ligne en 48h · Marketplace B2B pour l'Afrique",
     nav_biz:"Types d'Entreprise", nav_how:'Comment ça marche', nav_feat:'Fonctionnalités', nav_plans:'Plans', nav_eco:'Écosystème', nav_start:'Ouvrir ma Boutique',
     hero_badge:'MARKETPLACE MULTI-VENDEUR · AFRIQUE',
     hero_h1:'Vendez votre <em>Restaurant, Pharmacie</em><br/>ou Entreprise en Ligne',
@@ -1428,7 +1440,7 @@ const TR = {
     hero_btn1:"Ouvrir ma Boutique Aujourd'hui", hero_btn2:"Voir les Types d'Entreprise",
     biz_rest:'Restaurant', biz_rest_d:'Menu en ligne & livraison', biz_pharma:'Pharmacie', biz_pharma_d:'Médicaments & santé',
     biz_super:'Supermarché', biz_super_d:'Courses à domicile', biz_bout:'Boutique', biz_bout_d:'Mode & vêtements',
-    trust1:'Vendeurs actifs', trust2:'Pays', trust3:'Note moyenne', trust4:'Boutique en ligne',
+    trust1:'Premier mois, tous les plans', trust2:'Pays couverts', trust3:'Commission, plan Basique', trust4:'Boutique en ligne',
     stat1:'Vendeurs Actifs', stat2:'Commandes Mensuelles', stat3:'Pays', stat4:'Satisfaction',
     biz_tag:'POUR QUI', biz_title:"Chaque Type d'Entreprise est le Bienvenu",
     biz_sub:"Que vous cuisiniez, vendiez des médicaments ou gériez une boutique de mode — XenderBigShop a un espace dédié pour votre entreprise.",
@@ -1487,14 +1499,15 @@ const TR = {
     t2_name:'Dr. Emmanuel Ondoa', t2_role:'Pharmacien · Yaoundé, Cameroun',
     t3_text:"\"Je vends des imprimés africains et ma boutique livre maintenant dans 12 pays. La plateforme a traduit ma boutique en 3 langues automatiquement. Revenus passés de €500 à €4.000/mois.\"",
     t3_name:'Grace Ayuk', t3_role:'Boutique de Mode · Douala, Cameroun',
-    cta_h:'Prêt à Mettre votre Entreprise en Ligne ?', cta_p:'Rejoignez 50 000+ vendeurs. Ouvrez votre boutique. Premier mois gratuit.',
+    cta_h:'Prêt à Mettre votre Entreprise en Ligne ?', cta_p:'Ouvrez votre boutique et vendez dans 35 pays. Premier mois gratuit sur tous les plans.',
+    vendors_demo:'Exemples du type de commerce qui peut vendre sur XenderBigShop.',
     cta_btn1:'Ouvrir ma Boutique', cta_btn2:"Voir l'Écosystème",
     contact_label:'Contact', contact_h:'Contact & Support Vendeurs', contact_p:"Ouvrez votre boutique, partenariez avec nous ou obtenez de l'aide. Nous sommes là.",
     contact_vend:'Inscription Vendeur', contact_vend_d:"Ouvrez votre boutique et commencez à vendre en Afrique en 48 heures.",
     contact_log:'Logistique & B2B', contact_log_d:"Grossiste, envois en masse et import B2B depuis l'Asie.",
     contact_par:'Partenariats', contact_par_d:'Devenez Circulaire ou partenaire de distribution régionale.',
     contact_inv:'Investisseurs', contact_inv_d:'Levée Seed ouverte. Deck sur demande.',
-    foot_desc:"Marketplace multi-vendeur #1 d'Afrique pour restaurants, pharmacies, boutiques et toutes les entreprises. We Simplify Life.",
+    foot_desc:"Marketplace multi-vendeur pour restaurants, pharmacies, boutiques et toutes les entreprises d'Afrique. We Simplify Life.",
     foot_biz:"Types d'Entreprise", foot_ecosystem:'Écosystème', foot_legal:'Légal',
     foot_privacy:'Confidentialité', foot_terms:'Conditions', foot_vendor_rules:'Règles Vendeurs', foot_buyer:'Protection Acheteur',
     foot_copy:"© 2026 XenderBigShop · Écosystème InnovaAFRIC"
