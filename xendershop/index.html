@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head><!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGSW2FSB8J"></script>
@@ -134,27 +134,13 @@
       if(!data||!data.length) return;
       var grid = document.getElementById('xs-product-grid');
       if(!grid) return;
+      // Reutiliza el mismo renderizador que las subcategorías, para que estas
+      // tarjetas también lleven data-eur y respondan al cambio de moneda.
       var html = data.map(function(p){
-        var price = p.price_eur ? parseFloat(p.price_eur).toFixed(2)
-          : (p.priceEur ? parseFloat(p.priceEur).toFixed(2) : '9.99');
-        var orig = p.original_price ? parseFloat(p.original_price).toFixed(2) : (parseFloat(price)*1.6).toFixed(2);
-        var disc = p.discount ? '-'+p.discount+'%' : '-38%';
-        var rating = p.rating || (4.2 + Math.random()*0.7).toFixed(1);
-        var orders = p.orders || Math.floor(Math.random()*2000+200);
-        var stars = '★★★★' + (parseFloat(rating)>=4.5?'★':'☆');
-        var img = p.image_url || p.imageUrl || CATEGORY_IMGS[p.category] || CATEGORY_IMGS['default'];
-        var name = (p.name||'Producto').replace(/'/g,'&#39;');
-        return '<div class="pcard" onclick="xsToast(\'🛒 '+name+' añadido al carrito\',\'success\')">'
-          +'<div class="pcard-img"><img src="'+img+'" alt="'+name+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;">'
-          +'<span class="pcard-discount">'+disc+'</span>'
-          +'<span class="pcard-fav">♡</span></div>'
-          +'<div class="pcard-body">'
-          +'<div class="pcard-price"><span class="sym">€</span>'+price+'</div>'
-          +'<div class="pcard-orig">€'+orig+'</div>'
-          +'<div class="pcard-title">'+p.name+'</div>'
-          +'<div class="pcard-meta"><span class="pcard-stars">'+stars+'</span><span class="pcard-orders">'+orders+' '+((XS_TR[XS_LANG]||XS_TR.es).sold_lbl||'vendidos')+'</span></div>'
-          +'<div class="pcard-ship">'+(XS_TR[XS_LANG]||XS_TR.es).ship_free_china+'</div>'
-          +'</div></div>';
+        var n = xsNormalize(p);
+        if(!n.img) n.img = CATEGORY_IMGS[p.category] || CATEGORY_IMGS['default'];
+        if(!n.orders) n.orders = Math.floor(Math.random()*2000+200);
+        return xsCardHTML(n);
       }).join('');
       grid.insertAdjacentHTML('afterbegin', html);
     } catch(e){}
@@ -220,6 +206,13 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .lang-row{display:flex;gap:4px;}
 .lb{background:rgba(255,255,255,.2);border:none;border-radius:3px;padding:3px 7px;font-size:10px;font-weight:700;color:#fff;cursor:pointer;transition:background .2s;}
 .lb:hover,.lb.active{background:#fff;color:var(--red);}
+/* Selector de moneda. El desplegable nativo se pinta con fondo blanco, así que
+   los <option> necesitan color propio: si heredan el blanco del <select>
+   quedan invisibles (texto blanco sobre blanco). */
+.cur-select{background:rgba(255,255,255,.2);border:none;border-radius:3px;padding:4px 8px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;outline:none;margin-left:4px;font-family:inherit;}
+.cur-select:hover{background:rgba(255,255,255,.32);}
+.cur-select:focus-visible{outline:2px solid #FFD700;outline-offset:1px;}
+.cur-select option{color:#333;background:#fff;font-weight:600;}
 .xs-fade{animation:xsFade .25s ease}@keyframes xsFade{from{opacity:.3}to{opacity:1}}
 
 /* ── CAT BAR ── */
@@ -324,7 +317,11 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .cat-sidebar{border-right:1px solid var(--border);padding:8px 0;}
 .catsb-item{padding:8px 14px;font-size:12px;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s;}
 .catsb-item:hover,.catsb-item.active{background:#fff0ed;color:var(--red);font-weight:600;}
+.catsb-item:focus-visible{outline:2px solid var(--red);outline-offset:-2px;}
 .cat-products-area{padding:12px;}
+.subcat-note{font-size:11px;color:var(--lgrey);padding:0 0 10px;line-height:1.5;}
+.xs-flash{animation:xsFlash 1.1s ease;}
+@keyframes xsFlash{0%{box-shadow:0 0 0 0 rgba(255,64,16,.45);}100%{box-shadow:0 0 0 14px rgba(255,64,16,0);}}
 .cat-products-area .products-row{grid-template-columns:repeat(4,1fr);}
 
 /* ── MEGA CATEGORY GRID ── */
@@ -425,15 +422,15 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span data-i18n="nav_cart">Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
       <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span></a>
       <div class="lang-row">
-        <button id="lb-es" class="lb active" onclick="setLang('es')">ES</button>
-        <button id="lb-en" class="lb" onclick="setLang('en')">EN</button>
-        <button id="lb-fr" class="lb" onclick="setLang('fr')">FR</button>
+        <button id="lb-es" class="lb active" onclick="xsPickLang('es')">ES</button>
+        <button id="lb-en" class="lb" onclick="xsPickLang('en')">EN</button>
+        <button id="lb-fr" class="lb" onclick="xsPickLang('fr')">FR</button>
       </div>
-      <select id="xs-cur" onchange="setCurrency(this.value)" style="background:rgba(255,255,255,.2);border:none;border-radius:3px;padding:3px 7px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;outline:none;margin-left:4px;" title="Moneda / Currency / Devise">
+      <select id="xs-cur" class="cur-select" onchange="xsPickCurrency(this.value)" title="Moneda / Currency / Devise">
         <option value="EUR">€ EUR</option>
         <option value="USD">$ USD</option>
-        <option value="XAF">F XAF</option>
-        <option value="XOF">F XOF</option>
+        <option value="XAF">FCFA XAF</option>
+        <option value="XOF">CFA XOF</option>
       </select>
     </div>
   </div>
@@ -1342,6 +1339,7 @@ var XS_TR={
 var XS_LANG=localStorage.getItem('xs_lang')||'es';
 function setLang(l){
   XS_LANG=l; localStorage.setItem('xs_lang',l);
+  document.documentElement.lang=l;   // SEO + lectores de pantalla
   document.querySelectorAll('.lb').forEach(function(b){b.classList.remove('active');});
   var lb=document.getElementById('lb-'+l);if(lb)lb.classList.add('active');
   var T=XS_TR[l]||XS_TR.es;
@@ -1383,11 +1381,21 @@ function setLang(l){
   }
 }
 setLang(XS_LANG);
+// El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
+function xsPickLang(l){localStorage.setItem('xs_lang_manual','1');setLang(l);}
 
 // ── CURRENCY ──
 var XS_CUR=localStorage.getItem('xs_cur')||'EUR';
 var XS_RATES={EUR:1,USD:1.08,XAF:655.957,XOF:655.957};
-var XS_SYMS={EUR:'€',USD:'$',XAF:'F ',XOF:'F '};
+var XS_SYMS={EUR:'€',USD:'$',XAF:'FCFA',XOF:'CFA'};
+// El franco CFA se escribe detrás del importe (6 500 FCFA), el euro y el dólar delante.
+var XS_SYM_AFTER={XAF:true,XOF:true};
+function xsFmtPrice(base,cur){
+  var rate=XS_RATES[cur]||1, sym=XS_SYMS[cur]||'€', val=base*rate;
+  var isDecimal=(cur==='EUR'||cur==='USD');
+  var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('fr-FR');
+  return XS_SYM_AFTER[cur]?{n:disp+' ',s:sym,after:true}:{n:disp,s:sym,after:false};
+}
 function initPrices(){
   document.querySelectorAll('.pcard-price').forEach(function(el){
     var sym=el.querySelector('.sym');
@@ -1400,31 +1408,361 @@ function initPrices(){
   });
 }
 function setCurrency(cur){
+  if(!XS_RATES[cur])cur='EUR';
   XS_CUR=cur;localStorage.setItem('xs_cur',cur);
   var sel=document.getElementById('xs-cur');if(sel)sel.value=cur;
-  var rate=XS_RATES[cur]||1;var sym=XS_SYMS[cur]||'€';
-  var isDecimal=(cur==='EUR'||cur==='USD');
   document.querySelectorAll('.pcard-price').forEach(function(el){
     var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
-    var val=base*rate;
-    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('es-ES', {useGrouping:'always'});
-    el.innerHTML='<span class="sym">'+sym+'</span>'+disp;
+    var f=xsFmtPrice(base,cur);
+    el.innerHTML=f.after?f.n+'<span class="sym">'+f.s+'</span>':'<span class="sym">'+f.s+'</span>'+f.n;
   });
   document.querySelectorAll('.pcard-orig').forEach(function(el){
     var base=parseFloat(el.getAttribute('data-eur'));if(isNaN(base))return;
-    var val=base*rate;
-    var disp=isDecimal?val.toFixed(2):Math.round(val).toLocaleString('es-ES', {useGrouping:'always'});
-    el.textContent=sym+disp;
+    var f=xsFmtPrice(base,cur);
+    el.textContent=f.after?f.n+f.s:f.s+f.n;
   });
 }
+// El usuario eligió moneda a mano → respetar su decisión y no volver a autodetectar.
+function xsPickCurrency(cur){localStorage.setItem('xs_cur_manual','1');setCurrency(cur);}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GEODETECCIÓN — país → idioma + moneda
+   Cadena: elección manual guardada > API geo-IP > zona horaria >
+           idioma del navegador > por defecto (en/USD).
+   ═══════════════════════════════════════════════════════════════════ */
+var XS_GEO={
+  // ── Europa (EUR) ──
+  ES:{lang:'es',cur:'EUR'}, FR:{lang:'fr',cur:'EUR'}, GB:{lang:'en',cur:'EUR'},
+  PT:{lang:'es',cur:'EUR'}, AD:{lang:'es',cur:'EUR'}, IT:{lang:'en',cur:'EUR'},
+  DE:{lang:'en',cur:'EUR'}, NL:{lang:'en',cur:'EUR'}, IE:{lang:'en',cur:'EUR'},
+  BE:{lang:'fr',cur:'EUR'}, LU:{lang:'fr',cur:'EUR'}, CH:{lang:'fr',cur:'EUR'},
+  AT:{lang:'en',cur:'EUR'}, MC:{lang:'fr',cur:'EUR'},
+  // ── América (USD) ──
+  US:{lang:'en',cur:'USD'}, CA:{lang:'en',cur:'USD'}, MX:{lang:'es',cur:'USD'},
+  AR:{lang:'es',cur:'USD'}, CO:{lang:'es',cur:'USD'}, CL:{lang:'es',cur:'USD'},
+  PE:{lang:'es',cur:'USD'}, BR:{lang:'en',cur:'USD'}, DO:{lang:'es',cur:'USD'},
+  // ── África Central — zona CEMAC → franco CFA XAF ──
+  CM:{lang:'fr',cur:'XAF'},   // Camerún
+  GQ:{lang:'es',cur:'XAF'},   // Guinea Ecuatorial — único país hispanohablante de la zona
+  GA:{lang:'fr',cur:'XAF'},   // Gabón
+  CG:{lang:'fr',cur:'XAF'},   // Congo-Brazzaville
+  TD:{lang:'fr',cur:'XAF'},   // Chad
+  CF:{lang:'fr',cur:'XAF'},   // República Centroafricana
+  // ── África Occidental — zona UEMOA → franco CFA XOF ──
+  CI:{lang:'fr',cur:'XOF'},   // Costa de Marfil
+  SN:{lang:'fr',cur:'XOF'},   // Senegal
+  ML:{lang:'fr',cur:'XOF'},   // Malí
+  BF:{lang:'fr',cur:'XOF'},   // Burkina Faso
+  NE:{lang:'fr',cur:'XOF'},   // Níger
+  TG:{lang:'fr',cur:'XOF'},   // Togo
+  BJ:{lang:'fr',cur:'XOF'},   // Benín
+  GW:{lang:'fr',cur:'XOF'},   // Guinea-Bisáu
+  // ── Resto de África francófona ──
+  MA:{lang:'fr',cur:'EUR'}, DZ:{lang:'fr',cur:'EUR'}, TN:{lang:'fr',cur:'EUR'},
+  CD:{lang:'fr',cur:'USD'}, MG:{lang:'fr',cur:'USD'}, GN:{lang:'fr',cur:'USD'},
+  // ── África anglófona ──
+  NG:{lang:'en',cur:'USD'}, GH:{lang:'en',cur:'USD'}, KE:{lang:'en',cur:'USD'},
+  ZA:{lang:'en',cur:'USD'}, TZ:{lang:'en',cur:'USD'}, UG:{lang:'en',cur:'USD'},
+  ET:{lang:'en',cur:'USD'}, RW:{lang:'en',cur:'USD'}, ZM:{lang:'en',cur:'USD'},
+  ZW:{lang:'en',cur:'USD'}, BW:{lang:'en',cur:'USD'}, NA:{lang:'en',cur:'USD'},
+  // ── África lusófona ──
+  AO:{lang:'es',cur:'USD'}, MZ:{lang:'es',cur:'USD'}, CV:{lang:'es',cur:'EUR'}
+};
+var XS_GEO_DEFAULT={lang:'en',cur:'USD'};
+
+// Respaldo 1: la zona horaria del navegador delata el país sin llamar a nadie.
+var XS_TZ={
+  'Europe/Madrid':'ES','Atlantic/Canary':'ES','Europe/Paris':'FR','Europe/London':'GB',
+  'Europe/Lisbon':'PT','Europe/Brussels':'BE','Europe/Zurich':'CH','Europe/Rome':'IT',
+  'Europe/Berlin':'DE','Europe/Amsterdam':'NL','Europe/Dublin':'IE',
+  'Africa/Douala':'CM','Africa/Malabo':'GQ','Africa/Libreville':'GA',
+  'Africa/Brazzaville':'CG','Africa/Ndjamena':'TD','Africa/Bangui':'CF',
+  'Africa/Abidjan':'CI','Africa/Dakar':'SN','Africa/Bamako':'ML',
+  'Africa/Ouagadougou':'BF','Africa/Niamey':'NE','Africa/Lome':'TG',
+  'Africa/Porto-Novo':'BJ','Africa/Bissau':'GW',
+  'Africa/Lagos':'NG','Africa/Accra':'GH','Africa/Nairobi':'KE',
+  'Africa/Johannesburg':'ZA','Africa/Kinshasa':'CD','Africa/Casablanca':'MA',
+  'Africa/Algiers':'DZ','Africa/Tunis':'TN','Africa/Luanda':'AO',
+  'America/New_York':'US','America/Chicago':'US','America/Denver':'US',
+  'America/Los_Angeles':'US','America/Toronto':'CA','America/Vancouver':'CA',
+  'America/Mexico_City':'MX','America/Bogota':'CO','America/Buenos_Aires':'AR'
+};
+
+function xsCountryFromTZ(){
+  try{
+    var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if(XS_TZ[tz])return XS_TZ[tz];
+    // Africa/Ciudad desconocida → al menos deducimos el continente
+    if(/^Europe\//.test(tz))return 'FR';
+    if(/^America\//.test(tz))return 'US';
+  }catch(e){}
+  return null;
+}
+
+// Respaldo 2: el idioma configurado en el navegador (es-ES → ES).
+function xsCountryFromNavLang(){
+  var l=(navigator.languages&&navigator.languages[0])||navigator.language||'';
+  var m=l.match(/^[a-z]{2}[-_]([A-Z]{2})$/i);
+  if(m&&XS_GEO[m[1].toUpperCase()])return m[1].toUpperCase();
+  var base=l.slice(0,2).toLowerCase();
+  if(base==='es')return 'ES'; if(base==='fr')return 'FR'; if(base==='en')return 'GB';
+  return null;
+}
+
+// Fuente principal: servicios geo-IP gratuitos, sin clave. Se prueban en orden
+// y cada uno tiene 2,5 s antes de darse por perdido.
+var XS_GEO_APIS=[
+  {url:'https://get.geojs.io/v1/ip/country.json',pick:function(d){return d.country;}},
+  {url:'https://ipapi.co/json/',              pick:function(d){return d.country_code;}},
+  {url:'https://ipwho.is/',                   pick:function(d){return d.country_code;}}
+];
+
+function xsFetchCountry(){
+  return new Promise(function(resolve){
+    var i=0;
+    (function next(){
+      if(i>=XS_GEO_APIS.length)return resolve(null);
+      var api=XS_GEO_APIS[i++];
+      var ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+      var timer=setTimeout(function(){if(ctrl)ctrl.abort();},2500);
+      fetch(api.url,ctrl?{signal:ctrl.signal}:{})
+        .then(function(r){return r.ok?r.json():Promise.reject();})
+        .then(function(d){
+          clearTimeout(timer);
+          var c=api.pick(d);
+          if(c&&/^[A-Za-z]{2}$/.test(c))resolve(c.toUpperCase());else next();
+        })
+        .catch(function(){clearTimeout(timer);next();});
+    })();
+  });
+}
+
+function xsApplyGeo(country,source){
+  var g=XS_GEO[country]||XS_GEO_DEFAULT;
+  var manualLang=localStorage.getItem('xs_lang_manual')==='1';
+  var manualCur =localStorage.getItem('xs_cur_manual')==='1';
+  if(!manualLang&&g.lang!==XS_LANG)setLang(g.lang);
+  if(!manualCur &&g.cur !==XS_CUR )setCurrency(g.cur);
+  localStorage.setItem('xs_country',country||'');
+  if(window.console&&console.info)
+    console.info('[XenderShop] País: '+(country||'?')+' ('+source+') → '+g.lang.toUpperCase()+' / '+g.cur);
+}
+
+function xsInitGeo(){
+  var manualLang=localStorage.getItem('xs_lang_manual')==='1';
+  var manualCur =localStorage.getItem('xs_cur_manual')==='1';
+  if(manualLang&&manualCur)return;               // el usuario ya decidió las dos cosas
+  // Aplicamos ya la pista local para que no haya parpadeo mientras responde la API.
+  var local=xsCountryFromTZ()||xsCountryFromNavLang();
+  if(local)xsApplyGeo(local,'zona horaria/navegador');
+  // Y afinamos con la IP real en cuanto llegue.
+  xsFetchCountry().then(function(c){
+    if(c&&c!==local)xsApplyGeo(c,'geo-IP');
+  });
+}
+
 window.addEventListener('DOMContentLoaded',function(){
   initPrices();
   if(XS_CUR!=='EUR')setCurrency(XS_CUR);
   var sel=document.getElementById('xs-cur');if(sel)sel.value=XS_CUR;
+  xsInitGeo();
 });
 
-// Cat bar active
-document.querySelectorAll('.cat-link').forEach(function(a){a.addEventListener('click',function(){document.querySelectorAll('.cat-link').forEach(l=>l.classList.remove('active'));this.classList.add('active');});});
+/* ═══════════════════════════════════════════════════════════════════
+   TAXONOMÍA DE CATEGORÍAS
+   Cada categoría lleva:
+     ae  → id de categoría de AliExpress
+     kw  → palabras clave de búsqueda (lo que realmente usa
+           aliexpress.affiliate.product.query; funciona aunque el id cambie)
+   ⚠ Los ids `ae` hay que confirmarlos con aliexpress.affiliate.category.get
+     antes de activar la sincronización. Las `kw` son fiables desde ya.
+   ═══════════════════════════════════════════════════════════════════ */
+var XS_CATS={
+  electronics:{ae:'44',        kw:'consumer electronics'},
+  women:      {ae:'100003109', kw:'women clothing'},
+  men:        {ae:'100003070', kw:'men clothing'},
+  home:       {ae:'15',        kw:'home garden'},
+  beauty:     {ae:'66',        kw:'beauty health'},
+  sports:     {ae:'18',        kw:'sports entertainment'},
+  baby:       {ae:'1501',      kw:'mother kids'},
+  auto:       {ae:'34',        kw:'automobiles motorcycles'},
+  toys:       {ae:'26',        kw:'toys hobbies'},
+  jewelry:    {ae:'1420',      kw:'jewelry accessories'},
+  bags:       {ae:'1524',      kw:'luggage bags'},
+  computers:  {ae:'7',         kw:'computer office'},
+  shoes:      {ae:'322',       kw:'shoes'},
+  security:   {ae:'30',        kw:'security protection'},
+  lighting:   {ae:'39',        kw:'lights lighting'},
+  food:       {ae:'2',         kw:'food'}
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   ORIGEN DE PRODUCTOS — adaptador único
+   Se prueba AliExpress primero y Supabase después. Cuando tengas las
+   credenciales de AliExpress solo hay que poner enabled:true y rellenar
+   endpoint: el resto de la página no cambia.
+   ═══════════════════════════════════════════════════════════════════ */
+var XS_SOURCE={
+  aliexpress:{
+    enabled:false,
+    // Debe apuntar a TU API de Railway, no directamente a AliExpress:
+    // la firma HMAC necesita el app_secret y ese no puede vivir en el navegador.
+    endpoint:'',   // p.ej. 'https://tu-api.up.railway.app/aliexpress/products'
+    ttl:600000     // 10 min de caché en memoria
+  },
+  supabase:{enabled:true}
+};
+var XS_PCACHE={};
+
+// Normaliza cualquier producto (AliExpress o Supabase) a la misma forma.
+function xsNormalize(p){
+  return {
+    name:  p.product_title||p.productTitle||p.name||'Producto',
+    eur:   parseFloat(p.target_sale_price||p.salePrice||p.price_eur||p.priceEur||p.price)||0,
+    orig:  parseFloat(p.target_original_price||p.originalPrice||p.original_price)||0,
+    img:   p.product_main_image_url||p.productMainImageUrl||p.image_url||p.imageUrl||'',
+    disc:  p.discount||'',
+    rating:p.evaluate_rate||p.averageStar||p.rating||'',
+    orders:p.lastest_volume||p.totalSoldQuantity||p.orders||0,
+    url:   p.promotion_link||p.product_detail_url||p.url||''
+  };
+}
+
+async function xsFetchAliExpress(cat,sub){
+  var s=XS_SOURCE.aliexpress;
+  if(!s.enabled||!s.endpoint)throw new Error('AliExpress desactivado');
+  var meta=XS_CATS[cat]||{};
+  var qs='?category_id='+encodeURIComponent(meta.ae||'')
+        +'&keywords='+encodeURIComponent((sub?sub.replace(/_/g,' ')+' ':'')+(meta.kw||''))
+        +'&currency=EUR&page_size=8';
+  var r=await fetch(s.endpoint+qs);
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  var d=await r.json();
+  return (d.products||d.result||d.items||[]).map(xsNormalize);
+}
+
+async function xsFetchSupabase(cat,sub){
+  if(!XS_SOURCE.supabase.enabled)throw new Error('Supabase desactivado');
+  var q=SB.from('products').select('*').limit(8);
+  if(cat)q=q.eq('category',cat);
+  if(sub)q=q.eq('subcategory',sub);
+  var res=await q;
+  if(res.error)throw res.error;
+  return (res.data||[]).map(xsNormalize);
+}
+
+// Devuelve [] si ninguna fuente tiene productos para esa subcategoría.
+async function xsFetchProducts(cat,sub){
+  var key=cat+'/'+sub, hit=XS_PCACHE[key];
+  if(hit&&Date.now()-hit.t<XS_SOURCE.aliexpress.ttl)return hit.v;
+  var list=[];
+  try{ list=await xsFetchAliExpress(cat,sub); }catch(e){}
+  if(!list.length){ try{ list=await xsFetchSupabase(cat,sub); }catch(e){} }
+  XS_PCACHE[key]={t:Date.now(),v:list};
+  return list;
+}
+
+// Pinta tarjetas con la misma estructura que las estáticas, para que el
+// conversor de moneda, los filtros y el modal las sigan reconociendo.
+function xsCardHTML(p){
+  var T=XS_TR[XS_LANG]||XS_TR.es;
+  var eur=p.eur||0;
+  var orig=p.orig>eur?p.orig:eur*1.6;
+  var disc=p.disc||('-'+Math.round((1-eur/orig)*100)+'%');
+  var f=xsFmtPrice(eur,XS_CUR), fo=xsFmtPrice(orig,XS_CUR);
+  var rating=parseFloat(p.rating)||4.5;
+  var stars='★★★★'+(rating>=4.5?'★':'☆');
+  var name=String(p.name).replace(/[<>"]/g,'');
+  return '<div class="pcard">'
+    +'<div class="pcard-img">'+(p.img?'<img src="'+p.img+'" alt="'+name+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;">':'📦')
+    +'<span class="pcard-discount">'+disc+'</span><span class="pcard-fav">❤️</span></div>'
+    +'<div class="pcard-body">'
+    +'<div class="pcard-price" data-eur="'+eur+'">'+(f.after?f.n+'<span class="sym">'+f.s+'</span>':'<span class="sym">'+f.s+'</span>'+f.n)+'</div>'
+    +'<div class="pcard-orig" data-eur="'+orig+'">'+(fo.after?fo.n+fo.s:fo.s+fo.n)+'</div>'
+    +'<div class="pcard-title">'+name+'</div>'
+    +'<div class="pcard-meta"><span class="pcard-stars">'+stars+'</span>'
+    +'<span class="pcard-orders">'+(p.orders||0).toLocaleString('fr-FR')+' '+(T.sold_lbl||'vendidos')+'</span></div>'
+    +'<div class="pcard-ship">'+(T.ship_free||'✈ Envío gratis')+'</div>'
+    +'</div></div>';
+}
+
+var XS_SUB_MSG={
+  es:{loading:'Cargando productos…',empty:'Catálogo de esta subcategoría disponible al conectar AliExpress. Mientras tanto, mira nuestra selección:'},
+  en:{loading:'Loading products…',empty:'This subcategory\'s catalogue arrives with the AliExpress sync. Meanwhile, browse our selection:'},
+  fr:{loading:'Chargement des produits…',empty:'Le catalogue de cette sous-catégorie arrive avec la synchro AliExpress. En attendant, voici notre sélection :'}
+};
+
+async function xsLoadSub(catKey,subKey,area){
+  var grid=area.querySelector('.products-row');if(!grid)return;
+  var M=XS_SUB_MSG[XS_LANG]||XS_SUB_MSG.es;
+  // Guardamos las tarjetas de demostración la primera vez, para poder volver.
+  if(!area.hasAttribute('data-fallback'))area.setAttribute('data-fallback',grid.innerHTML);
+  var note=area.querySelector('.subcat-note');
+  if(!note){note=document.createElement('div');note.className='subcat-note';area.insertBefore(note,grid);}
+  note.textContent=M.loading;note.style.display='';
+  var list=[];
+  try{ list=await xsFetchProducts(catKey,subKey); }catch(e){}
+  if(list.length){
+    grid.innerHTML=list.map(xsCardHTML).join('');
+    note.style.display='none';
+  }else{
+    grid.innerHTML=area.getAttribute('data-fallback');
+    note.textContent=M.empty;
+  }
+}
+
+function xsInitCats(){
+  var keyOf=function(el,pre){
+    var k=el.getAttribute('data-i18n')||'';
+    return k.replace(/^(cat_|hcat_|sub_)/,'');
+  };
+  // ── Sidebar de subcategorías dentro de cada bloque ──
+  document.querySelectorAll('.cat-block').forEach(function(block){
+    var titleEl=block.querySelector('.cat-block-title');
+    var catKey=titleEl?keyOf(titleEl):'';
+    block.setAttribute('data-cat',catKey);
+    var area=block.querySelector('.cat-products-area');
+    block.querySelectorAll('.catsb-item').forEach(function(item){
+      var subKey=keyOf(item);
+      item.setAttribute('data-sub',subKey);
+      item.setAttribute('role','button');
+      item.setAttribute('tabindex','0');
+      var go=function(){
+        block.querySelectorAll('.catsb-item').forEach(function(i){i.classList.remove('active');});
+        item.classList.add('active');
+        if(area)xsLoadSub(catKey,subKey,area);
+      };
+      item.addEventListener('click',go);
+      item.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+    });
+  });
+  // ── Barra superior y sidebar del hero: llevan al bloque de esa categoría ──
+  var jump=function(el,list){
+    var catKey=keyOf(el);
+    el.setAttribute('data-cat',catKey);
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      document.querySelectorAll(list).forEach(function(l){l.classList.remove('active');});
+      el.classList.add('active');
+      var block=document.querySelector('.cat-block[data-cat="'+catKey+'"]');
+      if(block){
+        block.scrollIntoView({behavior:'smooth',block:'start'});
+        block.classList.remove('xs-flash');void block.offsetWidth;block.classList.add('xs-flash');
+      }else{
+        // Sin bloque propio todavía: buscamos esa categoría en el buscador.
+        var inp=document.querySelector('.search-input');
+        if(inp){inp.value=el.textContent.replace(/[^\p{L}\s&]/gu,'').trim();inp.focus();}
+        xsToast('🔎 '+el.textContent.trim(),'success');
+      }
+    });
+  };
+  document.querySelectorAll('.cat-link').forEach(function(el){jump(el,'.cat-link');});
+  document.querySelectorAll('.hcat-item').forEach(function(el){
+    el.setAttribute('role','button');el.setAttribute('tabindex','0');
+    jump(el,'.hcat-item');
+  });
+}
+window.addEventListener('DOMContentLoaded',xsInitCats);
 
 // Filter bar
 function applyFilters(){
@@ -1478,17 +1816,19 @@ function openProduct(emoji,title,price,orig,discount){
   document.body.style.overflow='hidden';
 }
 function closeProdModal(){document.getElementById('prod-modal').style.display='none';document.body.style.overflow='';}
-document.querySelectorAll('.pcard').forEach(function(c){
-  c.style.cursor='pointer';
-  c.addEventListener('click',function(e){
-    if(e.target.classList.contains('pcard-fav'))return;
-    var emoji=c.querySelector('.pcard-img')&&c.querySelector('.pcard-img').textContent.replace(/[^^\u{1F000}-\u{1FFFF}☀-⟿]/gu,'').trim()||'📦';
-    var title=c.querySelector('.pcard-title')&&c.querySelector('.pcard-title').textContent||'Producto';
-    var price=c.querySelector('.pcard-price')&&c.querySelector('.pcard-price').textContent||'';
-    var orig=c.querySelector('.pcard-orig')&&c.querySelector('.pcard-orig').textContent||'';
-    var disc=c.querySelector('.pcard-discount')&&c.querySelector('.pcard-discount').textContent||'';
-    openProduct(emoji,title,price,orig,disc);
-  });
+// Delegación: así las tarjetas que se cargan después (subcategorías,
+// AliExpress, Supabase) también abren el modal sin recablear nada.
+document.addEventListener('click',function(e){
+  if(e.target.classList&&e.target.classList.contains('pcard-fav'))return;
+  var c=e.target.closest?e.target.closest('.pcard'):null;
+  if(!c)return;
+  var imgEl=c.querySelector('.pcard-img');
+  var emoji=(imgEl&&imgEl.textContent.replace(/[^^\u{1F000}-\u{1FFFF}☀-⟿]/gu,'').trim())||'📦';
+  var title=c.querySelector('.pcard-title')&&c.querySelector('.pcard-title').textContent||'Producto';
+  var price=c.querySelector('.pcard-price')&&c.querySelector('.pcard-price').textContent||'';
+  var orig=c.querySelector('.pcard-orig')&&c.querySelector('.pcard-orig').textContent||'';
+  var disc=c.querySelector('.pcard-discount')&&c.querySelector('.pcard-discount').textContent||'';
+  openProduct(emoji,title,price,orig,disc);
 });
 
 // Size selector in modal
