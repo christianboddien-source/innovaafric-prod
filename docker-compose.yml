@@ -1,0 +1,52 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  InnovaAFRIC — despliegue en el servidor de IONOS
+#
+#  Punto de partida para cuando el servidor esté activo. Arranca las webs
+#  estáticas y el proxy de AliExpress. La base de datos NO está aquí a
+#  propósito: Supabase se mueve al final, y con backups montados antes.
+#
+#  Uso:
+#    cp services/aliexpress-proxy/.env.example .env   # y rellenar
+#    docker compose up -d
+#
+#  ⚠ El archivo .env NO se sube a Git (ya está en .gitignore).
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ── Webs estáticas ──────────────────────────────────────────────────────
+  # Sirve xendershop, xenderbigshop, xendermoney, xenderdelivery e innovaafric
+  # desde el propio repo. Sustituye a GitHub Pages / Netlify.
+  web:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./:/srv:ro
+      - caddy_data:/data      # certificados TLS: si se pierde, se re-emiten
+      - caddy_config:/config
+    depends_on:
+      - aliexpress-proxy
+
+  # ── Proxy de AliExpress ─────────────────────────────────────────────────
+  aliexpress-proxy:
+    build: ./services/aliexpress-proxy
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      AE_APP_KEY: ${AE_APP_KEY}
+      AE_APP_SECRET: ${AE_APP_SECRET}
+      AE_TRACKING_ID: ${AE_TRACKING_ID:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://www.xendershop.com,https://xendershop.com}
+      CACHE_TTL_MS: ${CACHE_TTL_MS:-600000}
+    # Sin `ports:` a propósito: solo Caddy habla con él, no se expone a
+    # internet directamente.
+    expose:
+      - "3000"
+
+volumes:
+  caddy_data:
+  caddy_config:
