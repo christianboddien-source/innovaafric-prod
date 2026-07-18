@@ -66,8 +66,14 @@
         }
         var iaCode = genIACode();
         var now = new Date().toISOString();
+        var nombreCompleto = nombre + ' ' + apellidos;
+        // `full_name` es obligatoria (NOT NULL) en la tabla real y el alta no
+        // la enviaba: el insert fallaba siempre con 23502 y nadie podía
+        // registrarse. Se rellenan las dos porque el resto del código lee
+        // `name`.
         var {data: newUser, error} = await SB.from('users').insert({
-          name: nombre + ' ' + apellidos,
+          full_name: nombreCompleto,
+          name: nombreCompleto,
           email: email,
           phone: phone,
           country: pais,
@@ -78,14 +84,11 @@
           created_at: now
         }).select().single();
         if(error) throw error;
-        // Create wallet. Se comprueba el error: antes no, y una cuenta sin
-        // monedero llegaba al panel como si todo hubiese ido bien.
-        var wRes = await SB.from('wallets').insert({user_id: newUser.id, currency: 'EUR', balance: 0, created_at: now});
-        if(wRes.error){
-          console.error('[XenderMoney] Cuenta creada pero el monedero no:', wRes.error);
-          alert('⚠ Tu cuenta se ha creado, pero no hemos podido abrir tu monedero. Escríbenos antes de operar.');
-        }
-        xmSetSession({id: newUser.id, name: newUser.name, email: newUser.email, ia_code: iaCode, country: pais});
+        // El monedero NO se crea aquí: hay un trigger en la base de datos que
+        // lo abre solo al dar de alta el usuario. La tabla es multi-moneda en
+        // una única fila (eur, xaf, xof, usd, points), así que insertarlo a
+        // mano fallaba siempre con "duplicate key on wallets_user_id_key".
+        xmSetSession({id: newUser.id, name: newUser.full_name || newUser.name, email: newUser.email, ia_code: iaCode, country: pais});
         await xmShowDashboard(xmGetSession());
       } catch(err) {
         alert('❌ Error al crear cuenta: ' + (err.message||'inténtalo de nuevo'));
@@ -158,7 +161,7 @@
     // Supabase, se entra igualmente con lo mínimo en vez de dejar fuera a
     // alguien que sí se ha autenticado bien.
     xmSetSession(user
-      ? {id:user.id, name:user.name, email:user.email, ia_code:user.ia_code, country:user.country}
+      ? {id:user.id, name:user.full_name || user.name, email:user.email, ia_code:user.ia_code, country:user.country}
       : {id:null, name:null, email:email, ia_code:null, country:null});
     document.getElementById('xm-login-modal').style.display = 'none';
     await xmShowDashboard(xmGetSession());
