@@ -1980,6 +1980,62 @@ function toggleFloat(){var m=document.getElementById('float-menu');var b=documen
     }).catch(function(){});
 }catch(e){}})();
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     REFINAMIENTO VISUAL — capa aditiva, la última de la cascada.
+     Solo aspecto: ni una regla de posicionamiento ni de lógica. Si algo
+     no convence, se borra este bloque entero y la página vuelve
+     exactamente a como estaba antes.
+     ═══════════════════════════════════════════════════════════════════ -->
+<style>
+:root{
+  --r-sm:8px; --r-md:12px;
+  --sh-1:0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.05);
+  --sh-2:0 6px 20px rgba(16,24,40,.09), 0 2px 6px rgba(16,24,40,.04);
+  --hair:#eeeeee;
+}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* Un único ritmo de esquinas, en vez de la mezcla actual de 2/3/4 px */
+.section,.cat-block,.promo-strip,.subcat-block,.hero-row{border-radius:var(--r-md);}
+.pcard,.search-wrap,.btn-banner,.schip,.cd-box,.pay-chip,.allcat-card{border-radius:var(--r-sm);}
+.ptick img{border-radius:var(--r-sm);}
+
+/* Contornos más finos y sombra suave en lugar del borde duro */
+.section,.cat-block,.promo-strip,.subcat-block{border:1px solid var(--hair);box-shadow:var(--sh-1);}
+.pcard{border-color:var(--hair);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+.pcard:hover{transform:translateY(-3px);box-shadow:var(--sh-2);border-color:#f3d9d0;}
+.sec-head{border-bottom:1px solid var(--hair);padding-bottom:12px;}
+.hcat-item,.catsb-item{border-bottom-color:#f7f7f7;}
+
+/* Aire: mantiene la densidad de marketplace, pero respira */
+.section{padding:18px;}
+.products-row{gap:10px;}
+.pcard-body{padding:10px;}
+.page-wrap{padding:0 20px;}
+
+/* Tipografía algo más contenida */
+.sec-title-red,.cat-block-title,.banner-h{letter-spacing:-.02em;}
+.pcard-title{color:#4a4a4a;line-height:1.45;}
+.pcard-price{letter-spacing:-.02em;}
+
+/* Interacción coherente en toda la página */
+.cat-link,.hcat-item,.catsb-item,.schip,.see-more,.mega-cat-item,.allcat-card{transition:background .16s ease,color .16s ease,border-color .16s ease;}
+.search-wrap{box-shadow:var(--sh-1);}
+
+/* Foco visible: hoy no se ve nada al navegar con teclado */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
+.hcat-item:focus-visible,.catsb-item:focus-visible{
+  outline:2px solid var(--red);outline-offset:2px;border-radius:4px;
+}
+nav a:focus-visible,nav button:focus-visible,nav select:focus-visible{outline-color:#FFD700;}
+
+/* Quien pide menos movimiento, recibe menos movimiento */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
+  .prod-ticker-track{animation:none;}
+}
+</style>
 </body>
 </html>
 

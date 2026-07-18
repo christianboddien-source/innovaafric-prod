@@ -1876,6 +1876,57 @@ if(typeof openModal==='undefined'){function openModal(id){document.getElementByI
     }).catch(function(){});
 }catch(e){}})();
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     REFINAMIENTO VISUAL — capa aditiva, la última de la cascada.
+     Solo aspecto: ni una regla de posicionamiento ni de lógica. Si algo
+     no convence, se borra este bloque entero y la página vuelve
+     exactamente a como estaba antes.
+     ═══════════════════════════════════════════════════════════════════ -->
+<style>
+:root{
+  --sh-1:0 1px 2px rgba(61,28,0,.04), 0 1px 3px rgba(61,28,0,.05);
+  --sh-2:0 8px 28px rgba(61,28,0,.10), 0 2px 8px rgba(61,28,0,.05);
+  --hair:rgba(61,28,0,.09);
+}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* Escala de esquinas coherente: hoy conviven 3, 6, 8, 10, 12, 14, 16 y 20 px.
+   Va con !important porque el marcado lleva los radios en estilos inline y
+   un inline solo se puede sobrescribir así. Son propiedades puramente
+   cosméticas, ninguna afecta al posicionamiento. */
+.vcard,.biz-type-card,.feat-card,.faq-item,.plan-card{border-radius:16px!important;}
+.biz-type-btn,.btn-nav,.btn-primary,.btn-secondary{border-radius:10px!important;}
+.sec-tag,.vcard-badge{border-radius:999px!important;}
+
+/* NOTA sobre sombras y bordes de las tarjetas.
+   Aquí no se tocan, a propósito. Las tarjetas de esta página (.vcard,
+   .feat-card, .biz-type-card) se revelan con animaciones que ya animan
+   box-shadow. Al añadirles una `transition` sobre esa misma propiedad se
+   quedaban transiciones corriendo sin parar, y una transition activa gana en
+   la cascada incluso a !important: la sombra se congelaba en transparente.
+   Afinar sombras y bordes aquí exige antes sacar los estilos inline del
+   marcado a clases; hasta entonces, solo se refina lo que no entra en
+   conflicto. Se mantiene únicamente la elevación al pasar el ratón, que usa
+   transform y no interfiere. */
+.vcard,.feat-card,.biz-type-card{transition:transform .2s ease;}
+.vcard:hover,.feat-card:hover,.biz-type-card:hover{transform:translateY(-3px);}
+
+/* Tipografía algo más contenida en los titulares grandes */
+h1,h2,.sec-title,.hero-h1{letter-spacing:-.025em;}
+.feat-desc,.biz-type-desc{line-height:1.65;}
+
+/* Foco visible: hoy no se ve nada al navegar con teclado */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--orange);outline-offset:2px;border-radius:6px;
+}
+
+/* Quien pide menos movimiento, recibe menos movimiento */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
+  .reveal{opacity:1!important;transform:none!important;}
+}
+</style>
 </body>
 </html>
 
