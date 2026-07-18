@@ -314,9 +314,9 @@
     </div>
     <div class="nav-right">
       <div class="lang-btns">
-        <button onclick="setLang('es')" id="lb-es">ES</button>
-        <button onclick="setLang('en')" id="lb-en" class="active">EN</button>
-        <button onclick="setLang('fr')" id="lb-fr">FR</button>
+        <button onclick="bsPickLang('es')" id="lb-es">ES</button>
+        <button onclick="bsPickLang('en')" id="lb-en" class="active">EN</button>
+        <button onclick="bsPickLang('fr')" id="lb-fr">FR</button>
       </div>
       <a href="#" onclick="openModal('modal-bs');return false;" class="btn-nav" data-i18n="nav_start">Open My Store</a>
       <button class="ham-btn-xb" id="ham-btn-xb" onclick="toggleHamXb()">☰</button>
@@ -329,7 +329,7 @@
   <a href="#how" onclick="toggleHamXb()">⚙️ How it works</a>
   <a href="#calculadora-bs" onclick="toggleHamXb()">🧮 Calculadora</a>
   <a href="#plans" onclick="toggleHamXb()">💲 Plans</a>
-  <a href="#" onclick="openModal('modal-bs');return false;" onclick="toggleHamXb()" style="background:#E0921A;color:#fff;padding:14px 32px;border-radius:12px;">🚀 Open My Store</a>
+  <a href="#" onclick="toggleHamXb();openModal('modal-bs');return false;" style="background:#E0921A;color:#fff;padding:14px 32px;border-radius:12px;">🚀 Open My Store</a>
 </div>
 
 <!-- HERO -->
@@ -1218,11 +1218,11 @@ function toggleFaq(header){
       <div>
         <p class="foot-col-ttl" data-i18n="foot_biz">Business Types</p>
         <ul class="foot-links">
-          <li><a href="#" data-i18n="bt1_name">Restaurants</a></li>
-          <li><a href="#" data-i18n="bt2_name">Pharmacies</a></li>
-          <li><a href="#" data-i18n="bt3_name">Supermarkets</a></li>
-          <li><a href="#" data-i18n="bt4_name">Fashion Boutiques</a></li>
-          <li><a href="#" data-i18n="bt5_name">Beauty Salons</a></li>
+          <li><a href="#business-types" data-i18n="bt1_name">Restaurants</a></li>
+          <li><a href="#business-types" data-i18n="bt2_name">Pharmacies</a></li>
+          <li><a href="#business-types" data-i18n="bt3_name">Supermarkets</a></li>
+          <li><a href="#business-types" data-i18n="bt4_name">Fashion Boutiques</a></li>
+          <li><a href="#business-types" data-i18n="bt5_name">Beauty Salons</a></li>
         </ul>
       </div>
       <div>
@@ -1515,6 +1515,76 @@ function setLang(l) {
   });
 }
 setLang(LANG);
+// El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
+function bsPickLang(l){ localStorage.setItem('ia_lang_manual','1'); setLang(l); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   GEODETECCIÓN DE IDIOMA
+   Mismo mapa de países que XenderShop. Aquí solo decide el idioma:
+   los precios de los planes están en XAF y no se convierten.
+   Cadena: elección manual > geo-IP > zona horaria > navegador > EN.
+   ═══════════════════════════════════════════════════════════════════ */
+const BS_LANG_BY_COUNTRY = {
+  es:['ES','GQ','MX','AR','CO','CL','PE','DO','PT','AD','AO','MZ','CV'],
+  fr:['FR','BE','LU','CH','MC','CM','GA','CG','TD','CF','CI','SN','ML',
+      'BF','NE','TG','BJ','GW','MA','DZ','TN','CD','MG','GN']
+  // cualquier otro país → 'en'
+};
+const BS_TZ = {
+  'Europe/Madrid':'ES','Atlantic/Canary':'ES','Europe/Paris':'FR','Europe/Brussels':'BE',
+  'Europe/Zurich':'CH','Europe/Lisbon':'PT','Africa/Malabo':'GQ','Africa/Douala':'CM',
+  'Africa/Libreville':'GA','Africa/Brazzaville':'CG','Africa/Ndjamena':'TD','Africa/Bangui':'CF',
+  'Africa/Abidjan':'CI','Africa/Dakar':'SN','Africa/Bamako':'ML','Africa/Ouagadougou':'BF',
+  'Africa/Niamey':'NE','Africa/Lome':'TG','Africa/Porto-Novo':'BJ','Africa/Bissau':'GW',
+  'Africa/Casablanca':'MA','Africa/Algiers':'DZ','Africa/Tunis':'TN','Africa/Kinshasa':'CD',
+  'Africa/Luanda':'AO','America/Mexico_City':'MX','America/Bogota':'CO','America/Buenos_Aires':'AR'
+};
+function bsLangFor(country){
+  for(const l in BS_LANG_BY_COUNTRY) if(BS_LANG_BY_COUNTRY[l].includes(country)) return l;
+  return 'en';
+}
+function bsCountryLocal(){
+  try{
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if(BS_TZ[tz]) return BS_TZ[tz];
+  }catch(e){}
+  const nl = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+  const m = nl.match(/^[a-z]{2}[-_]([A-Z]{2})$/i);
+  if(m) return m[1].toUpperCase();
+  const base = nl.slice(0,2).toLowerCase();
+  return base==='es' ? 'ES' : base==='fr' ? 'FR' : null;
+}
+async function bsFetchCountry(){
+  const apis = [
+    ['https://get.geojs.io/v1/ip/country.json', d=>d.country],
+    ['https://ipapi.co/json/',                  d=>d.country_code],
+    ['https://ipwho.is/',                       d=>d.country_code]
+  ];
+  for(const [url,pick] of apis){
+    try{
+      const ctrl = new AbortController();
+      const t = setTimeout(()=>ctrl.abort(), 2500);
+      const r = await fetch(url, {signal: ctrl.signal});
+      clearTimeout(t);
+      if(!r.ok) continue;
+      const c = pick(await r.json());
+      if(c && /^[A-Za-z]{2}$/.test(c)) return c.toUpperCase();
+    }catch(e){}
+  }
+  return null;
+}
+async function bsInitGeo(){
+  if(localStorage.getItem('ia_lang_manual')==='1') return;   // el usuario ya decidió
+  const local = bsCountryLocal();                            // pista inmediata, sin parpadeo
+  if(local){ const l = bsLangFor(local); if(l!==LANG) setLang(l); }
+  const c = await bsFetchCountry();                          // y afinamos con la IP real
+  if(c && c!==local){
+    const l = bsLangFor(c);
+    if(l!==LANG) setLang(l);
+    console.info('[XenderBigShop] País: '+c+' (geo-IP) → '+l.toUpperCase());
+  }
+}
+bsInitGeo();
 
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
@@ -1760,7 +1830,7 @@ function bsUpdateDelivery(){
         <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#1a1a1a;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Publicar mi catálogo →</button></div>
       </form>
     </div>
-    <p style="text-align:center;margin-top:20px;font-size:13px;color:#666;">¿Ya tienes cuenta? <a href="#" style="color:#E0921A;font-weight:700;">Inicia sesión →</a></p>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:#666;">¿Ya tienes cuenta? <a href="../xendermoney/" style="color:#E0921A;font-weight:700;">Inicia sesión →</a></p>
   </div>
 </section>
   </div>
