@@ -418,6 +418,10 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 .footer-col h4{color:#fff;font-size:13px;font-weight:700;margin-bottom:12px;}
 .footer-col a{display:block;font-size:11px;color:#aaa;text-decoration:none;margin-bottom:6px;transition:color .2s;}
 .footer-col a:hover{color:var(--red3);}
+/* Los métodos de pago son informativos, no enlaces: mismo aspecto que el
+   resto de la columna pero sin cursor de mano ni efecto al pasar por encima,
+   para que nadie los pulse esperando que lleven a algún sitio. */
+.footer-col span{display:block;font-size:11px;color:#888;margin-bottom:6px;}
 .footer-bottom{border-top:1px solid #444;padding-top:16px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#777;}
 .pay-icons{display:flex;gap:6px;flex-wrap:wrap;}
 .pay-chip{background:#333;border-radius:3px;padding:3px 8px;font-size:10px;font-weight:700;color:#ddd;}
@@ -485,7 +489,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <a href="../xenderbigshop/" class="nav-icon-btn" style="background:#fff;border:1px solid rgba(255,255,255,0.85);border-radius:8px;padding:6px 12px;font-weight:700;color:#c62828;font-size:12px;">🏪 Vender en XenderBigShop</a>
       <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span data-i18n="nav_account">Cuenta</span></a>
       <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span data-i18n="nav_cart">Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
-      <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span></a>
+      <a href="#" class="nav-icon-btn cart-wrap"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span><span class="cart-badge" id="wish-count" style="display:none;">0</span></a>
       <div class="lang-row">
         <button id="lb-es" class="lb active" onclick="xsPickLang('es')">ES</button>
         <button id="lb-en" class="lb" onclick="xsPickLang('en')">EN</button>
@@ -616,7 +620,10 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div class="section" id="flash">
   <div class="sec-head">
     <div class="sec-title-red"><span class="flame">🔥</span> <span data-i18n="flash_h">Flash Deals</span> <div class="countdown" style="margin-left:12px;"><div class="cd-box" id="cdH">08</div><span class="cd-sep">:</span><div class="cd-box" id="cdM">34</div><span class="cd-sep">:</span><div class="cd-box" id="cdS">17</div></div></div>
-    <a href="#" class="see-more" data-i18n="see_more">Ver todo →</a>
+    <!-- "Ver todo" de Flash Deals: activa el filtro "En oferta", que ya
+         existe y funciona. Asi muestra TODOS los productos rebajados de la
+         pagina, no solo los cinco de esta fila. -->
+    <a href="#" class="see-more" id="xs-ver-ofertas" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="products-row cols5">
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=440&h=440&fit=crop&auto=format" alt="Auriculares Bluetooth TWS" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-62%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>12.99</div><div class="pcard-orig">€34.00</div><div class="pcard-title">Auriculares Bluetooth 5.3 TWS, cancelación de ruido activa, 40h batería</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">8,420 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
@@ -806,7 +813,9 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div class="section">
   <div class="sec-head">
     <div class="sec-title-red" data-i18n="jfy_h">✨ Solo Para Ti</div>
-    <a href="#" class="see-more" data-i18n="ver_mas">Ver más →</a>
+    <!-- "Ver más" de Solo Para Ti: quitado. Es una tira de recomendaciones y
+         no hay nada mas que mostrar detras, asi que enlazaba a la nada.
+         Volvera cuando el catalogo de AliExpress de para paginar. -->
   </div>
   <div class="jfy-grid" id="xs-product-grid">
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-33%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>159.00</div><div class="pcard-orig">€237.00</div><div class="pcard-title">Monitor gaming 27" 165Hz IPS 2K QHD, 1ms, FreeSync, HDMI+DP</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">2,800 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
@@ -1342,46 +1351,47 @@ setLang=function(l){
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <div class="footer-inner">
+    <!-- ═══════════════════════════════════════════════════════════════
+         El pie tenia 20 enlaces apuntando a href="#": Prensa, Inversores,
+         Trabaja con Nosotros, Blog, Mis Pedidos, Devoluciones, Programa de
+         Puntos, API, Chat 24/7... ninguno llevaba a ningun sitio.
+
+         Se ha recortado en vez de crear paginas vacias. Un pie corto donde
+         todo funciona da mejor impresion que uno largo que se desmorona al
+         pulsarlo — y quien evalue esta web va a pulsar.
+
+         Los metodos de pago pasan a texto plano: son informativos, nunca
+         debieron ser enlaces. Lo que prometia un servicio inexistente
+         (Chat 24/7, Centro de Ayuda) se ha quitado hasta que exista.
+         ═══════════════════════════════════════════════════════════════ -->
     <div class="footer-grid">
       <div class="footer-col">
         <h4 data-i18n="foot_col1">XenderShop</h4>
-        <a href="#" data-i18n="foot_about">Sobre Nosotros</a>
-        <a href="#" data-i18n="foot_press">Prensa & Media</a>
-        <a href="#" data-i18n="foot_investors">Inversores</a>
-        <a href="#" data-i18n="foot_jobs">Trabaja con Nosotros</a>
-        <a href="#">Blog</a>
+        <a href="../" data-i18n="foot_about">Sobre Nosotros</a>
+        <a href="#contact" data-i18n="foot_contact">Contacto</a>
       </div>
       <div class="footer-col">
         <h4 data-i18n="foot_col2">Comprar</h4>
-        <a href="#" data-i18n="foot_orders">Mis Pedidos</a>
-        <a href="#" data-i18n="foot_wishlist">Lista de Deseos</a>
-        <a href="#" data-i18n="foot_returns">Devoluciones</a>
-        <a href="#" data-i18n="foot_tracking">Seguimiento de Envío</a>
-        <a href="#" data-i18n="foot_points">Programa de Puntos</a>
+        <a href="terminos.html" data-i18n="foot_returns">Devoluciones</a>
+        <a href="terminos.html">Envíos y plazos</a>
       </div>
       <div class="footer-col">
         <h4 data-i18n="foot_col3">Vender</h4>
         <a href="../xenderbigshop/" data-i18n="foot_open_store" target="_blank" rel="noopener noreferrer">Abrir Tienda</a>
-        <a href="#" data-i18n="foot_seller_guide">Guía del Vendedor</a>
-        <a href="#" data-i18n="foot_plans">Planes & Precios</a>
-        <a href="#" data-i18n="foot_seller_help">Centro de Ayuda Vendor</a>
-        <a href="#">API</a>
+        <a href="../xenderbigshop/" data-i18n="foot_plans" target="_blank" rel="noopener noreferrer">Planes & Precios</a>
       </div>
       <div class="footer-col">
         <h4 data-i18n="foot_col4">Pagar con</h4>
         <a href="../xendermoney/" style="color:#FF6B35;font-weight:700;" target="_blank" rel="noopener noreferrer">💰 XenderMoney</a>
-        <a href="#" data-i18n="foot_momo">Mobile Money</a>
-        <a href="#">Orange Money</a>
-        <a href="#">MTN MoMo</a>
-        <a href="#" data-i18n="foot_card">Tarjeta Bancaria</a>
+        <span data-i18n="foot_momo">Mobile Money</span>
+        <span>Orange Money</span>
+        <span>MTN MoMo</span>
+        <span data-i18n="foot_card">Tarjeta Bancaria</span>
       </div>
       <div class="footer-col">
-        <h4 data-i18n="foot_col5">Ayuda</h4>
-        <a href="#" data-i18n="foot_help">Centro de Ayuda</a>
-        <a href="#">Chat 24/7</a>
+        <h4 data-i18n="foot_col5">Legal</h4>
         <a href="privacidad.html" data-i18n="foot_privacy">Política de Privacidad</a>
         <a href="terminos.html" data-i18n="foot_terms">Términos de Uso</a>
-        <a href="#contact" data-i18n="foot_contact">Contacto</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1979,6 +1989,9 @@ async function xsLoadSub(catKey,subKey,area){
     grid.innerHTML=area.getAttribute('data-fallback');
     note.textContent=M.empty;
   }
+  // Las tarjetas se han vuelto a pintar: hay que repintar los corazones o
+  // los productos guardados apareceran como si no lo estuvieran.
+  if(typeof XS_FAVS!=='undefined')xsFavPinta();
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -2186,6 +2199,74 @@ var XS_MEGA={
     fr:['Snacks','Boissons','Café et thé','Épices','Conserves','Huiles','Sans gluten','Compléments']}
 };
 
+/* ═══════════════════════════════════════════════════════════════════
+   FAVORITOS
+
+   El corazon del modal hacia alert('❤️ Guardado en favoritos') y no
+   guardaba nada; el de las tarjetas no tenia ningun manejador. El
+   contador "Deseos" de la cabecera tampoco existia.
+
+   Mismo patron que el carrito: un array persistido en localStorage y el
+   DOM pintado desde el, nunca al reves.
+   ═══════════════════════════════════════════════════════════════════ */
+var XS_FAVS=[];
+var XS_FAV_MSG={
+  es:{add:'Guardado en favoritos',del:'Quitado de favoritos'},
+  en:{add:'Saved to wishlist',del:'Removed from wishlist'},
+  fr:{add:'Ajouté aux favoris',del:'Retiré des favoris'}
+};
+
+function xsFavGuardar(){ try{ localStorage.setItem('xs_favs',JSON.stringify(XS_FAVS)); }catch(e){} }
+function xsFavCargar(){
+  try{
+    var g=JSON.parse(localStorage.getItem('xs_favs'));
+    XS_FAVS=Array.isArray(g)?g.filter(function(x){return typeof x==='string'&&x;}):[];
+  }catch(e){ XS_FAVS=[]; }
+}
+function xsEsFav(t){ return XS_FAVS.indexOf((t||'').slice(0,80))>-1; }
+
+function xsFavToggle(titulo){
+  if(!titulo)return;
+  var id=titulo.slice(0,80);
+  var i=XS_FAVS.indexOf(id);
+  var M=XS_FAV_MSG[XS_LANG]||XS_FAV_MSG.es;
+  if(i>-1){ XS_FAVS.splice(i,1); } else { XS_FAVS.push(id); }
+  xsFavGuardar(); xsFavPinta();
+  if(typeof xsToast==='function')xsToast((i>-1?'🤍 ':'❤️ ')+(i>-1?M.del:M.add),'success');
+}
+
+/* Pinta el estado en las tarjetas, en el modal y en el contador. El corazon
+   lleno significa guardado; el hueco, no. Antes siempre estaba lleno, que
+   es lo que hacia creer que se habia guardado algo. */
+function xsFavPinta(){
+  document.querySelectorAll('.pcard').forEach(function(c){
+    var t=c.querySelector('.pcard-title'), h=c.querySelector('.pcard-fav');
+    if(!t||!h)return;
+    var fav=xsEsFav(t.textContent);
+    h.textContent=fav?'❤️':'🤍';
+    h.style.opacity=fav?'1':'';   // si esta guardado se ve siempre, no solo al pasar el raton
+  });
+  var bm=document.getElementById('pm-fav');
+  if(bm)bm.textContent=(XS_PROD_ACTUAL&&xsEsFav(XS_PROD_ACTUAL.t))?'❤️':'🤍';
+  var cont=document.getElementById('wish-count');
+  if(cont){ cont.textContent=XS_FAVS.length; cont.style.display=XS_FAVS.length?'':'none'; }
+}
+
+function xsFavActual(){ if(XS_PROD_ACTUAL)xsFavToggle(XS_PROD_ACTUAL.t); }
+
+// El corazon de las tarjetas: un solo listener para las de ahora y las que
+// lleguen despues de AliExpress.
+document.addEventListener('click',function(e){
+  var h=e.target.classList&&e.target.classList.contains('pcard-fav')?e.target:null;
+  if(!h)return;
+  e.preventDefault(); e.stopPropagation();   // que no abra tambien el modal
+  var c=h.closest('.pcard'), t=c?c.querySelector('.pcard-title'):null;
+  if(t)xsFavToggle(t.textContent);
+});
+
+function xsFavInit(){ xsFavCargar(); xsFavPinta(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',xsFavInit); } else { xsFavInit(); }
+
 var xsMegaEl=null, xsMegaTimer=null;
 
 function xsMegaPanel(){
@@ -2281,6 +2362,36 @@ function xsMegaAbrir(item,catKey){
   });
 }
 
+/* Los seis "Ver todo →" de las cabeceras de seccion eran href="#" sin
+   manejador. Ahora piden el catalogo completo de esa categoria por la misma
+   via que las subcategorias: hoy eso muestra el aviso honesto de que el
+   catalogo llegara al conectar AliExpress, y cuando la API este enchufada
+   funcionaran solos sin tocar nada. */
+function xsInitVerTodo(){
+  // Flash Deals: enciende el filtro "En oferta" y lleva a la barra de
+  // filtros, para que se vea que ha pasado algo.
+  var ofertas=document.getElementById('xs-ver-ofertas');
+  if(ofertas)ofertas.addEventListener('click',function(e){
+    e.preventDefault();
+    var chk=document.getElementById('f-sale');
+    if(chk){ chk.checked=true; applyFilters(); }
+    var barra=document.getElementById('f-count');
+    if(barra)barra.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  document.querySelectorAll('.cat-block .see-more').forEach(function(a){
+    var bloque=a.closest('.cat-block');
+    if(!bloque)return;
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      var cat=bloque.getAttribute('data-cat')||'';
+      var area=bloque.querySelector('.cat-products-area');
+      bloque.scrollIntoView({behavior:'smooth',block:'start'});
+      if(area&&typeof xsLoadSub==='function')xsLoadSub(cat,'',area);
+    });
+  });
+}
+
 function xsInitMega(){
   document.querySelectorAll('.hero-cats .hcat-item').forEach(function(item){
     var k=(item.getAttribute('data-i18n')||'').replace(/^(cat_|hcat_)/,'');
@@ -2315,6 +2426,9 @@ function xsInitMega(){
 
 window.addEventListener('DOMContentLoaded',xsInitCats);
 window.addEventListener('DOMContentLoaded',xsInitMega);
+// Va despues de xsInitCats a proposito: es esa la que pone data-cat en los
+// bloques, y xsInitVerTodo lo necesita para saber que categoria pedir.
+window.addEventListener('DOMContentLoaded',xsInitVerTodo);
 
 // Filter bar
 /* Lee los tres datos que el orden necesita de una tarjeta ya pintada.
@@ -2441,6 +2555,8 @@ function openProduct(emoji,title,price,orig,discount,eur,foto){
   document.getElementById('pm-disc').textContent=discount||'';
   document.getElementById('prod-modal').style.display='flex';
   document.body.style.overflow='hidden';
+  // El corazon del modal debe reflejar si ESTE producto ya esta guardado.
+  if(typeof XS_FAVS!=='undefined')xsFavPinta();
 }
 function closeProdModal(){document.getElementById('prod-modal').style.display='none';document.body.style.overflow='';}
 // Delegación: así las tarjetas que se cargan después (subcategorías,
@@ -2541,7 +2657,7 @@ async function nlSubmit(e){
       </div>
       <div style="display:flex;gap:10px;">
         <button onclick="xsAddActual()" style="flex:1;background:linear-gradient(135deg,#FF4010,#FF7A00);border:none;border-radius:8px;color:#fff;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">🛒 Añadir al carrito</button>
-        <button onclick="alert('❤️ Guardado en favoritos')" style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:13px 16px;font-size:18px;cursor:pointer;">❤️</button>
+        <button id="pm-fav" onclick="xsFavActual()" aria-label="Favorito" style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:13px 16px;font-size:18px;cursor:pointer;">🤍</button>
       </div>
       <div style="margin-top:12px;display:flex;gap:12px;font-size:11px;color:#999;">
         <span>🛡️ Compra protegida</span>
