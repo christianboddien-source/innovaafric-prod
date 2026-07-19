@@ -34,7 +34,12 @@
     try {
       var {data} = await SB.from('promo_codes').select('*').eq('code',v).eq('active',true).maybeSingle();
       if(data){
-        var disc = data.discount_pct ? data.discount_pct+'% de descuento' : (data.discount_fixed ? '€'+data.discount_fixed+' de descuento' : 'descuento aplicado');
+        // El importe fijo tambien tiene que seguir a la moneda: anunciar un
+        // descuento en euros a alguien que ve la tienda en FCFA no le dice
+        // cuanto se ahorra. xsFmtFlat vive en otro bloque <script>, de ahi
+        // la comprobacion.
+        var fmt = function(v){ return typeof xsFmtFlat==='function' ? xsFmtFlat(v) : '€'+v; };
+        var disc = data.discount_pct ? data.discount_pct+'% de descuento' : (data.discount_fixed ? fmt(data.discount_fixed)+' de descuento' : 'descuento aplicado');
         xsToast('✅ Código '+v+' aplicado — '+disc,'success');
       } else if(v==='INNOVA10'){
         xsToast('✅ Código INNOVA10 aplicado — 10% descuento','success');
@@ -890,7 +895,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
             <div style="font-size:10px;color:#999;" data-i18n="del_std_sub">Entrega a domicilio</div>
           </div>
         </div>
-        <span style="font-size:12px;font-weight:800;color:#FF4010;">€2.99</span>
+        <span id="xs-del-std-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€2.99</span>
       </label>
       <label id="del-exp-row" style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e8e8e8;border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .2s;">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -900,7 +905,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
             <div style="font-size:10px;color:#999;" data-i18n="del_exp_sub">Ciudades principales</div>
           </div>
         </div>
-        <span style="font-size:12px;font-weight:800;color:#FF4010;">€5.99</span>
+        <span id="xs-del-exp-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€5.99</span>
       </label>
     </div>
   </div>
@@ -1104,7 +1109,21 @@ var xsPayMethod='xm';
 // fía el checkout: los textos en pantalla van convertidos a la moneda del
 // usuario y no sirven para calcular.
 var XS_CART_EUR={sub:0,del:0,disc:0,total:0};
+/* Costes de envio, SIEMPRE en euros. Unica fuente: antes estos mismos
+   importes estaban tambien escritos a mano en el HTML de las dos opciones
+   y duplicados dentro de xsUpdateDelivery. */
 var XS_DEL_COSTS={none:0,std:2.99,exp:5.99};
+
+/* Las opciones de envio mostraban "€2.99" y "€5.99" fijos: con FCFA
+   seleccionado, el carrito entero salia en francos y justo debajo el envio
+   en euros. Mismo fallo que ya se corrigio en el modal de XenderBigShop.
+   Ahora siguen a la moneda como el resto. */
+function xsPintaEnviosCarrito(){
+  [['std','xs-del-std-precio'],['exp','xs-del-exp-precio']].forEach(function(par){
+    var el=document.getElementById(par[1]);
+    if(el)el.textContent=xsFmtFlat(XS_DEL_COSTS[par[0]]);
+  });
+}
 
 // Guarda el precio EUR de cada línea en data-eur la primera vez, para poder
 // recalcular aunque en pantalla ya se muestre en FCFA o en dólares.
@@ -1135,6 +1154,9 @@ function xsRecalcCart(){
     var v=parseFloat(el.getAttribute('data-eur'));
     if(!isNaN(v))el.textContent=xsFmtFlat(v);
   });
+  // Las tarifas de envio, igual: se pintan aqui para que no haya forma de
+  // que se queden en otra moneda que el resto del carrito.
+  xsPintaEnviosCarrito();
   var delCost=XS_DEL_COSTS[xsDeliveryMode]||0;
   var discount=XS_CART_EUR.disc||0;
   XS_CART_EUR={sub:sub,del:delCost,disc:discount,total:sub+delCost-discount};
@@ -1148,13 +1170,17 @@ function xsRecalcCart(){
 function xsUpdateDelivery(){
   var sel=document.querySelector('input[name="xs-delivery"]:checked');
   xsDeliveryMode=sel?sel.value:'none';
-  var delCosts={none:0,std:2.99,exp:5.99};
-  var delCost=delCosts[xsDeliveryMode]||0;
+  /* Antes esta funcion declaraba su PROPIA copia de los costes de envio,
+     duplicando XS_DEL_COSTS. Los mismos importes vivian en tres sitios y
+     cambiar uno dejaba los otros mintiendo. Ahora hay una sola fuente. */
+  var delCost=XS_DEL_COSTS[xsDeliveryMode]||0;
   var T=XS_TR[XS_LANG]||XS_TR.es;
   var delRow=document.getElementById('xs-delivery-row');
   if(delCost>0){
     delRow.style.display='flex';
-    document.getElementById('xs-delivery-val').textContent='€'+delCost.toFixed(2);
+    // Iba con '€' escrito a mano: con FCFA activo el carrito entero salia en
+    // francos y solo esta linea en euros.
+    document.getElementById('xs-delivery-val').textContent=xsFmtFlat(delCost);
     document.getElementById('xs-delivery-lbl').textContent=xsDeliveryMode==='exp'?(T.del_exp||'⚡ Express 24h'):(T.del_std||'🚚 Estándar');
   } else {
     delRow.style.display='none';
