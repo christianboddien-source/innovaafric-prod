@@ -606,7 +606,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     <a href="#" class="see-more" data-i18n="see_more">Ver todo →</a>
   </div>
   <div class="products-row cols5">
-    <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-62%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>12.99</div><div class="pcard-orig">€34.00</div><div class="pcard-title">Auriculares Bluetooth 5.3 TWS, cancelación de ruido activa, 40h batería</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">8,420 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
+    <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=440&h=440&fit=crop&auto=format" alt="Auriculares Bluetooth TWS" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-62%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>12.99</div><div class="pcard-orig">€34.00</div><div class="pcard-title">Auriculares Bluetooth 5.3 TWS, cancelación de ruido activa, 40h batería</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">8,420 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-55%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>18.50</div><div class="pcard-orig">€41.00</div><div class="pcard-title">Smartwatch deportivo IP68 waterproof, monitor cardíaco, GPS, iOS/Android</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">12,100 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-70%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>8.99</div><div class="pcard-orig">€29.99</div><div class="pcard-title">Vestido verano mujer floral, tela ligera, tallas S–XL, varios colores</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">5,830 vendidos</span></div><div class="pcard-ship">✈ Envío gratis +€15</div></div></div>
     <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-48%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>14.99</div><div class="pcard-orig">€28.80</div><div class="pcard-title">Power bank 20,000mAh carga rápida 65W, 3 puertos USB-C + USB-A</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">21,440 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
@@ -977,13 +977,13 @@ function xsCartUnidades(){
   return XS_CART.reduce(function(a,i){return a+i.q;},0);
 }
 
-function xsAddToCart(titulo,eur,emoji){
+function xsAddToCart(titulo,eur,emoji,foto){
   eur=parseFloat(eur)||0;
   if(!titulo)return;
   var id=titulo.slice(0,80);
   var linea=XS_CART.filter(function(i){return i.id===id;})[0];
   if(linea){ linea.q++; }
-  else{ XS_CART.push({id:id,t:titulo,eur:eur,e:emoji||'📦',q:1}); }
+  else{ XS_CART.push({id:id,t:titulo,eur:eur,e:emoji||'📦',f:foto||'',q:1}); }
   xsCartGuardar(); xsCartPinta();
   var M=XS_CART_MSG[XS_LANG]||XS_CART_MSG.es;
   if(typeof xsToast==='function')xsToast('🛒 '+M.anadido,'success');
@@ -1022,7 +1022,11 @@ function xsCartPinta(){
   }else{
     cont.innerHTML=XS_CART.map(function(i,n){
       return '<div class="xs-cart-line" style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid #f5f5f5;">'
-        +'<div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">'+xsEsc(i.e)+'</div>'
+        +'<div style="width:64px;height:64px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden;">'
+          +(i.f
+             ? '<img src="'+xsEsc(i.f)+'" alt="" style="width:100%;height:100%;object-fit:cover;">'
+             : xsEsc(i.e))
+        +'</div>'
         +'<div style="flex:1;min-width:0;">'
           +'<div style="font-size:13px;font-weight:600;line-height:1.35;margin-bottom:6px;">'+xsEsc(i.t)+'</div>'
           +'<div class="xs-cart-price" data-eur="'+i.eur+'" style="font-weight:900;color:#FF4010;margin-bottom:6px;">'+xsFmtFlat(i.eur)+'</div>'
@@ -2164,8 +2168,26 @@ function toggleDark(){
 // pone "8 521 FCFA" y meter eso en el carrito multiplicaria el importe.
 var XS_PROD_ACTUAL=null;
 
-function openProduct(emoji,title,price,orig,discount,eur){
-  XS_PROD_ACTUAL={t:title||'Producto',e:emoji||'📦',eur:parseFloat(eur)||0};
+function openProduct(emoji,title,price,orig,discount,eur,foto){
+  XS_PROD_ACTUAL={t:title||'Producto',e:emoji||'📦',eur:parseFloat(eur)||0,foto:foto||''};
+
+  /* El modal mostraba un corazon negro en TODOS los productos. Sacaba un
+     "emoji" del textContent de .pcard-img, pero ahi dentro no hay ningun
+     emoji de producto: hay una <img>, la etiqueta de descuento y el ❤️ de
+     favoritos. El filtro se quedaba con el corazon.
+     Ahora se muestra la foto real de la tarjeta, y el emoji queda solo como
+     respaldo para tarjetas sin imagen o si la foto falla al cargar. */
+  var ph=document.getElementById('pm-photo');
+  var sp=document.getElementById('pm-img');
+  if(ph&&foto){
+    ph.onerror=function(){ ph.style.display='none'; if(sp)sp.style.display=''; };
+    ph.onload =function(){ ph.style.display='';     if(sp)sp.style.display='none'; };
+    ph.alt=title||'';
+    ph.src=foto;
+  }else{
+    if(ph)ph.style.display='none';
+    if(sp)sp.style.display='';
+  }
   document.getElementById('pm-img').textContent=emoji||'📦';
   document.getElementById('pm-title').textContent=title||'Producto';
   document.getElementById('pm-price').textContent=price||'€0.00';
@@ -2182,7 +2204,20 @@ document.addEventListener('click',function(e){
   var c=e.target.closest?e.target.closest('.pcard'):null;
   if(!c)return;
   var imgEl=c.querySelector('.pcard-img');
-  var emoji=(imgEl&&imgEl.textContent.replace(/[^^\u{1F000}-\u{1FFFF}☀-⟿]/gu,'').trim())||'📦';
+  var fotoEl=imgEl?imgEl.querySelector('img'):null;
+  var foto=fotoEl?fotoEl.getAttribute('src'):'';
+  /* El emoji solo sirve de respaldo para tarjetas sin foto. Se lee saltando
+     .pcard-fav y .pcard-discount: si no, lo que se extraia era el ❤️ de
+     favoritos, que es como acababa saliendo un corazon negro gigante en el
+     modal de todos los productos. */
+  var emoji='📦';
+  if(imgEl&&!fotoEl){
+    var suelto=[].slice.call(imgEl.childNodes)
+      .filter(function(n){ return n.nodeType===3; })
+      .map(function(n){ return n.textContent; }).join('')
+      .replace(/[^\u{1F000}-\u{1FFFF}☀-⟿]/gu,'').trim();
+    if(suelto)emoji=suelto;
+  }
   var title=c.querySelector('.pcard-title')&&c.querySelector('.pcard-title').textContent||'Producto';
   var price=c.querySelector('.pcard-price')&&c.querySelector('.pcard-price').textContent||'';
   var orig=c.querySelector('.pcard-orig')&&c.querySelector('.pcard-orig').textContent||'';
@@ -2191,13 +2226,13 @@ document.addEventListener('click',function(e){
   // la cifra que viaja al carrito, no el texto convertido que se ve.
   var pEl=c.querySelector('.pcard-price');
   var eur=pEl?parseFloat(pEl.getAttribute('data-eur')):0;
-  openProduct(emoji,title,price,orig,disc,eur);
+  openProduct(emoji,title,price,orig,disc,eur,foto);
 });
 
 // Anade al carrito el producto abierto en el modal.
 function xsAddActual(){
   if(!XS_PROD_ACTUAL)return;
-  xsAddToCart(XS_PROD_ACTUAL.t,XS_PROD_ACTUAL.eur,XS_PROD_ACTUAL.e);
+  xsAddToCart(XS_PROD_ACTUAL.t,XS_PROD_ACTUAL.eur,XS_PROD_ACTUAL.e,XS_PROD_ACTUAL.foto);
   closeProdModal();
   openCart();
 }
@@ -2233,6 +2268,10 @@ async function nlSubmit(e){
 <div id="prod-modal" onclick="if(event.target===this)closeProdModal()" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;">
   <div style="background:#fff;border-radius:16px;max-width:520px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.3);overflow:hidden;">
     <div style="background:var(--bg);height:220px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;">
+      <!-- La foto real del producto. El <span> de al lado es el respaldo por
+           si una tarjeta no trae imagen (o si falla al cargar): entonces se
+           muestra un emoji, como hacia antes. -->
+      <img id="pm-photo" alt="" style="display:none;width:100%;height:100%;object-fit:contain;background:#fff;">
       <span id="pm-img">📦</span>
       <span id="pm-disc" style="position:absolute;top:12px;left:12px;background:#FF4010;color:#fff;font-size:11px;font-weight:800;padding:4px 8px;border-radius:6px;"></span>
       <button onclick="closeProdModal()" style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.15);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#333;">✕</button>
