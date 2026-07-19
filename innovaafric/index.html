@@ -301,9 +301,9 @@
   </ul>
   <div class="nav-right">
     <div class="lang-switcher">
-      <button onclick="setLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
-      <button onclick="setLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
-      <button onclick="setLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
+      <button onclick="iaPickLang('es')" id="lb-es" class="lb-btn">🇪🇸</button>
+      <button onclick="iaPickLang('en')" id="lb-en" class="lb-btn active">🇬🇧</button>
+      <button onclick="iaPickLang('fr')" id="lb-fr" class="lb-btn">🇫🇷</button>
     </div>
     <button onclick="toggleDarkInnova()" id="dark-ia" title="Modo oscuro" style="background:none;border:1.5px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:#fff;font-weight:700;margin-right:4px;">🌙</button>
     <a href="#" onclick="openModal('modal-ia');return false;" class="btn-nav" data-i18n="nav_cta">Get Started</a>
@@ -1804,8 +1804,8 @@
       s2t:'Verificar Identidad', s2d:'Completa el KYC con tu DNI o pasaporte para desbloquear límites más altos.',
       s3t:'Recargar Wallet', s3d:'Añade dinero via Mobile Money, transferencia bancaria o tarjeta Stripe.',
       s4t:'Compra, Envía y Entrega', s4d:'Usa cualquier servicio — todos conectados, todos en un ecosistema.',
-      sec_reach:'Alcance Global', sec_cont_h:'Dónde Operamos',
-      sec_cont_sub:'Construido para la diáspora y comunidades locales en tres continentes.',
+      sec_reach:'El Objetivo del Alcance de la Futura Cobertura Del Ecosistema Global', sec_cont_h:'Dónde Pensamos Dar cobertura de Operaciones al Inicio',
+      sec_cont_sub:'Construido para todos y también para las comunidades locales de los tres continentes.',
       flow1:'Productos & Suministro', flow2:'Calidad & Logística', flow3:'Mobile Money & Crecimiento',
       asia_badge:'POLO 1 · PROVEEDOR', asia_role:'Proveedor Principal del E-Commerce',
       asia_title:'Asia — La Fábrica del Mundo',
@@ -2104,8 +2104,8 @@
       s2t:'Verify Identity', s2d:'Complete KYC with your ID or passport to unlock higher limits.',
       s3t:'Fund Wallet', s3d:'Add money via Mobile Money, bank transfer, or Stripe card.',
       s4t:'Shop, Send & Deliver', s4d:'Use any service — all connected, all in one ecosystem.',
-      sec_reach:'Global Reach', sec_cont_h:'Where We Operate',
-      sec_cont_sub:'Built for the diaspora and local communities across three continents.',
+      sec_reach:'The Target Reach of the Ecosystem\'s Future Global Coverage', sec_cont_h:'Where We Plan to Provide Operations Coverage at Launch',
+      sec_cont_sub:'Built for everyone and also for the local communities of the three continents.',
       flow1:'Products & Supply', flow2:'Quality & Logistics', flow3:'Mobile Money & Growth',
       asia_badge:'POLE 1 · SUPPLIER', asia_role:'Main E-Commerce Supplier',
       asia_title:'Asia — The Factory of the World',
@@ -2442,8 +2442,8 @@
       s2t:'Vérifier l\'Identité', s2d:'Complétez le KYC avec votre carte d\'identité ou passeport.',
       s3t:'Recharger le Wallet', s3d:"Ajoutez de l'argent via Mobile Money, virement bancaire ou carte Stripe.",
       s4t:'Achetez, Envoyez & Livrez', s4d:'Utilisez n\'importe quel service — tout connecté, tout en un écosystème.',
-      sec_reach:'Portée Mondiale', sec_cont_h:'Où Nous Opérons',
-      sec_cont_sub:'Construit pour la diaspora et les communautés locales sur trois continents.',
+      sec_reach:'L\'Objectif de Portée de la Future Couverture Mondiale de l\'Écosystème', sec_cont_h:'Où Nous Prévoyons d\'Assurer la Couverture des Opérations au Démarrage',
+      sec_cont_sub:'Conçu pour tous et aussi pour les communautés locales des trois continents.',
       flow1:'Produits & Approvisionnement', flow2:'Qualité & Logistique', flow3:'Mobile Money & Croissance',
       asia_badge:'PÔLE 1 · FOURNISSEUR', asia_role:'Fournisseur Principal du E-Commerce',
       asia_title:'Asie — L\'Usine du Monde',
@@ -2578,6 +2578,85 @@
     });
   }
   setLang(LANG);
+
+  /* ═══════════════════════════════════════════════════════════════════
+     AUTO-GEOLOCALIZACIÓN DEL IDIOMA
+     El idioma se elige por el país del visitante, y SOLO si no lo ha
+     escogido a mano. Cadena de pistas: elección guardada > geo-IP real >
+     zona horaria > idioma del navegador > inglés por defecto.
+     Comparte las claves ia_lang / ia_lang_manual con el resto del
+     ecosistema (mismo origen), así elegir idioma en una app se recuerda
+     en las demás.
+     ═══════════════════════════════════════════════════════════════════ */
+  // El usuario elige a mano → se respeta y no se vuelve a autodetectar.
+  function iaPickLang(l){ try{localStorage.setItem('ia_lang_manual','1');}catch(e){} setLang(l); }
+
+  var IA_LANG_BY_COUNTRY={
+    ES:'es',GQ:'es',PT:'es',MX:'es',AR:'es',CO:'es',CL:'es',PE:'es',DO:'es',AO:'es',MZ:'es',
+    FR:'fr',BE:'fr',CH:'fr',LU:'fr',MC:'fr',CM:'fr',GA:'fr',CG:'fr',TD:'fr',CF:'fr',
+    CI:'fr',SN:'fr',ML:'fr',BF:'fr',NE:'fr',TG:'fr',BJ:'fr',GW:'fr',MA:'fr',DZ:'fr',
+    TN:'fr',CD:'fr',MG:'fr',GN:'fr',
+    GB:'en',US:'en',CA:'en',IE:'en',DE:'en',NL:'en',IT:'en',AT:'en',
+    NG:'en',GH:'en',KE:'en',ZA:'en',TZ:'en',UG:'en',ET:'en',RW:'en',ZM:'en',ZW:'en',BW:'en',NA:'en'
+  };
+  var IA_TZ_COUNTRY={
+    'Europe/Madrid':'ES','Atlantic/Canary':'ES','Europe/Paris':'FR','Europe/London':'GB',
+    'Europe/Brussels':'BE','Europe/Zurich':'CH','Europe/Lisbon':'PT',
+    'Africa/Douala':'CM','Africa/Malabo':'GQ','Africa/Libreville':'GA','Africa/Brazzaville':'CG',
+    'Africa/Ndjamena':'TD','Africa/Bangui':'CF','Africa/Abidjan':'CI','Africa/Dakar':'SN',
+    'Africa/Bamako':'ML','Africa/Ouagadougou':'BF','Africa/Niamey':'NE','Africa/Lome':'TG',
+    'Africa/Porto-Novo':'BJ','Africa/Bissau':'GW','Africa/Lagos':'NG','Africa/Accra':'GH',
+    'Africa/Nairobi':'KE','Africa/Johannesburg':'ZA','Africa/Kinshasa':'CD','Africa/Casablanca':'MA',
+    'Africa/Algiers':'DZ','Africa/Tunis':'TN','Africa/Luanda':'AO',
+    'America/New_York':'US','America/Los_Angeles':'US','America/Chicago':'US','America/Toronto':'CA',
+    'America/Mexico_City':'MX','America/Bogota':'CO','America/Buenos_Aires':'AR'
+  };
+  function iaLangByCountry(c){ return (c&&IA_LANG_BY_COUNTRY[c])||null; }
+  function iaCountryFromTZ(){
+    try{ var tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if(IA_TZ_COUNTRY[tz])return IA_TZ_COUNTRY[tz];
+      if(/^Europe\//.test(tz))return 'FR'; if(/^America\//.test(tz))return 'US';
+    }catch(e){} return null;
+  }
+  function iaLangFromNav(){
+    var l=(navigator.languages&&navigator.languages[0])||navigator.language||'';
+    var b=l.slice(0,2).toLowerCase();
+    return (b==='es'||b==='fr'||b==='en')?b:null;
+  }
+  // Servicios geo-IP gratuitos y sin clave, probados en orden con 2,5 s cada uno.
+  var IA_GEO_APIS=[
+    {url:'https://get.geojs.io/v1/ip/country.json',pick:function(d){return d.country;}},
+    {url:'https://ipapi.co/json/',pick:function(d){return d.country_code;}},
+    {url:'https://ipwho.is/',pick:function(d){return d.country_code;}}
+  ];
+  function iaFetchCountry(){
+    return new Promise(function(res){ var i=0;
+      (function next(){
+        if(i>=IA_GEO_APIS.length)return res(null);
+        var api=IA_GEO_APIS[i++];
+        var ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+        var t=setTimeout(function(){if(ctrl)ctrl.abort();},2500);
+        fetch(api.url,ctrl?{signal:ctrl.signal}:{})
+          .then(function(r){return r.ok?r.json():Promise.reject();})
+          .then(function(d){clearTimeout(t);var c=api.pick(d);
+            if(c&&/^[A-Za-z]{2}$/.test(c))res(c.toUpperCase());else next();})
+          .catch(function(){clearTimeout(t);next();});
+      })();
+    });
+  }
+  function iaInitGeoLang(){
+    if(localStorage.getItem('ia_lang_manual')==='1')return;   // ya eligió a mano
+    // Pista local instantánea, para que no haya parpadeo antes de que responda la red.
+    var local=iaLangByCountry(iaCountryFromTZ())||iaLangFromNav();
+    if(local&&local!==LANG)setLang(local);
+    // Se afina con la IP real en cuanto llega.
+    iaFetchCountry().then(function(c){
+      if(localStorage.getItem('ia_lang_manual')==='1')return;
+      var byIp=iaLangByCountry(c);
+      if(byIp&&byIp!==LANG)setLang(byIp);
+    });
+  }
+  iaInitGeoLang();
 
   // Dark mode
   var darkIA=false;
