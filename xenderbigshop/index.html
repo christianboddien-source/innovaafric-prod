@@ -1573,6 +1573,10 @@ function setLang(l) {
   // los datos todavía no. Comprobar la función dejaba pasar esa llamada, que
   // reventaba y abortaba el resto del script.
   if(typeof BS_PRECIOS !== 'undefined') bsPintaPrecios();
+  // Mismo motivo que arriba: BS_ENVIO y BS_VOLUMEN se declaran más abajo en
+  // el archivo, así que en la primera llamada a setLang todavía no existen.
+  if(typeof BS_ENVIO !== 'undefined') bsPintaEnvios();
+  if(typeof BS_VOLUMEN !== 'undefined') bsPintaVolumen();
 }
 setLang(LANG);
 // El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
@@ -1675,6 +1679,10 @@ function bsSetMoneda(m){
   BS_CUR = m;
   localStorage.setItem('bs_cur', m);
   bsPintaPrecios();
+  // El modal de registro tiene que seguir a la moneda igual que las tarjetas:
+  // si no, el plan sale en FCFA y el envío en euros, que es lo que pasaba.
+  if(typeof BS_ENVIO !== 'undefined') bsPintaEnvios();
+  if(typeof BS_VOLUMEN !== 'undefined') bsPintaVolumen();
 }
 // El usuario eligió moneda a mano → respetar su decisión y no autodetectar.
 function bsPickMoneda(m){ localStorage.setItem('bs_cur_manual','1'); bsSetMoneda(m); }
@@ -1906,7 +1914,84 @@ function showBSTab(t){['comprador','proveedor'].forEach(function(x){document.get
 /* ── BIGSHOP PAYMENT + DELIVERY ── */
 var bsPayMethod='xendermoney';
 var bsDeliveryMode='none';
-var bsDeliveryCosts={none:0,std:4.99,exp:9.99};
+/* Las tarifas de entrega estaban escritas a mano en euros, así que un
+   comerciante que elegía FCFA veía su plan en francos y el envío en euros
+   dentro del mismo formulario. Mismo criterio que los planes: precio propio
+   por mercado (no conversión) y viviendo en Supabase para poder cambiarlo
+   sin desplegar. El respaldo de abajo debe coincidir con delivery_prices. */
+var BS_ENVIO_RESPALDO = {
+  std: {EUR:4.99, USD:5, XAF:2000, XOF:2000},
+  exp: {EUR:9.99, USD:10, XAF:4000, XOF:4000}
+};
+var BS_ENVIO = JSON.parse(JSON.stringify(BS_ENVIO_RESPALDO));
+
+// Importe de un modo de envío en la moneda activa. 'none' es recogida: gratis.
+function bsEnvioImporte(modo){
+  if(modo === 'none') return 0;
+  var m = BS_ENVIO[modo];
+  return m ? (m[BS_CUR] !== undefined ? m[BS_CUR] : m.EUR) : 0;
+}
+
+// Carga las tarifas reales. Si Supabase no responde, se queda el respaldo.
+async function bsCargaEnvios(){
+  try{
+    var r = await SB.from('delivery_prices').select('mode,currency,amount').eq('active', true);
+    if(r.error || !r.data || !r.data.length) return;
+    var nuevos = {};
+    r.data.forEach(function(f){
+      if(!nuevos[f.mode]) nuevos[f.mode] = {};
+      nuevos[f.mode][f.currency] = Number(f.amount);
+    });
+    Object.keys(nuevos).forEach(function(m){
+      BS_ENVIO[m] = Object.assign({}, BS_ENVIO[m], nuevos[m]);
+    });
+    bsPintaEnvios();
+  }catch(e){ /* nos quedamos con el respaldo */ }
+}
+
+/* El desplegable de volumen mensual también estaba en euros fijos. Aquí sí
+   corresponde CONVERSIÓN de verdad y no precio local: no es una tarifa que
+   fijemos nosotros, es cuánto factura el comerciante. Los tramos en CFA usan
+   la paridad fija con el euro (655,957), redondeada a cifras legibles. */
+var BS_VOLUMEN = {
+  EUR: [1000, 5000, 20000],
+  USD: [1000, 5000, 20000],
+  XAF: [650000, 3300000, 13000000],
+  XOF: [650000, 3300000, 13000000]
+};
+
+function bsPintaVolumen(){
+  var sel = document.getElementById('bs-volumen');
+  if(!sel) return;
+  var t = BS_VOLUMEN[BS_CUR] || BS_VOLUMEN.EUR;
+  var f = function(n){ return bsFormatea(n, BS_CUR); };
+  var etiquetas = {
+    es: ['Menos de '+f(t[0]), f(t[0])+' – '+f(t[1]), f(t[1])+' – '+f(t[2]), 'Más de '+f(t[2])],
+    en: ['Less than '+f(t[0]), f(t[0])+' – '+f(t[1]), f(t[1])+' – '+f(t[2]), 'More than '+f(t[2])],
+    fr: ['Moins de '+f(t[0]), f(t[0])+' – '+f(t[1]), f(t[1])+' – '+f(t[2]), 'Plus de '+f(t[2])]
+  };
+  var txt = etiquetas[LANG] || etiquetas.es;
+  var i = sel.selectedIndex;  // no perder lo que el usuario ya hubiera elegido
+  sel.innerHTML = txt.map(function(o){ return '<option>'+o+'</option>'; }).join('');
+  if(i >= 0) sel.selectedIndex = i;
+}
+
+// Vuelca las tarifas de la moneda activa en las filas del modal.
+function bsPintaEnvios(){
+  ['std','exp'].forEach(function(modo){
+    var el = document.getElementById('bsdel-' + modo + '-precio');
+    if(el) el.textContent = bsFormatea(bsEnvioImporte(modo), BS_CUR);
+  });
+  // Si ya había una opción marcada, el resumen debe seguir a la moneda.
+  if(typeof bsUpdateDelivery === 'function' && document.querySelector('input[name="bs-delivery"]:checked')) bsUpdateDelivery();
+}
+
+// Arranque de los envíos. Va AQUÍ, después de declarar BS_ENVIO y BS_VOLUMEN,
+// no arriba con bsPintaPrecios(): allí las variables aún no existen y la
+// llamada reventaría el resto del script.
+bsPintaEnvios();
+bsPintaVolumen();
+bsCargaEnvios();
 
 function bsSelectPay(btn,method){
   bsPayMethod=method;
@@ -1928,7 +2013,7 @@ function bsSelectPay(btn,method){
 function bsUpdateDelivery(){
   var sel=document.querySelector('input[name="bs-delivery"]:checked');
   bsDeliveryMode=sel?sel.value:'none';
-  var cost=bsDeliveryCosts[bsDeliveryMode]||0;
+  var cost=bsEnvioImporte(bsDeliveryMode);
   // Border highlights
   var rows={none:'bsdel-none-row',std:'bsdel-std-row',exp:'bsdel-exp-row'};
   Object.keys(rows).forEach(function(k){
@@ -1940,7 +2025,7 @@ function bsUpdateDelivery(){
   if(cost>0){
     summary.style.display='block';
     var labels={std:'🚚 Xender Delivery Estándar 3–5 días',exp:'⚡ Xender Delivery Express 24–48h'};
-    summary.textContent=(labels[bsDeliveryMode]||'🚚 Delivery')+' · +€'+cost.toFixed(2)+' al total del pedido';
+    summary.textContent=(labels[bsDeliveryMode]||'🚚 Delivery')+' · +'+bsFormatea(cost,BS_CUR)+' al total del pedido';
   } else {
     summary.style.display='none';
   }
@@ -1992,7 +2077,7 @@ function bsUpdateDelivery(){
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Email *</label><input type="email" placeholder="empresa@email.com" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Teléfono *</label><input type="tel" placeholder="+237 6XX XXX XXX" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
         <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">País *</label><select required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="">País</option><option>Camerún</option><option>Senegal</option><option>Costa de Marfil</option><option>Mali</option><option>Guinea</option><option>España</option><option>Francia</option><option>China</option><option>Otro</option></select></div>
-        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select>
+        <div><label style="font-size:12px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:6px;">Volumen mensual estimado</label><select id="bs-volumen" style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option>Menos de 1.000€</option><option>1.000€ – 5.000€</option><option>5.000€ – 20.000€</option><option>Más de 20.000€</option></select>
         </div>
         <!-- PAYMENT METHODS VISUAL -->
         <div style="grid-column:1/-1;">
@@ -2027,7 +2112,7 @@ function bsUpdateDelivery(){
                   <div style="font-size:11px;color:#999;">Entrega en almacén o domicilio</div>
                 </div>
               </div>
-              <span style="font-size:13px;font-weight:800;color:#E0921A;">€4.99</span>
+              <span id="bsdel-std-precio" style="font-size:13px;font-weight:800;color:#E0921A;">€4.99</span>
             </label>
             <label style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e2e8f0;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .2s;" id="bsdel-exp-row">
               <div style="display:flex;align-items:center;gap:8px;">
@@ -2037,7 +2122,7 @@ function bsUpdateDelivery(){
                   <div style="font-size:11px;color:#999;">Ciudades principales · Prioritario</div>
                 </div>
               </div>
-              <span style="font-size:13px;font-weight:800;color:#E0921A;">€9.99</span>
+              <span id="bsdel-exp-precio" style="font-size:13px;font-weight:800;color:#E0921A;">€9.99</span>
             </label>
           </div>
         </div>
