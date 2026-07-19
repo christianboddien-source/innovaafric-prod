@@ -522,21 +522,26 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
 <div class="hero-row">
   <!-- Left sidebar -->
   <div class="hero-cats">
+    <!-- Orden pensado para este mercado, no copiado de AliExpress: primero lo
+         ligero y de alta rotación (barato de enviar, margen sano), al final lo
+         voluminoso, pesado o de nicho. Belleza sube al segundo puesto porque
+         pelucas, extensiones y cosmética son de lo que más se mueve en África
+         occidental; Iluminación entra pronto por las luces solares. -->
     <div class="hcat-item" data-i18n="cat_electronics">📱 Electrónica <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_women">👗 Moda Mujer <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_men">👔 Moda Hombre <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_home">🏠 Hogar & Jardín <span class="arr">›</span></div>
     <div class="hcat-item" data-i18n="hcat_beauty">💄 Belleza & Salud <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_sports">⚽ Deportes <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="cat_baby">🧸 Bebé & Mamá <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_auto">🚗 Automóvil <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_toys">🎮 Juguetes <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_jewelry">💎 Joyería & Relojes <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="hcat_bags">👜 Bolsos & Maletas <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="cat_computers">💻 Computadoras <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_women">👗 Moda Mujer <span class="arr">›</span></div>
     <div class="hcat-item" data-i18n="cat_shoes">👟 Zapatos <span class="arr">›</span></div>
-    <div class="hcat-item" data-i18n="cat_security">🔒 Seguridad <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_men">👔 Moda Hombre <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_bags">👜 Bolsos & Maletas <span class="arr">›</span></div>
     <div class="hcat-item" data-i18n="cat_lighting">💡 Iluminación <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_home">🏠 Hogar & Jardín <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_baby">🧸 Bebé & Mamá <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_jewelry">💎 Joyería & Relojes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_computers">💻 Computadoras <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_sports">⚽ Deportes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_toys">🎮 Juguetes <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="cat_security">🔒 Seguridad <span class="arr">›</span></div>
+    <div class="hcat-item" data-i18n="hcat_auto">🚗 Automóvil <span class="arr">›</span></div>
     <div class="hcat-item" data-i18n="cat_food">🍵 Alimentos <span class="arr">›</span></div>
   </div>
 
@@ -679,7 +684,6 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <div class="catsb-item active" data-i18n="sub_smartphones">Smartphones</div>
       <div class="catsb-item" data-i18n="sub_tablets">Tablets</div>
       <div class="catsb-item" data-i18n="sub_laptops">Laptops</div>
-      <div class="catsb-item" data-i18n="sub_smarttvs">Smart TVs</div>
       <div class="catsb-item" data-i18n="sub_headphones">Auriculares</div>
       <div class="catsb-item" data-i18n="sub_smartwatches">Smartwatches</div>
       <div class="catsb-item" data-i18n="sub_speakers">Altavoces</div>
@@ -2091,9 +2095,9 @@ function xsInitCats(){
    ═══════════════════════════════════════════════════════════════════ */
 var XS_MEGA={
   electronics:{
-    es:['Smartphones','Tablets','Portátiles','Smart TVs','Auriculares','Smartwatches','Altavoces','Power banks'],
-    en:['Smartphones','Tablets','Laptops','Smart TVs','Headphones','Smartwatches','Speakers','Power banks'],
-    fr:['Smartphones','Tablettes','Ordinateurs portables','Smart TV','Écouteurs','Montres connectées','Enceintes','Batteries externes']},
+    es:['Smartphones','Tablets','Portátiles','Auriculares','Smartwatches','Altavoces','Power banks'],
+    en:['Smartphones','Tablets','Laptops','Headphones','Smartwatches','Speakers','Power banks'],
+    fr:['Smartphones','Tablettes','Ordinateurs portables','Écouteurs','Montres connectées','Enceintes','Batteries externes']},
   women:{
     es:['Vestidos','Blusas y tops','Pantalones','Faldas','Chaquetas','Bañadores','Ropa interior','Tallas grandes'],
     en:['Dresses','Tops & blouses','Pants','Skirts','Jackets','Swimwear','Lingerie','Plus size'],
@@ -2156,9 +2160,6 @@ var XS_MEGA={
     fr:['Snacks','Boissons','Café et thé','Épices','Conserves','Huiles','Sans gluten','Compléments']}
 };
 
-var XS_MEGA_TIT={es:'Subcategorías',en:'Subcategories',fr:'Sous-catégories'};
-var XS_MEGA_VER={es:'Ver todo en',en:'See all in',fr:'Voir tout dans'};
-
 var xsMegaEl=null, xsMegaTimer=null;
 
 function xsMegaPanel(){
@@ -2182,36 +2183,76 @@ function xsMegaCerrarPronto(){
   xsMegaTimer=setTimeout(function(){ if(xsMegaEl)xsMegaEl.style.display='none'; },180);
 }
 
-function xsMegaAbrir(item,catKey){
-  var datos=XS_MEGA[catKey];
-  if(!datos)return;
-  var lista=datos[XS_LANG]||datos.es;
+/* Se muestran TODAS las categorias y subcategorias a la vez, no solo la
+   que se esta senalando.
+
+   AliExpress obliga a pasar el raton categoria por categoria para descubrir
+   que hay dentro: esconde el catalogo y te hace trabajar. Aqui el mapa
+   entero esta a la vista de un vistazo y lo unico que hace el raton es
+   resaltar donde estas. Es mas minimalista aunque muestre mas: menos
+   acciones para saber lo mismo.
+
+   El contenido se construye una sola vez y se reconstruye solo si cambia el
+   idioma. */
+var xsMegaIdioma=null;
+
+function xsMegaConstruir(){
   var p=xsMegaPanel();
+  if(xsMegaIdioma===XS_LANG)return p;
+
+  // Los nombres visibles (con su emoji) se leen de la propia lista lateral,
+  // asi no hay que mantenerlos duplicados aqui.
+  var etiquetas={};
+  document.querySelectorAll('.hero-cats .hcat-item').forEach(function(it){
+    var k=(it.getAttribute('data-i18n')||'').replace(/^(cat_|hcat_)/,'');
+    etiquetas[k]=(it.textContent||'').replace('›','').trim();
+  });
+
+  var orden=[].slice.call(document.querySelectorAll('.hero-cats .hcat-item'))
+    .map(function(it){ return (it.getAttribute('data-i18n')||'').replace(/^(cat_|hcat_)/,''); })
+    .filter(function(k){ return XS_MEGA[k]; });
+
+  p.innerHTML='<div id="xs-mega-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:22px 26px;">'
+    +orden.map(function(k){
+        var lista=XS_MEGA[k][XS_LANG]||XS_MEGA[k].es;
+        return '<div class="xs-mega-bloque" data-cat="'+xsEsc(k)+'" style="border-radius:8px;padding:8px 10px;transition:background .15s;">'
+          +'<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(k)+'" data-sub="" '
+            +'style="display:block;font-size:12.5px;font-weight:800;color:#1a1a1a;text-decoration:none;margin-bottom:7px;">'
+            +xsEsc(etiquetas[k]||k)+'</a>'
+          +lista.map(function(s){
+              return '<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(k)+'" data-sub="'+xsEsc(s)+'" '
+                +'style="display:block;font-size:12px;color:#666;text-decoration:none;padding:3px 0;">'
+                +xsEsc(s)+'</a>';
+            }).join('')
+          +'</div>';
+      }).join('')
+    +'</div>';
+
+  xsMegaIdioma=XS_LANG;
+  return p;
+}
+
+function xsMegaAbrir(item,catKey){
+  var p=xsMegaConstruir();
   clearTimeout(xsMegaTimer);
 
-  var titulo=(item.textContent||'').replace('›','').trim();
-  var ver=(XS_MEGA_VER[XS_LANG]||XS_MEGA_VER.es)+' '+xsEsc(titulo);
-
-  p.innerHTML='<div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:12px;">'+xsEsc(titulo)+'</div>'
-    +'<div style="columns:3;column-gap:28px;">'
-    +lista.map(function(s){
-        return '<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(catKey)+'" data-sub="'+xsEsc(s)+'" '
-          +'style="display:block;break-inside:avoid;font-size:12.5px;color:#444;text-decoration:none;padding:5px 0;">'
-          +xsEsc(s)+'</a>';
-      }).join('')
-    +'</div>'
-    +'<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(catKey)+'" data-sub="" '
-    +'style="display:inline-block;margin-top:12px;font-size:12px;font-weight:700;color:var(--red);text-decoration:none;">'
-    +ver+' →</a>';
-
-  var r=item.getBoundingClientRect();
   var lateral=item.closest('.hero-cats');
-  var rl=lateral?lateral.getBoundingClientRect():r;
+  var rl=lateral?lateral.getBoundingClientRect():item.getBoundingClientRect();
   p.style.display='block';
   p.style.left=Math.round(rl.right+2)+'px';
-  p.style.top=Math.round(Math.max(8,Math.min(r.top,window.innerHeight-360)))+'px';
-  p.style.width=Math.round(Math.min(560,window.innerWidth-rl.right-24))+'px';
-  p.style.maxHeight=Math.round(window.innerHeight*0.62)+'px';
+  p.style.top=Math.round(Math.max(8,rl.top))+'px';
+  p.style.width=Math.round(Math.min(940,window.innerWidth-rl.right-24))+'px';
+  p.style.maxHeight=Math.round(Math.min(window.innerHeight-rl.top-24,window.innerHeight*0.78))+'px';
+
+  // Resaltar la categoria senalada y traerla a la vista dentro del panel.
+  p.querySelectorAll('.xs-mega-bloque').forEach(function(b){
+    var activo=b.getAttribute('data-cat')===catKey;
+    b.style.background=activo?'#fff5f2':'transparent';
+    if(activo){
+      var pr=p.getBoundingClientRect(), br=b.getBoundingClientRect();
+      if(br.top<pr.top||br.bottom>pr.bottom)b.scrollIntoView({block:'nearest'});
+    }
+  });
 }
 
 function xsInitMega(){
