@@ -123,6 +123,10 @@
   .lang-btns { display: flex; gap: .3rem; }
   .lang-btns button { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: .75rem; cursor: pointer; color: var(--muted); transition: all .2s; font-weight: 600; }
   .lang-btns button:hover, .lang-btns button.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .cur-select-bs { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: .75rem; font-weight: 600; color: var(--muted); cursor: pointer; outline: none; font-family: inherit; }
+  .cur-select-bs:hover { border-color: var(--orange); color: var(--orange); }
+  .cur-select-bs:focus-visible { outline: 2px solid var(--orange); outline-offset: 1px; }
+  .cur-select-bs option { color: #333; background: #fff; font-weight: 600; }
   .btn-nav { background: var(--orange); color: #fff; padding: .5rem 1.3rem; border-radius: 8px; font-weight: 700; font-size: .85rem; text-decoration: none; transition: all .2s; border: none; cursor: pointer; }
   .btn-nav:hover { background: var(--dark2); }
 
@@ -321,6 +325,15 @@
         <button onclick="bsPickLang('en')" id="lb-en" class="active">EN</button>
         <button onclick="bsPickLang('fr')" id="lb-fr">FR</button>
       </div>
+      <!-- Los <option> necesitan color propio: si heredan el del <select>
+           pueden quedar ilegibles en el desplegable nativo, que es justo lo
+           que pasaba en XenderShop. -->
+      <select id="bs-cur" class="cur-select-bs" onchange="bsPickMoneda(this.value)" title="Moneda / Currency / Devise">
+        <option value="EUR">€ EUR</option>
+        <option value="USD">$ USD</option>
+        <option value="XAF">FCFA XAF</option>
+        <option value="XOF">CFA XOF</option>
+      </select>
       <a href="#" onclick="openModal('modal-bs');return false;" class="btn-nav" data-i18n="nav_start">Open My Store</a>
       <button class="ham-btn-xb" id="ham-btn-xb" onclick="toggleHamXb()">☰</button>
     </div>
@@ -1075,7 +1088,7 @@
           <div style="font-size:14px;font-weight:700;color:var(--dark);">¿Cuánto cuesta abrir una tienda?</div>
           <span style="font-size:18px;color:var(--orange);font-weight:700;transition:transform .3s;">+</span>
         </div>
-        <div class="faq-body" style="display:none;padding:16px 20px;font-size:14px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);">El primer mes es completamente gratuito en todos los planes. Después: Starter 40 $/mes (hasta 30 productos, comisión 5%), Business 70 $/mes (hasta 60 productos, comisión 4%), Business Prime 150 $/mes (hasta 90 productos, comisión 3%) y Enterprise 300 $/mes (hasta 5 tiendas y 150 productos por tienda, comisión 1%). Puedes cambiar o cancelar en cualquier momento.</div>
+        <div class="faq-body" style="display:none;padding:16px 20px;font-size:14px;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);"><span id="bs-faq-precios">El primer mes es completamente gratuito en todos los planes.</span> Puedes cambiar o cancelar en cualquier momento.</div>
       </div>
 
       <div class="faq-item" style="border:1px solid var(--border);border-radius:14px;overflow:hidden;">
@@ -1553,6 +1566,13 @@ function setLang(l) {
     const k = el.getAttribute('data-i18n');
     if(T[k]!==undefined) { el.innerHTML = T[k]; el.classList.remove('lang-fade'); void el.offsetWidth; el.classList.add('lang-fade'); }
   });
+  // Los precios y el texto del FAQ no son claves i18n: se componen aparte y
+  // hay que repintarlos.
+  // La guarda mira BS_PRECIOS, no la función: las declaraciones de función se
+  // elevan y bsPintaPrecios ya "existe" en la primera llamada a setLang, pero
+  // los datos todavía no. Comprobar la función dejaba pasar esa llamada, que
+  // reventaba y abortaba el resto del script.
+  if(typeof BS_PRECIOS !== 'undefined') bsPintaPrecios();
 }
 setLang(LANG);
 // El usuario eligió idioma a mano → respetar su decisión y no volver a autodetectar.
@@ -1566,13 +1586,134 @@ function bsPickLang(l){ localStorage.setItem('ia_lang_manual','1'); setLang(l); 
    Starter y Business abren el registro recordando el plan elegido.
    Enterprise lleva a contacto, porque es venta asistida.
    ═══════════════════════════════════════════════════════════════════ */
-// Los importes deben coincidir con las tarjetas de precios y con el FAQ.
-// Si cambias una tarifa, cámbiala en los tres sitios.
+/* ═══════════════════════════════════════════════════════════════════
+   PRECIOS EN VARIAS MONEDAS
+
+   No hay conversión automática: cada moneda tiene su propio precio, y los
+   precios viven en Supabase (tabla plan_prices), no aquí. Christian puede
+   cambiar una tarifa con un UPDATE sin tocar código ni desplegar.
+
+   El motivo de no convertir: el franco CFA está fijado al euro por ley
+   (1 EUR = 655,957 FCFA, no fluctúa), pero convertir sin más un precio
+   pensado para Europa deja fuera al comerciante africano — $40/mes son
+   ~26.000 FCFA, entre un quinto y un cuarto de un salario medio mensual en
+   Camerún. Por eso el precio en FCFA es deliberadamente más bajo.
+
+   Lo de abajo es solo el respaldo por si Supabase no responde: debe
+   coincidir con lo que hay en la tabla.
+   ═══════════════════════════════════════════════════════════════════ */
+var BS_PRECIOS_RESPALDO = {
+  starter:    {EUR:39,  USD:40,  XAF:15000,  XOF:15000},
+  business:   {EUR:69,  USD:70,  XAF:30000,  XOF:30000},
+  prime:      {EUR:149, USD:150, XAF:65000,  XOF:65000},
+  enterprise: {EUR:299, USD:300, XAF:150000, XOF:150000}
+};
+var BS_PRECIOS = JSON.parse(JSON.stringify(BS_PRECIOS_RESPALDO));
+
+// El símbolo del franco CFA va DETRÁS del importe (15 000 FCFA), el euro y
+// el dólar delante.
+var BS_SIMBOLOS  = {EUR:'€', USD:'$', XAF:'FCFA', XOF:'CFA'};
+var BS_SIM_DETRAS = {XAF:true, XOF:true};
+
+var BS_CUR = localStorage.getItem('bs_cur') || 'EUR';
+
+function bsFormatea(importe, moneda){
+  var sym = BS_SIMBOLOS[moneda] || '€';
+  var n = Number(importe) || 0;
+  // Los CFA no usan decimales; euro y dólar solo si el importe los tiene.
+  var txt = (n % 1 === 0) ? n.toLocaleString('fr-FR') : n.toFixed(2);
+  return BS_SIM_DETRAS[moneda] ? txt + ' ' + sym : sym + txt;
+}
+
+// Vuelca los precios de la moneda activa en las tarjetas.
+function bsPintaPrecios(){
+  var orden = ['starter','business','prime','enterprise'];
+  document.querySelectorAll('.plan-card').forEach(function(card, i){
+    var plan = orden[i];
+    var el = card.querySelector('.plan-price');
+    if(!plan || !el) return;
+    var importe = (BS_PRECIOS[plan] || {})[BS_CUR];
+    if(importe === undefined) return;
+    var mes = el.querySelector('[data-i18n="plan_mo"]');
+    // Se conserva el <span> del "/mes" para que setLang lo siga traduciendo.
+    el.textContent = bsFormatea(importe, BS_CUR);
+    if(mes) el.appendChild(mes);
+  });
+  var sel = document.getElementById('bs-cur');
+  if(sel) sel.value = BS_CUR;
+  bsPintaFaqPrecios();
+}
+
+// El FAQ repetía los importes escritos a mano, así que al cambiar de moneda
+// las tarjetas decían una cosa y el FAQ otra — la misma contradicción que
+// tenía la página antes. Ahora sale de la misma fuente que las tarjetas.
+function bsPintaFaqPrecios(){
+  var el = document.getElementById('bs-faq-precios');
+  if(!el) return;
+  var P = BS_PRECIOS, C = BS_CUR;
+  var f = function(p){ return bsFormatea((P[p]||{})[C], C); };
+  var mes = {es:'/mes', en:'/month', fr:'/mois'}[LANG] || '/mes';
+  var txt = {
+    es:'El primer mes es completamente gratuito en todos los planes. Después: Starter '+f('starter')+mes+
+       ' (hasta 30 productos, comisión 5%), Business '+f('business')+mes+' (hasta 60 productos, comisión 4%), '+
+       'Business Prime '+f('prime')+mes+' (hasta 90 productos, comisión 3%) y Enterprise '+f('enterprise')+mes+
+       ' (hasta 5 tiendas y 150 productos por tienda, comisión 1%).',
+    en:'The first month is completely free on all plans. After that: Starter '+f('starter')+mes+
+       ' (up to 30 products, 5% commission), Business '+f('business')+mes+' (up to 60 products, 4% commission), '+
+       'Business Prime '+f('prime')+mes+' (up to 90 products, 3% commission) and Enterprise '+f('enterprise')+mes+
+       ' (up to 5 stores and 150 products each, 1% commission).',
+    fr:'Le premier mois est entièrement gratuit sur tous les plans. Ensuite : Starter '+f('starter')+mes+
+       ' (jusqu\'à 30 produits, commission 5%), Business '+f('business')+mes+' (jusqu\'à 60 produits, commission 4%), '+
+       'Business Prime '+f('prime')+mes+' (jusqu\'à 90 produits, commission 3%) et Enterprise '+f('enterprise')+mes+
+       ' (jusqu\'à 5 boutiques et 150 produits chacune, commission 1%).'
+  };
+  el.textContent = txt[LANG] || txt.es;
+}
+
+function bsSetMoneda(m){
+  if(!BS_SIMBOLOS[m]) m = 'EUR';
+  BS_CUR = m;
+  localStorage.setItem('bs_cur', m);
+  bsPintaPrecios();
+}
+// El usuario eligió moneda a mano → respetar su decisión y no autodetectar.
+function bsPickMoneda(m){ localStorage.setItem('bs_cur_manual','1'); bsSetMoneda(m); }
+
+// Carga los precios reales. Si Supabase no responde, se queda el respaldo.
+async function bsCargaPrecios(){
+  try{
+    var r = await SB.from('plan_prices').select('plan,currency,amount').eq('active', true);
+    if(r.error || !r.data || !r.data.length) return;
+    var nuevos = {};
+    r.data.forEach(function(f){
+      if(!nuevos[f.plan]) nuevos[f.plan] = {};
+      nuevos[f.plan][f.currency] = Number(f.amount);
+    });
+    // Solo se sustituye lo que venga completo, para no dejar huecos.
+    Object.keys(nuevos).forEach(function(p){
+      BS_PRECIOS[p] = Object.assign({}, BS_PRECIOS[p], nuevos[p]);
+    });
+    bsPintaPrecios();
+  }catch(e){ /* nos quedamos con el respaldo */ }
+}
+
+// Qué moneda le corresponde a cada país.
+var BS_MONEDA_PAIS = {
+  XAF:['CM','GQ','GA','CG','TD','CF'],                          // zona CEMAC
+  XOF:['CI','SN','ML','BF','NE','TG','BJ','GW'],                // zona UEMOA
+  USD:['US','CA','NG','GH','KE','ZA','TZ','UG','ET','RW','CD','MX','AR','CO','CL','PE','BR']
+  // el resto → EUR
+};
+function bsMonedaPara(pais){
+  for(var m in BS_MONEDA_PAIS) if(BS_MONEDA_PAIS[m].indexOf(pais) > -1) return m;
+  return 'EUR';
+}
+
 var BS_PLANES = {
-  starter:    {es:'Plan Starter · $40/mes',        en:'Starter plan · $40/month',        fr:'Plan Starter · 40 $/mois'},
-  business:   {es:'Plan Business · $70/mes',       en:'Business plan · $70/month',       fr:'Plan Business · 70 $/mois'},
-  prime:      {es:'Plan Business Prime · $150/mes',en:'Business Prime plan · $150/month',fr:'Plan Business Prime · 150 $/mois'},
-  enterprise: {es:'Plan Enterprise',               en:'Enterprise plan',                 fr:'Plan Enterprise'}
+  starter:    {es:'Plan Starter',        en:'Starter plan',        fr:'Plan Starter'},
+  business:   {es:'Plan Business',       en:'Business plan',       fr:'Plan Business'},
+  prime:      {es:'Plan Business Prime', en:'Business Prime plan', fr:'Plan Business Prime'},
+  enterprise: {es:'Plan Enterprise',     en:'Enterprise plan',     fr:'Plan Enterprise'}
 };
 
 function bsElegirPlan(plan){
@@ -1586,9 +1727,18 @@ function bsElegirPlan(plan){
 
   var etiqueta = document.getElementById('bs-plan-elegido');
   if(etiqueta){
-    var txt = (BS_PLANES[plan] && (BS_PLANES[plan][LANG] || BS_PLANES[plan].es)) || '';
-    if(txt){ etiqueta.textContent = '✓ ' + txt; etiqueta.style.display = ''; }
-    else   { etiqueta.style.display = 'none'; }
+    var nombre = (BS_PLANES[plan] && (BS_PLANES[plan][LANG] || BS_PLANES[plan].es)) || '';
+    // El importe sale de la moneda activa, para que el usuario vea en el
+    // formulario exactamente la misma cifra que acaba de pulsar.
+    var importe = (BS_PRECIOS[plan] || {})[BS_CUR];
+    var mes = {es:'/mes', en:'/month', fr:'/mois'}[LANG] || '/mes';
+    if(nombre){
+      etiqueta.textContent = '✓ ' + nombre + (importe !== undefined
+        ? ' · ' + bsFormatea(importe, BS_CUR) + mes : '');
+      etiqueta.style.display = '';
+    } else {
+      etiqueta.style.display = 'none';
+    }
   }
   openModal('modal-bs');
 }
@@ -1648,17 +1798,35 @@ async function bsFetchCountry(){
   }
   return null;
 }
-async function bsInitGeo(){
-  if(localStorage.getItem('ia_lang_manual')==='1') return;   // el usuario ya decidió
-  const local = bsCountryLocal();                            // pista inmediata, sin parpadeo
-  if(local){ const l = bsLangFor(local); if(l!==LANG) setLang(l); }
-  const c = await bsFetchCountry();                          // y afinamos con la IP real
-  if(c && c!==local){
-    const l = bsLangFor(c);
-    if(l!==LANG) setLang(l);
-    console.info('[XenderBigShop] País: '+c+' (geo-IP) → '+l.toUpperCase());
+// Aplica idioma y moneda según el país, respetando lo que el usuario haya
+// elegido a mano. Idioma y moneda se deciden por separado: alguien en Francia
+// puede querer la web en francés pero pagar en dólares.
+function bsAplicaPais(pais, origen){
+  if(localStorage.getItem('ia_lang_manual') !== '1'){
+    const l = bsLangFor(pais);
+    if(l !== LANG) setLang(l);
   }
+  if(localStorage.getItem('bs_cur_manual') !== '1'){
+    const m = bsMonedaPara(pais);
+    if(m !== BS_CUR) bsSetMoneda(m);
+  }
+  console.info('[XenderBigShop] País: '+pais+' ('+origen+') → '+LANG.toUpperCase()+' / '+BS_CUR);
 }
+
+async function bsInitGeo(){
+  const manualTodo = localStorage.getItem('ia_lang_manual')==='1'
+                  && localStorage.getItem('bs_cur_manual')==='1';
+  if(manualTodo) return;                       // el usuario ya decidió las dos cosas
+  const local = bsCountryLocal();              // pista inmediata, sin parpadeo
+  if(local) bsAplicaPais(local, 'zona horaria/navegador');
+  const c = await bsFetchCountry();            // y afinamos con la IP real
+  if(c && c !== local) bsAplicaPais(c, 'geo-IP');
+}
+
+// Orden importante: primero se pinta el respaldo para que nunca haya un
+// hueco vacío, luego llegan los precios reales de Supabase.
+bsPintaPrecios();
+bsCargaPrecios();
 bsInitGeo();
 
 const obs = new IntersectionObserver(entries => {
