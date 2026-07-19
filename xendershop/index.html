@@ -328,13 +328,21 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 
    Las fotos se piden a 440x440. Antes se pedían a 300 y, ya con la rejilla
    fluida, 10 de las 50 acababan mostrándose a 328px — un 9% de estirado.
-   440 cubre con margen la tarjeta más ancha que produce el auto-fill.
+   440 cubre con margen la tarjeta más ancha que produce la rejilla.
 
-   auto-fill mete tantas columnas de >=240px como quepan: ~6 en 1920, 5 en
-   1440, 4 en 1280, y baja solo en móvil sin necesidad de media queries. */
+   auto-FIT, no auto-fill. La diferencia importa aquí: auto-fill crea
+   tantas columnas como quepan aunque se queden vacías, y como cada sección
+   solo tiene 4 productos, se generaban 6 huecos y 2 quedaban en blanco a
+   la derecha. auto-fit colapsa las columnas vacías y reparte el ancho
+   entre los productos que existen: las tarjetas pasan de 247px a 376px y
+   la fila queda llena.
+
+   Y sigue siendo lo correcto cuando llegue el catálogo real de AliExpress:
+   con filas completas, auto-fit se comporta igual que auto-fill. No habrá
+   que volver a tocarlo. */
 .products-row.cols4,
 .products-row.cols5,
-.products-row.cols6{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+.products-row.cols6{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
 
 .pcard{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:all .2s;}
 .pcard:hover{border-color:#ffb89a;box-shadow:0 4px 16px rgba(255,64,16,.12);transform:translateY(-2px);}
@@ -371,7 +379,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 @keyframes xsFlash{0%{box-shadow:0 0 0 0 rgba(255,64,16,.45);}100%{box-shadow:0 0 0 14px rgba(255,64,16,0);}}
 /* Esta zona lleva barra lateral de subcategorías, así que dispone de menos
    ancho: el mínimo baja a 220px para que sigan entrando 4-5 tarjetas. */
-.cat-products-area .products-row{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+.cat-products-area .products-row{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
 
 /* ── MEGA CATEGORY GRID ── */
 .mega-cats{display:grid;grid-template-columns:repeat(10,1fr);gap:0;background:#fff;border-radius:4px;border:1px solid var(--border);margin:8px 0;}
@@ -773,9 +781,9 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
     <div class="cat-products-area">
       <div class="products-row cols4">
         <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-52%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>7.99</div><div class="pcard-orig">€16.60</div><div class="pcard-title">Sérum vitamina C + retinol antioxidante, hidratante, 30ml, piel mixta</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">31,400 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
-        <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1586495777744-4e6b69a7a28d?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-60%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>3.49</div><div class="pcard-orig">€8.70</div><div class="pcard-title">Labial mate líquido 24h, 18 colores, sin transferencia, hidratante</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">44,800 vendidos</span></div><div class="pcard-ship">✈ Envío gratis +€10</div></div></div>
+        <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-60%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>3.49</div><div class="pcard-orig">€8.70</div><div class="pcard-title">Labial mate líquido 24h, 18 colores, sin transferencia, hidratante</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">44,800 vendidos</span></div><div class="pcard-ship">✈ Envío gratis +€10</div></div></div>
         <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-44%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>18.99</div><div class="pcard-orig">€33.90</div><div class="pcard-title">Extensiones cabello 100% natural Remy, liso, 50cm, 100g, varios tonos</div><div class="pcard-meta"><span class="pcard-stars">★★★★★</span><span class="pcard-orders">9,200 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
-        <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-58%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>11.50</div><div class="pcard-orig">€27.40</div><div class="pcard-title">Perfume mujer floral-oriental 50ml, duración 12h+, sin alcohol</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">18,600 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
+        <div class="pcard"><div class="pcard-img"><img src="https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=440&h=440&fit=crop&auto=format" alt="product" loading="lazy" style="width:100%;height:100%;object-fit:cover;"><span class="pcard-discount">-58%</span><span class="pcard-fav">❤️</span></div><div class="pcard-body"><div class="pcard-price"><span class="sym">€</span>11.50</div><div class="pcard-orig">€27.40</div><div class="pcard-title">Perfume mujer floral-oriental 50ml, duración 12h+, sin alcohol</div><div class="pcard-meta"><span class="pcard-stars">★★★★☆</span><span class="pcard-orders">18,600 vendidos</span></div><div class="pcard-ship">✈ Envío gratis</div></div></div>
       </div>
     </div>
   </div>
