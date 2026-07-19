@@ -218,7 +218,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);overf
 
 /* ── NAV ── */
 nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.nav-main{display:flex;align-items:center;gap:12px;padding:6px 16px;max-width:1300px;margin:0 auto;}
+.nav-main{display:flex;align-items:center;gap:12px;padding:6px 16px;max-width:1760px;margin:0 auto;}
 .logo{font-size:20px;font-weight:900;color:#fff;text-decoration:none;flex-shrink:0;letter-spacing:-1px;}
 .logo span{color:#FFD700;}
 .search-wrap{flex:1;display:flex;max-width:680px;border-radius:2px;overflow:hidden;border:2px solid #FF7A00;}
@@ -245,13 +245,13 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 
 /* ── CAT BAR ── */
 .cat-bar{background:var(--red2);border-top:1px solid rgba(255,255,255,.15);}
-.cat-bar-inner{display:flex;align-items:center;max-width:1300px;margin:0 auto;padding:0 16px;overflow-x:auto;scrollbar-width:none;}
+.cat-bar-inner{display:flex;align-items:center;max-width:1760px;margin:0 auto;padding:0 16px;overflow-x:auto;scrollbar-width:none;}
 .cat-bar-inner::-webkit-scrollbar{display:none;}
 .cat-link{color:rgba(255,255,255,.9);text-decoration:none;padding:8px 14px;font-size:12px;font-weight:600;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:5px;}
 .cat-link:hover,.cat-link.active{color:#fff;border-bottom-color:#FFD700;}
 
 /* ── MAIN LAYOUT ── */
-.page-wrap{max-width:1300px;margin:0 auto;padding:0 16px;}
+.page-wrap{max-width:1760px;margin:0 auto;padding:0 16px;}
 
 /* ── HERO ROW ── */
 .hero-row{display:grid;grid-template-columns:200px 1fr 180px;gap:0;margin:12px 0;border-radius:4px;overflow:hidden;height:320px;}
@@ -316,9 +316,22 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 
 /* ── PRODUCT CARDS ── */
 .products-row{display:grid;gap:8px;}
-.products-row.cols5{grid-template-columns:repeat(5,1fr);}
-.products-row.cols6{grid-template-columns:repeat(6,1fr);}
-.products-row.cols4{grid-template-columns:repeat(4,1fr);}
+/* Rejilla fluida en vez de un número fijo de columnas.
+
+   Antes: 4 columnas siempre. En una pantalla de 1920 el contenedor se
+   quedaba en 1300px y se desperdiciaban 310px por lado — solo se usaba el
+   68% del ancho.
+
+   Ensanchar el contenedor manteniendo 4 columnas habría estirado cada
+   tarjeta de 261px a ~420px, y las fotos se piden a 300x300 (?w=300 en la
+   URL): se verían escaladas y borrosas. Así que en vez de tarjetas más
+   grandes, MÁS tarjetas.
+
+   auto-fill mete tantas columnas de >=240px como quepan: ~6 en 1920, 5 en
+   1440, 4 en 1280, y baja solo en móvil sin necesidad de media queries. */
+.products-row.cols4,
+.products-row.cols5,
+.products-row.cols6{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
 
 .pcard{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;cursor:pointer;transition:all .2s;}
 .pcard:hover{border-color:#ffb89a;box-shadow:0 4px 16px rgba(255,64,16,.12);transform:translateY(-2px);}
@@ -353,7 +366,9 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .xs-search-bar button:hover{background:#fff0ed;}
 .xs-flash{animation:xsFlash 1.1s ease;}
 @keyframes xsFlash{0%{box-shadow:0 0 0 0 rgba(255,64,16,.45);}100%{box-shadow:0 0 0 14px rgba(255,64,16,0);}}
-.cat-products-area .products-row{grid-template-columns:repeat(4,1fr);}
+/* Esta zona lleva barra lateral de subcategorías, así que dispone de menos
+   ancho: el mínimo baja a 220px para que sigan entrando 4-5 tarjetas. */
+.cat-products-area .products-row{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
 
 /* ── MEGA CATEGORY GRID ── */
 .mega-cats{display:grid;grid-template-columns:repeat(10,1fr);gap:0;background:#fff;border-radius:4px;border:1px solid var(--border);margin:8px 0;}
@@ -379,7 +394,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 
 /* ── FOOTER ── */
 footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
-.footer-inner{max-width:1300px;margin:0 auto;}
+.footer-inner{max-width:1760px;margin:0 auto;}
 .footer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;margin-bottom:32px;}
 .footer-col h4{color:#fff;font-size:13px;font-weight:700;margin-bottom:12px;}
 .footer-col a{display:block;font-size:11px;color:#aaa;text-decoration:none;margin-bottom:6px;transition:color .2s;}
@@ -448,7 +463,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <button class="search-btn" onclick="xsSearch()" aria-label="Buscar">🔍</button>
     </div>
     <div class="nav-actions">
-      <a href="../xenderbigshop/" class="nav-icon-btn" style="background:rgba(232,67,67,0.12);border:1px solid rgba(232,67,67,0.3);border-radius:8px;padding:6px 12px;font-weight:700;color:#e84343;font-size:12px;">🏪 Vender en XenderBigShop</a>
+      <a href="../xenderbigshop/" class="nav-icon-btn" style="background:#fff;border:1px solid rgba(255,255,255,0.85);border-radius:8px;padding:6px 12px;font-weight:700;color:#c62828;font-size:12px;">🏪 Vender en XenderBigShop</a>
       <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span data-i18n="nav_account">Cuenta</span></a>
       <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span data-i18n="nav_cart">Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
       <a href="#" class="nav-icon-btn"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span></a>
