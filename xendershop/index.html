@@ -1914,6 +1914,23 @@ function xsInitCats(){
 window.addEventListener('DOMContentLoaded',xsInitCats);
 
 // Filter bar
+/* Lee los tres datos que el orden necesita de una tarjeta ya pintada.
+   Se sacan del DOM y no de una estructura de datos porque las tarjetas
+   vienen de sitios distintos: HTML fijo, subcategorias y, mas adelante,
+   AliExpress. Mientras respeten estas clases, el orden funciona para todas. */
+function xsDatosTarjeta(c){
+  var pRaw=(c.querySelector('.pcard-price')||{}).textContent||'';
+  var oRaw=(c.querySelector('.pcard-orders')||{}).textContent||'';
+  var sRaw=(c.querySelector('.pcard-stars')||{}).textContent||'';
+  return {
+    // "€12.99" o "15 000 FCFA": quita todo lo que no sea numero y normaliza
+    // la coma decimal. Los separadores de miles se eliminan antes.
+    precio: parseFloat(pRaw.replace(/[^\d.,]/g,'').replace(/\.(?=\d{3}\b)/g,'').replace(/\s/g,'').replace(',','.'))||0,
+    ventas: parseInt(oRaw.replace(/[^\d]/g,''),10)||0,
+    estrellas: (sRaw.match(/★/g)||[]).length
+  };
+}
+
 function applyFilters(){
   var sort=document.getElementById('f-sort').value;
   var freeOnly=document.getElementById('f-free').checked;
@@ -1930,6 +1947,35 @@ function applyFilters(){
     c.style.display=visible?'':'none';
     if(visible)shown++;
   });
+
+  /* El desplegable "Ordenar por" leia su valor y no lo usaba nunca: las
+     cuatro opciones no hacian absolutamente nada. Se ordena dentro de cada
+     fila, no globalmente, para no sacar un producto de su categoria. */
+  if(sort){
+    var criterio={
+      low:  function(a,b){ return a.d.precio - b.d.precio; },
+      high: function(a,b){ return b.d.precio - a.d.precio; },
+      top:  function(a,b){ return b.d.estrellas - a.d.estrellas || b.d.ventas - a.d.ventas; },
+      pop:  function(a,b){ return b.d.ventas - a.d.ventas; }
+    }[sort];
+    if(criterio){
+      document.querySelectorAll('.products-row').forEach(function(fila){
+        var items=[].slice.call(fila.querySelectorAll(':scope > .pcard'));
+        if(items.length<2)return;
+        // Se guarda el orden original la primera vez, para poder volver a el
+        // cuando el usuario elija "Ordenar por" vacio o pulse Limpiar.
+        if(!fila.xsOrdenOriginal)fila.xsOrdenOriginal=items.slice();
+        items.map(function(c){ return {c:c,d:xsDatosTarjeta(c)}; })
+             .sort(criterio)
+             .forEach(function(o){ fila.appendChild(o.c); });
+      });
+    }
+  }else{
+    document.querySelectorAll('.products-row').forEach(function(fila){
+      if(fila.xsOrdenOriginal)fila.xsOrdenOriginal.forEach(function(c){ fila.appendChild(c); });
+    });
+  }
+
   var T=XS_TR[XS_LANG]||XS_TR.es;
   document.getElementById('f-count').textContent=(T.f_count||'Mostrando todos los productos').replace('todos los productos',shown+' productos');
 }
@@ -1938,6 +1984,11 @@ function clearFilters(){
   document.getElementById('f-free').checked=false;
   document.getElementById('f-sale').checked=false;
   document.querySelectorAll('.pcard').forEach(c=>c.style.display='');
+  // Deshacer tambien el orden, no solo los filtros: si no, "Limpiar" dejaba
+  // los productos barajados por el ultimo criterio elegido.
+  document.querySelectorAll('.products-row').forEach(function(fila){
+    if(fila.xsOrdenOriginal)fila.xsOrdenOriginal.forEach(function(c){ fila.appendChild(c); });
+  });
   var T=XS_TR[XS_LANG]||XS_TR.es;
   document.getElementById('f-count').textContent=T.f_count||'Mostrando todos los productos';
 }
