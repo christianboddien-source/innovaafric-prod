@@ -1986,12 +1986,35 @@ function bsPintaEnvios(){
   if(typeof bsUpdateDelivery === 'function' && document.querySelector('input[name="bs-delivery"]:checked')) bsUpdateDelivery();
 }
 
-// Arranque de los envíos. Va AQUÍ, después de declarar BS_ENVIO y BS_VOLUMEN,
-// no arriba con bsPintaPrecios(): allí las variables aún no existen y la
-// llamada reventaría el resto del script.
-bsPintaEnvios();
-bsPintaVolumen();
-bsCargaEnvios();
+/* Arranque de los envíos.
+
+   Dos condiciones que hay que cumplir a la vez, y por eso esto va donde va:
+
+   1. DESPUÉS de declarar BS_ENVIO y BS_VOLUMEN. Con var, la declaración se
+      eleva pero la asignación no, así que llamar antes daba undefined.
+   2. DESPUÉS de que exista el modal en el DOM. El modal está más abajo en
+      el archivo que este script, así que al ejecutarse en línea todavía no
+      hay ni #bs-volumen ni #bsdel-std-precio: getElementById devuelve null
+      y las funciones se salían sin pintar nada.
+
+   La primera versión solo cumplía (1) y se publicó con el volumen sin
+   traducir a la moneda. No se detectó porque las pruebas llamaban a
+   bsSetMoneda() a mano, que repinta — o sea que medían la propia llamada,
+   no el arranque. Los envíos parecían correctos de casualidad: bsCargaEnvios
+   es asíncrona, termina con el DOM ya montado y repinta.
+
+   Con DOMContentLoaded se cumplen las dos. Y si el evento ya pasó (script
+   cargado tarde), se ejecuta igualmente en lugar de quedarse esperando. */
+function bsArranqueEnvios(){
+  bsPintaEnvios();
+  bsPintaVolumen();
+  bsCargaEnvios();
+}
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', bsArranqueEnvios);
+} else {
+  bsArranqueEnvios();
+}
 
 function bsSelectPay(btn,method){
   bsPayMethod=method;
