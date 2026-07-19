@@ -262,6 +262,9 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .hero-cats::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
 .hcat-item{padding:9px 14px;font-size:12px;color:#333;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f5f5f5;transition:background .15s;}
 .hcat-item:hover{background:#fff0ed;color:var(--red);}
+/* Subcategorías del mega-menú */
+.xs-mega-sub:hover{color:var(--red)!important;text-decoration:underline!important;}
+#xs-mega{scrollbar-width:thin;}
 .hcat-item span.arr{color:#ccc;font-size:10px;}
 
 /* MAIN BANNER */
@@ -2068,7 +2071,183 @@ function xsInitCats(){
     jump(el,'.hcat-item');
   });
 }
+/* ═══════════════════════════════════════════════════════════════════
+   MEGA-MENU DE CATEGORIAS
+
+   Al pasar el raton por una categoria de la lista se abre un panel con
+   sus subcategorias en columnas, como en AliExpress.
+
+   Antes solo 4 de las 16 categorias tenian subcategorias definidas (las
+   que tienen seccion de productos). Las otras 12 no ofrecian nada al
+   pulsarlas. Aqui estan las 16 completas, en los tres idiomas.
+
+   El panel se cuelga del <body> con posicion fija y no dentro de
+   .hero-row: esa fila tiene overflow:hidden y altura 320px, asi que un
+   panel hijo quedaria recortado. Colgarlo del body evita tocar la
+   maquetacion del hero.
+
+   Sin fotos por subcategoria ni fila de marcas: eso necesita catalogo
+   real. Se anadira cuando entre AliExpress.
+   ═══════════════════════════════════════════════════════════════════ */
+var XS_MEGA={
+  electronics:{
+    es:['Smartphones','Tablets','Portátiles','Smart TVs','Auriculares','Smartwatches','Altavoces','Power banks'],
+    en:['Smartphones','Tablets','Laptops','Smart TVs','Headphones','Smartwatches','Speakers','Power banks'],
+    fr:['Smartphones','Tablettes','Ordinateurs portables','Smart TV','Écouteurs','Montres connectées','Enceintes','Batteries externes']},
+  women:{
+    es:['Vestidos','Blusas y tops','Pantalones','Faldas','Chaquetas','Bañadores','Ropa interior','Tallas grandes'],
+    en:['Dresses','Tops & blouses','Pants','Skirts','Jackets','Swimwear','Lingerie','Plus size'],
+    fr:['Robes','Hauts et blouses','Pantalons','Jupes','Vestes','Maillots de bain','Lingerie','Grandes tailles']},
+  men:{
+    es:['Camisas','Camisetas','Pantalones','Trajes','Chaquetas','Ropa deportiva','Ropa interior','Accesorios'],
+    en:['Shirts','T-shirts','Pants','Suits','Jackets','Sportswear','Underwear','Accessories'],
+    fr:['Chemises','T-shirts','Pantalons','Costumes','Vestes','Vêtements de sport','Sous-vêtements','Accessoires']},
+  home:{
+    es:['Muebles','Ropa de cama','Cocina','Menaje','Decoración','Baño','Jardín','Herramientas'],
+    en:['Furniture','Bedding','Kitchen','Kitchenware','Decoration','Bathroom','Garden','Tools'],
+    fr:['Meubles','Linge de lit','Cuisine','Ustensiles','Décoration','Salle de bain','Jardin','Outils']},
+  beauty:{
+    es:['Cuidado facial','Maquillaje','Cabello','Extensiones y pelucas','Uñas','Perfumes','Cuidado corporal','Vitaminas'],
+    en:['Facial skincare','Makeup','Hair','Extensions & wigs','Nails','Perfumes','Body care','Vitamins'],
+    fr:['Soins du visage','Maquillage','Cheveux','Extensions et perruques','Ongles','Parfums','Soins du corps','Vitamines']},
+  sports:{
+    es:['Fitness','Ciclismo','Fútbol','Camping','Pesca','Natación','Running','Deportes de equipo'],
+    en:['Fitness','Cycling','Football','Camping','Fishing','Swimming','Running','Team sports'],
+    fr:['Fitness','Cyclisme','Football','Camping','Pêche','Natation','Running','Sports collectifs']},
+  baby:{
+    es:['Ropa de bebé','Pañales','Alimentación','Cochecitos','Juguetes de bebé','Sillas de coche','Cunas','Maternidad'],
+    en:['Baby clothing','Diapers','Feeding','Strollers','Baby toys','Car seats','Cribs','Maternity'],
+    fr:['Vêtements bébé','Couches','Alimentation','Poussettes','Jouets bébé','Sièges auto','Lits bébé','Maternité']},
+  auto:{
+    es:['Accesorios interior','Accesorios exterior','Electrónica del coche','Neumáticos y llantas','Herramientas','Aceites y fluidos','Motos','Limpieza'],
+    en:['Interior accessories','Exterior accessories','Car electronics','Tires & wheels','Tools','Oils & fluids','Motorcycles','Cleaning'],
+    fr:['Accessoires intérieur','Accessoires extérieur','Électronique auto','Pneus et jantes','Outils','Huiles et fluides','Motos','Nettoyage']},
+  toys:{
+    es:['Juguetes educativos','Muñecas','Coches y radiocontrol','Puzles','Juegos de mesa','Peluches','Juguetes de exterior','Construcción'],
+    en:['Educational toys','Dolls','RC & cars','Puzzles','Board games','Plush toys','Outdoor toys','Building blocks'],
+    fr:['Jouets éducatifs','Poupées','RC et voitures','Puzzles','Jeux de société','Peluches',"Jouets d'extérieur",'Construction']},
+  jewelry:{
+    es:['Collares','Anillos','Pendientes','Pulseras','Relojes','Joyería de plata','Bisutería','Cajas y organizadores'],
+    en:['Necklaces','Rings','Earrings','Bracelets','Watches','Silver jewelry','Fashion jewelry','Boxes & organizers'],
+    fr:['Colliers','Bagues',"Boucles d'oreilles",'Bracelets','Montres','Bijoux en argent','Bijoux fantaisie','Boîtes et rangements']},
+  bags:{
+    es:['Bolsos de mujer','Mochilas','Maletas','Carteras','Bandoleras','Bolsas de viaje','Bolsos de hombre','Fundas para portátil'],
+    en:["Women's bags",'Backpacks','Suitcases','Wallets','Crossbody bags','Travel bags',"Men's bags",'Laptop sleeves'],
+    fr:['Sacs femme','Sacs à dos','Valises','Portefeuilles','Sacs bandoulière','Sacs de voyage','Sacs homme','Housses ordinateur']},
+  computers:{
+    es:['Portátiles','Monitores','Teclados y ratones','Almacenamiento','Componentes','Impresoras','Redes','Accesorios gaming'],
+    en:['Laptops','Monitors','Keyboards & mice','Storage','Components','Printers','Networking','Gaming accessories'],
+    fr:['Ordinateurs portables','Écrans','Claviers et souris','Stockage','Composants','Imprimantes','Réseau','Accessoires gaming']},
+  shoes:{
+    es:['Zapatillas','Zapatos de mujer','Zapatos de hombre','Sandalias','Botas','Deportivas','Zapatos de niño','Cuidado del calzado'],
+    en:['Sneakers',"Women's shoes","Men's shoes",'Sandals','Boots','Sports shoes',"Kids' shoes",'Shoe care'],
+    fr:['Baskets','Chaussures femme','Chaussures homme','Sandales','Bottes','Chaussures de sport','Chaussures enfant','Entretien']},
+  security:{
+    es:['Cámaras de vigilancia','Alarmas','Cerraduras inteligentes','Videoporteros','Detectores','Cajas fuertes','Control de acceso','Accesorios'],
+    en:['Security cameras','Alarms','Smart locks','Video doorbells','Detectors','Safes','Access control','Accessories'],
+    fr:['Caméras de surveillance','Alarmes','Serrures connectées','Interphones vidéo','Détecteurs','Coffres-forts',"Contrôle d'accès",'Accessoires']},
+  lighting:{
+    es:['Bombillas LED','Tiras LED','Lámparas de techo','Lámparas de mesa','Iluminación exterior','Focos','Luces solares','Linternas'],
+    en:['LED bulbs','LED strips','Ceiling lights','Table lamps','Outdoor lighting','Spotlights','Solar lights','Flashlights'],
+    fr:['Ampoules LED','Rubans LED','Plafonniers','Lampes de table','Éclairage extérieur','Spots','Lampes solaires','Lampes torches']},
+  food:{
+    es:['Snacks','Bebidas','Café y té','Especias','Conservas','Aceites','Productos sin gluten','Suplementos'],
+    en:['Snacks','Drinks','Coffee & tea','Spices','Canned food','Oils','Gluten-free','Supplements'],
+    fr:['Snacks','Boissons','Café et thé','Épices','Conserves','Huiles','Sans gluten','Compléments']}
+};
+
+var XS_MEGA_TIT={es:'Subcategorías',en:'Subcategories',fr:'Sous-catégories'};
+var XS_MEGA_VER={es:'Ver todo en',en:'See all in',fr:'Voir tout dans'};
+
+var xsMegaEl=null, xsMegaTimer=null;
+
+function xsMegaPanel(){
+  if(!xsMegaEl){
+    xsMegaEl=document.createElement('div');
+    xsMegaEl.id='xs-mega';
+    xsMegaEl.style.cssText='position:fixed;display:none;z-index:900;background:#fff;'
+      +'border:1px solid var(--border);border-radius:8px;box-shadow:0 12px 48px rgba(0,0,0,.16);'
+      +'padding:18px 22px;overflow-y:auto;';
+    // Si el raton entra en el panel no se cierra; al salir, si.
+    xsMegaEl.addEventListener('mouseenter',function(){ clearTimeout(xsMegaTimer); });
+    xsMegaEl.addEventListener('mouseleave',xsMegaCerrarPronto);
+    document.body.appendChild(xsMegaEl);
+  }
+  return xsMegaEl;
+}
+
+function xsMegaCerrarPronto(){
+  clearTimeout(xsMegaTimer);
+  // Margen para que se pueda cruzar el hueco entre la lista y el panel.
+  xsMegaTimer=setTimeout(function(){ if(xsMegaEl)xsMegaEl.style.display='none'; },180);
+}
+
+function xsMegaAbrir(item,catKey){
+  var datos=XS_MEGA[catKey];
+  if(!datos)return;
+  var lista=datos[XS_LANG]||datos.es;
+  var p=xsMegaPanel();
+  clearTimeout(xsMegaTimer);
+
+  var titulo=(item.textContent||'').replace('›','').trim();
+  var ver=(XS_MEGA_VER[XS_LANG]||XS_MEGA_VER.es)+' '+xsEsc(titulo);
+
+  p.innerHTML='<div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:12px;">'+xsEsc(titulo)+'</div>'
+    +'<div style="columns:3;column-gap:28px;">'
+    +lista.map(function(s){
+        return '<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(catKey)+'" data-sub="'+xsEsc(s)+'" '
+          +'style="display:block;break-inside:avoid;font-size:12.5px;color:#444;text-decoration:none;padding:5px 0;">'
+          +xsEsc(s)+'</a>';
+      }).join('')
+    +'</div>'
+    +'<a href="#" class="xs-mega-sub" data-cat="'+xsEsc(catKey)+'" data-sub="" '
+    +'style="display:inline-block;margin-top:12px;font-size:12px;font-weight:700;color:var(--red);text-decoration:none;">'
+    +ver+' →</a>';
+
+  var r=item.getBoundingClientRect();
+  var lateral=item.closest('.hero-cats');
+  var rl=lateral?lateral.getBoundingClientRect():r;
+  p.style.display='block';
+  p.style.left=Math.round(rl.right+2)+'px';
+  p.style.top=Math.round(Math.max(8,Math.min(r.top,window.innerHeight-360)))+'px';
+  p.style.width=Math.round(Math.min(560,window.innerWidth-rl.right-24))+'px';
+  p.style.maxHeight=Math.round(window.innerHeight*0.62)+'px';
+}
+
+function xsInitMega(){
+  document.querySelectorAll('.hero-cats .hcat-item').forEach(function(item){
+    var k=(item.getAttribute('data-i18n')||'').replace(/^(cat_|hcat_)/,'');
+    if(!XS_MEGA[k])return;
+    item.addEventListener('mouseenter',function(){ xsMegaAbrir(item,k); });
+    item.addEventListener('mouseleave',xsMegaCerrarPronto);
+  });
+  // Un solo listener para todas las subcategorias del panel.
+  document.addEventListener('click',function(e){
+    var a=e.target.closest?e.target.closest('.xs-mega-sub'):null;
+    if(!a)return;
+    e.preventDefault();
+    if(xsMegaEl)xsMegaEl.style.display='none';
+    var cat=a.getAttribute('data-cat'), sub=a.getAttribute('data-sub');
+    var bloque=document.querySelector('.cat-block[data-cat="'+cat+'"]');
+    if(bloque){
+      bloque.scrollIntoView({behavior:'smooth',block:'start'});
+      bloque.classList.remove('xs-flash');void bloque.offsetWidth;bloque.classList.add('xs-flash');
+      var area=bloque.querySelector('.cat-products-area');
+      if(sub&&area&&typeof xsLoadSub==='function')xsLoadSub(cat,sub,area);
+    }else if(sub){
+      // Categoria sin seccion propia todavia: se busca el termino, que es
+      // mas util que no hacer nada.
+      var inp=document.querySelector('.search-input');
+      if(inp){ inp.value=sub; if(typeof xsSearch==='function')xsSearch(); }
+    }
+  });
+  // Si se hace scroll con el panel abierto, se cierra: su posicion es fija
+  // y se quedaria flotando lejos de su categoria.
+  window.addEventListener('scroll',function(){ if(xsMegaEl&&xsMegaEl.style.display==='block')xsMegaEl.style.display='none'; },{passive:true});
+}
+
 window.addEventListener('DOMContentLoaded',xsInitCats);
+window.addEventListener('DOMContentLoaded',xsInitMega);
 
 // Filter bar
 /* Lee los tres datos que el orden necesita de una tarjeta ya pintada.
