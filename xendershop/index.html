@@ -911,7 +911,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
             <div style="font-size:10px;color:#999;" data-i18n="del_std_sub">Entrega a domicilio</div>
           </div>
         </div>
-        <span id="xs-del-std-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€2.99</span>
+        <span id="xs-del-std-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€4.99</span>
       </label>
       <label id="del-exp-row" style="display:flex;align-items:center;justify-content:space-between;border:2px solid #e8e8e8;border-radius:8px;padding:9px 12px;cursor:pointer;transition:border-color .2s;">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -921,7 +921,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
             <div style="font-size:10px;color:#999;" data-i18n="del_exp_sub">Ciudades principales</div>
           </div>
         </div>
-        <span id="xs-del-exp-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€5.99</span>
+        <span id="xs-del-exp-precio" style="font-size:12px;font-weight:800;color:#FF4010;">€9.99</span>
       </label>
     </div>
   </div>
@@ -1125,19 +1125,52 @@ var xsPayMethod='xm';
 // fía el checkout: los textos en pantalla van convertidos a la moneda del
 // usuario y no sirven para calcular.
 var XS_CART_EUR={sub:0,del:0,disc:0,total:0};
-/* Costes de envio, SIEMPRE en euros. Unica fuente: antes estos mismos
-   importes estaban tambien escritos a mano en el HTML de las dos opciones
-   y duplicados dentro de xsUpdateDelivery. */
-var XS_DEL_COSTS={none:0,std:2.99,exp:5.99};
+/* Tarifas de envío LOCALES FIJAS por moneda, de la MISMA tabla
+   delivery_prices de Supabase que usa XenderBigShop → las dos apps cobran
+   exactamente igual (antes XenderShop convertía 2,99€→1.961 FCFA mientras
+   BigShop fijaba 2.000 FCFA). Estos valores son el respaldo si Supabase no
+   responde; deben coincidir con la tabla. */
+var XS_ENVIO={
+  std:{EUR:4.99, USD:5, XAF:2000, XOF:2000},
+  exp:{EUR:9.99, USD:10, XAF:4000, XOF:4000}
+};
 
-/* Las opciones de envio mostraban "€2.99" y "€5.99" fijos: con FCFA
-   seleccionado, el carrito entero salia en francos y justo debajo el envio
-   en euros. Mismo fallo que ya se corrigio en el modal de XenderBigShop.
-   Ahora siguen a la moneda como el resto. */
+/* La clave para no reescribir todo el carrito: el resto de la máquina trabaja
+   en EUR y convierte al mostrar (xsFmtFlat multiplica por el tipo de cambio).
+   Así que la tarifa local fija se devuelve como su EQUIVALENTE EN EUR para la
+   moneda activa (2.000 FCFA ÷ 655,957 = 3,05 €). Al pasar por xsFmtFlat vuelve
+   a mostrarse como los 2.000 FCFA exactos, y el total y el checkout —que ya
+   eran EUR— siguen cuadrando sin tocar nada. */
+function xsEnvioEur(mode){
+  if(mode==='none'||!XS_ENVIO[mode]) return 0;
+  var cur=(typeof XS_CUR!=='undefined')?XS_CUR:'EUR';
+  var rate=(typeof XS_RATES!=='undefined'&&XS_RATES[cur])?XS_RATES[cur]:1;
+  var local=XS_ENVIO[mode][cur];
+  if(local==null) local=(XS_ENVIO[mode].EUR||0)*rate;  // moneda sin tarifa propia
+  return local/rate;
+}
+
+// Carga las tarifas reales de Supabase (misma tabla que BigShop). Si falla o
+// no hay datos, se queda el respaldo de arriba.
+async function xsCargaEnvios(){
+  try{
+    var r=await SB.from('delivery_prices').select('mode,currency,amount').eq('active',true);
+    if(r.error||!r.data||!r.data.length) return;
+    var nuevos={};
+    r.data.forEach(function(f){ if(!nuevos[f.mode])nuevos[f.mode]={}; nuevos[f.mode][f.currency]=Number(f.amount); });
+    Object.keys(nuevos).forEach(function(m){ XS_ENVIO[m]=Object.assign({},XS_ENVIO[m],nuevos[m]); });
+    if(typeof xsPintaEnviosCarrito==='function')xsPintaEnviosCarrito();
+    if(typeof xsRecalcCart==='function')xsRecalcCart();
+  }catch(e){ /* nos quedamos con el respaldo */ }
+}
+
+/* Las opciones de envío muestran la tarifa local fija en la moneda activa.
+   Pasa por xsFmtFlat(equivalente-EUR), que la vuelve a mostrar como el
+   importe local exacto. */
 function xsPintaEnviosCarrito(){
   [['std','xs-del-std-precio'],['exp','xs-del-exp-precio']].forEach(function(par){
     var el=document.getElementById(par[1]);
-    if(el)el.textContent=xsFmtFlat(XS_DEL_COSTS[par[0]]);
+    if(el)el.textContent=xsFmtFlat(xsEnvioEur(par[0]));
   });
 }
 
@@ -1173,7 +1206,7 @@ function xsRecalcCart(){
   // Las tarifas de envio, igual: se pintan aqui para que no haya forma de
   // que se queden en otra moneda que el resto del carrito.
   xsPintaEnviosCarrito();
-  var delCost=XS_DEL_COSTS[xsDeliveryMode]||0;
+  var delCost=xsEnvioEur(xsDeliveryMode);
   var discount=XS_CART_EUR.disc||0;
   XS_CART_EUR={sub:sub,del:delCost,disc:discount,total:sub+delCost-discount};
 
@@ -1186,10 +1219,9 @@ function xsRecalcCart(){
 function xsUpdateDelivery(){
   var sel=document.querySelector('input[name="xs-delivery"]:checked');
   xsDeliveryMode=sel?sel.value:'none';
-  /* Antes esta funcion declaraba su PROPIA copia de los costes de envio,
-     duplicando XS_DEL_COSTS. Los mismos importes vivian en tres sitios y
-     cambiar uno dejaba los otros mintiendo. Ahora hay una sola fuente. */
-  var delCost=XS_DEL_COSTS[xsDeliveryMode]||0;
+  // Coste del envío = tarifa local fija (XS_ENVIO / delivery_prices) como
+  // equivalente en EUR para la moneda activa. Única fuente.
+  var delCost=xsEnvioEur(xsDeliveryMode);
   var T=XS_TR[XS_LANG]||XS_TR.es;
   var delRow=document.getElementById('xs-delivery-row');
   if(delCost>0){
@@ -1846,6 +1878,7 @@ window.addEventListener('DOMContentLoaded',function(){
   if(XS_CUR!=='EUR')setCurrency(XS_CUR);
   var sel=document.getElementById('xs-cur');if(sel)sel.value=XS_CUR;
   xsInitGeo();
+  xsCargaEnvios();   // tarifas de envío reales desde Supabase (misma tabla que BigShop)
 });
 
 /* ═══════════════════════════════════════════════════════════════════
