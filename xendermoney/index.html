@@ -608,6 +608,10 @@
     .footer-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
     .footer-links a { font-size: 14px; color: var(--grey); text-decoration: none; transition: color .2s; }
     .footer-links a:hover { color: var(--orange); }
+    /* Enlaces legales aún sin página: se ven apagados y con etiqueta, no como
+       enlaces vivos. Recordatorio visible de documentación por terminar. */
+    .legal-pending { font-size: 14px; color: var(--grey); opacity: .5; cursor: default; }
+    .legal-tag { font-size: 11px; color: var(--orange); opacity: .75; font-weight: 600; white-space: nowrap; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
     .footer-bottom p { font-size: 13px; color: var(--grey); }
     .footer-slogan { font-size: 12px; font-weight: 700; color: var(--orange); letter-spacing: 2px; }
@@ -1731,11 +1735,16 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
     </div>
     <div>
       <p class="footer-col-title">Legal</p>
+      <!-- Marcados como PENDIENTES a proposito: XenderMoney mueve dinero y su
+           documentacion legal (privacidad, KYC/AML, compliance, licencias)
+           tiene que redactarla y validarla Christian, no improvisarse. La
+           etiqueta "· pendiente" los deja visibles como recordatorio para no
+           olvidar terminar la documentacion, sin fingir que ya existen. -->
       <ul class="footer-links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Compliance</a></li>
-        <li><a href="#">Cookies</a></li>
+        <li><span class="legal-pending" data-i18n="foot_privacy">Privacy Policy</span> <span class="legal-tag" data-i18n="foot_soon">· pendiente</span></li>
+        <li><span class="legal-pending" data-i18n="foot_terms">Terms of Service</span> <span class="legal-tag" data-i18n="foot_soon">· pendiente</span></li>
+        <li><span class="legal-pending" data-i18n="foot_compliance">Compliance</span> <span class="legal-tag" data-i18n="foot_soon">· pendiente</span></li>
+        <li><span class="legal-pending" data-i18n="foot_cookies">Cookies</span> <span class="legal-tag" data-i18n="foot_soon">· pendiente</span></li>
       </ul>
     </div>
   </div>
@@ -1819,7 +1828,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f4:'Cumplimiento RGPD', sec_f4p:'Cumplimiento total con el RGPD europeo. Tus datos son tuyos. Elimina tu cuenta y todos los datos en cualquier momento.',
       sec_f5:'Fondos Segregados', sec_f5p:'Los fondos de usuarios se mantienen en cuentas segregadas en bancos socios con licencia. Nunca usados para operaciones. 100% protegidos.',
       sec_f6:'SLA 99.98% Disponibilidad', sec_f6p:'Infraestructura redundante en 3 centros de datos. Monitoreo en tiempo real 24/7. Respuesta a incidentes en menos de 5 minutos.',
-      dl_h:'Descarga XenderMoney App', dl_sub:'Disponible en iOS y Android. Gratis. Sin comisiones ocultas.',
+      dl_h:'Descarga XenderMoney App', foot_soon:'· pendiente', dl_sub:'Disponible en iOS y Android. Gratis. Sin comisiones ocultas.',
       ck_txt:'🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#F5A623;text-decoration:underline;">Política de Privacidad</a>.', ck_ess:'Solo esenciales', ck_acc:'Aceptar ✓'
     },
     en:{
@@ -1889,7 +1898,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f4:'GDPR Compliance', sec_f4p:'Full compliance with the European GDPR. Your data is yours. Delete your account and all your data at any time.',
       sec_f5:'Segregated Funds', sec_f5p:'User funds are held in segregated accounts at licensed partner banks. Never used for operations. 100% protected.',
       sec_f6:'99.98% Uptime SLA', sec_f6p:'Redundant infrastructure across 3 data centers. Real-time 24/7 monitoring. Incident response in under 5 minutes.',
-      dl_h:'Download the XenderMoney App', dl_sub:'Available on iOS and Android. Free. No hidden fees.',
+      dl_h:'Download the XenderMoney App', foot_soon:'· coming soon', dl_sub:'Available on iOS and Android. Free. No hidden fees.',
       ck_txt:'🍪 We use cookies to improve your experience. <a href="#" style="color:#F5A623;text-decoration:underline;">Privacy Policy</a>.', ck_ess:'Essential only', ck_acc:'Accept ✓'
     },
     fr:{
@@ -1959,7 +1968,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f4:'Conformité RGPD', sec_f4p:"Conformité totale avec le RGPD européen. Vos données vous appartiennent. Supprimez votre compte et toutes vos données à tout moment.",
       sec_f5:'Fonds Ségrégués', sec_f5p:"Les fonds des utilisateurs sont détenus dans des comptes ségrégués chez des banques partenaires agréées. Jamais utilisés pour les opérations. 100% protégés.",
       sec_f6:'SLA 99.98% de Disponibilité', sec_f6p:'Infrastructure redondante sur 3 centres de données. Surveillance en temps réel 24/7. Réponse aux incidents en moins de 5 minutes.',
-      dl_h:'Téléchargez l\'app XenderMoney', dl_sub:'Disponible sur iOS et Android. Gratuit. Sans frais cachés.',
+      dl_h:'Téléchargez l\'app XenderMoney', dl_sub:'Disponible sur iOS et Android. Gratuit. Sans frais cachés.', foot_soon:'· à venir',
       ck_txt:'🍪 Nous utilisons des cookies pour améliorer votre expérience. <a href="#" style="color:#F5A623;text-decoration:underline;">Politique de confidentialité</a>.', ck_ess:'Essentiels uniquement', ck_acc:'Accepter ✓'
     }
   };
@@ -2063,19 +2072,8 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
   iaInitGeoLang();
 </script>
 
-<!-- ═══ APP DOWNLOAD STRIP ═══ -->
-<section style="background:linear-gradient(135deg,#0F1A2E,#1E3050);padding:60px 6%;text-align:center;">
-  <div style="max-width:700px;margin:0 auto;">
-    <div style="font-size:28px;margin-bottom:12px;">📱</div>
-    <h2 style="font-size:clamp(20px,2.5vw,28px);font-weight:900;color:#fff;margin-bottom:10px;" data-i18n="dl_h">Descarga XenderMoney App</h2>
-    <p style="font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:28px;" data-i18n="dl_sub">Disponible en iOS y Android. Gratis. Sin comisiones ocultas.</p>
-    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
-      <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 22px;text-decoration:none;color:#fff;transition:all .2s;" onmouseenter="this.style.background='rgba(245,166,35,0.15)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'"><span style="font-size:24px;">🍎</span><div style="text-align:left;"><div style="font-size:10px;color:rgba(255,255,255,0.5);">Download on the</div><div style="font-size:15px;font-weight:800;">App Store</div></div></a>
-      <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 22px;text-decoration:none;color:#fff;transition:all .2s;" onmouseenter="this.style.background='rgba(245,166,35,0.15)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'"><span style="font-size:24px;">🤖</span><div style="text-align:left;"><div style="font-size:10px;color:rgba(255,255,255,0.5);">Get it on</div><div style="font-size:15px;font-weight:800;">Google Play</div></div></a>
-      <a href="#" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 22px;text-decoration:none;color:#fff;transition:all .2s;" onmouseenter="this.style.background='rgba(245,166,35,0.15)'" onmouseleave="this.style.background='rgba(255,255,255,0.08)'"><span style="font-size:24px;">🌐</span><div style="text-align:left;"><div style="font-size:10px;color:rgba(255,255,255,0.5);">Open in</div><div style="font-size:15px;font-weight:800;">Web App</div></div></a>
-    </div>
-  </div>
-</section>
+<!-- Seccion de descarga de app retirada: la app no esta publicada todavia.
+     Volvera cuando exista en App Store / Google Play. -->
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);padding:16px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(245,166,35,0.2);">
