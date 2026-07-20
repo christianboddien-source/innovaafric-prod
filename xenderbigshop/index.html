@@ -21,7 +21,12 @@
 <meta name="twitter:title" content="XenderBigShop — Marketplace for African Business"/>
 <meta name="twitter:description" content="Open your store in 5 minutes. Sell to 35 African countries. Get paid instantly via Mobile Money."/>
 <meta name="keywords" content="XenderBigShop, marketplace Africa, vendre en ligne Afrique, multivendor Africa, Dokan Africa"/>
-<link rel="canonical" href="https://www.xenderbigshop.com/"/>
+<!-- Canonical temporal a GitHub Pages, que es donde vive la web ahora.
+     www.xenderbigshop.com aún no resuelve (transferencia de dominio a IONOS
+     en curso); apuntar el canonical a un dominio muerto impide que Google
+     indexe. RESTAURAR a https://www.xenderbigshop.com/ cuando el dominio esté
+     activo y sirviendo esta página. -->
+<link rel="canonical" href="https://christianboddien-source.github.io/innovaafric-prod/xenderbigshop/"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -1352,7 +1357,7 @@ const TR = {
     f7_h:'Descripciones de Producto con IA', f7_d:'Sube una foto — nuestra IA genera títulos, descripciones y etiquetas en 3 idiomas automáticamente.',
     f8_h:'Herramientas de Marketing Integradas', f8_d:'Códigos promocionales, ventas flash, compartir en redes sociales, posicionamiento destacado y campañas de notificaciones push.',
     f9_h:'Acceso al Catálogo AliExpress', f9_d:'Los vendedores de electrónica pueden importar productos directamente del catálogo AliExpress. 500M+ SKUs. Dropshipping directo de Asia.',
-    plans_tag:'PLANES VENDEDOR', plans_title:'Elige tu Plan', plans_sub:'Empieza gratis. Crece con tus ventas. Sin comisiones ocultas.',
+    plans_tag:'PLANES VENDEDOR', plans_title:'Elige tu Plan', plans_sub:'Primer mes gratis. Crece con tus ventas. Sin comisiones ocultas.',
     plan1_name:'Starter', plan1_sub:'Para nuevos negocios y emprendedores', plan_mo:'/mes', plan_free:'Comenzar',
     plan2_name:'Business', plan2_sub:'Para un restaurante o tienda en crecimiento', plan_start:'Comenzar',
     plan4_name:'Business Prime', plan4_sub:'Para quien ya vende volumen y quiere menos comision', plan_start2:'Comenzar',
@@ -1437,7 +1442,7 @@ const TR = {
     f7_h:'AI Product Descriptions', f7_d:'Upload a photo — our AI generates product titles, descriptions, and tags in 3 languages automatically.',
     f8_h:'Built-in Marketing Tools', f8_d:'Promo codes, flash sales, social media sharing, featured product placement, and push notification campaigns.',
     f9_h:'AliExpress Catalog Access', f9_d:'Electronics vendors can import products directly from AliExpress catalog. 500M+ SKUs. Dropship directly from Asia.',
-    plans_tag:'VENDOR PLANS', plans_title:'Choose Your Plan', plans_sub:'Start free. Grow with your sales. No hidden fees.',
+    plans_tag:'VENDOR PLANS', plans_title:'Choose Your Plan', plans_sub:'First month free. Grow with your sales. No hidden fees.',
     plan1_name:'Starter', plan1_sub:'For new businesses & entrepreneurs', plan_mo:'/month', plan_free:'Get Started',
     plan2_name:'Business', plan2_sub:'For a growing restaurant or shop', plan_start:'Get Started',
     plan4_name:'Business Prime', plan4_sub:'For high-volume sellers who want lower fees', plan_start2:'Get Started',
@@ -1522,7 +1527,7 @@ const TR = {
     f7_h:'Descriptions Produit par IA', f7_d:"Téléchargez une photo — notre IA génère titres, descriptions et tags en 3 langues automatiquement.",
     f8_h:'Outils Marketing Intégrés', f8_d:"Codes promo, ventes flash, partage réseaux sociaux, placement produit en vedette et campagnes de notifications push.",
     f9_h:'Accès Catalogue AliExpress', f9_d:"Les vendeurs d'électronique peuvent importer des produits directement du catalogue AliExpress. 500M+ SKUs. Dropshipping direct.",
-    plans_tag:'PLANS VENDEUR', plans_title:'Choisissez votre Plan', plans_sub:'Commencez gratuitement. Grandissez avec vos ventes. Sans frais cachés.',
+    plans_tag:'PLANS VENDEUR', plans_title:'Choisissez votre Plan', plans_sub:'Premier mois gratuit. Grandissez avec vos ventes. Sans frais cachés.',
     plan1_name:'Starter', plan1_sub:'Pour nouvelles entreprises et entrepreneurs', plan_mo:'/mois', plan_free:'Commencer',
     plan2_name:'Business', plan2_sub:'Pour un restaurant ou une boutique en croissance', plan_start:'Commencer',
     plan4_name:'Business Prime', plan4_sub:'Pour ceux qui vendent en volume et veulent moins de commission', plan_start2:'Commencer',
@@ -2054,8 +2059,15 @@ function bsUpdateDelivery(){
   var summary=document.getElementById('bs-delivery-summary');
   if(cost>0){
     summary.style.display='block';
-    var labels={std:'🚚 Xender Delivery Estándar 3–5 días',exp:'⚡ Xender Delivery Express 24–48h'};
-    summary.textContent=(labels[bsDeliveryMode]||'🚚 Delivery')+' · +'+bsFormatea(cost,BS_CUR)+' al total del pedido';
+    // Antes esta etiqueta y el "al total del pedido" estaban en español fijo:
+    // con la web en inglés o francés el resumen del envío salía mezclado.
+    var labels={
+      es:{std:'🚚 Xender Delivery Estándar 3–5 días',exp:'⚡ Xender Delivery Express 24–48h'},
+      en:{std:'🚚 Xender Delivery Standard 3–5 days',exp:'⚡ Xender Delivery Express 24–48h'},
+      fr:{std:'🚚 Xender Delivery Standard 3–5 jours',exp:'⚡ Xender Delivery Express 24–48h'}
+    }[LANG]||{std:'🚚 Xender Delivery Estándar 3–5 días',exp:'⚡ Xender Delivery Express 24–48h'};
+    var sufijo={es:' al total del pedido',en:' to your order total',fr:' au total de la commande'}[LANG]||' al total del pedido';
+    summary.textContent=(labels[bsDeliveryMode]||'🚚 Delivery')+' · +'+bsFormatea(cost,BS_CUR)+sufijo;
   } else {
     summary.style.display='none';
   }
