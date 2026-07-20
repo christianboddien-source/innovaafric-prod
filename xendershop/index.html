@@ -1214,6 +1214,14 @@ function xsRecalcCart(){
   set('xs-subtotal-val',sub);
   set('xs-discount-val',discount,true);
   set('xs-total-val',XS_CART_EUR.total);
+  // La fila de envío del desglose también tiene que seguir a la moneda: antes
+  // solo se actualizaba al cambiar el radio (en xsUpdateDelivery), así que al
+  // cambiar de moneda con un envío ya elegido se quedaba en la anterior.
+  var delRow=document.getElementById('xs-delivery-row');
+  if(delRow){
+    delRow.style.display=delCost>0?'flex':'none';
+    if(delCost>0)set('xs-delivery-val',delCost);
+  }
 }
 
 function xsUpdateDelivery(){
