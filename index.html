@@ -959,33 +959,8 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div id="shop-tab-big"    class="pill pill-off"   style="flex-shrink:0;cursor:pointer" onclick="shopTab('big')">BigShop</div>
           <div id="shop-tab-deals"  class="pill pill-off"   style="flex-shrink:0;cursor:pointer" onclick="shopTab('deals')">Ofertas</div>
         </div>
-        <!-- Categorías (vista por defecto) -->
-        <div id="shop-cats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Smartphones','xender')">
-            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Smartphones</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €89</div></div>
-          </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Electrónica','xender')">
-            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Electrónica</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €25</div></div>
-          </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Moda & Textil','xender')">
-            <img src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Moda &amp; Textil</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €12</div></div>
-          </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Alimentación','xender')">
-            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Alimentación</div><div style="font-size:10px;color:var(--green);font-weight:700">Desde €5</div></div>
-          </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Hogar','big')">
-            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">Hogar</div><div style="font-size:10px;color:var(--gold);font-weight:700">BigShop</div></div>
-          </div>
-          <div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat('Ofertas','deals')">
-            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=200&h=120&fit=crop" style="width:100%;height:90px;object-fit:cover">
-            <div style="padding:10px"><div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">🔥 Ofertas</div><div style="font-size:10px;color:var(--red);font-weight:700">Hasta -60%</div></div>
-          </div>
-        </div>
+        <!-- Categorías (vista por defecto) — se construyen desde el catálogo real de la API -->
+        <div id="shop-cats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"></div>
         <!-- Lista de productos (cuando se filtra) -->
         <div id="shop-products-list" style="display:none"></div>
         <div style="padding:12px 14px;border-radius:14px;background:rgba(0,137,123,.08);border:1px solid rgba(0,137,123,.2);display:flex;align-items:center;gap:10px">
@@ -1922,6 +1897,8 @@ function goScreen(id) {
   if (['s-home','s-wallet','s-send','s-retirar','s-cambiar','s-bills'].indexOf(id) !== -1 && _token) {
     loadBalance();
   }
+  // Carga el catálogo de la tienda al entrar en Shop (antes no se cargaba nunca)
+  if (id === 's-shop') loadShopCatalog();
 }
 
 function goBack() {
@@ -3153,11 +3130,113 @@ function shopTab(tab) {
   if (tab === 'all') {
     document.getElementById('shop-cats').style.display = 'grid';
     document.getElementById('shop-products-list').style.display = 'none';
+    loadShopCatalog();
   } else {
     document.getElementById('shop-cats').style.display = 'none';
     document.getElementById('shop-products-list').style.display = 'block';
     loadShopProducts(tab);
   }
+}
+
+// Etiquetas legibles para las categorías que devuelve la API (slug -> ES)
+var _shopCatLabels = {
+  electronics:'Electrónica', energy:'Energía solar', accessories:'Accesorios',
+  fashion:'Moda & Textil', home:'Hogar', phones:'Smartphones',
+  cereales:'Cereales', aceites:'Aceites', frutas_verduras:'Frutas y verduras',
+  lacteos:'Lácteos', carnes:'Carnes', bebidas:'Bebidas', higiene:'Higiene'
+};
+var _shopCatEmoji = {
+  electronics:'📱', energy:'☀️', accessories:'🎒', fashion:'👕', home:'🏠', phones:'📱',
+  cereales:'🌾', aceites:'🫒', frutas_verduras:'🥬', lacteos:'🥛', carnes:'🥩', bebidas:'🧃', higiene:'🧼'
+};
+function shopCatLabel(slug) {
+  if (_shopCatLabels[slug]) return _shopCatLabels[slug];
+  return String(slug || '').replace(/_/g, ' ').replace(/^./, function(c){ return c.toUpperCase(); });
+}
+
+// Normaliza un producto de /shop/products o /bigshop/products a una forma única.
+// La API devuelve priceEur/priceXaf/imageUrl (camelCase); BigShop solo trae priceXaf.
+function normProduct(p, source) {
+  var xaf = Number(p.priceXaf != null ? p.priceXaf : p.price_xaf) || 0;
+  var eur = Number(p.priceEur != null ? p.priceEur : p.price_eur) || 0;
+  if (!eur && xaf) eur = xaf * _FX.EUR;
+  if (!xaf && eur) xaf = eur / _FX.EUR;
+  return {
+    id: p.id,
+    name: p.name || 'Producto',
+    description: p.description || '',
+    category: p.category || '',
+    source: source,
+    priceEur: eur,
+    priceXaf: xaf,
+    img: p.imageUrl || p.image_url || p.image || '',
+    store: p.store || '',
+    stock: (p.stock != null) ? p.stock : null,
+    available: (p.available != null) ? !!p.available : ((p.stock == null) || p.stock > 0),
+    deliveryDays: p.deliveryDays != null ? p.deliveryDays : null,
+    discountPct: Number(p.discountPct || p.discount_pct) || 0
+  };
+}
+
+var _shopCatalogLoaded = false;
+// Carga los dos catálogos una sola vez y construye la parrilla de categorías real.
+function loadShopCatalog(force) {
+  if (_shopCatalogLoaded && !force) return Promise.resolve(_shopAllProducts);
+  var cats = document.getElementById('shop-cats');
+  if (cats) cats.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando catálogo…</div>';
+  var one = function(path, src) {
+    return railGet(path + '?limit=200')
+      .then(function(resp) {
+        var items = (resp && resp.data && resp.data.items) || [];
+        return Array.isArray(items) ? items.map(function(p){ return normProduct(p, src); }) : [];
+      })
+      .catch(function(){ return []; });
+  };
+  return Promise.all([one('/shop/products','xender'), one('/bigshop/products','big')])
+    .then(function(res) {
+      _shopAllProducts = res[0].concat(res[1]);
+      _shopCatalogLoaded = true;
+      renderShopCats();
+      return _shopAllProducts;
+    });
+}
+
+// Parrilla de categorías construida desde el catálogo real, con el precio mínimo de cada una.
+function renderShopCats() {
+  var el = document.getElementById('shop-cats');
+  if (!el) return;
+  var groups = {};
+  _shopAllProducts.forEach(function(p) {
+    var k = p.source + '|' + p.category;
+    if (!groups[k]) groups[k] = { source:p.source, category:p.category, min:p.priceEur, n:0 };
+    if (p.priceEur && p.priceEur < groups[k].min) groups[k].min = p.priceEur;
+    groups[k].n++;
+  });
+  var keys = Object.keys(groups);
+  if (!keys.length) {
+    el.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">El catálogo no está disponible ahora mismo.</div>';
+    return;
+  }
+  el.innerHTML = keys.map(function(k) {
+    var g = groups[k];
+    var badge = g.source === 'big'
+      ? '<div style="font-size:9px;color:var(--gold);font-weight:800">BigShop</div>'
+      : '<div style="font-size:9px;color:#FF6B35;font-weight:800">XenderShop</div>';
+    return '<div class="card" style="border-radius:18px;padding:0;overflow:hidden;cursor:pointer" onclick="openShopCat(\'' + g.category + '\',\'' + g.source + '\')">' +
+      '<div style="height:70px;display:flex;align-items:center;justify-content:center;font-size:32px;background:linear-gradient(145deg,var(--bg3),#243060)">' + (_shopCatEmoji[g.category] || '🛍️') + '</div>' +
+      '<div style="padding:10px">' +
+        '<div style="font-size:11px;font-weight:800;color:var(--txt);margin-bottom:2px">' + shopCatLabel(g.category) + '</div>' +
+        '<div style="font-size:10px;color:var(--green);font-weight:700">Desde ' + fmtEur(g.min) + ' · ' + g.n + (g.n === 1 ? ' producto' : ' productos') + '</div>' +
+        badge +
+      '</div></div>';
+  }).join('');
+}
+
+function fmtEur(v) {
+  return '€' + (Number(v) || 0).toLocaleString('es-ES', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function fmtXaf(v) {
+  return Math.round(Number(v) || 0).toLocaleString('es-ES', { useGrouping:'always' }) + ' XAF';
 }
 
 function openShopCat(cat, source) {
@@ -3167,48 +3246,85 @@ function openShopCat(cat, source) {
   loadShopProducts(source, cat);
 }
 
+// Filtra sobre el catálogo ya cargado (los slugs de categoría los pone la propia API,
+// así que ya no se mandan nombres inventados en ?category=).
 function loadShopProducts(source, cat) {
   var el = document.getElementById('shop-products-list');
   el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando productos…</div>';
-  var endpoint = source === 'big' ? '/bigshop/products' : '/shop/products';
-  var url = endpoint + (cat && cat !== 'Ofertas' ? '?category=' + encodeURIComponent(cat) : '');
-  railGet(url).then(function(resp) {
-    var items = (resp && resp.data && (resp.data.products || resp.data)) || [];
-    if (source === 'deals') items = items.filter(function(p){ return p.discount_pct > 0 || p.original_price; });
+  loadShopCatalog().then(function(all) {
+    var items = all.slice();
+    if (source === 'xender' || source === 'big') items = items.filter(function(p){ return p.source === source; });
+    if (source === 'deals')  items = items.filter(function(p){ return p.discountPct > 0; });
+    if (cat) items = items.filter(function(p){ return p.category === cat; });
     if (!items.length) {
-      el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">No hay productos disponibles en esta sección.</div>';
+      var msg = source === 'deals'
+        ? 'No hay ofertas activas en este momento.'
+        : 'No hay productos disponibles en esta sección.';
+      el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">' + msg + '</div>';
       return;
     }
-    _shopAllProducts = items;
     renderShopProducts(items);
   }).catch(function() {
-    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">No hay productos disponibles en esta sección.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">No se pudo conectar con la tienda. Inténtalo de nuevo.</div>';
   });
 }
 
 function renderShopProducts(items) {
   var el = document.getElementById('shop-products-list');
+  if (!el) return;
   _shopRendered = items.slice(0,20);
+  if (!_shopRendered.length) {
+    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Ningún producto coincide con tu búsqueda.</div>';
+    return;
+  }
   el.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">' +
     _shopRendered.map(function(p, i) {
-      var price  = p.price || p.price_eur || 0;
-      var currency = p.currency || 'EUR';
-      var sym = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency;
-      var img = p.image_url || p.image || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop';
-      return '<div class="card" style="border-radius:16px;padding:0;overflow:hidden;cursor:pointer" onclick="openBuy(' + i + ')">' +
-        '<img src="' + img + '" style="width:100%;height:80px;object-fit:cover" onerror="this.src=\'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=120&fit=crop\'">' +
+      var img = p.img
+        ? '<img src="' + p.img + '" style="width:100%;height:80px;object-fit:cover" onerror="this.parentNode.replaceChild(shopPlaceholder(\'' + p.category + '\'), this)">'
+        : '<div style="height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(145deg,var(--bg3),#243060)">' + (_shopCatEmoji[p.category] || '🛍️') + '</div>';
+      var soldOut = p.available ? '' : '<span class="pill pill-off" style="font-size:8px;padding:2px 6px">Sin stock</span>';
+      return '<div class="card" style="border-radius:16px;padding:0;overflow:hidden;cursor:pointer' + (p.available ? '' : ';opacity:.55') + '" onclick="openBuy(' + i + ')">' +
+        img +
         '<div style="padding:8px">' +
-        '<div style="font-size:10px;font-weight:800;color:var(--txt);margin-bottom:2px">' + (p.name||'Producto') + '</div>' +
-        '<div style="font-size:10px;color:var(--green);font-weight:700">' + sym + price + '</div>' +
-        (p.discount_pct ? '<span class="pill pill-red" style="font-size:8px;padding:2px 6px">-' + p.discount_pct + '%</span>' : '') +
+        '<div style="font-size:10px;font-weight:800;color:var(--txt);margin-bottom:2px">' + p.name + '</div>' +
+        '<div style="font-size:10px;color:var(--green);font-weight:700">' + fmtEur(p.priceEur) + '</div>' +
+        '<div style="font-size:9px;color:var(--txt3);margin-top:1px">' + fmtXaf(p.priceXaf) + '</div>' +
+        (p.discountPct ? '<span class="pill pill-red" style="font-size:8px;padding:2px 6px">-' + p.discountPct + '%</span>' : '') +
+        soldOut +
         '</div></div>';
     }).join('') + '</div>';
 }
 
+// Sustituto visual cuando la imagen del producto no carga (la API aún no sirve imágenes)
+function shopPlaceholder(cat) {
+  var d = document.createElement('div');
+  d.setAttribute('style', 'height:80px;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(145deg,var(--bg3),#243060)');
+  d.textContent = _shopCatEmoji[cat] || '🛍️';
+  return d;
+}
+
 function filterShopProducts() {
-  var q = (document.getElementById('shop-search-input').value || '').toLowerCase();
-  if (!q) { renderShopProducts(_shopAllProducts); return; }
-  renderShopProducts(_shopAllProducts.filter(function(p){ return (p.name||'').toLowerCase().includes(q); }));
+  var q = (document.getElementById('shop-search-input').value || '').toLowerCase().trim();
+  var cats = document.getElementById('shop-cats');
+  var list = document.getElementById('shop-products-list');
+  if (!q) {
+    // Sin búsqueda: volver a la vista que corresponda a la pestaña activa
+    if (_shopCurrentTab === 'all') { cats.style.display = 'grid'; list.style.display = 'none'; }
+    else { loadShopProducts(_shopCurrentTab); }
+    return;
+  }
+  cats.style.display = 'none';
+  list.style.display = 'block';
+  loadShopCatalog().then(function(all) {
+    var base = all;
+    if (_shopCurrentTab === 'xender' || _shopCurrentTab === 'big') base = all.filter(function(p){ return p.source === _shopCurrentTab; });
+    if (_shopCurrentTab === 'deals') base = all.filter(function(p){ return p.discountPct > 0; });
+    renderShopProducts(base.filter(function(p) {
+      return p.name.toLowerCase().indexOf(q) > -1
+          || p.description.toLowerCase().indexOf(q) > -1
+          || shopCatLabel(p.category).toLowerCase().indexOf(q) > -1;
+    }));
+  });
 }
 
 function loadTontinas() {
@@ -3730,7 +3846,9 @@ function loadCards() {
       return;
     }
     el.innerHTML = cards.map(function(c) {
-      var masked = c.number ? '**** **** **** ' + c.number.slice(-4) : '**** **** **** ****';
+      // GET /cards devuelve el número ya enmascarado en number_masked; "number" completo
+      // solo llega en la respuesta de creación (POST /cards)
+      var masked = c.number_masked || (c.number ? '**** **** **** ' + c.number.slice(-4) : '**** **** **** ****');
       return '<div style="background:linear-gradient(135deg,#1a2744,#0f3460);border:1px solid rgba(41,171,226,.2);border-radius:18px;padding:18px;margin-bottom:12px">' +
         '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">' +
         '<div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.6)">'+c.label+'</div>' +
@@ -3993,7 +4111,9 @@ function renderSupport(msgs) {
   if (!msgs.length) { box.innerHTML = '<div style="text-align:center;font-size:11px;color:var(--txt3);padding:24px">Escríbenos y el equipo de soporte te responderá. 💬</div>'; return; }
   box.innerHTML = msgs.map(function(m){
     var role = (m.from && m.from.role) || '';
-    var mine = !/support|admin|agent|supervisor/i.test(role);
+    // El mensaje es mío si lo envié yo (fromId); el rol solo sirve de respaldo
+    var mine = (m.fromId && _user && _user.id) ? (m.fromId === _user.id)
+                                               : !/support|admin|agent|supervisor/i.test(role);
     var name = (m.from && m.from.name) || (mine ? 'Tú' : 'Soporte');
     var t = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' }) : '';
     if (mine) return '<div style="align-self:flex-end;max-width:80%;background:var(--blue);border-radius:16px 16px 4px 16px;padding:9px 13px;font-size:13px;color:#fff">' + escSup(m.message) + '<div style="font-size:8px;opacity:.7;text-align:right;margin-top:2px">' + t + '</div></div>';
@@ -4022,17 +4142,20 @@ function railPost(path, body) {
 }
 function openBuy(i) {
   var p = _shopRendered[i]; if (!p) return;
+  if (!p.available) { showToast('Sin stock', 'Este producto no está disponible ahora mismo.'); return; }
   _buyProduct = p;
-  var price = p.price || p.price_eur || 0;
-  var cur = (['EUR','USD','XAF','XOF'].indexOf(p.currency) > -1) ? p.currency : 'EUR';
-  var sym = cur === 'EUR' ? '€' : cur === 'USD' ? '$' : cur;
+  // BigShop solo cotiza en XAF; XenderShop trae ambos. Se paga en la divisa nativa del producto.
+  var cur = (p.source === 'big') ? 'XAF' : 'EUR';
+  var priceTxt = (cur === 'XAF') ? fmtXaf(p.priceXaf) : fmtEur(p.priceEur);
+  var altTxt   = (cur === 'XAF') ? fmtEur(p.priceEur) : fmtXaf(p.priceXaf);
   var ov = document.getElementById('buy-overlay');
   if (!ov) { ov = document.createElement('div'); ov.id = 'buy-overlay'; document.body.appendChild(ov); }
   ov.setAttribute('style', 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:9999');
   ov.innerHTML = '<div style="background:var(--bg);width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:18px 16px 22px;box-shadow:0 -8px 30px rgba(0,0,0,.4)">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div style="font-size:15px;font-weight:900;color:var(--txt)">Comprar producto</div><div onclick="closeBuy()" style="cursor:pointer;font-size:18px;color:var(--txt3)">✕</div></div>'
-    + '<div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">' + (p.name || 'Producto') + '</div>'
-    + '<div style="font-size:13px;color:var(--green);font-weight:800;margin-bottom:12px">' + sym + price + ' / ud · pago en ' + cur + '</div>'
+    + '<div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px">' + p.name + '</div>'
+    + '<div style="font-size:13px;color:var(--green);font-weight:800;margin-bottom:2px">' + priceTxt + ' / ud · pago en ' + cur + '</div>'
+    + '<div style="font-size:11px;color:var(--txt3);margin-bottom:12px">≈ ' + altTxt + (p.deliveryDays ? ' · entrega en ' + p.deliveryDays + ' días' : (p.source === 'big' ? ' · entrega en menos de 30 min' : '')) + '</div>'
     + '<div class="section-title">Cantidad</div><div class="card-sm" style="margin-bottom:10px;padding:8px 12px"><input id="buy-qty" type="number" value="1" min="1" style="width:100%;background:none;border:none;outline:none;font-size:14px;color:var(--txt);font-family:\'Inter\',sans-serif"></div>'
     + '<div class="section-title">Dirección de entrega</div><div class="card-sm" style="margin-bottom:12px;padding:8px 12px"><input id="buy-addr" placeholder="Calle, ciudad, país" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:\'Inter\',sans-serif"></div>'
     + '<div id="buy-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>'
@@ -4045,32 +4168,59 @@ function confirmBuy() {
   var addr = document.getElementById('buy-addr').value.trim();
   var err  = document.getElementById('buy-err');
   var btn  = document.getElementById('buy-btn');
-  var cur  = (['EUR','USD','XAF','XOF'].indexOf(p.currency) > -1) ? p.currency : 'EUR';
+  var cur  = (p.source === 'big') ? 'XAF' : 'EUR';
   if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
   if (!addr)   { err.textContent = 'Introduce la dirección de entrega'; return; }
   err.textContent = ''; btn.innerHTML = '<span class="login-spinner"></span>Procesando…'; btn.disabled = true;
-  railPost('/shop/cart', { product_id: p.id, quantity: qty }).then(function(c) {
-    if (!c || !c.success) { throw new Error((c && c.error) || 'No se pudo añadir al carrito'); }
-    return railPost('/shop/orders', { payment_currency: cur, delivery_address: addr });
-  }).then(function(o) {
-    if (!o || !o.success) { err.textContent = errMsg(o, 'No se pudo crear el pedido'); btn.innerHTML = 'Comprar y pagar →'; btn.disabled = false; return; }
-    var d = o.data; var trk = d.trackingId || d.tracking_id;
-    if (d.paymentCurrency === 'XAF' && d.paymentAmount) {
-      _balances.XAF = Math.max(0, _balances.XAF - d.paymentAmount);
+
+  var restore = function() { var b = document.getElementById('buy-btn'); if (b) { b.innerHTML = 'Comprar y pagar →'; b.disabled = false; } };
+
+  // BigShop y XenderShop son catálogos distintos con flujos de pedido distintos:
+  // BigShop va contra /bigshop/orders (pago en XAF, entrega en ~30 min, sin carrito),
+  // XenderShop pasa por /shop/cart y luego /shop/orders.
+  var flow = (p.source === 'big')
+    ? railPost('/bigshop/orders', { items: [{ product_id: p.id, quantity: qty }], delivery_address: addr })
+    : railPost('/shop/cart', { product_id: p.id, quantity: qty }).then(function(c) {
+        if (!c || !c.success) { throw new Error(errMsg(c, 'No se pudo añadir al carrito')); }
+        return railPost('/shop/orders', { payment_currency: cur, delivery_address: addr });
+      });
+
+  flow.then(function(o) {
+    if (!o || !o.success) { err.textContent = errMsg(o, 'No se pudo crear el pedido'); restore(); return; }
+    var d = o.data;
+    // Descontar del saldo local lo que la API ha cobrado de verdad
+    var paidXaf = (p.source === 'big') ? (d.totalXaf || 0) : (d.paymentCurrency === 'XAF' ? d.paymentAmount : 0);
+    if (paidXaf) {
+      _balances.XAF = Math.max(0, _balances.XAF - paidXaf);
       localStorage.setItem('inn_balance', JSON.stringify(_balances));
       updateBalanceDisplay(); refreshBalanceInScreens();
     }
     closeBuy();
-    showToast('Pedido confirmado', 'Código de seguimiento: ' + trk);
-    var ti = document.getElementById('track-id'); if (ti) ti.value = trk;
-    goScreen('s-track'); if (typeof loadTrack === 'function') loadTrack();
+    if (p.source === 'big') {
+      // Los pedidos BigShop no llevan trackingId: se siguen desde "Mis pedidos"
+      showToast('Pedido confirmado', 'Pedido ' + d.id + ' · entrega en ' + (d.estimatedDelivery || '25-30 minutos'));
+      goScreen('s-track');
+      if (typeof loadMyOrders === 'function') loadMyOrders();
+    } else {
+      var trk = d.trackingId || d.tracking_id;
+      showToast('Pedido confirmado', 'Código de seguimiento: ' + trk);
+      var ti = document.getElementById('track-id'); if (ti) ti.value = trk;
+      goScreen('s-track'); if (typeof loadTrack === 'function') loadTrack();
+    }
+    if (_token) loadBalance();
   }).catch(function(e) {
     err.textContent = (e && e.message) || 'Error de conexión. Inténtalo de nuevo.';
-    var b = document.getElementById('buy-btn'); if (b) { b.innerHTML = 'Comprar y pagar →'; b.disabled = false; }
+    restore();
   });
 }
 var _trackFlow = ['confirmed','processing_hub','dispatched','in_transit','out_for_delivery','delivered'];
-var _trackLabels = { confirmed:'Pedido confirmado', processing_hub:'En el hub logístico', dispatched:'Despachado', in_transit:'En tránsito', out_for_delivery:'En reparto', delivered:'Entregado' };
+var _trackLabels = {
+  confirmed:'Pedido confirmado', processing_hub:'En el hub logístico', dispatched:'Despachado',
+  in_transit:'En tránsito', out_for_delivery:'En reparto', delivered:'Entregado',
+  // estados propios de los pedidos BigShop (comercio + rider)
+  preparing:'En preparación', ready:'Listo para recoger', completed:'Completado',
+  cancelled:'Cancelado', pending_approval:'Pendiente de aprobación'
+};
 function loadTrack() {
   var id    = document.getElementById('track-id').value.trim();
   var hint  = document.getElementById('track-hint');
@@ -4199,10 +4349,62 @@ function filterTxn(type) {
   });
   var userId = _user && _user.id;
   var filtered = _allTxns;
-  if (type === 'sent')     filtered = _allTxns.filter(function(t){ return t.senderId === userId || t.type === 'send' || t.type === 'withdraw'; });
-  if (type === 'received') filtered = _allTxns.filter(function(t){ return t.recipientId === userId || t.type === 'deposit'; });
-  if (type === 'purchase') filtered = _allTxns.filter(function(t){ return t.type === 'purchase'; });
+  // El modelo de la API llama al emisor "userId" (no "senderId"), y los tipos reales que
+  // escribe son: send, withdraw, topup, qr_payment, refund, rep_cashout, circular_cashout.
+  if (type === 'sent') {
+    filtered = _allTxns.filter(function(t){ return t.userId === userId && t.recipientId !== userId; });
+  }
+  if (type === 'received') {
+    filtered = _allTxns.filter(function(t){ return t.recipientId === userId || t.type === 'topup' || t.type === 'refund'; });
+  }
+  if (type === 'purchase') {
+    // Las compras no generan transacción en la API: se leen de los pedidos reales
+    loadPurchases();
+    return;
+  }
   renderTxnList('txn-list', filtered, 50);
+}
+
+// "Compras" no sale de /money/history (la API no crea transacción al comprar):
+// se combinan los pedidos de XenderShop y los de BigShop.
+function loadPurchases() {
+  var el = document.getElementById('txn-list');
+  if (!el) return;
+  if (!_token) { el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Inicia sesión para ver tus compras</div>'; return; }
+  el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Cargando compras…</div>';
+  Promise.all([
+    railGet('/shop/orders?limit=50').then(function(r){ return (r && r.data && r.data.items) || []; }).catch(function(){ return []; }),
+    railGet('/bigshop/my-orders').then(function(r){ return (r && r.data && r.data.orders) || []; }).catch(function(){ return []; })
+  ]).then(function(res) {
+    var orders = res[0].map(function(o) {
+      return { id:o.id, when:o.createdAt, xaf:(o.paymentCurrency === 'XAF' ? o.paymentAmount : (o.totalXaf || 0)),
+               eur:o.totalEur || 0, label:'XenderShop', status:o.status, track:o.trackingId, n:(o.items||[]).length };
+    }).concat(res[1].map(function(o) {
+      return { id:o.id, when:o.createdAt, xaf:o.totalXaf || 0, eur:(o.totalXaf || 0) * _FX.EUR,
+               label:o.merchantName || 'BigShop', status:o.status, track:null, n:(o.items||[]).length };
+    }));
+    orders.sort(function(a,b){ return new Date(b.when) - new Date(a.when); });
+    if (!orders.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">Aún no has hecho ninguna compra</div>';
+      return;
+    }
+    el.innerHTML = orders.map(function(o) {
+      var d = new Date(o.when);
+      return '<div class="txn-row"' + (o.track ? ' style="cursor:pointer" onclick="trackFromPurchase(\'' + o.track + '\')"' : '') + '>' +
+        '<div class="txn-ico" style="background:rgba(168,85,247,.1)">🛒</div>' +
+        '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + o.label + '</div>' +
+        '<div style="font-size:10px;color:var(--txt3)">' + o.n + (o.n === 1 ? ' artículo · ' : ' artículos · ') + (_trackLabels[o.status] || o.status) +
+        ' · ' + d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}) + '</div></div>' +
+        '<div class="txn-amt-neg">-' + fmtXaf(o.xaf) + '</div></div>';
+    }).join('');
+  });
+}
+
+function trackFromPurchase(trk) {
+  var ti = document.getElementById('track-id');
+  if (ti) ti.value = trk;
+  goScreen('s-track');
+  if (typeof loadTrack === 'function') loadTrack();
 }
 
 function updateWalletChart(txns) {
@@ -4212,9 +4414,18 @@ function updateWalletChart(txns) {
   var now = Date.now();
   var day = 86400000;
   var vols = [0,0,0,0,0,0,0];
+  var userId = _user && _user.id;
   txns.forEach(function(t) {
     var age = Math.floor((now - new Date(t.createdAt).getTime()) / day);
-    if (age >= 0 && age < 7) vols[6 - age] += Math.abs(t.amount || 0);
+    if (age < 0 || age >= 7) return;
+    // send/withdraw guardan el importe en amountSent/amountReceived; "amount" viene vacío
+    var isIn = t.recipientId === userId;
+    var v = isIn ? (t.amountReceived || t.amountSent) : (t.amountSent || t.amountReceived);
+    if (!v) v = t.amount || 0;
+    var cur = isIn ? (t.currencyReceived || t.currencySent) : t.currencySent;
+    // Normalizar a XAF para que las barras sean comparables entre divisas
+    if (cur === 'EUR') v = v / _FX.EUR; else if (cur === 'USD') v = v / _FX.USD;
+    vols[6 - age] += Math.abs(v);
   });
   var max = Math.max.apply(null, vols) || 1;
   bars.forEach(function(b, i) { b.style.height = Math.max(10, Math.round(vols[i] / max * 100)) + '%'; });
@@ -4241,14 +4452,20 @@ function renderTxnList(containerId, items, maxItems) {
       lastDate = label;
     }
     var isIn = txn.recipientId === userId;
-    var typeIcons = { send:'💸', purchase:'🛒', withdraw:'🏧', deposit:'💰', transfer:'🔄' };
+    // Tipos reales que escribe la API: send, withdraw, topup, qr_payment, refund,
+    // rep_cashout, circular_cashout, rider_payment
+    var typeIcons = { send:'💸', withdraw:'🏧', topup:'💰', qr_payment:'📲', refund:'↩️',
+                      rep_cashout:'🤝', circular_cashout:'⚡', rider_payment:'🛵', transfer:'🔄' };
     var icon = isIn ? '📥' : (typeIcons[txn.type] || '💸');
     var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
     var cur = isIn ? (txn.currencyReceived || txn.currencySent) : txn.currencySent;
     var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
     var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('es-ES', {useGrouping:'always'}) : parseFloat(amt||0).toFixed(2)) + ' ' + cur;
     var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
-    var note = txn.note || (txn.type === 'send' ? 'Envío' : txn.type === 'purchase' ? 'Compra' : txn.type === 'deposit' ? 'Depósito' : 'Transacción');
+    var typeNames = { send:(isIn ? 'Dinero recibido' : 'Envío'), withdraw:'Retirada', topup:'Recarga de saldo',
+                      qr_payment:'Pago con QR', refund:'Reembolso', rep_cashout:'Liquidación representante',
+                      circular_cashout:'Liquidación circular', rider_payment:'Pago a rider', transfer:'Transferencia' };
+    var note = txn.note || typeNames[txn.type] || 'Transacción';
     html += '<div class="txn-row"><div class="txn-ico" style="background:' + iconBg + '">' + icon + '</div>' +
       '<div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">' + note + '</div>' +
       '<div style="font-size:10px;color:var(--txt3)">' + d.toLocaleDateString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) + '</div></div>' +
