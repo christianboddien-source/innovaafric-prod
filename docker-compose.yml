@@ -28,12 +28,17 @@ services:
       - ./:/srv:ro
       - caddy_data:/data      # certificados TLS: si se pierde, se re-emiten
       - caddy_config:/config
-    depends_on:
-      - aliexpress-proxy
+    # Sin depends_on del proxy: las webs son estáticas y no lo necesitan para
+    # arrancar. Caddy levanta igual aunque el proxy no esté; solo daría error
+    # si alguien pega en /api/aliexpress/*, que aún no se usa.
 
   # ── Proxy de AliExpress ─────────────────────────────────────────────────
+  # En el profile "ai": NO arranca con `docker compose up -d` (necesita las
+  # claves de AliExpress, que aún no hay). Cuando estén, se levanta con:
+  #   docker compose --profile ai up -d
   aliexpress-proxy:
     build: ./services/aliexpress-proxy
+    profiles: ["ai"]
     restart: unless-stopped
     environment:
       PORT: 3000
