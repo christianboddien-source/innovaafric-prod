@@ -442,7 +442,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div style="padding:0 14px;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <div class="section-title" style="margin:0">Ecosistema</div>
-          <span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer">Ver todo →</span>
+          <span style="font-size:10px;font-weight:700;color:var(--blue);cursor:pointer" onclick="goScreen('s-shop')">Ver todo →</span>
         </div>
         <div class="eco-row" style="padding:0;margin-bottom:8px">
           <div class="eco-card" onclick="goScreen('s-send')">
@@ -453,7 +453,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
             <svg width="100%" height="18" viewBox="0 0 80 20" style="margin-bottom:5px"><rect width="80" height="20" rx="5" fill="#00897B"/><text x="40" y="14" font-family="Arial Black" font-size="9" font-weight="900" fill="white" text-anchor="middle">XenderShop</text></svg>
             <div style="font-size:8px;font-weight:700;color:#FF6B35">Comprar →</div>
           </div>
-          <div class="eco-card">
+          <div class="eco-card" onclick="goScreen('s-shop');shopTab('big')">
             <svg width="100%" height="18" viewBox="0 0 80 20" style="margin-bottom:5px"><rect width="80" height="20" rx="5" fill="#F5A623"/><text x="40" y="14" font-family="Arial Black" font-size="9" font-weight="900" fill="#1a2744" text-anchor="middle">BigShop</text></svg>
             <div style="font-size:8px;font-weight:700;color:var(--gold)">Tiendas →</div>
           </div>
@@ -685,7 +685,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div id="track-steps"></div>
       <div id="track-hint" style="text-align:center;font-size:11px;color:var(--txt3);padding:18px 24px;line-height:1.5">Introduce el código de tu pedido (lo recibes al comprar) y pulsa «Rastrear» para ver el estado en vivo.</div>
       <div style="display:flex;gap:10px;padding:14px 14px 8px">
-        <button style="flex:1;background:var(--gold);color:#fff;border:none;border-radius:14px;padding:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif">📞 Llamar rider</button>
+        <button style="flex:1;background:var(--gold);color:#fff;border:none;border-radius:14px;padding:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif" onclick="callRider()">📞 Llamar rider</button>
         <button style="flex:1;background:var(--bg2);color:var(--txt);border:1px solid var(--border);border-radius:14px;padding:14px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif" onclick="goScreen('s-chat')">💬 Chat</button>
       </div>
       <div style="height:6px"></div>
@@ -704,8 +704,8 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div style="font-size:10px;color:var(--green);font-weight:700">🟢 En camino · 8 min</div>
         </div>
         <div style="display:flex;gap:7px">
-          <div class="icon-btn" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25)">📞</div>
-          <div class="icon-btn" style="background:rgba(41,171,226,.1);border-color:rgba(41,171,226,.2)">📹</div>
+          <div class="icon-btn" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25)" onclick="callRider()">📞</div>
+          <div class="icon-btn" style="background:rgba(41,171,226,.1);border-color:rgba(41,171,226,.2)" onclick="callRider('video')">📹</div>
         </div>
       </div>
       <div style="margin:8px 14px;padding:8px 12px;border-radius:12px;background:rgba(41,171,226,.07);border:1px solid rgba(41,171,226,.13);display:flex;align-items:center;gap:8px;flex-shrink:0">
@@ -739,17 +739,17 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       </div>
       <div style="padding:8px 14px 6px;flex-shrink:0">
         <div class="chat-input">
-          <div style="flex:1;font-size:11px;color:var(--txt3)">Escribe un mensaje…</div>
+          <input id="rider-chat-input" type="text" placeholder="Escribe un mensaje…" onkeydown="if(event.key==='Enter')sendRiderMsg()" style="flex:1;font-size:11px;color:var(--txt);background:none;border:none;outline:none;font-family:'Inter',sans-serif">
           <div style="display:flex;gap:6px;align-items:center">
-            <span style="font-size:16px;cursor:pointer;opacity:.4">🎤</span>
-            <span style="font-size:16px;cursor:pointer;opacity:.4">📷</span>
-            <div style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;cursor:pointer">➤</div>
+            <span style="font-size:16px;cursor:pointer;opacity:.4" onclick="showToast('Nota de voz','Función de audio disponible próximamente.')">🎤</span>
+            <span style="font-size:16px;cursor:pointer;opacity:.4" onclick="showToast('Foto','Adjuntar foto disponible próximamente.')">📷</span>
+            <div onclick="sendRiderMsg()" style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;cursor:pointer">➤</div>
           </div>
         </div>
         <div style="display:flex;gap:6px;margin-top:7px;overflow-x:auto;padding-bottom:3px">
-          <div class="pill pill-off" style="flex-shrink:0;font-size:9px">Estoy en casa 🏠</div>
-          <div class="pill pill-off" style="flex-shrink:0;font-size:9px">OK, te espero</div>
-          <div class="pill pill-off" style="flex-shrink:0;font-size:9px">¿Cuánto tardarás?</div>
+          <div class="pill pill-off" style="flex-shrink:0;font-size:9px" onclick="sendRiderMsg('Estoy en casa 🏠')">Estoy en casa 🏠</div>
+          <div class="pill pill-off" style="flex-shrink:0;font-size:9px" onclick="sendRiderMsg('OK, te espero')">OK, te espero</div>
+          <div class="pill pill-off" style="flex-shrink:0;font-size:9px" onclick="sendRiderMsg('¿Cuánto tardarás?')">¿Cuánto tardarás?</div>
         </div>
       </div>
       <div style="height:4px"></div>
@@ -813,7 +813,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         </div>
       </div>
       <div style="padding:0 14px;display:flex;gap:10px">
-        <button class="btn-outline" style="flex:1">📄 Ver recibo</button>
+        <button class="btn-outline" style="flex:1" onclick="printReport('wallet')">📄 Ver recibo</button>
         <button class="btn-green" style="flex:1" onclick="goScreen('s-home')">🔄 Nuevo pedido</button>
       </div>
       <div style="height:16px"></div>
@@ -2110,6 +2110,7 @@ function afterLogin() {
   populateUser();
   loadBalance();
   loadTransactions();
+  loadServerNotifs();
   startBalanceAutoRefresh();
   document.getElementById('login-btn').innerHTML = 'Entrar';
   document.getElementById('login-btn').disabled = false;
@@ -3044,7 +3045,7 @@ function doAddBanco() {
         goBack(); loadBancosLista();
       }, 1500);
     } else {
-      err.textContent = (resp && resp.message) || 'Error al guardar';
+      err.textContent = errMsg(resp, 'Error al guardar');
     }
   }).catch(function(){ err.textContent = 'Error de conexión'; });
 }
@@ -3059,15 +3060,36 @@ function loadBancosLista() {
       return;
     }
     el.innerHTML = items.map(function(b) {
+      var sub = [b.city, b.country, b.currency].filter(Boolean).join(' · ');
       return '<div class="card" style="border-radius:14px;margin-bottom:10px;padding:14px">' +
-        '<div style="font-size:13px;font-weight:800;color:var(--txt)">' + b.bank_name + '</div>' +
-        '<div style="font-size:11px;color:var(--txt3);margin-top:4px">' + (b.account_number || b.iban || '—') + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span style="font-size:18px">' + (b.emoji || '🏦') + '</span>' +
+          '<div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--txt)">' + (b.bank_name || 'Banco') + '</div>' +
+          (sub ? '<div style="font-size:10px;color:var(--txt3)">' + sub + '</div>' : '') + '</div>' +
+          '<span class="pill ' + (b.verified ? 'pill-green' : 'pill-off') + '" style="font-size:9px">' + (b.verified ? 'Verificada' : 'Pendiente') + '</span>' +
+        '</div>' +
+        '<div style="font-size:11px;color:var(--txt3);margin-top:6px;font-family:monospace">' + (b.account_number || b.iban || '—') + '</div>' +
+        (b.account_name ? '<div style="font-size:10px;color:var(--txt3);margin-top:2px">Titular: ' + b.account_name + '</div>' : '') +
         (b.bic ? '<div style="font-size:10px;color:var(--txt3)">BIC: ' + b.bic + '</div>' : '') +
+        (b.reference ? '<div style="font-size:10px;color:var(--txt3);margin-top:2px">Ref: ' + b.reference + '</div>' : '') +
+        '<div style="text-align:right;margin-top:8px"><span onclick="delBanco(\'' + b.id + '\')" style="font-size:10px;font-weight:700;color:var(--red);cursor:pointer">Eliminar</span></div>' +
         '</div>';
     }).join('');
   }).catch(function(){
-    el.innerHTML = '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--txt3)">No tienes cuentas bancarias añadidas aún.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--txt3)">No se pudieron cargar tus cuentas bancarias.</div>';
   });
+}
+
+function delBanco(id) {
+  if (!id || !_token) return;
+  if (!confirm('¿Eliminar esta cuenta bancaria?')) return;
+  fetch(RAIL_API + '/banks/accounts/' + encodeURIComponent(id), {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + _token }
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    if (resp && resp.success) { showToast('Cuenta eliminada', 'La cuenta bancaria se ha borrado.'); loadBancosLista(); }
+    else showToast('Error', errMsg(resp, 'No se pudo eliminar'));
+  }).catch(function(){ showToast('Error', 'Error de conexión'); });
 }
 
 var _BOT_ANSWERS = {
@@ -4130,6 +4152,42 @@ function sendSupportMsg() {
     if (resp && resp.success) loadSupport(); else showToast('Error', errMsg(resp, 'No se pudo enviar'));
   }).catch(function(){ showToast('Error', 'Error de conexión'); });
 }
+// ── Chat con el rider (demo del flujo de entrega) ───────────────
+// Es una simulación local del chat cliente↔rider: eco del mensaje y
+// respuesta automática del rider. No hay backend de chat por pedido.
+function sendRiderMsg(preset) {
+  var inp = document.getElementById('rider-chat-input');
+  var text = preset || (inp ? (inp.value || '').trim() : '');
+  if (!text) return;
+  if (inp && !preset) inp.value = '';
+  var box = document.getElementById('chat-messages');
+  if (!box) return;
+  var now = new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' });
+  var out = document.createElement('div');
+  out.className = 'bubble-out';
+  out.innerHTML = escSup(text) + '<div class="btime">' + now + ' ✓✓</div>';
+  box.appendChild(out);
+  box.scrollTop = box.scrollHeight;
+  // Respuesta automática del rider
+  var replies = {
+    '¿Cuánto tardarás?': 'Estoy a unos 8 minutos, llegando por la avenida principal 🛵',
+    'Estoy en casa 🏠': '¡Perfecto! Voy para allá, nos vemos en un momento 👌',
+    'OK, te espero': 'Genial, ya casi llego 🙌'
+  };
+  var reply = replies[text] || '¡Recibido! Cualquier cosa te aviso 👍';
+  setTimeout(function() {
+    var inb = document.createElement('div');
+    inb.className = 'bubble-in';
+    inb.innerHTML = escSup(reply) + '<div class="btime-in">' + new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' }) + '</div>';
+    box.appendChild(inb);
+    box.scrollTop = box.scrollHeight;
+  }, 900);
+}
+function callRider(mode) {
+  showToast(mode === 'video' ? '📹 Videollamada' : '📞 Llamando al rider',
+            'Conectando con Moussa Diallo… (demo del flujo de entrega)');
+}
+
 // ── COMPRA EN TIENDA (crea pedido real con código de seguimiento) ──
 var _shopRendered = [];
 var _buyProduct = null;
@@ -4352,7 +4410,8 @@ function filterTxn(type) {
   // El modelo de la API llama al emisor "userId" (no "senderId"), y los tipos reales que
   // escribe son: send, withdraw, topup, qr_payment, refund, rep_cashout, circular_cashout.
   if (type === 'sent') {
-    filtered = _allTxns.filter(function(t){ return t.userId === userId && t.recipientId !== userId; });
+    // Las compras tienen su propia pestaña, no se cuentan como "enviado"
+    filtered = _allTxns.filter(function(t){ return t.userId === userId && t.recipientId !== userId && t.type !== 'purchase'; });
   }
   if (type === 'received') {
     filtered = _allTxns.filter(function(t){ return t.recipientId === userId || t.type === 'topup' || t.type === 'refund'; });
@@ -4454,7 +4513,7 @@ function renderTxnList(containerId, items, maxItems) {
     var isIn = txn.recipientId === userId;
     // Tipos reales que escribe la API: send, withdraw, topup, qr_payment, refund,
     // rep_cashout, circular_cashout, rider_payment
-    var typeIcons = { send:'💸', withdraw:'🏧', topup:'💰', qr_payment:'📲', refund:'↩️',
+    var typeIcons = { send:'💸', withdraw:'🏧', topup:'💰', qr_payment:'📲', refund:'↩️', purchase:'🛒',
                       rep_cashout:'🤝', circular_cashout:'⚡', rider_payment:'🛵', transfer:'🔄' };
     var icon = isIn ? '📥' : (typeIcons[txn.type] || '💸');
     var iconBg = isIn ? 'rgba(34,197,94,.1)' : 'rgba(245,166,35,.1)';
@@ -4462,7 +4521,7 @@ function renderTxnList(containerId, items, maxItems) {
     var amt = isIn ? (txn.amountReceived || txn.amountSent) : txn.amountSent;
     var amtStr = (isIn ? '+' : '-') + (cur === 'XAF' ? Math.round(amt).toLocaleString('es-ES', {useGrouping:'always'}) : parseFloat(amt||0).toFixed(2)) + ' ' + cur;
     var amtClass = isIn ? 'txn-amt-pos' : 'txn-amt-neg';
-    var typeNames = { send:(isIn ? 'Dinero recibido' : 'Envío'), withdraw:'Retirada', topup:'Recarga de saldo',
+    var typeNames = { send:(isIn ? 'Dinero recibido' : 'Envío'), withdraw:'Retirada', topup:'Recarga de saldo', purchase:'Compra',
                       qr_payment:'Pago con QR', refund:'Reembolso', rep_cashout:'Liquidación representante',
                       circular_cashout:'Liquidación circular', rider_payment:'Pago a rider', transfer:'Transferencia' };
     var note = txn.note || typeNames[txn.type] || 'Transacción';
@@ -4862,7 +4921,17 @@ function renderNotifPanel() {
 }
 
 function readNotif(id) {
-  _notifList.forEach(function(n){ if (n.id === id) n.read = true; });
+  _notifList.forEach(function(n){
+    if (n.id === id) {
+      n.read = true;
+      // Si viene del servidor, marcarla también allí
+      if (n.srvId && _token) {
+        fetch(RAIL_API + '/notifications/' + encodeURIComponent(n.srvId) + '/read', {
+          method: 'PATCH', headers: { 'Authorization': 'Bearer ' + _token }
+        }).catch(function(){});
+      }
+    }
+  });
   localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
   renderNotifBadge();
   renderNotifPanel();
@@ -4871,8 +4940,40 @@ function readNotif(id) {
 function markAllRead() {
   _notifList.forEach(function(n){ n.read = true; });
   localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
+  if (_token) {
+    fetch(RAIL_API + '/notifications/read-all', {
+      method: 'PATCH', headers: { 'Authorization': 'Bearer ' + _token }
+    }).catch(function(){});
+  }
   renderNotifBadge();
   renderNotifPanel();
+}
+
+// Trae las notificaciones del servidor (avisos de admin, pedidos, etc.) y las
+// fusiona con las locales sin duplicar. Antes solo se veían las locales.
+var _notifIcons = { info:'ℹ️', payment:'💸', order:'📦', delivery:'🛵', promo:'🎁',
+                    security:'🔐', kyc:'🪪', tontine:'🤝', system:'⚙️', warning:'⚠️' };
+function loadServerNotifs() {
+  if (!_token) return;
+  railGet('/notifications?limit=30').then(function(resp) {
+    var items = (resp && resp.data && resp.data.items) || [];
+    if (!Array.isArray(items) || !items.length) { renderNotifBadge(); return; }
+    var known = {};
+    _notifList.forEach(function(n){ if (n.srvId) known[n.srvId] = n; });
+    items.forEach(function(s) {
+      if (known[s.id]) { known[s.id].read = s.read; return; }
+      _notifList.push({
+        id: Date.now() + Math.floor(Math.random() * 1000), srvId: s.id,
+        icon: _notifIcons[s.type] || 'ℹ️', title: s.title, body: s.body,
+        color: 'rgba(41,171,226,.12)', read: !!s.read, ts: s.createdAt
+      });
+    });
+    _notifList.sort(function(a, b){ return new Date(b.ts) - new Date(a.ts); });
+    if (_notifList.length > 60) _notifList = _notifList.slice(0, 60);
+    localStorage.setItem('inn_notifs', JSON.stringify(_notifList));
+    renderNotifBadge();
+    renderNotifPanel();
+  }).catch(function(){});
 }
 
 var _notifPanelOpen = false;
@@ -4882,7 +4983,7 @@ function toggleNotifPanel() {
   var overlay = document.getElementById('notif-overlay');
   if (panel)   panel.classList.toggle('open', _notifPanelOpen);
   if (overlay) overlay.style.display = _notifPanelOpen ? 'block' : 'none';
-  if (_notifPanelOpen) { renderNotifPanel(); updatePushPermUI(); }
+  if (_notifPanelOpen) { loadServerNotifs(); renderNotifPanel(); updatePushPermUI(); }
 }
 
 function toggleNotifCat(cat) {
