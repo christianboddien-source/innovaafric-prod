@@ -478,6 +478,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="svc-item" onclick="goScreen('s-giftcard')"><div style="font-size:20px">💳</div><div style="font-size:8px;font-weight:700;color:var(--blue);margin-top:3px">Tarjetas</div></div>
         <div class="svc-item" onclick="goScreen('s-invest')"><div style="font-size:20px">📊</div><div style="font-size:8px;font-weight:700;color:var(--gold);margin-top:3px">Inversión</div></div>
         <div class="svc-item" onclick="goScreen('s-ahorro')"><div style="font-size:20px">🎯</div><div style="font-size:8px;font-weight:700;color:var(--green);margin-top:3px">Ahorro</div></div>
+        <div class="svc-item" onclick="goScreen('s-prestamos')"><div style="font-size:20px">🏦</div><div style="font-size:8px;font-weight:700;color:var(--purple);margin-top:3px">Préstamos</div></div>
       </div>
       <!-- ADS BANNER -->
       <div style="padding:0 14px;margin-bottom:6px">
@@ -1666,6 +1667,58 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div style="height:20px"></div>
     </div>
 
+    <!-- SCREEN: PRÉSTAMOS -->
+    <div class="screen" id="s-prestamos">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title">Préstamos</div>
+        <div class="icon-btn" onclick="goScreen('s-prestamo-solicitar')" style="font-size:20px;font-weight:900;color:var(--purple)">+</div>
+      </div>
+      <div style="padding:0 14px">
+        <div style="padding:12px 14px;border-radius:14px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);margin-bottom:14px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">🏦</span>
+          <div style="font-size:11px;color:var(--txt2);line-height:1.5">Solicita un microcrédito para tu negocio o emergencias. Interés desde el 5%. Un préstamo activo a la vez.</div>
+        </div>
+        <div id="prestamos-list"><div style="text-align:center;padding:30px 0;color:var(--txt3);font-size:12px">Cargando préstamos…</div></div>
+        <button class="btn-primary" onclick="goScreen('s-prestamo-solicitar')" style="margin-top:14px;background:linear-gradient(135deg,var(--purple),#7c3aed)">🏦 Solicitar préstamo</button>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- SCREEN: SOLICITAR PRÉSTAMO -->
+    <div class="screen" id="s-prestamo-solicitar">
+      <div class="page-header">
+        <div onclick="goBack()" class="icon-btn">←</div>
+        <div class="page-title" style="font-size:15px">Solicitar préstamo</div>
+        <div style="width:36px"></div>
+      </div>
+      <div style="padding:0 14px">
+        <div class="section-title">¿Cuánto necesitas?</div>
+        <div class="card-sm" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <input id="loan-amount" type="number" placeholder="100000" style="flex:1;background:none;border:none;outline:none;font-size:22px;font-weight:800;color:var(--txt);font-family:'Inter',sans-serif">
+          <select id="loan-cur" style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:4px 8px;color:var(--txt);font-size:12px;outline:none">
+            <option value="XAF">XAF</option><option value="XOF">XOF</option><option value="EUR">EUR</option><option value="USD">USD</option>
+          </select>
+        </div>
+        <div class="section-title">Finalidad</div>
+        <div class="card-sm" style="margin-bottom:10px">
+          <select id="loan-purpose" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif">
+            <option value="business">Negocio</option>
+            <option value="restock">Reposición de stock</option>
+            <option value="equipment">Equipamiento</option>
+            <option value="personal">Personal</option>
+            <option value="emergency">Emergencia</option>
+          </select>
+        </div>
+        <div class="section-title">Nota (opcional)</div>
+        <div class="card-sm" style="margin-bottom:14px"><input id="loan-notes" type="text" maxlength="120" placeholder="Cuéntanos para qué lo necesitas" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        <div style="font-size:11px;color:var(--txt3);margin-bottom:12px;line-height:1.5">📄 Tu solicitud pasará a revisión. Si se aprueba, el importe se abona en tu saldo XenderMoney. El plazo por defecto es de 30 días.</div>
+        <div id="loan-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+        <button id="loan-btn" class="btn-primary" onclick="doRequestLoan()" style="background:linear-gradient(135deg,var(--purple),#7c3aed)">🏦 Enviar solicitud</button>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
     <!-- SCREEN: PAGO QR -->
     <div class="screen" id="s-qrpay">
       <div class="page-header">
@@ -1874,7 +1927,8 @@ var nav_map = {
   's-home':'nb-home','s-wallet':'nb-wallet','s-send':'nb-wallet',
   's-track':'nb-pedidos','s-chat':'nb-pedidos','s-confirm':'nb-pedidos',
   's-recibir':'nb-wallet','s-cambiar':'nb-wallet','s-retirar':'nb-wallet',
-  's-shop':'nb-shop','s-perfil':'nb-perfil','s-map':'nb-home'
+  's-shop':'nb-shop','s-perfil':'nb-perfil','s-map':'nb-home',
+  's-prestamos':'nb-wallet','s-prestamo-solicitar':'nb-wallet'
 };
 
 function goScreen(id) {
@@ -3688,6 +3742,75 @@ function doCrearAhorro() {
   }).catch(function(){ btn.innerHTML = '🎯 Crear meta'; btn.disabled = false; err.textContent = 'Error de conexión'; });
 }
 
+// ── PRÉSTAMOS ────────────────────────────────────────────
+var _loanStatus = {
+  pending:  { txt:'En revisión',  pill:'pill-gold',  color:'var(--gold)' },
+  approved: { txt:'Aprobado',     pill:'pill-blue',  color:'var(--blue)' },
+  disbursed:{ txt:'Desembolsado', pill:'pill-green', color:'var(--green)' },
+  repaid:   { txt:'Devuelto',     pill:'pill-off',   color:'var(--txt3)' },
+  rejected: { txt:'Rechazado',    pill:'pill-off',   color:'var(--red)' }
+};
+var _loanPurpose = { business:'Negocio', restock:'Reposición de stock', equipment:'Equipamiento', personal:'Personal', emergency:'Emergencia' };
+
+function loadLoans() {
+  if (!_token) return;
+  var el = document.getElementById('prestamos-list');
+  railGet('/loans/my').then(function(resp) {
+    if (!el) return;
+    var loans = (resp && resp.success && resp.data && resp.data.loans) || [];
+    if (!Array.isArray(loans) || !loans.length) {
+      el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No tienes préstamos aún.<br>Solicita el primero cuando lo necesites.</div>';
+      return;
+    }
+    el.innerHTML = loans.map(function(l) {
+      var st = _loanStatus[l.status] || { txt:l.status, pill:'pill-off', color:'var(--txt3)' };
+      var amt = (l.amount || 0).toLocaleString('es-ES', {useGrouping:'always'});
+      var due = l.dueDate ? new Date(l.dueDate).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '—';
+      var totalDue = (l.amount || 0) * (1 + (l.interestRate || 0) / 100);
+      var pct = totalDue > 0 ? Math.min(Math.round((l.repaidAmount || 0) / totalDue * 100), 100) : 0;
+      var showBar = (l.status === 'disbursed' || l.status === 'repaid');
+      return '<div class="card" style="border-radius:16px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
+          '<div style="font-size:16px;font-weight:900;color:var(--txt)">' + amt + ' ' + (l.currency || 'XAF') + '</div>' +
+          '<span class="pill ' + st.pill + '" style="font-size:10px">' + st.txt + '</span></div>' +
+        '<div style="font-size:11px;color:var(--txt3);margin-bottom:' + (showBar ? '8px' : '2px') + '">' +
+          (_loanPurpose[l.purpose] || l.purpose) + ' · interés ' + (l.interestRate || 0) + '% · vence ' + due + '</div>' +
+        (showBar
+          ? '<div style="height:6px;background:var(--bg3);border-radius:6px;margin-bottom:4px"><div style="height:6px;background:var(--green);border-radius:6px;width:' + pct + '%"></div></div>' +
+            '<div style="font-size:10px;color:var(--txt3)">Devuelto ' + (l.repaidAmount || 0).toLocaleString('es-ES', {useGrouping:'always'}) + ' / ' + Math.round(totalDue).toLocaleString('es-ES', {useGrouping:'always'}) + ' ' + (l.currency || 'XAF') + '</div>'
+          : '') +
+        (l.notes ? '<div style="font-size:10px;color:var(--txt3);margin-top:4px;font-style:italic">“' + l.notes + '”</div>' : '') +
+        '</div>';
+    }).join('');
+  }).catch(function() {
+    if (el) el.innerHTML = '<div style="text-align:center;padding:20px 0;color:var(--txt3);font-size:12px">No se pudieron cargar tus préstamos.</div>';
+  });
+}
+
+function doRequestLoan() {
+  var amount  = parseFloat(document.getElementById('loan-amount').value);
+  var cur     = document.getElementById('loan-cur').value;
+  var purpose = document.getElementById('loan-purpose').value;
+  var notes   = document.getElementById('loan-notes').value.trim();
+  var err = document.getElementById('loan-err');
+  var btn = document.getElementById('loan-btn');
+  if (!_token) { err.textContent = 'Debes iniciar sesión'; return; }
+  if (!amount || amount <= 0) { err.textContent = 'Introduce el importe que necesitas'; return; }
+  err.textContent = '';
+  btn.innerHTML = '<span class="login-spinner"></span>Enviando…'; btn.disabled = true;
+  fetch(RAIL_API + '/loans', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amount, currency: cur, purpose: purpose, notes: notes || undefined })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = '🏦 Enviar solicitud'; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, 'No se pudo enviar la solicitud'); return; }
+    showToast('Solicitud enviada', 'Tu préstamo de ' + amount.toLocaleString('es-ES', {useGrouping:'always'}) + ' ' + cur + ' está en revisión.');
+    document.getElementById('loan-amount').value = ''; document.getElementById('loan-notes').value = '';
+    loadLoans(); goScreen('s-prestamos');
+  }).catch(function(){ btn.innerHTML = '🏦 Enviar solicitud'; btn.disabled = false; err.textContent = 'Error de conexión'; });
+}
+
 // ── PAGO QR ──────────────────────────────────────────────
 function qrTab(tab) {
   document.getElementById('qr-panel-scan').style.display = tab === 'scan' ? 'block' : 'none';
@@ -4070,6 +4193,7 @@ goScreen = function(id) {
   if (id === 's-seguros')       loadSeguros();
   if (id === 's-invest')        loadInvest();
   if (id === 's-ahorro')        loadAhorro();
+  if (id === 's-prestamos')     loadLoans();
   if (id === 's-giftcard')      loadCards();
   if (id === 's-qrpay')         populateQRGen();
   if (id === 's-pos')           genPosQR();
