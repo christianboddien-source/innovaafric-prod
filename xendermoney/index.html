@@ -443,7 +443,7 @@
       border-radius: 16px; padding: 16px;
     }
     .balance-label { font-size: 10px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-    .balance-amount { font-size: 26px; font-weight: 900; color: var(--orange); }
+    .balance-amount { font-size: 22px; font-weight: 900; color: var(--orange); }
     .balance-currency { font-size: 12px; color: var(--grey); margin-top: 2px; }
 
     .screen-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 16px; }
@@ -1829,7 +1829,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f5:'Fondos Segregados', sec_f5p:'Los fondos de usuarios se mantienen en cuentas segregadas en bancos socios con licencia. Nunca usados para operaciones. 100% protegidos.',
       sec_f6:'SLA 99.98% Disponibilidad', sec_f6p:'Infraestructura redundante en 3 centros de datos. Monitoreo en tiempo real 24/7. Respuesta a incidentes en menos de 5 minutos.',
       dl_h:'Descarga XenderMoney App', foot_soon:'· pendiente', dl_sub:'Disponible en iOS y Android. Gratis. Sin comisiones ocultas.',
-      ck_txt:'🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#F5A623;text-decoration:underline;">Política de Privacidad</a>.', ck_ess:'Solo esenciales', ck_acc:'Aceptar ✓'
+      ck_txt:'🍪 Usamos cookies para mejorar tu experiencia. <span style="color:#F5A623;text-decoration:underline;">Política de Privacidad</span>.', ck_ess:'Solo esenciales', ck_acc:'Aceptar ✓'
     },
     en:{
       nav_login:'Log in', nav_open:'Open account',
@@ -1899,7 +1899,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f5:'Segregated Funds', sec_f5p:'User funds are held in segregated accounts at licensed partner banks. Never used for operations. 100% protected.',
       sec_f6:'99.98% Uptime SLA', sec_f6p:'Redundant infrastructure across 3 data centers. Real-time 24/7 monitoring. Incident response in under 5 minutes.',
       dl_h:'Download the XenderMoney App', foot_soon:'· coming soon', dl_sub:'Available on iOS and Android. Free. No hidden fees.',
-      ck_txt:'🍪 We use cookies to improve your experience. <a href="#" style="color:#F5A623;text-decoration:underline;">Privacy Policy</a>.', ck_ess:'Essential only', ck_acc:'Accept ✓'
+      ck_txt:'🍪 We use cookies to improve your experience. <span style="color:#F5A623;text-decoration:underline;">Privacy Policy</span>.', ck_ess:'Essential only', ck_acc:'Accept ✓'
     },
     fr:{
       nav_login:'Se connecter', nav_open:'Ouvrir un compte',
@@ -1969,7 +1969,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
       sec_f5:'Fonds Ségrégués', sec_f5p:"Les fonds des utilisateurs sont détenus dans des comptes ségrégués chez des banques partenaires agréées. Jamais utilisés pour les opérations. 100% protégés.",
       sec_f6:'SLA 99.98% de Disponibilité', sec_f6p:'Infrastructure redondante sur 3 centres de données. Surveillance en temps réel 24/7. Réponse aux incidents en moins de 5 minutes.',
       dl_h:'Téléchargez l\'app XenderMoney', dl_sub:'Disponible sur iOS et Android. Gratuit. Sans frais cachés.', foot_soon:'· à venir',
-      ck_txt:'🍪 Nous utilisons des cookies pour améliorer votre expérience. <a href="#" style="color:#F5A623;text-decoration:underline;">Politique de confidentialité</a>.', ck_ess:'Essentiels uniquement', ck_acc:'Accepter ✓'
+      ck_txt:'🍪 Nous utilisons des cookies pour améliorer votre expérience. <span style="color:#F5A623;text-decoration:underline;">Politique de confidentialité</span>.', ck_ess:'Essentiels uniquement', ck_acc:'Accepter ✓'
     }
   };
 
@@ -2077,7 +2077,7 @@ var fxSecs=0;setInterval(function(){fxSecs++;var t=fxSecs<60?fxSecs+'s ago':Math
 
 <!-- ═══ COOKIE BANNER ═══ -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);padding:16px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(245,166,35,0.2);">
-  <p style="font-size:13px;color:rgba(255,255,255,0.7);margin:0;max-width:700px;" data-i18n="ck_txt">🍪 Usamos cookies para mejorar tu experiencia. <a href="#" style="color:#F5A623;text-decoration:underline;">Política de Privacidad</a>.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.7);margin:0;max-width:700px;" data-i18n="ck_txt">🍪 Usamos cookies para mejorar tu experiencia. <span style="color:#F5A623;text-decoration:underline;">Política de Privacidad</span>.</p>
   <div style="display:flex;gap:10px;flex-shrink:0;">
     <button onclick="cookieDecline()" style="background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.55);border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;" data-i18n="ck_ess">Solo esenciales</button>
     <button onclick="cookieAccept()" style="background:#F5A623;border:none;color:#0F1A2E;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;" data-i18n="ck_acc">Aceptar ✓</button>
@@ -2220,7 +2220,7 @@ function calcXM(){
         <div><label style="font-size:12px;font-weight:700;color:#0D2B4E;display:block;margin-bottom:6px;">Operador Mobile Money</label><select style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;background:#fff;font-family:inherit;"><option value="xendermoney" selected>⭐ XenderMoney</option>
 <option>MTN MoMo</option><option>Orange Money</option><option>Wave</option><option>Moov Money</option><option>Airtel Money</option><option>M-Pesa</option></select></div>
         <div style="grid-column:1/-1;"><label style="font-size:12px;font-weight:700;color:#0D2B4E;display:block;margin-bottom:6px;">Contraseña *</label><input type="password" placeholder="Mín. 8 caracteres" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;font-family:inherit;"></div>
-        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#64748b;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#F5A623;"> Acepto los <a href="#" style="color:#F5A623;">Términos de uso</a> y la <a href="#" style="color:#F5A623;">Política de privacidad</a></label></div>
+        <div style="grid-column:1/-1;"><label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#64748b;cursor:pointer;"><input type="checkbox" required style="margin-top:3px;accent-color:#F5A623;"> Acepto los <span style="color:#F5A623;">Términos de uso</span> y la <span style="color:#F5A623;">Política de privacidad</span></label></div>
         <div style="grid-column:1/-1;"><button type="submit" style="width:100%;padding:15px;background:#F5A623;color:#0D2B4E;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">Crear cuenta XenderMoney →</button></div>
       </form>
       <p style="text-align:center;margin-top:20px;font-size:13px;color:#64748b;">¿Ya tienes cuenta? <a href="#" onclick="closeModal('modal-xm');xmOpenLogin();return false;" style="color:#F5A623;font-weight:700;">Inicia sesión →</a></p>
