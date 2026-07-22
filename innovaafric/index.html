@@ -299,11 +299,38 @@
     .msvc b { font-size: 12px; font-weight: 600; color: #E4ECF6; }
     .mega-cta { display: inline-block; font-size: 16px; padding: 15px 34px; }
 
+    /* Showcase: maqueta + capacidades */
+    .mega-showcase { display: grid; grid-template-columns: 240px 1fr; gap: 32px; align-items: center; margin: 8px 0 30px; text-align: left; }
+    .mega-phone { width: 240px; margin: 0 auto; background: #0A0E1A; border: 8px solid #1c2942; border-radius: 34px; padding: 10px 8px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); position: relative; }
+    .mp-notch { width: 70px; height: 16px; background: #1c2942; border-radius: 0 0 12px 12px; margin: 0 auto 8px; }
+    .mp-screen { padding: 2px; }
+    .mp-top { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .mp-logo { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg,#29ABE2,#1a5a8a); color: #fff; font-size: 8px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .mp-bal { background: linear-gradient(145deg,#111827,#1a2540); border: 1px solid rgba(41,171,226,0.18); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+    .mp-curr { display: flex; gap: 4px; margin-top: 8px; }
+    .mp-curr span { font-size: 7px; font-weight: 800; color: #8A9AB8; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 3px 7px; }
+    .mp-curr span.on { background: rgba(41,171,226,0.15); color: #29ABE2; }
+    .mp-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; background: #111827; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 10px 4px; margin-bottom: 10px; }
+    .mp-actions > div { text-align: center; }
+    .mp-actions span { font-size: 7px; font-weight: 700; color: #9ca3af; display: block; margin-top: 2px; }
+    .mp-ico { font-size: 15px; font-weight: 900; }
+    .mp-eco { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+    .mp-eco span { font-size: 7px; font-weight: 900; color: #fff; text-align: center; padding: 6px 0; border-radius: 6px; }
+    .mp-svc { display: flex; justify-content: space-between; padding: 0 2px; }
+    .mp-svc span { font-size: 14px; }
+    .mega-caps { display: flex; flex-direction: column; gap: 14px; }
+    .cap { display: flex; gap: 12px; align-items: flex-start; }
+    .cap > span { font-size: 22px; flex-shrink: 0; line-height: 1.2; }
+    .cap b { display: block; font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+    .cap p { font-size: 12.5px; color: #B8C6DA; line-height: 1.55; margin: 0; }
+
     @media (max-width: 900px) {
       .founder-inner { grid-template-columns: 1fr; }
       .screens-grid { grid-template-columns: 1fr; }
       .megaapp-inner { padding: 36px 20px; }
       .megaapp-copy h3 { font-size: 24px; }
+      .mega-showcase { grid-template-columns: 1fr; gap: 24px; }
+      .mega-services { max-width: 100%; }
     }
   </style>
 </head>
@@ -913,6 +940,52 @@
           <span class="curr-chip">$ USD</span>
           <span class="curr-chip">FCFA</span>
           <span class="curr-chip">XOF</span>
+        </div>
+
+        <!-- Maqueta del móvil + qué se puede hacer -->
+        <div class="mega-showcase">
+          <!-- Phone mockup del home de la mega app -->
+          <div class="mega-phone">
+            <div class="mp-notch"></div>
+            <div class="mp-screen">
+              <div class="mp-top">
+                <div class="mp-logo">IA</div>
+                <div style="flex:1;font-size:9px;font-weight:800;color:#fff">INNOVAAFRIC</div>
+                <span style="font-size:9px;color:#8A9AB8">🌐 ES</span>
+              </div>
+              <div class="mp-bal">
+                <div style="font-size:7px;color:#8A9AB8;letter-spacing:1px" data-i18n="mp_total">TOTAL BALANCE</div>
+                <div style="font-size:20px;font-weight:900;color:#fff">500.000 <span style="font-size:11px;color:#F5A623">XAF</span></div>
+                <div style="font-size:7px;color:#8A9AB8">≈ € 762,25 · $ 823,40</div>
+                <div class="mp-curr"><span class="on">XAF</span><span>EUR</span><span>USD</span><span>XOF</span></div>
+              </div>
+              <div class="mp-actions">
+                <div><div class="mp-ico" style="color:#F5A623">↑</div><span data-i18n="mp_send">Enviar</span></div>
+                <div><div class="mp-ico" style="color:#22C55E">↓</div><span data-i18n="mp_receive">Recibir</span></div>
+                <div><div class="mp-ico" style="color:#29ABE2">⇄</div><span data-i18n="mp_exchange">Cambiar</span></div>
+                <div><div class="mp-ico" style="color:#A855F7">↧</div><span data-i18n="mp_withdraw">Retirar</span></div>
+              </div>
+              <div class="mp-eco">
+                <span style="background:#00897B">XenderMoney</span>
+                <span style="background:#00897B">XenderShop</span>
+                <span style="background:#F5A623;color:#1a2744">BigShop</span>
+                <span style="background:#1a3a5c;color:#29ABE2">Delivery</span>
+              </div>
+              <div class="mp-svc">
+                <span>🤖</span><span>🤝</span><span>📲</span><span>🗺️</span><span>🧾</span><span>🏪</span><span>🛡️</span><span>💳</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Qué se puede hacer -->
+          <div class="mega-caps">
+            <div class="cap"><span>💸</span><div><b data-i18n="cap1_t">Real-time transfers</b><p data-i18n="cap1_d">Send money between InnovaAFRIC users instantly, from the app.</p></div></div>
+            <div class="cap"><span>⚡</span><div><b data-i18n="cap2_t">Top up value units</b><p data-i18n="cap2_d">Recharge at authorized circulars and outlets approved by InnovaAFRIC and its representatives.</p></div></div>
+            <div class="cap"><span>🏧</span><div><b data-i18n="cap3_t">Cash withdrawals</b><p data-i18n="cap3_d">Withdraw cash at establishments authorized by InnovaAFRIC.</p></div></div>
+            <div class="cap"><span>🛍️</span><div><b data-i18n="cap4_t">Shop and pay in-app</b><p data-i18n="cap4_d">Buy on XenderShop in real time and pay straight from the app — no cards needed.</p></div></div>
+            <div class="cap"><span>🧾</span><div><b data-i18n="cap5_t">Pay bills</b><p data-i18n="cap5_d">Pay the bills of service providers registered in our system.</p></div></div>
+            <div class="cap"><span>📲</span><div><b data-i18n="cap6_t">QR payments</b><p data-i18n="cap6_d">Pay by QR at registered merchants — restaurants, pharmacies and shops selling on the XenderBigShop marketplace.</p></div></div>
+          </div>
         </div>
 
         <div class="mega-services">
@@ -1890,6 +1963,13 @@
       sec_app:'La Súper-App', sec_app_h:'Una sola app. Toda tu vida financiera.', sec_app_sub:'Envía dinero, compra, paga facturas, ahorra, invierte, pide envíos y mucho más — todo en una sola app, de forma nativa en 4 monedas: EUR, USD, FCFA y XOF.',
       mega_label:'Todo en uno', mega_h:'Todo lo que hace el ecosistema — en una sola app.', mega_sub:'XenderMoney, XenderShop, BigShop y XenderDelivery conviven en una única súper-app: 34 pantallas y más de 12 servicios, funcionando de forma nativa en tus 4 monedas.',
       mega_s_send:'Enviar y recibir', mega_s_exch:'Cambiar divisa', mega_s_wd:'Retirar', mega_s_shop:'Shop y BigShop', mega_s_track:'Seguir envío', mega_s_qr:'Pagos QR', mega_s_bills:'Pagar facturas', mega_s_tontine:'Tontinas', mega_s_save:'Ahorro', mega_s_invest:'Inversión', mega_s_ins:'Seguros', mega_s_cards:'Tarjetas virtuales', mega_s_pos:'Terminal POS', mega_s_bot:'InnovaBot 24/7', mega_cta:'Abrir la app →',
+      mp_total:'SALDO TOTAL', mp_send:'Enviar', mp_receive:'Recibir', mp_exchange:'Cambiar', mp_withdraw:'Retirar',
+      cap1_t:'Transferencias en tiempo real', cap1_d:'Envía dinero entre usuarios de InnovaAFRIC al instante, desde la app.',
+      cap2_t:'Recarga de unidades de valor', cap2_d:'Recarga en las circulares autorizadas y los establecimientos aprobados por InnovaAFRIC y sus representantes.',
+      cap3_t:'Reintegros en efectivo', cap3_d:'Retira dinero en efectivo en los establecimientos autorizados por InnovaAFRIC.',
+      cap4_t:'Compra y paga desde la app', cap4_d:'Compra en XenderShop en tiempo real y paga directamente desde la app — sin tarjetas.',
+      cap5_t:'Pago de facturas', cap5_d:'Paga las facturas de los proveedores de servicios registrados en nuestro sistema.',
+      cap6_t:'Pagos por QR', cap6_d:'Paga por QR en los comercios registrados — restaurantes, farmacias y tiendas que venden en el marketplace XenderBigShop.',
       app_send:'Enviar', app_rcv:'Recibir', app_search:'Buscar productos...', app_popular:'POPULAR', app_shop_btn:'Comprar con Mobile Money', app_delivery_tag:'🚚 Entregado por XenderDelivery', app_your_orders:'TUS PEDIDOS',
       scr1_lbl:'XenderMoney Wallet', scr1_sub:'Envía, recibe, paga', scr2_lbl:'XenderShop', scr2_sub:'Productos globales, precios locales', scr3_lbl:'XenderDelivery', scr3_sub:'Seguimiento en tiempo real',
       sec_founder:'Nuestra Historia', sec_founder_h:'Un sueño nacido en África,<br/>construido para el mundo',
@@ -2194,6 +2274,13 @@
       scr1_lbl:'XenderMoney Wallet', scr1_sub:'Send, receive, pay', scr2_lbl:'XenderShop', scr2_sub:'Global products, local prices', scr3_lbl:'XenderDelivery', scr3_sub:'Real-time tracking',
       mega_label:'All-in-one', mega_h:'Everything the ecosystem does — in one app.', mega_sub:'XenderMoney, XenderShop, BigShop and XenderDelivery live together in a single super-app: 34 screens and 12+ services, working natively across your 4 currencies.',
       mega_s_send:'Send &amp; receive', mega_s_exch:'Exchange', mega_s_wd:'Withdraw', mega_s_shop:'Shop &amp; BigShop', mega_s_track:'Track delivery', mega_s_qr:'QR payments', mega_s_bills:'Pay bills', mega_s_tontine:'Tontines', mega_s_save:'Savings', mega_s_invest:'Investment', mega_s_ins:'Insurance', mega_s_cards:'Virtual cards', mega_s_pos:'POS terminal', mega_s_bot:'InnovaBot 24/7', mega_cta:'Open the app →',
+      mp_total:'TOTAL BALANCE', mp_send:'Send', mp_receive:'Receive', mp_exchange:'Exchange', mp_withdraw:'Withdraw',
+      cap1_t:'Real-time transfers', cap1_d:'Send money between InnovaAFRIC users instantly, from the app.',
+      cap2_t:'Top up value units', cap2_d:'Recharge at authorized circulars and outlets approved by InnovaAFRIC and its representatives.',
+      cap3_t:'Cash withdrawals', cap3_d:'Withdraw cash at establishments authorized by InnovaAFRIC.',
+      cap4_t:'Shop and pay in-app', cap4_d:'Buy on XenderShop in real time and pay straight from the app — no cards needed.',
+      cap5_t:'Pay bills', cap5_d:'Pay the bills of service providers registered in our system.',
+      cap6_t:'QR payments', cap6_d:'Pay by QR at registered merchants — restaurants, pharmacies and shops selling on the XenderBigShop marketplace.',
       sec_founder:'Our Story', sec_founder_h:'A dream born in Africa,<br/>built for the world',
       founder_quote:'"I saw how technology across Asia, Europe and Africa transformed people\'s lives — making everything simpler, more accessible, more human. Africa deserves exactly the same. That\'s why I built InnovaAFRIC."',
       founder_name:'Cristiano Ivendengani Boddien', founder_role:'Founder & CEO · InnovaAFRIC',
@@ -2532,6 +2619,13 @@
       sec_app:"La Super-App", sec_app_h:'Une seule app. Toute votre vie financière.', sec_app_sub:"Envoyez de l'argent, achetez, payez vos factures, épargnez, investissez, commandez une livraison et plus encore — le tout dans une seule app, nativement en 4 devises : EUR, USD, FCFA et XOF.",
       mega_label:'Tout-en-un', mega_h:'Tout ce que fait l\'écosystème — dans une seule app.', mega_sub:'XenderMoney, XenderShop, BigShop et XenderDelivery cohabitent dans une seule super-app : 34 écrans et plus de 12 services, fonctionnant nativement dans vos 4 devises.',
       mega_s_send:'Envoyer et recevoir', mega_s_exch:'Convertir', mega_s_wd:'Retirer', mega_s_shop:'Shop et BigShop', mega_s_track:'Suivre la livraison', mega_s_qr:'Paiements QR', mega_s_bills:'Payer les factures', mega_s_tontine:'Tontines', mega_s_save:'Épargne', mega_s_invest:'Investissement', mega_s_ins:'Assurances', mega_s_cards:'Cartes virtuelles', mega_s_pos:'Terminal TPE', mega_s_bot:'InnovaBot 24/7', mega_cta:'Ouvrir l\'app →',
+      mp_total:'SOLDE TOTAL', mp_send:'Envoyer', mp_receive:'Recevoir', mp_exchange:'Convertir', mp_withdraw:'Retirer',
+      cap1_t:'Transferts en temps réel', cap1_d:'Envoie de l\'argent entre utilisateurs InnovaAFRIC instantanément, depuis l\'app.',
+      cap2_t:'Recharge d\'unités de valeur', cap2_d:'Recharge auprès des circulaires autorisées et des établissements agréés par InnovaAFRIC et ses représentants.',
+      cap3_t:'Retraits en espèces', cap3_d:'Retire de l\'argent en espèces dans les établissements autorisés par InnovaAFRIC.',
+      cap4_t:'Achète et paie dans l\'app', cap4_d:'Achète sur XenderShop en temps réel et paie directement depuis l\'app — sans carte.',
+      cap5_t:'Paiement de factures', cap5_d:'Paie les factures des fournisseurs de services enregistrés dans notre système.',
+      cap6_t:'Paiements par QR', cap6_d:'Paie par QR chez les commerces enregistrés — restaurants, pharmacies et boutiques vendant sur la marketplace XenderBigShop.',
       app_send:'Envoyer', app_rcv:'Recevoir', app_search:'Chercher des produits...', app_popular:'POPULAIRE', app_shop_btn:'Acheter avec Mobile Money', app_delivery_tag:'🚚 Livré par XenderDelivery', app_your_orders:'VOS COMMANDES',
       scr1_lbl:'XenderMoney Wallet', scr1_sub:'Envoyez, recevez, payez', scr2_lbl:'XenderShop', scr2_sub:'Produits mondiaux, prix locaux', scr3_lbl:'XenderDelivery', scr3_sub:'Suivi en temps réel',
       sec_founder:'Notre Histoire', sec_founder_h:'Un rêve né en Afrique,<br/>construit pour le monde',
