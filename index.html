@@ -743,8 +743,9 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         <div class="chat-input">
           <input id="rider-chat-input" type="text" placeholder="Escribe un mensaje…" onkeydown="if(event.key==='Enter')sendRiderMsg()" style="flex:1;font-size:11px;color:var(--txt);background:none;border:none;outline:none;font-family:'Inter',sans-serif">
           <div style="display:flex;gap:6px;align-items:center">
-            <span style="font-size:16px;cursor:pointer;opacity:.4" onclick="showToast('Nota de voz','Función de audio disponible próximamente.')">🎤</span>
-            <span style="font-size:16px;cursor:pointer;opacity:.4" onclick="showToast('Foto','Adjuntar foto disponible próximamente.')">📷</span>
+            <span id="rider-mic" style="font-size:16px;cursor:pointer" onclick="toggleRiderAudio(this)">🎤</span>
+            <span style="font-size:16px;cursor:pointer" onclick="document.getElementById('rider-photo-input').click()">📷</span>
+            <input id="rider-photo-input" type="file" accept="image/*" style="display:none" onchange="sendRiderPhoto(this)">
             <div onclick="sendRiderMsg()" style="width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;cursor:pointer">➤</div>
           </div>
         </div>
@@ -813,6 +814,48 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           </div>
           <div style="font-size:15px;font-weight:900;color:var(--green)">€8.50</div>
         </div>
+      </div>
+      <!-- CONFIRMACIÓN DEL CLIENTE -->
+      <div id="confirm-client-block" style="padding:0 14px;margin-bottom:14px">
+        <div class="section-title">Confirma la recepción</div>
+        <div class="card" style="border-radius:16px">
+          <div style="font-size:11px;color:var(--txt3);margin-bottom:10px">Confirma que has recibido tu pedido. Puedes verificarlo de varias formas:</div>
+
+          <div style="font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Código de cliente</div>
+          <div class="card-sm" style="margin-bottom:12px;padding:8px 12px"><input id="cc-code" type="text" placeholder="Código recibido al pedir (ej. XD-…)" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+
+          <div style="font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Foto del paquete recibido</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div id="cc-photo-preview" style="width:54px;height:54px;border-radius:12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;flex-shrink:0">📷</div>
+            <button class="btn-outline" style="flex:1;padding:10px" onclick="document.getElementById('cc-photo-input').click()">📷 Añadir foto</button>
+            <input id="cc-photo-input" type="file" accept="image/*" style="display:none" onchange="ccSetPhoto(this)">
+          </div>
+
+          <div style="font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Firma digital</div>
+          <div style="position:relative;margin-bottom:6px">
+            <canvas id="cc-sign" width="360" height="110" style="width:100%;height:110px;background:#fff;border-radius:12px;border:1px solid var(--border);touch-action:none"></canvas>
+            <span onclick="ccClearSign()" style="position:absolute;top:6px;right:10px;font-size:10px;font-weight:700;color:var(--red);cursor:pointer">Borrar</span>
+          </div>
+          <div style="font-size:10px;color:var(--txt3);margin-bottom:12px">Firma con el dedo dentro del recuadro blanco.</div>
+
+          <div style="font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Comentario (opcional)</div>
+          <div class="card-sm" style="margin-bottom:6px;padding:8px 12px"><input id="cc-note" type="text" maxlength="140" placeholder="Ej: Paquete recibido a tiempo por Moussa Diallo" style="width:100%;background:none;border:none;outline:none;font-size:13px;color:var(--txt);font-family:'Inter',sans-serif"></div>
+        </div>
+      </div>
+
+      <!-- RESEÑAS: 3 grupos de 3 preguntas -->
+      <div id="confirm-review-block" style="padding:0 14px;margin-bottom:14px">
+        <div class="section-title">Valora tu experiencia</div>
+        <div style="text-align:center;margin-bottom:12px">
+          <div id="cc-stars" style="font-size:30px;letter-spacing:4px;cursor:pointer">☆☆☆☆☆</div>
+          <div style="font-size:10px;color:var(--txt3);margin-top:2px">Toca las estrellas para puntuar</div>
+        </div>
+        <div id="cc-reviews"></div>
+      </div>
+
+      <div id="confirm-err" style="padding:0 14px;color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
+      <div style="padding:0 14px;margin-bottom:10px">
+        <button id="cc-submit" class="btn-green" style="width:100%" onclick="submitDeliveryConfirm()">✓ Confirmar recepción y enviar reseña</button>
       </div>
       <div style="padding:0 14px;display:flex;gap:10px">
         <button class="btn-outline" style="flex:1" onclick="printReport('wallet')">📄 Ver recibo</button>
@@ -4434,6 +4477,7 @@ goScreen = function(id) {
   if (id === 's-giftcard')      loadCards();
   if (id === 's-qrpay')         populateQRGen();
   if (id === 's-pos')           genPosQR();
+  if (id === 's-confirm')       { if (typeof initDeliveryConfirm === 'function') initDeliveryConfirm(); }
 };
 
 // ── RECIBIR ─────────────────────────────────────────────
@@ -4548,6 +4592,214 @@ function sendRiderMsg(preset) {
 function callRider(mode) {
   showToast(mode === 'video' ? '📹 Videollamada' : '📞 Llamando al rider',
             'Conectando con Moussa Diallo… (demo del flujo de entrega)');
+}
+
+// ── Nota de audio (grabación local con MediaRecorder) ────
+var _riderRec = null, _riderChunks = [], _riderRecStart = 0;
+function toggleRiderAudio(el) {
+  if (_riderRec && _riderRec.state === 'recording') { _riderRec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) {
+    showToast(T('Audio no disponible','Audio non disponible','Audio not available'),
+              T('Tu navegador no permite grabar audio.','Ton navigateur ne permet pas d’enregistrer.','Your browser can’t record audio.'));
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    _riderChunks = [];
+    _riderRec = new MediaRecorder(stream);
+    _riderRecStart = Date.now();
+    _riderRec.ondataavailable = function(e){ if (e.data && e.data.size) _riderChunks.push(e.data); };
+    _riderRec.onstop = function() {
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      if (el) { el.textContent = '🎤'; el.style.color = ''; }
+      var secs = Math.max(1, Math.round((Date.now() - _riderRecStart) / 1000));
+      var blob = new Blob(_riderChunks, { type: 'audio/webm' });
+      addRiderAudioBubble(URL.createObjectURL(blob), secs);
+    };
+    _riderRec.start();
+    if (el) { el.textContent = '⏹️'; el.style.color = 'var(--red)'; }
+    showToast('🎤 ' + T('Grabando…','Enregistrement…','Recording…'), T('Toca de nuevo para enviar','Touche à nouveau pour envoyer','Tap again to send'));
+  }).catch(function() {
+    showToast(T('Permiso denegado','Autorisation refusée','Permission denied'),
+              T('No se pudo acceder al micrófono.','Impossible d’accéder au micro.','Could not access the microphone.'));
+  });
+}
+function addRiderAudioBubble(url, secs) {
+  var box = document.getElementById('chat-messages'); if (!box) return;
+  var now = new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' });
+  var out = document.createElement('div');
+  out.className = 'bubble-out';
+  out.innerHTML = '🎤 <span style="font-size:10px">' + T('Nota de voz','Note vocale','Voice note') + ' · ' + secs + 's</span>' +
+    '<audio controls src="' + url + '" style="display:block;margin-top:6px;max-width:180px;height:32px"></audio>' +
+    '<div class="btime">' + now + ' ✓✓</div>';
+  box.appendChild(out); box.scrollTop = box.scrollHeight;
+  setTimeout(function(){ riderAutoReply(T('¡Escuchado! Gracias por el audio 👍','Bien reçu ! Merci pour l’audio 👍','Got it! Thanks for the audio 👍')); }, 1000);
+}
+function sendRiderPhoto(input) {
+  var file = input.files && input.files[0]; if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast(T('Foto','Photo','Photo'), T('La imagen debe ser menor de 5 MB','L’image doit faire moins de 5 Mo','Image must be under 5 MB')); input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var box = document.getElementById('chat-messages'); if (!box) return;
+    var now = new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' });
+    var out = document.createElement('div');
+    out.className = 'bubble-out';
+    out.innerHTML = '<img src="' + e.target.result + '" style="max-width:160px;border-radius:10px;display:block;margin-bottom:4px">' +
+      '<div class="btime">' + now + ' ✓✓</div>';
+    box.appendChild(out); box.scrollTop = box.scrollHeight;
+    setTimeout(function(){ riderAutoReply(T('¡Foto recibida! 📸','Photo reçue ! 📸','Photo received! 📸')); }, 1000);
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+function riderAutoReply(text) {
+  var box = document.getElementById('chat-messages'); if (!box) return;
+  var inb = document.createElement('div');
+  inb.className = 'bubble-in';
+  inb.innerHTML = escSup(text) + '<div class="btime-in">' + new Date().toLocaleTimeString('es', { hour:'2-digit', minute:'2-digit' }) + '</div>';
+  box.appendChild(inb); box.scrollTop = box.scrollHeight;
+}
+
+// ── CONFIRMACIÓN DE ENTREGA + RESEÑAS ────────────────────
+// 3 grupos de 3 preguntas; cada una con 3 respuestas preescritas. El cliente
+// solo selecciona. Textos en ES/FR/EN.
+var _reviewGroups = [
+  { title:['El rider','Le livreur','The rider'], q:[
+    { t:['¿Cómo te trató el rider?','Comment le livreur t’a-t-il traité ?','How did the rider treat you?'], a:[['Muy amable','Très aimable','Very friendly'],['Correcto','Correct','Okay'],['Mejorable','À améliorer','Could improve']] },
+    { t:['¿Llegó a tiempo?','Est-il arrivé à l’heure ?','Did it arrive on time?'], a:[['Antes de lo previsto','En avance','Ahead of time'],['Puntual','Ponctuel','On time'],['Con retraso','En retard','Late']] },
+    { t:['¿Cuidó tu paquete?','A-t-il pris soin de ton colis ?','Did they care for your package?'], a:[['Perfecto estado','Parfait état','Perfect condition'],['Bien','Bien','Good'],['Con algún daño','Quelques dégâts','Some damage']] }
+  ]},
+  { title:['La entrega','La livraison','The delivery'], q:[
+    { t:['¿El pedido llegó completo?','La commande était-elle complète ?','Did the order arrive complete?'], a:[['Todo correcto','Tout correct','All correct'],['Faltaba algo','Il manquait un article','Something missing'],['Producto equivocado','Mauvais produit','Wrong product']] },
+    { t:['¿La comunicación fue clara?','La communication était-elle claire ?','Was communication clear?'], a:[['Excelente','Excellente','Excellent'],['Suficiente','Suffisante','Enough'],['Confusa','Confuse','Confusing']] },
+    { t:['¿Recomendarías XenderDelivery?','Recommanderais-tu XenderDelivery ?','Would you recommend XenderDelivery?'], a:[['Sin duda','Sans hésiter','Definitely'],['Quizás','Peut-être','Maybe'],['No','Non','No']] }
+  ]},
+  { title:['Tu experiencia','Ton expérience','Your experience'], q:[
+    { t:['¿Cómo valoras la app?','Comment évalues-tu l’app ?','How do you rate the app?'], a:[['Muy fácil','Très facile','Very easy'],['Normal','Normale','Normal'],['Complicada','Compliquée','Complicated']] },
+    { t:['¿Volverías a pedir?','Commanderais-tu à nouveau ?','Would you order again?'], a:[['Seguro que sí','Certainement','For sure'],['Tal vez','Peut-être','Maybe'],['No','Non','No']] },
+    { t:['¿Tu experiencia general?','Ton expérience générale ?','Your overall experience?'], a:[['Excelente','Excellente','Excellent'],['Buena','Bonne','Good'],['Regular','Moyenne','Fair']] }
+  ]}
+];
+var _reviewAnswers = {};   // key "g-q" -> índice de respuesta
+var _ccStars = 0;
+
+function tt(arr) { return T(arr[0], arr[1], arr[2]); }  // traduce una tripleta [es,fr,en]
+
+function renderReviews() {
+  var el = document.getElementById('cc-reviews'); if (!el) return;
+  var html = '';
+  _reviewGroups.forEach(function(g, gi) {
+    html += '<div style="font-size:11px;font-weight:800;color:var(--blue);margin:10px 0 6px">' + tt(g.title) + '</div>';
+    g.q.forEach(function(q, qi) {
+      var key = gi + '-' + qi;
+      html += '<div style="margin-bottom:10px"><div style="font-size:12px;color:var(--txt);margin-bottom:5px">' + tt(q.t) + '</div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+        q.a.map(function(a, ai) {
+          var on = _reviewAnswers[key] === ai;
+          return '<div onclick="selReview(\'' + key + '\',' + ai + ')" class="pill ' + (on ? 'pill-blue' : 'pill-off') + '" style="cursor:pointer;font-size:10px">' + tt(a) + '</div>';
+        }).join('') + '</div></div>';
+    });
+  });
+  el.innerHTML = html;
+}
+function selReview(key, ai) {
+  _reviewAnswers[key] = ai;
+  renderReviews();
+}
+function renderCcStars() {
+  var el = document.getElementById('cc-stars');
+  if (el) el.textContent = '★★★★★'.slice(0, _ccStars) + '☆☆☆☆☆'.slice(0, 5 - _ccStars);
+}
+function initDeliveryConfirm() {
+  _reviewAnswers = {}; _ccStars = 0;
+  renderReviews(); renderCcStars();
+  ccClearSign();
+  var p = document.getElementById('cc-photo-preview'); if (p) { p.innerHTML = '📷'; _ccPhoto = null; }
+  ['cc-code','cc-note'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  var err = document.getElementById('confirm-err'); if (err) err.textContent = '';
+  // estrellas clicables
+  var stars = document.getElementById('cc-stars');
+  if (stars && !stars._wired) {
+    stars._wired = true;
+    stars.addEventListener('click', function(e) {
+      var rect = stars.getBoundingClientRect();
+      var rel = (e.clientX - rect.left) / rect.width;
+      _ccStars = Math.max(1, Math.min(5, Math.ceil(rel * 5)));
+      renderCcStars();
+    });
+  }
+}
+var _ccPhoto = null;
+function ccSetPhoto(input) {
+  var f = input.files && input.files[0]; if (!f) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    _ccPhoto = e.target.result;
+    var p = document.getElementById('cc-photo-preview');
+    if (p) p.innerHTML = '<img src="' + _ccPhoto + '" style="width:100%;height:100%;object-fit:cover">';
+  };
+  reader.readAsDataURL(f);
+  input.value = '';
+}
+// Firma en canvas (ratón + táctil)
+var _ccSignCtx = null, _ccSigned = false;
+function ccInitSign() {
+  var c = document.getElementById('cc-sign'); if (!c) return;
+  _ccSignCtx = c.getContext('2d');
+  var drawing = false;
+  function pos(e) {
+    var r = c.getBoundingClientRect();
+    var t = e.touches ? e.touches[0] : e;
+    return { x: (t.clientX - r.left) * (c.width / r.width), y: (t.clientY - r.top) * (c.height / r.height) };
+  }
+  function start(e) { drawing = true; _ccSigned = true; var p = pos(e); _ccSignCtx.beginPath(); _ccSignCtx.moveTo(p.x, p.y); e.preventDefault(); }
+  function move(e) { if (!drawing) return; var p = pos(e); _ccSignCtx.lineTo(p.x, p.y); _ccSignCtx.strokeStyle = '#0A0E1A'; _ccSignCtx.lineWidth = 2; _ccSignCtx.lineCap = 'round'; _ccSignCtx.stroke(); e.preventDefault(); }
+  function end() { drawing = false; }
+  c.addEventListener('mousedown', start); c.addEventListener('mousemove', move); window.addEventListener('mouseup', end);
+  c.addEventListener('touchstart', start); c.addEventListener('touchmove', move); c.addEventListener('touchend', end);
+}
+function ccClearSign() {
+  var c = document.getElementById('cc-sign');
+  if (c && c.getContext) { c.getContext('2d').clearRect(0, 0, c.width, c.height); }
+  _ccSigned = false;
+}
+function submitDeliveryConfirm() {
+  var err = document.getElementById('confirm-err');
+  var code = (document.getElementById('cc-code') || {}).value || '';
+  // Al menos una prueba de recepción: código, foto o firma
+  if (!code.trim() && !_ccPhoto && !_ccSigned) {
+    err.textContent = T('Añade al menos una prueba: código, foto o firma.','Ajoute au moins une preuve : code, photo ou signature.','Add at least one proof: code, photo or signature.');
+    return;
+  }
+  var answered = Object.keys(_reviewAnswers).length;
+  if (_ccStars === 0 && answered === 0) {
+    err.textContent = T('Puntúa o responde al menos una pregunta.','Note ou réponds à au moins une question.','Rate or answer at least one question.');
+    return;
+  }
+  err.textContent = '';
+  var btn = document.getElementById('cc-submit');
+  btn.innerHTML = '<span class="login-spinner"></span>' + T('Enviando…','Envoi…','Sending…'); btn.disabled = true;
+  // Intento real contra la API si el pedido lo permite; si no, confirmación local (demo)
+  var payload = { rating: _ccStars, note: (document.getElementById('cc-note')||{}).value || '', client_code: code, reviews: _reviewAnswers };
+  var finish = function() {
+    // Estado de agradecimiento
+    var cb = document.getElementById('confirm-client-block');
+    var rb = document.getElementById('confirm-review-block');
+    if (cb) cb.style.display = 'none';
+    if (rb) rb.innerHTML = '<div class="card" style="border-radius:16px;text-align:center;padding:22px"><div style="font-size:34px;margin-bottom:8px">🙏</div>' +
+      '<div style="font-size:15px;font-weight:900;color:var(--green);margin-bottom:4px">' + T('¡Gracias por tu reseña!','Merci pour ton avis !','Thanks for your review!') + '</div>' +
+      '<div style="font-size:11px;color:var(--txt3)">' + T('Recepción confirmada. Tu opinión ayuda a mejorar XenderDelivery.','Réception confirmée. Ton avis aide à améliorer XenderDelivery.','Delivery confirmed. Your feedback helps improve XenderDelivery.') + '</div></div>';
+    btn.style.display = 'none';
+    var eb = document.getElementById('confirm-err'); if (eb) eb.style.display = 'none';
+    showToast(T('Recepción confirmada','Réception confirmée','Delivery confirmed'), T('¡Gracias por tu valoración!','Merci pour ton évaluation !','Thanks for your rating!'));
+  };
+  var trk = (document.getElementById('track-id') || {}).value || code;
+  if (_token && trk) {
+    railPost('/delivery/orders/' + encodeURIComponent(trk) + '/confirm', payload)
+      .then(function(){ finish(); })
+      .catch(function(){ finish(); });   // demo: confirmamos igual localmente
+  } else {
+    setTimeout(finish, 500);
+  }
 }
 
 // ── COMPRA EN TIENDA (crea pedido real con código de seguimiento) ──
@@ -5531,6 +5783,7 @@ window.addEventListener('DOMContentLoaded', function() {
     applyTheme();
     renderNotifBadge();
     initNotifCatUI();
+    if (typeof ccInitSign === 'function') ccInitSign();
     updatePushPermUI();
     // Welcome notification on first login
     if (_user && _notifList.length === 0) {
@@ -5647,6 +5900,6 @@ goScreen = function(id) {
 };
 </script>
 <!-- i18n ES/FR/EN — traduce por coincidencia exacta + observa cambios dinámicos -->
-<script src="./app-i18n.js?v=6"></script>
+<script src="./app-i18n.js?v=7"></script>
 </body>
 </html>
