@@ -1,4 +1,4 @@
-const CACHE = 'innovaafric-v9';
+const CACHE = 'innovaafric-v10';
 const PAGES = ['/'];
 
 self.addEventListener('install', e => {
@@ -21,9 +21,26 @@ self.addEventListener('fetch', e => {
   if(e.request.url.includes('/v1/')) return;        // no cachear API Railway
   if(e.request.url.includes('supabase.co')) return; // no cachear Supabase
 
-  // RED PRIMERO: las actualizaciones llegan al instante; la caché solo
-  // se usa sin conexión. (Antes era cache-first y los móviles se quedaban
-  // con versiones viejas de la app — el saldo nunca se actualizaba.)
+  // Para navegaciones y el HTML de la app: PEDIR SIEMPRE FRESCO A LA RED
+  // (cache:'no-store' salta la caché HTTP de GitHub Pages de 10 min, así las
+  //  actualizaciones llegan al instante). Sin conexión, usa la copia cacheada.
+  const isNav = e.request.mode === 'navigate' ||
+                (e.request.destination === 'document') ||
+                e.request.url.endsWith('/') ||
+                e.request.url.endsWith('index.html');
+  if (isNav) {
+    e.respondWith(
+      fetch(e.request, { cache: 'no-store' })
+        .then(res => {
+          if (res && res.ok) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(e.request, cp)); }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then(r => r || caches.match('/')))
+    );
+    return;
+  }
+
+  // Resto de recursos: RED PRIMERO con respaldo en caché
   e.respondWith(
     fetch(e.request).then(res => {
       if(res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
