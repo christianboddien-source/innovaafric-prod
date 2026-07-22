@@ -188,6 +188,13 @@
     'IBAN, nº de móvil o punto autorizado': { fr: 'IBAN, n° de mobile ou point autorisé', en: 'IBAN, mobile no. or authorized point' },
     'Solicitar retiro →': { fr: 'Demander le retrait →', en: 'Request withdrawal →' },
     '🏧 Retiro a banco': { fr: '🏧 Retrait vers banque', en: '🏧 Bank withdrawal' },
+    'Cash en punto XenderMoney': { fr: 'Cash en point XenderMoney', en: 'Cash at XenderMoney point' },
+    'Establecimiento autorizado · Inmediato': { fr: 'Établissement autorisé · Immédiat', en: 'Authorized outlet · Instant' },
+    // ── Cambio de divisa ──
+    'Tú cambias': { fr: 'Tu convertis', en: 'You convert' },
+    'Saldo': { fr: 'Solde', en: 'Balance' },
+    'Euro': { fr: 'Euro', en: 'Euro' },
+    'Franco CFA Oeste': { fr: 'Franc CFA Ouest', en: 'West African CFA' },
 
     // ── Shop / tienda ──
     'Buscar productos…': { fr: 'Rechercher des produits…', en: 'Search products…' },

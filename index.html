@@ -868,32 +868,35 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       </div>
       <div style="padding:0 14px">
         <div class="card" style="border-radius:22px;margin-bottom:12px">
-          <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Tienes</div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-            <div id="cambiar-saldo" style="font-size:32px;font-weight:900;color:var(--txt)">—</div>
-            <div class="pill pill-blue" style="font-size:13px">XAF</div>
+          <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Tú cambias</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <input id="cambiar-input" type="number" placeholder="0" oninput="calcCambio()" style="font-size:30px;font-weight:900;color:var(--txt);background:none;border:none;outline:none;flex:1;width:0;font-family:'Inter',sans-serif">
+            <select id="cambiar-from" onchange="onCambioFrom()" style="background:var(--bg3);border:1px solid rgba(41,171,226,.3);border-radius:12px;padding:6px 10px;color:var(--blue);font-size:13px;font-weight:800;outline:none">
+              <option value="XAF">XAF</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="XOF">XOF</option>
+            </select>
           </div>
+          <div style="font-size:10px;color:var(--txt3);margin-bottom:14px">Saldo <span id="cambiar-saldo">—</span></div>
           <div style="height:1px;background:var(--border);margin-bottom:14px;position:relative">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold)">⇅</div>
+            <div onclick="swapCambio()" style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold);cursor:pointer">⇅</div>
           </div>
           <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Recibirás</div>
           <div style="display:flex;align-items:center;justify-content:space-between">
-            <div style="font-size:28px;font-weight:900;color:var(--green)">816,832</div>
-            <div class="pill pill-green" style="font-size:12px">XAF</div>
+            <div id="cambiar-result" style="font-size:26px;font-weight:900;color:var(--green)">0</div>
+            <div id="cambiar-to-pill" class="pill pill-green" style="font-size:12px">EUR</div>
           </div>
-          <div style="font-size:10px;color:var(--txt3);margin-top:10px">1 EUR = 655.957 XAF · Comisión: 0%</div>
+          <div id="cambiar-rate" style="font-size:10px;color:var(--txt3);margin-top:10px">—</div>
         </div>
         <div style="margin-bottom:14px">
           <div class="section-title">Selecciona divisa destino</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="card" style="border-color:var(--green);text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇨🇲</div><div style="font-size:12px;font-weight:800;color:var(--green)">XAF</div><div style="font-size:9px;color:var(--txt3)">Franco CFA</div></div>
-            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇺🇸</div><div style="font-size:12px;font-weight:800;color:var(--txt)">USD</div><div style="font-size:9px;color:var(--txt3)">Dólar</div></div>
-            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇬🇭</div><div style="font-size:12px;font-weight:800;color:var(--txt)">GHS</div><div style="font-size:9px;color:var(--txt3)">Cedi ghanés</div></div>
-            <div class="card" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇬🇧</div><div style="font-size:12px;font-weight:800;color:var(--txt)">GBP</div><div style="font-size:9px;color:var(--txt3)">Libra esterlina</div></div>
+          <div id="cambiar-dest-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="cambiar-dest card" data-cur="EUR" onclick="selCambioTo('EUR')" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇪🇺</div><div class="cd-code" style="font-size:12px;font-weight:800;color:var(--txt)">EUR</div><div style="font-size:9px;color:var(--txt3)">Euro</div></div>
+            <div class="cambiar-dest card" data-cur="USD" onclick="selCambioTo('USD')" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇺🇸</div><div class="cd-code" style="font-size:12px;font-weight:800;color:var(--txt)">USD</div><div style="font-size:9px;color:var(--txt3)">Dólar</div></div>
+            <div class="cambiar-dest card" data-cur="XAF" onclick="selCambioTo('XAF')" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇨🇲</div><div class="cd-code" style="font-size:12px;font-weight:800;color:var(--txt)">XAF</div><div style="font-size:9px;color:var(--txt3)">Franco CFA</div></div>
+            <div class="cambiar-dest card" data-cur="XOF" onclick="selCambioTo('XOF')" style="text-align:center;padding:12px;cursor:pointer"><div style="font-size:20px;margin-bottom:4px">🇸🇳</div><div class="cd-code" style="font-size:12px;font-weight:800;color:var(--txt)">XOF</div><div style="font-size:9px;color:var(--txt3)">Franco CFA Oeste</div></div>
           </div>
         </div>
         <div id="cambiar-err" style="color:var(--red);font-size:11px;text-align:center;margin-bottom:8px;min-height:14px"></div>
-        <button class="btn-primary" onclick="showToast('Cambio de divisa','Esta función estará disponible pronto. Por ahora puedes ver tus saldos en múltiples divisas en la pantalla de inicio.')">Confirmar cambio →</button>
+        <button id="cambiar-btn" class="btn-primary" onclick="doCambio()">Confirmar cambio →</button>
       </div>
       <div style="height:10px"></div>
     </div>
@@ -918,10 +921,15 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
         </div>
         <div class="section-title">Destino del retiro</div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
-          <div id="ret-m-bank_transfer" class="card ret-method" onclick="selRetMethod('bank_transfer',this)" style="display:flex;align-items:center;gap:12px;border-color:var(--purple);border-radius:14px;cursor:pointer">
+          <div id="ret-m-authorized_point" class="card ret-method" onclick="selRetMethod('authorized_point',this)" style="display:flex;align-items:center;gap:12px;border-color:var(--purple);border-radius:14px;cursor:pointer">
+            <svg width="26" height="22" viewBox="0 0 100 26" style="flex-shrink:0"><rect width="100" height="26" rx="6" fill="#00897B"/><text x="50" y="18" font-family="Arial Black" font-size="11" font-weight="900" fill="white" text-anchor="middle">XenderMoney</text></svg>
+            <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Cash en punto XenderMoney</div><div style="font-size:10px;color:var(--txt3)">Establecimiento autorizado · Inmediato</div></div>
+            <div class="ret-check" style="width:18px;height:18px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
+          </div>
+          <div id="ret-m-bank_transfer" class="card ret-method" onclick="selRetMethod('bank_transfer',this)" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
             <span style="font-size:22px">🏦</span>
             <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">Cuenta bancaria SEPA</div><div style="font-size:10px;color:var(--txt3)">1-2 días hábiles</div></div>
-            <div class="ret-check" style="width:18px;height:18px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
+            <div class="ret-check" style="display:none;width:18px;height:18px;border-radius:50%;background:var(--purple);align-items:center;justify-content:center;font-size:9px;color:#fff">✓</div>
           </div>
           <div id="ret-m-mtn_money" class="card ret-method" onclick="selRetMethod('mtn_money',this)" style="display:flex;align-items:center;gap:12px;border-radius:14px;cursor:pointer">
             <span style="font-size:22px">📱</span>
@@ -1783,9 +1791,11 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
             <input id="pos-amount" type="text" inputmode="numeric" placeholder="0" oninput="genPosQR()" style="font-size:38px;font-weight:900;color:#fff;background:none;border:none;outline:none;text-align:center;width:200px;font-family:'Inter',sans-serif">
           </div>
-          <div style="display:flex;justify-content:center;gap:8px">
+          <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
             <div id="pos-cur-xaf" class="pill pill-blue" onclick="selPosCur('XAF')" style="cursor:pointer">XAF</div>
             <div id="pos-cur-eur" class="pill pill-off" onclick="selPosCur('EUR')" style="cursor:pointer">EUR</div>
+            <div id="pos-cur-usd" class="pill pill-off" onclick="selPosCur('USD')" style="cursor:pointer">USD</div>
+            <div id="pos-cur-xof" class="pill pill-off" onclick="selPosCur('XOF')" style="cursor:pointer">XOF</div>
           </div>
         </div>
         <div style="text-align:center;margin-bottom:14px">
@@ -2607,8 +2617,140 @@ function refreshBalanceInScreens() {
   if (wEur) wEur.textContent = '≈ € ' + eurV.toLocaleString('es-ES', {useGrouping:'always', minimumFractionDigits:2, maximumFractionDigits:2});
   var rEl = document.getElementById('retirar-saldo');
   if (rEl) rEl.textContent = _balances.XAF.toLocaleString('es-ES', {useGrouping:'always'}) + ' XAF';
-  var cEl = document.getElementById('cambiar-saldo');
-  if (cEl) cEl.textContent = _balances.XAF.toLocaleString('es-ES', {useGrouping:'always'});
+  if (typeof updateCambioSaldo === 'function') updateCambioSaldo();
+}
+
+// ── CAMBIO DE DIVISA ─────────────────────────────────────
+var _cambioTo = 'EUR';
+var _cambioRates = null; // cache de /utils/rates
+function fmtCur(v, cur) {
+  var dec = (cur === 'XAF' || cur === 'XOF') ? 0 : 2;
+  return Number(v || 0).toLocaleString('es-ES', { useGrouping:'always', minimumFractionDigits:dec, maximumFractionDigits:dec });
+}
+function updateCambioSaldo() {
+  var from = (document.getElementById('cambiar-from') || {}).value || 'XAF';
+  var el = document.getElementById('cambiar-saldo');
+  if (el) el.textContent = fmtCur(_balances[from] || 0, from) + ' ' + from;
+}
+function onCambioFrom() {
+  var from = document.getElementById('cambiar-from').value;
+  // si origen == destino, mueve el destino a otra divisa
+  if (from === _cambioTo) {
+    var alt = ['EUR','USD','XAF','XOF'].filter(function(c){ return c !== from; })[0];
+    selCambioTo(alt);
+  }
+  updateCambioSaldo();
+  calcCambio();
+}
+function selCambioTo(cur) {
+  _cambioTo = cur;
+  document.querySelectorAll('.cambiar-dest').forEach(function(c) {
+    var on = c.getAttribute('data-cur') === cur;
+    c.style.borderColor = on ? 'var(--green)' : 'var(--border)';
+    var code = c.querySelector('.cd-code');
+    if (code) code.style.color = on ? 'var(--green)' : 'var(--txt)';
+  });
+  var pill = document.getElementById('cambiar-to-pill');
+  if (pill) pill.textContent = cur;
+  calcCambio();
+}
+function swapCambio() {
+  var fromSel = document.getElementById('cambiar-from');
+  var from = fromSel.value, to = _cambioTo;
+  fromSel.value = to;
+  selCambioTo(from);
+  updateCambioSaldo();
+  calcCambio();
+}
+// Tasa desde el cache de la API (con fallback a _FX local si no hay red)
+function cambioRate(from, to) {
+  if (from === to) return 1;
+  if (_cambioRates) {
+    if (_cambioRates[from + '-' + to] != null) return _cambioRates[from + '-' + to];
+    if (_cambioRates[to + '-' + from]) return 1 / _cambioRates[to + '-' + from];
+  }
+  // fallback: perEur[c] = valor de 1 unidad de c en EUR. rate(from→to) = perEur[from]/perEur[to]
+  var perEur = { EUR:1, USD:1/1.08, XAF:1/655.957, XOF:1/655.957 };
+  if (perEur[from] && perEur[to]) return perEur[from] / perEur[to];
+  return null;
+}
+function calcCambio() {
+  var from = (document.getElementById('cambiar-from') || {}).value || 'XAF';
+  var to = _cambioTo;
+  var amt = parseFloat((document.getElementById('cambiar-input') || {}).value) || 0;
+  var rate = cambioRate(from, to);
+  var rEl = document.getElementById('cambiar-result');
+  var rateEl = document.getElementById('cambiar-rate');
+  if (from === to) {
+    if (rEl) rEl.textContent = fmtCur(amt, to);
+    if (rateEl) rateEl.textContent = T('Elige una divisa distinta','Choisis une devise différente','Pick a different currency');
+    return;
+  }
+  var fee = Math.round(amt * 0.005 * 100) / 100;   // 0,5% comisión de cambio
+  var received = (amt - fee) * (rate || 0);
+  if (rEl) rEl.textContent = fmtCur(received, to);
+  if (rateEl && rate) {
+    // Mostrar la tasa en la dirección más legible (evita "1 XAF = 0,00 EUR")
+    var line;
+    if (rate < 1) {
+      line = '1 ' + to + ' = ' + Number(1 / rate).toLocaleString('es-ES', { maximumFractionDigits:2 }) + ' ' + from;
+    } else {
+      line = '1 ' + from + ' = ' + Number(rate).toLocaleString('es-ES', { maximumFractionDigits:2 }) + ' ' + to;
+    }
+    rateEl.textContent = line + ' · ' + T('Comisión','Commission','Fee') + ' 0,5%';
+  }
+}
+function initCambio() {
+  refreshBalanceInScreens();
+  // Origen: la divisa con más saldo; destino: la primera distinta
+  var fromSel = document.getElementById('cambiar-from');
+  if (fromSel) {
+    var best = ['XAF','EUR','USD','XOF'].filter(function(c){ return (_balances[c]||0) > 0; })[0] || 'XAF';
+    fromSel.value = best;
+  }
+  var to = ['EUR','USD','XAF','XOF'].filter(function(c){ return c !== (fromSel ? fromSel.value : 'XAF'); })[0];
+  selCambioTo(to);
+  updateCambioSaldo();
+  loadCambioRates();
+  calcCambio();
+}
+function loadCambioRates() {
+  fetch(RAIL_API + '/utils/rates').then(function(r){ return r.json(); }).then(function(resp) {
+    var arr = (resp && resp.data && resp.data.rates) || [];
+    _cambioRates = {};
+    arr.forEach(function(x){ if (x.pair && x.rate != null) _cambioRates[x.pair] = x.rate; });
+    calcCambio();
+  }).catch(function(){});
+}
+function doCambio() {
+  var from = document.getElementById('cambiar-from').value;
+  var to = _cambioTo;
+  var amt = parseFloat(document.getElementById('cambiar-input').value) || 0;
+  var err = document.getElementById('cambiar-err');
+  var btn = document.getElementById('cambiar-btn');
+  if (!_token) { err.textContent = T('Debes iniciar sesión','Tu dois te connecter','You must log in'); return; }
+  if (from === to) { err.textContent = T('Elige una divisa distinta','Choisis une devise différente','Pick a different currency'); return; }
+  if (!amt || amt <= 0) { err.textContent = T('Introduce un importe','Saisis un montant','Enter an amount'); return; }
+  if (amt > (_balances[from] || 0)) { err.textContent = T('Saldo insuficiente','Solde insuffisant','Insufficient balance'); return; }
+  err.textContent = '';
+  var orig = btn.innerHTML;
+  btn.innerHTML = '<span class="login-spinner"></span>' + T('Procesando…','Traitement…','Processing…'); btn.disabled = true;
+  fetch(RAIL_API + '/money/convert', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
+    body: JSON.stringify({ amount: amt, from: from, to: to })
+  }).then(function(r){ return r.json(); }).then(function(resp) {
+    btn.innerHTML = orig; btn.disabled = false;
+    if (!resp || !resp.success) { err.textContent = errMsg(resp, T('No se pudo realizar el cambio','Échec de la conversion','Exchange failed')); return; }
+    var d = resp.data;
+    if (d.balances) { _balances = d.balances; localStorage.setItem('inn_balance', JSON.stringify(_balances)); }
+    updateBalanceDisplay(); refreshBalanceInScreens();
+    if (_token) loadTransactions();
+    document.getElementById('cambiar-input').value = '';
+    calcCambio();
+    showToast(T('Cambio realizado','Conversion effectuée','Exchange done'),
+              fmtCur(d.amount_sent, d.currency_sent) + ' ' + d.currency_sent + ' → ' + fmtCur(d.amount_received, d.currency_received) + ' ' + d.currency_received);
+  }).catch(function(){ btn.innerHTML = orig; btn.disabled = false; err.textContent = T('Error de conexión','Erreur de connexion','Connection error'); });
 }
 
 // -- On start ----------------------------
@@ -3974,8 +4116,10 @@ var _posCur = 'XAF';
 
 function selPosCur(cur) {
   _posCur = cur;
-  document.getElementById('pos-cur-xaf').className = cur === 'XAF' ? 'pill pill-blue' : 'pill pill-off';
-  document.getElementById('pos-cur-eur').className = cur === 'EUR' ? 'pill pill-blue' : 'pill pill-off';
+  ['XAF','EUR','USD','XOF'].forEach(function(c) {
+    var el = document.getElementById('pos-cur-' + c.toLowerCase());
+    if (el) el.className = (cur === c) ? 'pill pill-blue' : 'pill pill-off';
+  });
   genPosQR();
 }
 
@@ -4211,7 +4355,7 @@ goScreen = function(id) {
   if (id === 's-send')          { var sEl = document.getElementById('send-saldo'); if (sEl) sEl.textContent = _balances.XAF ? _balances.XAF.toLocaleString('es-ES', {useGrouping:'always'}) + ' XAF' : '— XAF'; calcSend(); }
   if (id === 's-recibir')       populateRecibir();
   if (id === 's-retirar')       refreshBalanceInScreens();
-  if (id === 's-cambiar')       refreshBalanceInScreens();
+  if (id === 's-cambiar')       { initCambio(); }
   if (id === 's-wallet') { refreshBalanceInScreens(); if (!_allTxns.length) loadTransactions(); }
   if (id === 's-fiscal') loadFiscalScreen();
   if (id === 's-soporte') loadSupport();
@@ -4470,7 +4614,7 @@ function loadTrack() {
     })
     .catch(function(){ hint.textContent = 'Error de conexión. Inténtalo de nuevo.'; });
 }
-var _retMethod = 'bank_transfer';
+var _retMethod = 'authorized_point';
 function selRetMethod(m, el) {
   _retMethod = m;
   var cards = document.querySelectorAll('.ret-method');
@@ -4480,6 +4624,17 @@ function selRetMethod(m, el) {
   }
   el.style.borderColor = 'var(--purple)';
   var c = el.querySelector('.ret-check'); if (c) c.style.display = 'flex';
+  // Ajustar el placeholder del destino según el método
+  var dest = document.getElementById('retirar-dest');
+  if (dest) {
+    var ph = {
+      authorized_point: T('Código del punto autorizado o tu código IA','Code du point autorisé ou ton code IA','Authorized point code or your IA code'),
+      bank_transfer: 'IBAN',
+      mtn_money: T('Nº de móvil MTN','N° mobile MTN','MTN mobile number'),
+      orange_money: T('Nº de móvil Orange','N° mobile Orange','Orange mobile number')
+    };
+    dest.placeholder = ph[m] || 'IBAN, nº de móvil o punto autorizado';
+  }
 }
 function doRetirar() {
   var amt  = parseFloat(document.getElementById('retirar-input').value);
@@ -5385,6 +5540,6 @@ goScreen = function(id) {
 };
 </script>
 <!-- i18n ES/FR/EN — traduce por coincidencia exacta + observa cambios dinámicos -->
-<script src="./app-i18n.js?v=3"></script>
+<script src="./app-i18n.js?v=4"></script>
 </body>
 </html>
