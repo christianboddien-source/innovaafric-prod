@@ -633,18 +633,23 @@
 @keyframes stPop{0%,60%{opacity:0;transform:translateY(8px) scale(.6)}68%{opacity:1;transform:translateY(0) scale(1.1)}74%,92%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0}}
 @keyframes stJump{0%,60%{transform:translateY(0)}66%{transform:translateY(-9px)}72%{transform:translateY(0)}78%{transform:translateY(-5px)}84%,100%{transform:translateY(0)}}
 @keyframes stGlow{0%,58%{opacity:.0}64%,84%{opacity:.85}100%{opacity:0}}
-.st-chip{offset-path:path('M118,108 C190,40 290,40 352,104');animation:stFly 7s ease-in-out infinite}
+.st-chip{offset-path:path('M118,100 C200,34 288,34 356,96');animation:stFly 7s ease-in-out infinite}
 .st-eur{animation:stEur 7s infinite}.st-fcfa{animation:stFcfa 7s infinite}
-.st-pop{animation:stPop 7s infinite;transform-origin:370px 92px}
+.st-pop{animation:stPop 7s infinite;transform-origin:360px 83px}
 .st-jump{animation:stJump 7s infinite}
 .st-glow{animation:stGlow 7s infinite}
+/* escena 1: mensaje entrante + billetes en el punto de retiro */
+@keyframes stMsg{0%{opacity:0;transform:translateY(-6px) scale(.9)}6%{opacity:1;transform:translateY(0) scale(1.04)}12%,80%{opacity:1;transform:translateY(0) scale(1)}90%,100%{opacity:0}}
+@keyframes stCash{0%,60%{opacity:0;transform:translateY(-10px)}70%{opacity:1;transform:translateY(0)}92%{opacity:1}100%{opacity:0}}
+.st-msg{animation:stMsg 7s ease-in-out infinite}
+.st-cash{animation:stCash 7s ease-in-out infinite}
 /* escena 2: pago QR */
-@keyframes stScan{0%,15%{transform:translateY(0);opacity:0}20%{opacity:1}45%{transform:translateY(34px);opacity:1}50%,100%{opacity:0}}
+@keyframes stScan{0%,15%{transform:translateY(0);opacity:0}20%{opacity:1}45%{transform:translateY(50px);opacity:1}50%,100%{opacity:0}}
 @keyframes stCheck{0%,50%{opacity:0;transform:scale(.4)}58%{opacity:1;transform:scale(1.15)}64%,90%{opacity:1;transform:scale(1)}100%{opacity:0}}
 @keyframes stBag{0%,58%{opacity:0;transform:translateY(10px)}66%,92%{opacity:1;transform:translateY(0)}100%{opacity:0}}
 @keyframes stBalloon{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
 .st-scan{animation:stScan 7s linear infinite}
-.st-check{animation:stCheck 7s infinite;transform-origin:312px 96px}
+.st-check{animation:stCheck 7s infinite;transform-origin:335px 130px}
 .st-bag{animation:stBag 7s infinite}
 .st-balloon{animation:stBalloon 3s ease-in-out infinite}
 </style>
@@ -660,33 +665,87 @@
       <img class="st-photo" src="../assets-new/story-neysson-jeysson.jpg" alt="Meysson y Jeysson"
            onload="this.nextElementSibling.style.display='none'" onerror="this.remove()">
       <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
-        <rect width="230" height="240" fill="#dfeefc"/><rect x="230" width="230" height="240" fill="#fdeedd"/>
-        <circle cx="50" cy="42" r="16" fill="#f7c948"/>
-        <rect x="20" y="120" width="34" height="60" fill="#b9cee4"/><rect x="62" y="100" width="30" height="80" fill="#a7c2dd"/><rect x="100" y="132" width="26" height="48" fill="#c7d9ec"/>
-        <rect y="180" width="230" height="60" fill="#cfe1f3"/>
-        <path d="M395 70 q-6 -28 8 -42 M395 70 q-26 -12 -30 -34 M395 70 q24 -16 34 -8 M395 70 q16 -22 2 -38" stroke="#1e7d4f" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <rect x="390" y="68" width="9" height="46" rx="3" fill="#8a5a33"/>
-        <rect x="230" y="180" width="230" height="60" fill="#f8ddbb"/><rect x="230" y="172" width="230" height="10" fill="#76c7e8"/>
-        <text x="115" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#27557f">🇪🇸 Madrid</text>
-        <text x="345" y="26" text-anchor="middle" font-size="13" font-weight="800" fill="#9a5b16">🇬🇶 Malabo</text>
+        <defs>
+          <linearGradient id="s1sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3a6b"/><stop offset="1" stop-color="#6d7bb5"/></linearGradient>
+          <linearGradient id="s1room" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8eefc"/><stop offset="1" stop-color="#d3ddf3"/></linearGradient>
+          <linearGradient id="s1air" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf1e2"/><stop offset="1" stop-color="#f7ddbb"/></linearGradient>
+        </defs>
+        <!-- ══ IZQUIERDA: MEYSSON EN EL HOTEL DE MADRID ══ -->
+        <rect width="230" height="240" fill="url(#s1room)"/>
+        <!-- ventana con skyline de Madrid al atardecer -->
+        <rect x="14" y="30" width="96" height="74" rx="4" fill="url(#s1sky)" stroke="#c3cbe6" stroke-width="3"/>
+        <circle cx="34" cy="52" r="9" fill="#ffd36b" opacity=".9"/>
+        <path d="M18 92 h20 v-20 h8 v14 h10 v-26 h9 v26 h12 v-16 h8 v22 h9 v-30 h7 v30" fill="#3a4a7a" opacity=".65"/>
+        <line x1="62" y1="30" x2="62" y2="104" stroke="#c3cbe6" stroke-width="2"/><line x1="14" y1="67" x2="110" y2="67" stroke="#c3cbe6" stroke-width="2"/>
+        <!-- lámpara + mesita -->
+        <rect x="122" y="70" width="8" height="34" fill="#b7a98f"/><path d="M116 70 h20 l-4 -14 h-12 z" fill="#e9c46a"/>
+        <!-- cama del hotel -->
+        <rect x="8" y="150" width="150" height="16" rx="4" fill="#9fb0d6"/>
+        <rect x="8" y="132" width="150" height="24" rx="6" fill="#ccd6ef"/>
+        <rect x="14" y="126" width="40" height="22" rx="6" fill="#fff"/>
+        <!-- letrero de habitación -->
+        <text x="70" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#27557f">🇪🇸 Madrid · Hotel</text>
+        <!-- MEYSSON: joven, sentado en la cama, mirando el móvil -->
         <g>
-          <circle cx="95" cy="120" r="15" fill="#7a4a28"/><path d="M80 114 a15 15 0 0 1 30 0 z" fill="#241a12"/>
-          <rect x="80" y="136" width="30" height="44" rx="10" fill="#1f6fb2"/>
-          <rect x="106" y="142" width="14" height="22" rx="4" fill="#0A1628"/><rect x="108" y="145" width="10" height="16" rx="2" fill="#29ABE2"/>
-          <text x="95" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#27557f">Meysson</text>
+          <ellipse cx="92" cy="182" rx="26" ry="6" fill="#000" opacity=".07"/>
+          <!-- piernas -->
+          <rect x="80" y="150" width="12" height="30" rx="6" fill="#33405c"/><rect x="94" y="150" width="12" height="30" rx="6" fill="#3a4867"/>
+          <!-- torso (camisa clara de negocios) -->
+          <path d="M74 128 q18 -10 36 0 l4 30 q-22 8 -44 0 z" fill="#dfe7f5"/>
+          <path d="M74 128 q18 -10 36 0 l2 14 q-20 6 -40 0 z" fill="#eef2fb"/>
+          <!-- brazo sujetando el móvil -->
+          <rect x="102" y="132" width="10" height="26" rx="5" fill="#dfe7f5"/>
+          <!-- cabeza, piel clara, pelo corto -->
+          <circle cx="92" cy="112" r="15" fill="#b5814f"/>
+          <path d="M78 108 a14 13 0 0 1 28 0 q-14 -8 -28 0z" fill="#2a1c12"/>
+          <circle cx="86" cy="112" r="1.6" fill="#241a12"/><circle cx="98" cy="112" r="1.6" fill="#241a12"/>
+          <path d="M87 119 q5 3 10 0" stroke="#7a4a28" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+          <!-- móvil con pantalla de envío -->
+          <rect x="108" y="138" width="15" height="26" rx="4" fill="#0A1628"/><rect x="110" y="141" width="11" height="20" rx="2" fill="#29ABE2"/>
+          <text x="115.5" y="154" text-anchor="middle" font-size="7" font-weight="900" fill="#fff">€</text>
+          <text x="92" y="205" text-anchor="middle" font-size="12" font-weight="800" fill="#27557f">Meysson</text>
         </g>
+        <!-- mensaje entrante del hermano pidiendo dinero -->
+        <g class="st-msg">
+          <path d="M120 44 h84 a8 8 0 0 1 8 8 v22 a8 8 0 0 1 -8 8 h-64 l-10 10 v-10 h-10 a8 8 0 0 1 -8 -8 v-22 a8 8 0 0 1 8 -8z" fill="#fff" stroke="#d3ddf3" stroke-width="1.5"/>
+          <text x="162" y="60" text-anchor="middle" font-size="8.5" font-weight="700" fill="#334">Hermano, ¿me envías</text>
+          <text x="162" y="72" text-anchor="middle" font-size="9.5" font-weight="900" fill="#1f6fb2">300 € ? 🙏</text>
+        </g>
+
+        <!-- ══ DERECHA: JEYSSON EN EL PUNTO DE RETIRO DEL AEROPUERTO ══ -->
+        <rect x="230" width="230" height="240" fill="url(#s1air)"/>
+        <rect x="230" y="176" width="230" height="64" fill="#efd8b4"/>
+        <!-- avión + letrero aeropuerto -->
+        <text x="352" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#9a5b16">🇬🇶 Malabo · ✈ Aeropuerto</text>
+        <path d="M300 40 l26 6 l14 -10 l4 4 l-8 12 l18 6 l6 -5 l3 3 l-9 12 l-64 -16z" fill="#cfd8e6" opacity=".7"/>
+        <!-- kiosco de retiro InnovaAFRIC -->
+        <rect x="300" y="96" width="130" height="86" rx="8" fill="#12325a"/>
+        <rect x="300" y="96" width="130" height="24" rx="8" fill="#1f6fb2"/>
+        <g transform="translate(312,101)"><rect width="15" height="15" rx="4" fill="#29ABE2"/><text x="7.5" y="11.5" text-anchor="middle" font-size="8" font-weight="900" fill="#fff">IA</text></g>
+        <text x="378" y="112" text-anchor="middle" font-size="8.5" font-weight="900" fill="#fff">PUNTO DE RETIRO</text>
+        <!-- mostrador + billetes -->
+        <rect x="308" y="150" width="114" height="14" rx="3" fill="#0d2544"/>
+        <g class="st-cash"><rect x="322" y="138" width="30" height="16" rx="2" fill="#2fae6b"/><rect x="326" y="141" width="22" height="10" rx="1" fill="#5fd08e"/><text x="337" y="149" text-anchor="middle" font-size="7" font-weight="900" fill="#0b5">F</text></g>
+        <!-- JEYSSON: joven feliz recibiendo el dinero -->
         <g class="st-jump">
-          <circle cx="370" cy="132" r="12" fill="#8a5a33"/><path d="M358 127 a12 12 0 0 1 24 0 z" fill="#241a12"/>
-          <rect x="358" y="145" width="24" height="35" rx="9" fill="#e0921a"/>
-          <rect x="340" y="150" width="13" height="20" rx="4" fill="#0A1628"/><rect x="342" y="153" width="9" height="14" rx="2" class="st-glow" fill="#34d399"/>
-          <text x="370" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#9a5b16">Jeysson</text>
+          <ellipse cx="284" cy="182" rx="22" ry="5" fill="#000" opacity=".07"/>
+          <rect x="274" y="150" width="10" height="30" rx="5" fill="#2f4a2f"/><rect x="286" y="150" width="10" height="30" rx="5" fill="#365936"/>
+          <path d="M270 130 q15 -8 30 0 l3 26 q-18 6 -36 0z" fill="#e0921a"/>
+          <rect x="296" y="134" width="9" height="22" rx="4.5" fill="#e0921a"/>
+          <circle cx="285" cy="116" r="14" fill="#b5814f"/>
+          <path d="M272 112 a13 12 0 0 1 26 0 q-13 -7 -26 0z" fill="#2a1c12"/>
+          <circle cx="280" cy="116" r="1.5" fill="#241a12"/><circle cx="290" cy="116" r="1.5" fill="#241a12"/>
+          <path d="M280 122 q5 4 10 0" stroke="#7a4a28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <text x="285" y="205" text-anchor="middle" font-size="12" font-weight="800" fill="#9a5b16">Jeysson</text>
         </g>
-        <path d="M118,108 C190,40 290,40 352,104" stroke="#29ABE2" stroke-width="2" stroke-dasharray="5 6" fill="none" opacity=".5"/>
+
+        <!-- transferencia 300€ → 196 800 FCFA -->
+        <path d="M118,100 C200,34 288,34 356,96" stroke="#29ABE2" stroke-width="2" stroke-dasharray="5 6" fill="none" opacity=".55"/>
         <g class="st-chip">
           <g class="st-eur"><rect x="-30" y="-13" width="60" height="26" rx="13" fill="#1f6fb2"/><text y="5" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">300 €</text></g>
           <g class="st-fcfa"><rect x="-46" y="-13" width="92" height="26" rx="13" fill="#1e7d4f"/><text y="5" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">196 800 F</text></g>
         </g>
-        <g class="st-pop"><rect x="316" y="78" width="112" height="26" rx="13" fill="#34d399"/><text x="372" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#063">+196 800 FCFA ✓</text></g>
+        <g class="st-pop"><rect x="300" y="70" width="120" height="26" rx="13" fill="#34d399"/><text x="360" y="87" text-anchor="middle" font-size="12" font-weight="800" fill="#063">+196 800 FCFA ✓</text></g>
       </svg>
       <div class="st-body">
         <div class="st-ttl" data-i18n="st1_t">Meysson → Jeysson: from Spain to Malabo in seconds</div>
@@ -698,38 +757,85 @@
       <img class="st-photo" src="../assets-new/story-alysson-madysson.jpg" alt="Alysson y Madysson"
            onload="this.nextElementSibling.style.display='none'" onerror="this.remove()">
       <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg">
-        <rect width="460" height="240" fill="#f2f0fb"/>
-        <rect x="20" y="34" width="420" height="14" rx="7" fill="#6c5ce7"/><text x="230" y="26" text-anchor="middle" font-size="13" font-weight="900" fill="#4b3fb5" data-i18n="st2_mall">🛍️ CENTRO COMERCIAL</text>
-        <rect x="30" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="90" y="104" text-anchor="middle" font-size="26">👗</text>
-        <rect x="310" y="48" width="120" height="100" rx="6" fill="#ffffff" stroke="#d8d3f2"/><text x="370" y="104" text-anchor="middle" font-size="26">👟</text>
-        <rect y="190" width="460" height="50" fill="#e4e0f5"/>
+        <defs>
+          <linearGradient id="s2wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef6f2"/><stop offset="1" stop-color="#dcece4"/></linearGradient>
+        </defs>
+        <rect width="460" height="240" fill="url(#s2wall)"/>
+        <!-- rótulo del supermercado -->
+        <rect x="16" y="14" width="428" height="20" rx="6" fill="#0e9f6e"/>
+        <text x="230" y="28" text-anchor="middle" font-size="12" font-weight="900" fill="#fff" data-i18n="st2_mall">🛒 SUPERMERCADO · Malabo</text>
+        <!-- estanterías con productos -->
         <g>
-          <rect x="270" y="60" width="84" height="104" rx="8" fill="#0A1628"/>
-          <rect x="280" y="70" width="64" height="64" rx="4" fill="#fff"/>
+          <rect x="24" y="44" width="150" height="86" rx="4" fill="#fff" stroke="#cfe0d6"/>
+          <line x1="24" y1="73" x2="174" y2="73" stroke="#e2eee8"/><line x1="24" y1="101" x2="174" y2="101" stroke="#e2eee8"/>
+          <text x="44" y="66" font-size="16">🥫</text><text x="72" y="66" font-size="16">🧴</text><text x="100" y="66" font-size="16">📦</text><text x="128" y="66" font-size="16">🍞</text>
+          <text x="44" y="94" font-size="16">🥛</text><text x="72" y="94" font-size="16">🧃</text><text x="100" y="94" font-size="16">🍎</text><text x="128" y="94" font-size="16">🥦</text>
+          <text x="44" y="122" font-size="16">🧀</text><text x="72" y="122" font-size="16">🍚</text><text x="100" y="122" font-size="16">☕</text><text x="128" y="122" font-size="16">🧼</text>
+        </g>
+        <!-- suelo -->
+        <rect y="196" width="460" height="44" fill="#cfe0d6"/>
+        <!-- ══ CAJA / CHECKOUT con terminal QR ══ -->
+        <!-- mostrador de caja -->
+        <rect x="286" y="150" width="150" height="46" rx="4" fill="#0e7a54"/>
+        <rect x="286" y="150" width="150" height="10" fill="#0b6344"/>
+        <text x="361" y="188" text-anchor="middle" font-size="8" font-weight="800" fill="#d7f2e6">CAJA · XenderMoney</text>
+        <!-- cajera detrás del mostrador -->
+        <g>
+          <circle cx="410" cy="118" r="13" fill="#b5814f"/>
+          <path d="M398 116 a12 11 0 0 1 24 0 q-12 -6 -24 0z" fill="#241a12"/>
+          <circle cx="405" cy="118" r="1.4" fill="#241a12"/><circle cx="415" cy="118" r="1.4" fill="#241a12"/>
+          <path d="M400 132 q10 -6 20 0 l3 20 q-13 5 -26 0z" fill="#12a37a"/>
+        </g>
+        <!-- terminal QR sobre el mostrador -->
+        <g>
+          <rect x="300" y="96" width="70" height="86" rx="8" fill="#0A1628"/>
+          <rect x="308" y="104" width="54" height="54" rx="4" fill="#fff"/>
           <g fill="#0A1628">
-            <rect x="284" y="74" width="12" height="12"/><rect x="328" y="74" width="12" height="12"/><rect x="284" y="118" width="12" height="12"/>
-            <rect x="302" y="78" width="6" height="6"/><rect x="314" y="90" width="6" height="6"/><rect x="296" y="98" width="6" height="6"/>
-            <rect x="322" y="104" width="6" height="6"/><rect x="304" y="112" width="6" height="6"/><rect x="330" y="120" width="6" height="6"/>
+            <rect x="311" y="107" width="11" height="11"/><rect x="348" y="107" width="11" height="11"/><rect x="311" y="145" width="11" height="11"/>
+            <rect x="313" y="109" width="7" height="7" fill="#fff"/><rect x="350" y="109" width="7" height="7" fill="#fff"/><rect x="313" y="147" width="7" height="7" fill="#fff"/>
+            <rect x="328" y="110" width="5" height="5"/><rect x="338" y="120" width="5" height="5"/><rect x="322" y="128" width="5" height="5"/>
+            <rect x="345" y="132" width="5" height="5"/><rect x="330" y="140" width="5" height="5"/><rect x="350" y="148" width="5" height="5"/>
           </g>
-          <rect x="280" y="70" width="64" height="3" rx="1.5" fill="#29ABE2" class="st-scan"/>
-          <text x="312" y="156" text-anchor="middle" font-size="9" font-weight="800" fill="#29ABE2">XenderMoney QR</text>
+          <rect x="308" y="104" width="54" height="3" rx="1.5" fill="#29ABE2" class="st-scan"/>
+          <text x="335" y="174" text-anchor="middle" font-size="8.5" font-weight="800" fill="#29ABE2">XenderMoney QR</text>
         </g>
+        <!-- ══ ALYSSON: hermana mayor, escaneando con el móvil ══ -->
         <g>
-          <circle cx="175" cy="98" r="15" fill="#7a4a28"/><circle cx="163" cy="84" r="6" fill="#241a12"/><circle cx="187" cy="84" r="6" fill="#241a12"/>
-          <path d="M158 116 q17 -10 34 0 l-5 52 q-12 6 -24 0 z" fill="#e84393"/>
-          <rect x="205" y="108" width="15" height="24" rx="4" fill="#0A1628" transform="rotate(18 212 120)"/>
-          <text x="180" y="200" text-anchor="middle" font-size="12" font-weight="800" fill="#4b3fb5">Alysson</text>
+          <ellipse cx="196" cy="196" rx="24" ry="6" fill="#000" opacity=".06"/>
+          <rect x="184" y="164" width="12" height="34" rx="6" fill="#5b3a7a"/><rect x="198" y="164" width="12" height="34" rx="6" fill="#6b478c"/>
+          <path d="M176 120 q22 -12 44 0 l-4 48 q-18 8 -36 0z" fill="#c0398f"/>
+          <path d="M176 120 q22 -12 44 0 l-1 12 q-21 8 -42 0z" fill="#d94ba3"/>
+          <!-- brazo levantado con el móvil hacia el QR -->
+          <path d="M214 128 q16 -6 30 -22" stroke="#c0398f" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <rect x="266" y="92" width="16" height="28" rx="4" fill="#0A1628" transform="rotate(20 274 106)"/>
+          <rect x="269" y="96" width="10" height="18" rx="2" fill="#29ABE2" transform="rotate(20 274 106)"/>
+          <!-- cabeza, piel clara, pelo recogido -->
+          <circle cx="196" cy="102" r="15" fill="#b5814f"/>
+          <path d="M181 100 a15 13 0 0 1 30 0 q-8 -12 -15 -12 q-7 0 -15 12z" fill="#2a1c12"/>
+          <circle cx="196" cy="92" r="5" fill="#2a1c12"/>
+          <circle cx="191" cy="102" r="1.6" fill="#241a12"/><circle cx="201" cy="102" r="1.6" fill="#241a12"/>
+          <path d="M191 109 q5 4 10 0" stroke="#7a4a28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <text x="196" y="212" text-anchor="middle" font-size="12" font-weight="800" fill="#4b3fb5">Alysson</text>
         </g>
+        <!-- ══ MADYSSON: hermanita, con la cesta y un globo ══ -->
         <g class="st-jump">
-          <circle cx="110" cy="128" r="11" fill="#8a5a33"/><circle cx="101" cy="117" r="5" fill="#241a12"/><circle cx="119" cy="117" r="5" fill="#241a12"/>
-          <path d="M98 141 q12 -8 24 0 l-4 38 q-8 5 -16 0 z" fill="#f7c948"/>
-          <line x1="124" y1="118" x2="138" y2="84" stroke="#888" stroke-width="1.5"/>
-          <g class="st-balloon"><circle cx="138" cy="74" r="11" fill="#ff6b6b"/></g>
-          <text x="112" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#9a5b16">Madysson</text>
+          <ellipse cx="112" cy="196" rx="18" ry="5" fill="#000" opacity=".06"/>
+          <rect x="104" y="170" width="9" height="28" rx="4.5" fill="#b8860b"/><rect x="115" y="170" width="9" height="28" rx="4.5" fill="#caa116"/>
+          <path d="M100 146 q13 -8 26 0 l-3 30 q-10 5 -20 0z" fill="#f4b400"/>
+          <circle cx="113" cy="130" r="12" fill="#b5814f"/>
+          <path d="M101 128 a12 11 0 0 1 24 0 q-6 -10 -12 -10 q-6 0 -12 10z" fill="#241a12"/>
+          <circle cx="108" cy="130" r="1.5" fill="#241a12"/><circle cx="118" cy="130" r="1.5" fill="#241a12"/>
+          <path d="M108 136 q5 4 10 0" stroke="#7a4a28" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- globo -->
+          <line x1="126" y1="132" x2="140" y2="96" stroke="#bbb" stroke-width="1.4"/>
+          <g class="st-balloon"><circle cx="140" cy="86" r="11" fill="#ff6b6b"/><path d="M137 96 l3 5 l3 -5z" fill="#ff6b6b"/></g>
+          <!-- cesta de la compra -->
+          <path d="M126 168 h26 l-3 18 h-20z" fill="#0e9f6e"/><rect x="128" y="164" width="22" height="5" rx="2" fill="#0b7a52"/>
+          <text x="112" y="212" text-anchor="middle" font-size="11" font-weight="800" fill="#9a5b16">Madysson</text>
         </g>
-        <g class="st-check"><circle cx="312" cy="96" r="22" fill="#34d399"/><text x="312" y="104" text-anchor="middle" font-size="22" fill="#fff">✓</text></g>
-        <g class="st-bag"><rect x="226" y="160" width="22" height="24" rx="3" fill="#e84393"/><path d="M230 160 q6 -10 14 0" stroke="#c2185b" stroke-width="2" fill="none"/><rect x="252" y="164" width="18" height="20" rx="3" fill="#29ABE2"/><path d="M255 164 q6 -8 12 0" stroke="#1b7fae" stroke-width="2" fill="none"/></g>
-        <g class="st-bag"><rect x="150" y="206" width="160" height="22" rx="11" fill="#34d399"/><text x="230" y="221" text-anchor="middle" font-size="11" font-weight="800" fill="#063" data-i18n="st2_paid">✓ Paid with XenderMoney</text></g>
+        <!-- pago confirmado -->
+        <g class="st-check"><circle cx="335" cy="130" r="20" fill="#34d399"/><text x="335" y="138" text-anchor="middle" font-size="20" fill="#fff">✓</text></g>
+        <g class="st-bag"><rect x="150" y="210" width="180" height="22" rx="11" fill="#34d399"/><text x="240" y="225" text-anchor="middle" font-size="11" font-weight="800" fill="#063" data-i18n="st2_paid">✓ Paid with XenderMoney</text></g>
       </svg>
       <div class="st-body">
         <div class="st-ttl" data-i18n="st2_t">Alysson &amp; Madysson: shopping day, zero cash</div>
@@ -1747,7 +1853,7 @@
       pb_tag:'Marketplace · Multivendedor',
       pd_tag:'Logística · Última Milla',
       mk_merchant:'Comercio',
-      st2_mall:'🛍️ CENTRO COMERCIAL',
+      st2_mall:'🛒 SUPERMERCADO · Malabo',
       chips_asia:'<span class="chip">🇨🇳 China</span><span class="chip">🇯🇵 Japón</span><span class="chip">🇰🇷 Corea</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 India</span><span class="chip">🇹🇭 Tailandia</span>',
       chips_eu:'<span class="chip">🇪🇸 España</span><span class="chip">🇫🇷 Francia</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Bélgica</span><span class="chip">🇮🇹 Italia</span><span class="chip">🇩🇪 Alemania</span>',
       chips_af:'<span class="chip">🇨🇲 Camerún</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Costa de Marfil</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇬🇶 Guinea Ec.</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Ruanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 RDC</span><span class="chip">🇬🇦 Gabón</span>',
@@ -2056,7 +2162,7 @@
       pb_tag:'Marketplace · Multivendor',
       pd_tag:'Logistics · Last-Mile',
       mk_merchant:'Merchant',
-      st2_mall:'🛍️ SHOPPING MALL',
+      st2_mall:'🛒 SUPERMARKET · Malabo',
       chips_asia:'<span class="chip">🇨🇳 China</span><span class="chip">🇯🇵 Japan</span><span class="chip">🇰🇷 Korea</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 India</span><span class="chip">🇹🇭 Thailand</span>',
       chips_eu:'<span class="chip">🇪🇸 Spain</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgium</span><span class="chip">🇮🇹 Italy</span><span class="chip">🇩🇪 Germany</span>',
       chips_af:'<span class="chip">🇨🇲 Cameroon</span><span class="chip">🇸🇳 Senegal</span><span class="chip">🇨🇮 Côte d\'Ivoire</span><span class="chip">🇬🇳 Guinea</span><span class="chip">🇬🇶 Eq. Guinea</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 DRC</span><span class="chip">🇬🇦 Gabon</span>',
@@ -2403,7 +2509,7 @@
       pb_tag:'Marketplace · Multivendeur',
       pd_tag:'Logistique · Dernier Kilomètre',
       mk_merchant:'Commerce',
-      st2_mall:'🛍️ CENTRE COMMERCIAL',
+      st2_mall:'🛒 SUPERMARCHÉ · Malabo',
       chips_asia:'<span class="chip">🇨🇳 Chine</span><span class="chip">🇯🇵 Japon</span><span class="chip">🇰🇷 Corée</span><span class="chip">🇻🇳 Vietnam</span><span class="chip">🇮🇳 Inde</span><span class="chip">🇹🇭 Thaïlande</span>',
       chips_eu:'<span class="chip">🇪🇸 Espagne</span><span class="chip">🇫🇷 France</span><span class="chip">🇵🇹 Portugal</span><span class="chip">🇧🇪 Belgique</span><span class="chip">🇮🇹 Italie</span><span class="chip">🇩🇪 Allemagne</span>',
       chips_af:'<span class="chip">🇨🇲 Cameroun</span><span class="chip">🇸🇳 Sénégal</span><span class="chip">🇨🇮 Côte d\'Ivoire</span><span class="chip">🇬🇳 Guinée</span><span class="chip">🇬🇶 Guinée Éq.</span><span class="chip">🇲🇱 Mali</span><span class="chip">🇧🇫 Burkina</span><span class="chip">🇷🇼 Rwanda</span><span class="chip">🇬🇭 Ghana</span><span class="chip">🇨🇩 RDC</span><span class="chip">🇬🇦 Gabon</span>',
