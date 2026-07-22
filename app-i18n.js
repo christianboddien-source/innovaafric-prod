@@ -211,6 +211,18 @@
     'Sin movimientos aún': { fr: 'Aucun mouvement pour l’instant', en: 'No activity yet' },
     'Pedido confirmado': { fr: 'Commande confirmée', en: 'Order confirmed' },
     'Aún no has hecho ninguna compra': { fr: 'Tu n’as encore fait aucun achat', en: 'You haven’t made any purchases yet' },
+    'Cargando productos…': { fr: 'Chargement des produits…', en: 'Loading products…' },
+    'No hay productos disponibles en esta sección.': { fr: 'Aucun produit disponible dans cette section.', en: 'No products available in this section.' },
+    'Ningún producto coincide con tu búsqueda.': { fr: 'Aucun produit ne correspond à ta recherche.', en: 'No products match your search.' },
+    'No hay ofertas activas en este momento.': { fr: 'Aucune offre active pour le moment.', en: 'No active deals at the moment.' },
+    'No se pudo conectar con la tienda. Inténtalo de nuevo.': { fr: 'Impossible de se connecter à la boutique. Réessaie.', en: 'Could not connect to the store. Try again.' },
+    'El catálogo no está disponible ahora mismo.': { fr: 'Le catalogue n’est pas disponible pour le moment.', en: 'The catalog is not available right now.' },
+    'Cargando compras…': { fr: 'Chargement des achats…', en: 'Loading purchases…' },
+    'Inicia sesión para ver tus compras': { fr: 'Connecte-toi pour voir tes achats', en: 'Log in to see your purchases' },
+    'Solicita el primero cuando lo necesites.': { fr: 'Demande le premier quand tu en as besoin.', en: 'Request your first one when you need it.' },
+    'No se pudieron cargar tus préstamos.': { fr: 'Impossible de charger tes prêts.', en: 'Could not load your loans.' },
+    'No se pudieron cargar tus cuentas bancarias.': { fr: 'Impossible de charger tes comptes bancaires.', en: 'Could not load your bank accounts.' },
+    'No tienes cuentas bancarias añadidas aún.': { fr: 'Tu n’as pas encore ajouté de compte bancaire.', en: 'You haven’t added any bank accounts yet.' },
 
     // ── Delivery / seguimiento ──
     'Rastrear': { fr: 'Suivre', en: 'Track' },
@@ -505,6 +517,24 @@
     '(automático por país)': { fr: '(automatique selon le pays)', en: '(automatic by country)' },
     '💱 Moneda asignada:': { fr: '💱 Devise attribuée :', en: '💱 Assigned currency:' },
 
+    // ── Faltantes detectados en el re-escaneo ──
+    'Bloqueado': { fr: 'Bloqué', en: 'Blocked' },
+    'Copiar': { fr: 'Copier', en: 'Copy' },
+    'Número de referencia / cuenta': { fr: 'Numéro de référence / compte', en: 'Reference / account number' },
+    'Verificada': { fr: 'Vérifiée', en: 'Verified' },
+    'Pendiente': { fr: 'En attente', en: 'Pending' },
+    'Eliminar': { fr: 'Supprimer', en: 'Delete' },
+    '🛡️ Cobertura tricontinental — salud, viaje, móvil y más. Activa al instante, sin papeleo.': { fr: '🛡️ Couverture tricontinentale — santé, voyage, mobile et plus. Activation instantanée, sans paperasse.', en: '🛡️ Tricontinental coverage — health, travel, mobile and more. Instant activation, no paperwork.' },
+    '📲 Toca "Añadir a pantalla de inicio" para instalar la app': { fr: '📲 Touche « Ajouter à l’écran d’accueil » pour installer l’app', en: '📲 Tap "Add to Home Screen" to install the app' },
+    // ── Chat de reparto (demo) ──
+    '📍 Rider llega en': { fr: '📍 Le livreur arrive dans', en: '📍 Rider arrives in' },
+    '🟢 En camino · 8 min': { fr: '🟢 En route · 8 min', en: '🟢 On the way · 8 min' },
+    '📦 Moussa ha recogido tu pedido': { fr: '📦 Moussa a récupéré ta commande', en: '📦 Moussa has picked up your order' },
+    '¡Hola! Ya recogí tu paquete. Estoy en camino, llegaré en unos 8 minutos aprox 🛵': { fr: 'Salut ! J’ai récupéré ton colis. Je suis en route, j’arrive dans 8 minutes environ 🛵', en: 'Hi! I’ve picked up your package. I’m on the way, arriving in about 8 minutes 🛵' },
+    '¡Perfecto! El edificio azul frente a la farmacia, 2ª planta. ¡Gracias!': { fr: 'Parfait ! Le bâtiment bleu en face de la pharmacie, 2e étage. Merci !', en: 'Perfect! The blue building across from the pharmacy, 2nd floor. Thanks!' },
+    'Entendido, te aviso cuando llegue 👌': { fr: 'Compris, je te préviens quand j’arrive 👌', en: 'Got it, I’ll let you know when I arrive 👌' },
+    'Entregado en Bastos, Yaoundé': { fr: 'Livré à Bastos, Yaoundé', en: 'Delivered in Bastos, Yaoundé' },
+
     // ── Préstamos ──
     'Préstamos': { fr: 'Prêts', en: 'Loans' },
     'Solicita un microcrédito para tu negocio o emergencias. Interés desde el 5%. Un préstamo activo a la vez.': { fr: 'Demande un microcrédit pour ton commerce ou tes urgences. Intérêt à partir de 5 %. Un seul prêt actif à la fois.', en: 'Request a microloan for your business or emergencies. Interest from 5%. One active loan at a time.' },
@@ -588,7 +618,15 @@
     });
   }
 
-  function apply() { walk(document.body); updateBtn(); }
+  function apply() {
+    walk(document.body);
+    updateBtn();
+    // Permite a la app re-pintar contenido dinámico (composites que no casan
+    // por diccionario, p. ej. "Desde €X · N productos") al cambiar de idioma.
+    if (typeof window.iaOnLangChange === 'function') {
+      try { window.iaOnLangChange(lang); } catch (e) {}
+    }
+  }
 
   function updateBtn() {
     var lbl = '🌐 ' + lang.toUpperCase();
@@ -606,6 +644,11 @@
     lang = l; localStorage.setItem('ia_lang', lang); apply();
   };
   window.iaGetLang = function () { return lang; };
+  // Helper para textos que la app construye dinámicamente (composites tipo
+  // "Desde €X · N productos"): la app llama iaT('es','fr','en') al renderizar.
+  window.iaT = function (es, fr, en) {
+    return lang === 'fr' ? (fr != null ? fr : es) : lang === 'en' ? (en != null ? en : es) : es;
+  };
 
   function makeBtn() {
     // Si la app ya tiene su botón de idioma (.ia-lang-hdr), no creamos el flotante
