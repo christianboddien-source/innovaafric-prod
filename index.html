@@ -1005,7 +1005,7 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
       <div class="page-header">
         <div onclick="goBack()" class="icon-btn">←</div>
         <div class="page-title">Mi Perfil</div>
-        <div class="icon-btn">⚙️</div>
+        <div class="icon-btn" onclick="openSettings()" title="Ajustes">⚙️</div>
       </div>
       <div style="padding:10px 14px 14px;text-align:center">
         <div class="photo-wrap" style="display:block;text-align:center">
@@ -1194,7 +1194,10 @@ body.light-mode #nav{background:var(--bg);border-top-color:var(--border)}
             </div>
             <div>
               <div style="font-size:9px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Nombre del banco *</div>
-              <input id="banco-nombre" type="text" placeholder="BGFI Bank, Santander…" class="input-field" style="width:100%">
+              <select id="banco-nombre-sel" class="input-field" style="width:100%" onchange="onBancoSelect()">
+                <option value="">Selecciona el país primero…</option>
+              </select>
+              <input id="banco-nombre" type="text" placeholder="BGFI Bank, Santander…" class="input-field" style="width:100%;display:none;margin-top:8px">
             </div>
           </div>
           <!-- País + Ciudad -->
@@ -3217,6 +3220,61 @@ function updateBancoCiudad() {
   var sel  = document.getElementById('banco-ciudad');
   var cities = _BANCO_CITIES[pais] || [];
   sel.innerHTML = cities.map(function(c){ return '<option value="'+c+'">'+c+'</option>'; }).join('') || '<option>—</option>';
+  // Cargar también los bancos disponibles en ese país
+  loadBancosDelPais(pais);
+}
+
+var _bancosPaisCache = {};
+// Puebla el desplegable "Nombre del banco" con los bancos del país (GET /banks?country=)
+// más una opción para escribir uno a mano.
+function loadBancosDelPais(pais) {
+  var sel = document.getElementById('banco-nombre-sel');
+  var manual = document.getElementById('banco-nombre');
+  if (!sel) return;
+  if (!pais) { sel.innerHTML = '<option value="">' + T('Selecciona el país primero…','Choisis d’abord le pays…','Select the country first…') + '</option>'; return; }
+  var otro = '<option value="__otro__">✏️ ' + T('Otro (escribir a mano)','Autre (saisie manuelle)','Other (type manually)') + '</option>';
+  var fill = function(banks) {
+    var opts = '<option value="">' + T('Selecciona tu banco…','Choisis ta banque…','Select your bank…') + '</option>';
+    opts += banks.map(function(b){
+      return '<option value="' + (b.id||'') + '" data-name="' + (b.name||'').replace(/"/g,'&quot;') + '" data-swift="' + (b.swiftCode||b.bic||'') + '" data-cur="' + (b.currency||'') + '">' + (b.name||'') + '</option>';
+    }).join('');
+    sel.innerHTML = opts + otro;
+    if (manual) { manual.style.display = 'none'; manual.value = ''; }
+  };
+  if (_bancosPaisCache[pais]) { fill(_bancosPaisCache[pais]); return; }
+  fetch(RAIL_API + '/banks?country=' + encodeURIComponent(pais))
+    .then(function(r){ return r.json(); })
+    .then(function(resp){
+      var banks = (resp && resp.data && resp.data.banks) || [];
+      _bancosPaisCache[pais] = banks;
+      fill(banks);
+    })
+    .catch(function(){ sel.innerHTML = otro; if (manual) manual.style.display = 'block'; });
+}
+
+function onBancoSelect() {
+  var sel = document.getElementById('banco-nombre-sel');
+  var manual = document.getElementById('banco-nombre');
+  var opt = sel.options[sel.selectedIndex];
+  if (!opt) return;
+  if (opt.value === '__otro__') {
+    // Escritura manual
+    if (manual) { manual.style.display = 'block'; manual.value = ''; manual.focus(); }
+    return;
+  }
+  if (manual) manual.style.display = 'none';
+  if (opt.value) {
+    // Banco del catálogo: guardamos el nombre en el input oculto y autocompletamos SWIFT/moneda
+    var name = opt.getAttribute('data-name') || opt.textContent;
+    if (manual) manual.value = name;
+    var swift = opt.getAttribute('data-swift');
+    var cur = opt.getAttribute('data-cur');
+    if (swift) document.getElementById('banco-swift').value = swift;
+    if (cur) {
+      var ms = document.getElementById('banco-moneda');
+      for (var i=0;i<ms.options.length;i++){ if (ms.options[i].value === cur) { ms.selectedIndex = i; break; } }
+    }
+  } else if (manual) { manual.value = ''; }
 }
 function updateBancoSwift() {
   var pais = document.getElementById('banco-pais').value;
@@ -3245,17 +3303,23 @@ function doAddBanco() {
   var ref      = document.getElementById('banco-ref').value.trim();
   var emoji    = _BANCO_EMOJIS[_bancoEmojiIdx];
   var err      = document.getElementById('banco-err');
-  if (!nombre) { err.textContent = 'El nombre del banco es obligatorio'; return; }
+  // Si se eligió un banco del catálogo, mandamos su bank_id (más preciso)
+  var sel = document.getElementById('banco-nombre-sel');
+  var selOpt = sel && sel.options[sel.selectedIndex];
+  var bankId = (selOpt && selOpt.value && selOpt.value !== '__otro__') ? selOpt.value : null;
+  if (!nombre) { err.textContent = T('El nombre del banco es obligatorio','Le nom de la banque est obligatoire','Bank name is required'); return; }
   err.textContent = '';
+  var body = {
+    bank_name: nombre, account_number: iban, bic: swift,
+    country: pais, city: ciudad, currency: moneda,
+    account_holder: titular, phone: telefono,
+    address: direccion, reference: ref, emoji: emoji
+  };
+  if (bankId) body.bank_id = bankId;
   fetch(RAIL_API + '/banks/accounts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _token },
-    body: JSON.stringify({
-      bank_name: nombre, account_number: iban, bic: swift,
-      country: pais, city: ciudad, currency: moneda,
-      account_holder: titular, phone: telefono,
-      address: direccion, reference: ref, emoji: emoji
-    })
+    body: JSON.stringify(body)
   }).then(function(r){ return r.json(); }).then(function(resp) {
     if (resp && resp.success) {
       err.style.color = 'var(--green)';
@@ -5295,22 +5359,21 @@ function toggleNotifPanel() {
   if (_notifPanelOpen) { loadServerNotifs(); renderNotifPanel(); updatePushPermUI(); }
 }
 
+function paintNotifTog(cat) {
+  var tog  = document.getElementById('ntog-' + cat);
+  var knob = document.getElementById('nknob-' + cat);
+  var on = !!_notifCats[cat];
+  if (tog)  { tog.style.background = on ? 'var(--blue)' : 'var(--bg3)'; tog.style.border = on ? 'none' : '1px solid var(--border)'; }
+  if (knob) knob.style.left = on ? '22px' : '3px';
+}
 function toggleNotifCat(cat) {
   _notifCats[cat] = !_notifCats[cat];
   localStorage.setItem('inn_notif_cats', JSON.stringify(_notifCats));
-  var tog  = document.getElementById('ntog-' + cat);
-  var knob = document.getElementById('nknob-' + cat);
-  if (tog)  tog.style.background  = _notifCats[cat] ? 'var(--blue)' : 'var(--bg3)';
-  if (knob) knob.style.left = _notifCats[cat] ? '22px' : '3px';
+  paintNotifTog(cat);
 }
 
 function initNotifCatUI() {
-  Object.keys(_notifCats).forEach(function(cat) {
-    var tog  = document.getElementById('ntog-' + cat);
-    var knob = document.getElementById('nknob-' + cat);
-    if (tog)  tog.style.background  = _notifCats[cat] ? 'var(--blue)' : 'var(--bg3)';
-    if (knob) knob.style.left = _notifCats[cat] ? '22px' : '3px';
-  });
+  Object.keys(_notifCats).forEach(paintNotifTog);
 }
 
 // ── MODO CLARO / OSCURO ──────────────────────────────────
@@ -5345,6 +5408,50 @@ function toggleLightMode() {
   localStorage.setItem('inn_theme', _lightMode ? 'light' : 'dark');
   applyTheme();
   showToast(_lightMode ? '☀️ Modo claro' : '🌙 Modo oscuro', 'Tema cambiado correctamente');
+}
+
+// ── AJUSTES (panel del botón ⚙️ del perfil) ──────────────
+function openSettings() {
+  var lang = (typeof window.iaGetLang === 'function') ? window.iaGetLang() : 'es';
+  var langBtn = function(code, label) {
+    var on = lang === code;
+    return '<div onclick="setSettingsLang(\'' + code + '\')" style="flex:1;text-align:center;padding:10px;border-radius:12px;cursor:pointer;font-size:12px;font-weight:800;' +
+      (on ? 'background:var(--blue);color:#fff' : 'background:var(--bg3);color:var(--txt3);border:1px solid var(--border)') + '">' + label + '</div>';
+  };
+  var ov = document.getElementById('settings-overlay');
+  if (!ov) { ov = document.createElement('div'); ov.id = 'settings-overlay'; document.body.appendChild(ov); }
+  ov.setAttribute('style', 'position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:9999');
+  ov.onclick = function(e){ if (e.target === ov) closeSettings(); };
+  ov.innerHTML =
+    '<div style="background:var(--bg);width:100%;max-width:430px;border-radius:22px 22px 0 0;padding:18px 16px 26px;box-shadow:0 -8px 30px rgba(0,0,0,.4)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">' +
+        '<div style="font-size:16px;font-weight:900;color:var(--txt)">⚙️ ' + T('Ajustes','Réglages','Settings') + '</div>' +
+        '<div onclick="closeSettings()" style="cursor:pointer;font-size:18px;color:var(--txt3)">✕</div></div>' +
+
+      '<div class="section-title">' + T('Idioma','Langue','Language') + '</div>' +
+      '<div style="display:flex;gap:8px;margin-bottom:16px">' + langBtn('es','🇪🇸 ES') + langBtn('fr','🇫🇷 FR') + langBtn('en','🇬🇧 EN') + '</div>' +
+
+      '<div class="section-title">' + T('Tema','Thème','Theme') + '</div>' +
+      '<div onclick="toggleLightMode();openSettings()" style="display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin-bottom:16px;cursor:pointer">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--txt)">' + (_lightMode ? '☀️ ' + T('Modo claro','Mode clair','Light mode') : '🌙 ' + T('Modo oscuro','Mode sombre','Dark mode')) + '</div>' +
+        '<div style="width:44px;height:24px;border-radius:12px;background:' + (_lightMode ? 'var(--blue)' : 'var(--bg3)') + ';position:relative;border:1px solid var(--border)"><div style="position:absolute;top:2px;left:' + (_lightMode ? '22px' : '3px') + ';width:18px;height:18px;border-radius:50%;background:#fff"></div></div></div>' +
+
+      '<div class="section-title">' + T('Seguridad','Sécurité','Security') + '</div>' +
+      '<div onclick="toggleBiometric();openSettings()" style="display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin-bottom:16px;cursor:pointer">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--txt)">🔒 ' + T('Bloqueo biométrico','Verrouillage biométrique','Biometric lock') + '</div>' +
+        '<div style="width:44px;height:24px;border-radius:12px;background:' + (_bioEnabled ? 'var(--blue)' : 'var(--bg3)') + ';position:relative;border:1px solid var(--border)"><div style="position:absolute;top:2px;left:' + (_bioEnabled ? '22px' : '3px') + ';width:18px;height:18px;border-radius:50%;background:#fff"></div></div></div>' +
+
+      '<div style="display:flex;gap:8px;margin-bottom:14px">' +
+        '<div onclick="goScreen(\'s-notificaciones\');closeSettings()" style="flex:1;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;font-size:12px;font-weight:700;color:var(--txt)">🔔 ' + T('Notificaciones','Notifications','Notifications') + '</div>' +
+        '<div onclick="goScreen(\'s-seguridad\');closeSettings()" style="flex:1;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;font-size:12px;font-weight:700;color:var(--txt)">🔐 ' + T('Contraseña','Mot de passe','Password') + '</div></div>' +
+
+      '<div style="text-align:center;font-size:10px;color:var(--txt3);margin-top:6px">INNOVAAFRIC · ' + T('versión','version','version') + ' 1.0</div>' +
+    '</div>';
+}
+function closeSettings() { var ov = document.getElementById('settings-overlay'); if (ov) ov.remove(); }
+function setSettingsLang(code) {
+  if (typeof window.iaSetLang === 'function') window.iaSetLang(code);
+  openSettings(); // re-pinta el panel con el idioma nuevo
 }
 
 // ── COMPARTIR POR WHATSAPP ────────────────────────────────
@@ -5540,6 +5647,6 @@ goScreen = function(id) {
 };
 </script>
 <!-- i18n ES/FR/EN — traduce por coincidencia exacta + observa cambios dinámicos -->
-<script src="./app-i18n.js?v=4"></script>
+<script src="./app-i18n.js?v=6"></script>
 </body>
 </html>

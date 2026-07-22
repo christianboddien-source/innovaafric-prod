@@ -371,6 +371,8 @@
     '🖨️ Imprimir cuentas (PDF)': { fr: '🖨️ Imprimer les comptes (PDF)', en: '🖨️ Print accounts (PDF)' },
     '📲 Compartir cuentas por WhatsApp': { fr: '📲 Partager les comptes via WhatsApp', en: '📲 Share accounts via WhatsApp' },
     'Seleccionar…': { fr: 'Sélectionner…', en: 'Select…' },
+    'Selecciona el país primero…': { fr: 'Choisis d’abord le pays…', en: 'Select the country first…' },
+    'Selecciona tu banco…': { fr: 'Choisis ta banque…', en: 'Select your bank…' },
     '— Seleccionar —': { fr: '— Sélectionner —', en: '— Select —' },
     '— País —': { fr: '— Pays —', en: '— Country —' },
     '— Ciudad —': { fr: '— Ville —', en: '— City —' },
@@ -524,6 +526,11 @@
     '(automático por país)': { fr: '(automatique selon le pays)', en: '(automatic by country)' },
     '💱 Moneda asignada:': { fr: '💱 Devise attribuée :', en: '💱 Assigned currency:' },
 
+    // ── Panel de ajustes ──
+    'Idioma': { fr: 'Langue', en: 'Language' },
+    'Tema': { fr: 'Thème', en: 'Theme' },
+    'Modo claro': { fr: 'Mode clair', en: 'Light mode' },
+    'Seguridad': { fr: 'Sécurité', en: 'Security' },
     // ── Faltantes detectados en el re-escaneo ──
     'Bloqueado': { fr: 'Bloqué', en: 'Blocked' },
     'Copiar': { fr: 'Copier', en: 'Copy' },
