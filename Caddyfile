@@ -12,7 +12,7 @@
 {
 	# Cambiar por el correo real: aquí avisa Let's Encrypt si un certificado
 	# va a caducar sin renovarse.
-	email christianboddien@gmail.com
+	email dev@innovaafric.com
 }
 
 # ── XenderShop ─────────────────────────────────────────────────────────────
