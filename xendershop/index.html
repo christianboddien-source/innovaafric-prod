@@ -104,7 +104,7 @@
       return;   // no redirigimos: no hay pedido que pagar
     }
     xsToast('✅ Pedido '+orderRef+' creado — redirigiendo a XenderMoney…','success');
-    setTimeout(function(){ window.location.href='../xendermoney/index.html'; }, 2000);
+    setTimeout(function(){ window.location.href='https://xendermoney.com/index.html'; }, 2000);
   }
 
   // ── Register vendor/store ──
@@ -185,7 +185,7 @@
     var nav = document.querySelector('.nav-actions');
     if(!nav) return;
     var badge = document.createElement('a');
-    badge.href = '../xendermoney/index.html';
+    badge.href = 'https://xendermoney.com/index.html';
     badge.style.cssText = 'background:rgba(255,64,16,0.15);border:1px solid rgba(255,64,16,0.3);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;color:#FF4010;text-decoration:none;';
     badge.textContent = '👤 '+(XS_SESSION.name?XS_SESSION.name.split(' ')[0]:'Mi cuenta');
     nav.insertBefore(badge, nav.firstChild);
@@ -486,7 +486,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
       <button class="search-btn" onclick="xsSearch()" aria-label="Buscar">🔍</button>
     </div>
     <div class="nav-actions">
-      <a href="../xenderbigshop/" class="nav-icon-btn" style="background:#fff;border:1px solid rgba(255,255,255,0.85);border-radius:8px;padding:6px 12px;font-weight:700;color:#c62828;font-size:12px;">🏪 Vender en XenderBigShop</a>
+      <a href="https://xenderbigshop.com/" class="nav-icon-btn" style="background:#fff;border:1px solid rgba(255,255,255,0.85);border-radius:8px;padding:6px 12px;font-weight:700;color:#c62828;font-size:12px;">🏪 Vender en XenderBigShop</a>
       <a href="#" class="nav-icon-btn"><span class="icon">👤</span><span data-i18n="nav_account">Cuenta</span></a>
       <a href="#" class="nav-icon-btn cart-wrap" onclick="openCart();return false;"><span class="icon">🛒</span><span data-i18n="nav_cart">Carrito</span><span class="cart-badge" id="cart-count">3</span></a>
       <a href="#" class="nav-icon-btn cart-wrap"><span class="icon">❤️</span><span data-i18n="nav_wishlist">Deseos</span><span class="cart-badge" id="wish-count" style="display:none;">0</span></a>
@@ -579,7 +579,7 @@ footer{background:#222;color:#ccc;padding:40px 16px 20px;margin-top:16px;}
         <div class="banner-tag" data-i18n="banner3_tag">Nuevo · Pago XenderMoney</div>
         <div class="banner-h" data-i18n="banner3_h">Paga en FCFA, EUR,<br/>USD o Mobile Money</div>
         <div class="banner-p" data-i18n="banner3_p">Sin comisiones extras. Tipo de cambio real en tiempo real.</div>
-        <a href="../xendermoney/" class="btn-banner" target="_blank" rel="noopener noreferrer" data-i18n="banner3_btn">Saber más →</a>
+        <a href="https://xendermoney.com/" class="btn-banner" target="_blank" rel="noopener noreferrer" data-i18n="banner3_btn">Saber más →</a>
       </div>
       <div class="banner-badge"><div class="badge-n">0%</div><div class="badge-t" data-i18n="badge3_t">COMISIÓN</div></div>
     </div>
@@ -1417,12 +1417,12 @@ setLang=function(l){
       </div>
       <div class="footer-col">
         <h4 data-i18n="foot_col3">Vender</h4>
-        <a href="../xenderbigshop/" data-i18n="foot_open_store" target="_blank" rel="noopener noreferrer">Abrir Tienda</a>
-        <a href="../xenderbigshop/" data-i18n="foot_plans" target="_blank" rel="noopener noreferrer">Planes & Precios</a>
+        <a href="https://xenderbigshop.com/" data-i18n="foot_open_store" target="_blank" rel="noopener noreferrer">Abrir Tienda</a>
+        <a href="https://xenderbigshop.com/" data-i18n="foot_plans" target="_blank" rel="noopener noreferrer">Planes & Precios</a>
       </div>
       <div class="footer-col">
         <h4 data-i18n="foot_col4">Pagar con</h4>
-        <a href="../xendermoney/" style="color:#FF6B35;font-weight:700;" target="_blank" rel="noopener noreferrer">💰 XenderMoney</a>
+        <a href="https://xendermoney.com/" style="color:#FF6B35;font-weight:700;" target="_blank" rel="noopener noreferrer">💰 XenderMoney</a>
         <span data-i18n="foot_momo">Mobile Money</span>
         <span>Orange Money</span>
         <span>MTN MoMo</span>
